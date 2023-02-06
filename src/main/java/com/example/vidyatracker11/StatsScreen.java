@@ -17,105 +17,79 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+//Window showing many tableviews of stats relating the game lists
 public class StatsScreen extends VBox {
+  //Played Games
+  //Platform
   TableColumn<PlayedDataEntry, String> playedPlatformTitleColumn = new TableColumn<>("Platform");
-  
   TableColumn<PlayedDataEntry, Integer> playedPlatformCountColumn = new TableColumn<>("Count");
-  
   TableColumn<PlayedDataEntry, String> playedPlatformPercentColumn = new TableColumn<>("Percent");
-  
   TableColumn<PlayedDataEntry, String> playedPlatformRatingColumn = new TableColumn<>("Average Rating");
-  
   static TableView<PlayedDataEntry> playedPlatformTable = new TableView<>();
-  
+
+  //Genre
   TableColumn<PlayedDataEntry, String> playedGenreTitleColumn = new TableColumn<>("Genre");
-  
   TableColumn<PlayedDataEntry, Integer> playedGenreCountColumn = new TableColumn<>("Count");
-  
   TableColumn<PlayedDataEntry, String> playedGenrePercentColumn = new TableColumn<>("Percent");
-  
   TableColumn<PlayedDataEntry, String> playedGenreRatingColumn = new TableColumn<>("Average Rating");
-  
   static TableView<PlayedDataEntry> playedGenreTable = new TableView<>();
-  
+
+  //Release Year
   TableColumn<PlayedDataEntry, String> playedReleaseYearTitleColumn = new TableColumn<>("Release Year");
-  
   TableColumn<PlayedDataEntry, Integer> playedReleaseYearCountColumn = new TableColumn<>("Count");
-  
   TableColumn<PlayedDataEntry, String> playedReleaseYearPercentColumn = new TableColumn<>("Percent");
-  
   TableColumn<PlayedDataEntry, String> playedReleaseYearRatingColumn = new TableColumn<>("Average Rating");
-  
   static TableView<PlayedDataEntry> playedReleaseYearTable = new TableView<>();
-  
+
+  //Completion Year
   TableColumn<PlayedDataEntry, String> playedCompletionYearTitleColumn = new TableColumn<>("Completion Year");
-  
   TableColumn<PlayedDataEntry, Integer> playedCompletionYearCountColumn = new TableColumn<>("Count");
-  
   TableColumn<PlayedDataEntry, String> playedCompletionYearPercentColumn = new TableColumn<>("Percent");
-  
   TableColumn<PlayedDataEntry, String> playedCompletionYearRatingColumn = new TableColumn<>("Average Rating");
-  
   static TableView<PlayedDataEntry> playedCompletionYearTable = new TableView<>();
-  
+
+  //Rating
   TableColumn<PlayedDataEntry, String> playedRatingTitleColumn = new TableColumn<>("Rating");
-  
   TableColumn<PlayedDataEntry, Integer> playedRatingCountColumn = new TableColumn<>("Count");
-  
   TableColumn<PlayedDataEntry, String> playedRatingPercentColumn = new TableColumn<>("Percent");
-  
   static TableView<PlayedDataEntry> playedRatingTable = new TableView<>();
-  
+
+  //100 Percent Status
   TableColumn<PlayedDataEntry, String> playedPercent100TitleColumn = new TableColumn<>("100% Status");
-  
   TableColumn<PlayedDataEntry, Integer> playedPercent100CountColumn = new TableColumn<>("Count");
-  
   TableColumn<PlayedDataEntry, String> playedPercent100PercentColumn = new TableColumn<>("Percent");
-  
   TableColumn<PlayedDataEntry, String> playedPercent100RatingColumn = new TableColumn<>("Average Rating");
-  
   static TableView<PlayedDataEntry> playedPercent100Table = new TableView<>();
-  
+
+  //Unplayed Games
+  //Platform
   TableColumn<UnplayedDataEntry, String> unplayedPlatformTitleColumn = new TableColumn<>("Platform");
-  
   TableColumn<UnplayedDataEntry, Integer> unplayedPlatformCountColumn = new TableColumn<>("Count");
-  
   TableColumn<UnplayedDataEntry, String> unplayedPlatformPercentColumn = new TableColumn<>("Percent");
-  
   TableColumn<UnplayedDataEntry, String> unplayedPlatformHoursColumn = new TableColumn<>("Total Hours");
-  
   static TableView<UnplayedDataEntry> unplayedPlatformTable = new TableView<>();
-  
+
+  //Genre
   TableColumn<UnplayedDataEntry, String> unplayedGenreTitleColumn = new TableColumn<>("Genre");
-  
   TableColumn<UnplayedDataEntry, Integer> unplayedGenreCountColumn = new TableColumn<>("Count");
-  
   TableColumn<UnplayedDataEntry, String> unplayedGenrePercentColumn = new TableColumn<>("Percent");
-  
   TableColumn<UnplayedDataEntry, String> unplayedGenreHoursColumn = new TableColumn<>("Total Hours");
-  
   static TableView<UnplayedDataEntry> unplayedGenreTable = new TableView<>();
-  
+
+  //Release Year
   TableColumn<UnplayedDataEntry, String> unplayedReleaseYearTitleColumn = new TableColumn<>("Release Year");
-  
   TableColumn<UnplayedDataEntry, Integer> unplayedReleaseYearCountColumn = new TableColumn<>("Count");
-  
   TableColumn<UnplayedDataEntry, String> unplayedReleaseYearPercentColumn = new TableColumn<>("Percent");
-  
   TableColumn<UnplayedDataEntry, String> unplayedReleaseYearHoursColumn = new TableColumn<>("Total Hours");
-  
   static TableView<UnplayedDataEntry> unplayedReleaseYearTable = new TableView<>();
-  
+
+  //Deck Status
   TableColumn<UnplayedDataEntry, String> unplayedDeckTitleColumn = new TableColumn<>("Deck Status");
-  
   TableColumn<UnplayedDataEntry, Integer> unplayedDeckCountColumn = new TableColumn<>("Count");
-  
   TableColumn<UnplayedDataEntry, String> unplayedDeckPercentColumn = new TableColumn<>("Percent");
-  
   TableColumn<UnplayedDataEntry, String> unplayedDeckHoursColumn = new TableColumn<>("Total Hours");
-  
   static TableView<UnplayedDataEntry> unplayedDeckTable = new TableView<>();
-  
+
   Label playedLabel = new Label("Played Games");
   
   Label unplayedLabel = new Label("Unplayed Games");
@@ -181,23 +155,33 @@ public class StatsScreen extends VBox {
     unplayedReleaseYearHoursColumn.setCellValueFactory(new PropertyValueFactory<>("totalHours"));
     unplayedDeckHoursColumn.setCellValueFactory(new PropertyValueFactory<>("totalHours"));
 
-    playedPlatformTable.getColumns().addAll(playedPlatformTitleColumn, playedPlatformCountColumn, playedPlatformPercentColumn, playedPlatformRatingColumn);
-    playedGenreTable.getColumns().addAll(playedGenreTitleColumn, playedGenreCountColumn, playedGenrePercentColumn, playedGenreRatingColumn);
-    playedReleaseYearTable.getColumns().addAll(playedReleaseYearTitleColumn, playedReleaseYearCountColumn, playedReleaseYearPercentColumn, playedReleaseYearRatingColumn);
-    playedCompletionYearTable.getColumns().addAll(playedCompletionYearTitleColumn, playedCompletionYearCountColumn, playedCompletionYearPercentColumn, playedCompletionYearRatingColumn);
-    playedRatingTable.getColumns().addAll(playedRatingTitleColumn, playedRatingCountColumn, playedRatingPercentColumn);
-    playedPercent100Table.getColumns().addAll(playedPercent100TitleColumn, playedPercent100CountColumn, playedPercent100PercentColumn, playedPercent100RatingColumn);
-    unplayedPlatformTable.getColumns().addAll(unplayedPlatformTitleColumn, unplayedPlatformCountColumn, unplayedPlatformPercentColumn, unplayedPlatformHoursColumn);
-    unplayedGenreTable.getColumns().addAll(unplayedGenreTitleColumn, unplayedGenreCountColumn, unplayedGenrePercentColumn, unplayedGenreHoursColumn);
-    unplayedReleaseYearTable.getColumns().addAll(unplayedReleaseYearTitleColumn, unplayedReleaseYearCountColumn, unplayedReleaseYearPercentColumn, unplayedReleaseYearHoursColumn);
-    unplayedDeckTable.getColumns().addAll(unplayedDeckTitleColumn, unplayedDeckCountColumn, unplayedDeckPercentColumn, unplayedDeckHoursColumn);
+    playedPlatformTable.getColumns().addAll(playedPlatformTitleColumn, playedPlatformCountColumn,
+            playedPlatformPercentColumn, playedPlatformRatingColumn);
+    playedGenreTable.getColumns().addAll(playedGenreTitleColumn, playedGenreCountColumn,
+            playedGenrePercentColumn, playedGenreRatingColumn);
+    playedReleaseYearTable.getColumns().addAll(playedReleaseYearTitleColumn, playedReleaseYearCountColumn,
+            playedReleaseYearPercentColumn, playedReleaseYearRatingColumn);
+    playedCompletionYearTable.getColumns().addAll(playedCompletionYearTitleColumn, playedCompletionYearCountColumn,
+            playedCompletionYearPercentColumn, playedCompletionYearRatingColumn);
+    playedRatingTable.getColumns().addAll(playedRatingTitleColumn, playedRatingCountColumn,
+            playedRatingPercentColumn);
+    playedPercent100Table.getColumns().addAll(playedPercent100TitleColumn, playedPercent100CountColumn,
+            playedPercent100PercentColumn, playedPercent100RatingColumn);
+    unplayedPlatformTable.getColumns().addAll(unplayedPlatformTitleColumn, unplayedPlatformCountColumn,
+            unplayedPlatformPercentColumn, unplayedPlatformHoursColumn);
+    unplayedGenreTable.getColumns().addAll(unplayedGenreTitleColumn, unplayedGenreCountColumn,
+            unplayedGenrePercentColumn, unplayedGenreHoursColumn);
+    unplayedReleaseYearTable.getColumns().addAll(unplayedReleaseYearTitleColumn, unplayedReleaseYearCountColumn,
+            unplayedReleaseYearPercentColumn, unplayedReleaseYearHoursColumn);
+    unplayedDeckTable.getColumns().addAll(unplayedDeckTitleColumn, unplayedDeckCountColumn,
+            unplayedDeckPercentColumn, unplayedDeckHoursColumn);
 
     playedBox.setAlignment(Pos.CENTER);
-    this.unplayedBox.setAlignment(Pos.CENTER);
+    unplayedBox.setAlignment(Pos.CENTER);
     setAlignment(Pos.CENTER);
-    this.playedLabel.setStyle("-fx-font-size: 16;-fx-font-weight: bold;");
-    this.unplayedLabel.setStyle("-fx-font-size: 16;-fx-font-weight: bold;");
-    getChildren().addAll(playedLabel, this.playedBox, this.unplayedLabel, this.unplayedBox);
+    playedLabel.setStyle("-fx-font-size: 16;-fx-font-weight: bold;");
+    unplayedLabel.setStyle("-fx-font-size: 16;-fx-font-weight: bold;");
+    getChildren().addAll(playedLabel, playedBox, unplayedLabel, unplayedBox);
     setPadding(new Insets(5.0));
     updateStats();
   }
@@ -214,7 +198,8 @@ public class StatsScreen extends VBox {
     preventColumnReorderingOrResizing(unplayedReleaseYearTable);
     preventColumnReorderingOrResizing(unplayedDeckTable);
   }
-  
+
+  //Add the data from each cell to a text object, get that object's width and whatever the greatest value is, set the column width to that.
   public void updateColumnWidth() {
     for (int i = 0; i < columnList.size(); i++) {
       Text text = new Text(columnList.get(i).getText());
@@ -233,7 +218,8 @@ public class StatsScreen extends VBox {
       columnList.get(i).setPrefWidth(width);
     } 
   }
-  
+
+  //Prevents the user from sorting manually
   public static <T> void preventColumnReorderingOrResizing(TableView<T> tableView) {
     Platform.runLater(() -> {
           for (Node header : tableView.lookupAll(".column-header"))
@@ -242,7 +228,8 @@ public class StatsScreen extends VBox {
             resizeLine.addEventFilter(MouseEvent.ANY, Event::consume); 
         });
   }
-  
+
+  //Refresh the data
   public void updateStats() {
     if (GameLists.playedList.size() != 0) {
       playedPlatformTable.setItems(setPlayedPlatformData(GameLists.platformList, true));
@@ -256,11 +243,12 @@ public class StatsScreen extends VBox {
       unplayedPlatformTable.setItems(setUnplayedPlatformData(GameLists.platformList, true));
       unplayedGenreTable.setItems(setUnplayedPlatformData(GameLists.genreList, false));
       unplayedReleaseYearTable.setItems(setUnplayedYearData());
-      unplayedDeckTable.setItems(setUnplayedToasterData());
+      unplayedDeckTable.setItems(setUnplayedDeckData());
     } 
     updateColumnWidth();
   }
-  
+
+  //Sets the data in the played game platform table or genre table. What a silly name for this method.
   public ObservableList<PlayedDataEntry> setPlayedPlatformData(ObservableList<String> list, boolean platform) {
     ObservableList<PlayedDataEntry> dataList = FXCollections.observableArrayList();
     for (String s : list) {
@@ -285,14 +273,15 @@ public class StatsScreen extends VBox {
         } 
       } 
       newPlatGenre.setCount((int)count);
-      newPlatGenre.setPercent(String.format("%.2f", count / GameLists.playedList.size() * 100.0D));
+      newPlatGenre.setPercent(String.format("%.2f", count / GameLists.playedList.size() * 100.0));
       if (ratingCount != 0)
         newPlatGenre.setAverageRating(String.format("%.2f", totalRating / ratingCount));
       dataList.add(newPlatGenre);
     } 
     return dataList;
   }
-  
+
+  //Sets the data for the unplayed game platform table or genre table. What a silly name for a method.
   public ObservableList<UnplayedDataEntry> setUnplayedPlatformData(ObservableList<String> list, boolean platform) {
     ObservableList<UnplayedDataEntry> dataList = FXCollections.observableArrayList();
     for (String s : list) {
@@ -319,7 +308,8 @@ public class StatsScreen extends VBox {
     } 
     return dataList;
   }
-  
+
+  //Sets data in the played release year table or completion year table.
   public ObservableList<PlayedDataEntry> setPlayedYearData(boolean release) {
     ObservableList<Integer> yearList = FXCollections.observableArrayList();
     if (release) {
@@ -364,7 +354,8 @@ public class StatsScreen extends VBox {
     } 
     return dataList;
   }
-  
+
+  //Sets the data for the unplayed release year table.
   public ObservableList<UnplayedDataEntry> setUnplayedYearData() {
     ObservableList<Integer> yearList = FXCollections.observableArrayList();
     for (int i = 0; i < GameLists.unplayedList.size(); i++) {
@@ -391,7 +382,8 @@ public class StatsScreen extends VBox {
     } 
     return dataList;
   }
-  
+
+  //Sets the data for the played rating table
   public ObservableList<PlayedDataEntry> setPlayedRatingData() {
     ObservableList<Integer> ratingList = FXCollections.observableArrayList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
     ObservableList<PlayedDataEntry> dataList = FXCollections.observableArrayList();
@@ -409,7 +401,8 @@ public class StatsScreen extends VBox {
     } 
     return dataList;
   }
-  
+
+  //Sets the data for the played percent100 table
   public ObservableList<PlayedDataEntry> setPlayedPercentData() {
     ObservableList<String> percentList = FXCollections.observableArrayList("", "Yes", "No");
     ObservableList<PlayedDataEntry> dataList = FXCollections.observableArrayList();
@@ -440,16 +433,17 @@ public class StatsScreen extends VBox {
     } 
     return dataList;
   }
-  
-  public ObservableList<UnplayedDataEntry> setUnplayedToasterData() {
-    ObservableList<String> toasterList = FXCollections.observableArrayList("", "Yes", "No", "Maybe");
+
+  //Sets the data for the unplayed deck status table
+  public ObservableList<UnplayedDataEntry> setUnplayedDeckData() {
+    ObservableList<String> deckList = FXCollections.observableArrayList("", "Yes", "No", "Maybe");
     ObservableList<UnplayedDataEntry> dataList = FXCollections.observableArrayList();
-    for (String s : toasterList) {
-      UnplayedDataEntry newToaster = new UnplayedDataEntry();
+    for (String s : deckList) {
+      UnplayedDataEntry newDeck = new UnplayedDataEntry();
       if (s.equals("")) {
-        newToaster.setName("Blank");
+        newDeck.setName("Blank");
       } else {
-        newToaster.setName(s);
+        newDeck.setName(s);
       } 
       double count = 0.0;
       double totalHours = 0.0;
@@ -459,10 +453,10 @@ public class StatsScreen extends VBox {
           totalHours += GameLists.unplayedList.get(j).getHours();
         } 
       } 
-      newToaster.setCount((int)count);
-      newToaster.setPercent(String.format("%.2f", count / GameLists.unplayedList.size() * 100.0));
-      newToaster.setTotalHours(String.format("%.2f", totalHours));
-      dataList.add(newToaster);
+      newDeck.setCount((int)count);
+      newDeck.setPercent(String.format("%.2f", count / GameLists.unplayedList.size() * 100.0));
+      newDeck.setTotalHours(String.format("%.2f", totalHours));
+      dataList.add(newDeck);
     } 
     return dataList;
   }

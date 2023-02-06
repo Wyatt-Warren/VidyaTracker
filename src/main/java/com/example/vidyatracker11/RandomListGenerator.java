@@ -16,6 +16,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+//Window used to generate a random list baased on filters.
 public class RandomListGenerator extends VBox {
   Label mainLabel = new Label("Generate List Based on Filters");
 
@@ -87,12 +88,12 @@ public class RandomListGenerator extends VBox {
           hoursMaxVBox, deckVBox, yearVBox);
   Button generateButton = new Button("Generate List");
   ListView<String> generatedList = new ListView<>();
-  
+
   public RandomListGenerator() {
     getChildren().addAll(mainLabel, mainHBox, generateButton, generatedList);
     mainLabel.setStyle("-fx-font-size: 24;-fx-font-weight: bold;");
     setFillWidth(false);
-    mainHBox.setSpacing(5.0D);
+    mainHBox.setSpacing(5.0);
     statusButtonBox.setAlignment(Pos.CENTER);
     platformButtonBox.setAlignment(Pos.CENTER);
     genreButtonBox.setAlignment(Pos.CENTER);
@@ -109,8 +110,8 @@ public class RandomListGenerator extends VBox {
     yearVBox.setAlignment(Pos.TOP_CENTER);
     setAlignment(Pos.CENTER);
 
-    setPadding(new Insets(5.0D));
-    setSpacing(5.0D);
+    setPadding(new Insets(5.0));
+    setSpacing(5.0);
     lengthField.setTextFormatter(new TextFormatter<>(change -> {
             String input = change.getText();
             return input.matches("[0-9]*") ? change : null;

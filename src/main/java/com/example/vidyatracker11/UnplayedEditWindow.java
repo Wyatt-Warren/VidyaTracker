@@ -12,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+//Window used to edit an existing unplayed game
 public class UnplayedEditWindow extends VBox {
   //Status
   Label statusLabel = new Label("Status:");
@@ -132,7 +133,8 @@ public class UnplayedEditWindow extends VBox {
           } 
         });
   }
-  
+
+  //Closes the window and saves the inputted data to the given unplayed game.
   public void saveAndQuit(UnplayedGame game, Stage parentStage, UnplayedGamesTable table,
                           ChoiceBox<String> sortChoiceBox, ChoiceBox<String> sortFilterBox,
                           StatusCountBoxUnplayed statusCountBoxUnplayed) throws
@@ -170,7 +172,8 @@ public class UnplayedEditWindow extends VBox {
     ApplicationGUI.changeMade = true;
     parentStage.close();
   }
-  
+
+  //Sets the days in the dropdown based on the selected month.
   public void setDayCount(int month, ChoiceBox<Integer> dayBox) {
     int dayCount = 0;
     switch (month) {

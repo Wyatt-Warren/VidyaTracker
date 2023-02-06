@@ -27,7 +27,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-
+//Tableview on the main window that displays played games
 public class PlayedGamesTable extends TableView<PlayedGame> {
   TableColumn<PlayedGame, String> statusColumn = new TableColumn<>("Status");
   
@@ -79,111 +79,111 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
     setItems(filteredList);
     getColumns().addAll(columnList);
 
-    statusColumn.setCellFactory(e -> new TableCell<PlayedGame, String>() {
-          public void updateItem(String item, boolean empty) {
-            super.updateItem(item, empty);
-            if (item == null || empty) {
-              setText(null);
-              setStyle("");
-            } else {
-              setText(item);
-              if ((getItem()).equals("Playing")) {
-                setStyle("-fx-background-color: lightgreen;");
-              } else if ((getItem()).equals("Completed")) {
-                setStyle("-fx-background-color: cornflowerblue;");
-              } else {
-                setStyle("-fx-background-color: sandybrown;");
-              } 
-            } 
+    statusColumn.setCellFactory(e -> new TableCell<>() {
+      public void updateItem(String item, boolean empty) {
+        super.updateItem(item, empty);
+        if (item == null || empty) {
+          setText(null);
+          setStyle("");
+        } else {
+          setText(item);
+          if ((getItem()).equals("Playing")) {
+            setStyle("-fx-background-color: lightgreen;");
+          } else if ((getItem()).equals("Completed")) {
+            setStyle("-fx-background-color: cornflowerblue;");
+          } else {
+            setStyle("-fx-background-color: sandybrown;");
           }
-        });
+        }
+      }
+    });
 
-    shortColumn.setCellFactory(e -> new TableCell<PlayedGame, String>() {
-          public void updateItem(String item, boolean empty) {
-            super.updateItem(item, empty);
-            if (item == null || empty) {
-              setText(null);
-              setStyle("");
-            } else {
-              setText(item);
-              if ((getItem()).equals("Yes")) {
-                setStyle("-fx-background-color: lightgreen;");
-              } else if ((getItem()).equals("No")) {
-                setStyle("-fx-background-color: lightcoral;");
-              } else {
-                setStyle("");
-              } 
-            } 
+    shortColumn.setCellFactory(e -> new TableCell<>() {
+      public void updateItem(String item, boolean empty) {
+        super.updateItem(item, empty);
+        if (item == null || empty) {
+          setText(null);
+          setStyle("");
+        } else {
+          setText(item);
+          if ((getItem()).equals("Yes")) {
+            setStyle("-fx-background-color: lightgreen;");
+          } else if ((getItem()).equals("No")) {
+            setStyle("-fx-background-color: lightcoral;");
+          } else {
+            setStyle("");
           }
-        });
+        }
+      }
+    });
 
-    ratingColumn.setCellFactory(e -> new TableCell<PlayedGame, Integer>() {
-          public void updateItem(Integer item, boolean empty) {
-            super.updateItem(item, empty);
-            if (item == null || empty) {
-              setText(null);
-              setStyle("");
-            } else {
-              setText("" + item);
-              if (item == 0)
-                setText(""); 
-            } 
-          }
-        });
+    ratingColumn.setCellFactory(e -> new TableCell<>() {
+      public void updateItem(Integer item, boolean empty) {
+        super.updateItem(item, empty);
+        if (item == null || empty) {
+          setText(null);
+          setStyle("");
+        } else {
+          setText("" + item);
+          if (item == 0)
+            setText("");
+        }
+      }
+    });
 
-    percent100Column.setCellFactory(e -> new TableCell<PlayedGame, String>() {
-          public void updateItem(String item, boolean empty) {
-            super.updateItem(item, empty);
-            if (item == null || empty) {
-              setText(null);
-              setStyle("");
-            } else {
-              setText(item);
-              if ((getItem()).equals("Yes")) {
-                setStyle("-fx-background-color: lightgreen;");
-              } else if ((getItem()).equals("No")) {
-                setStyle("-fx-background-color: lightcoral;");
-              } else {
-                setStyle("");
-              } 
-            } 
+    percent100Column.setCellFactory(e -> new TableCell<>() {
+      public void updateItem(String item, boolean empty) {
+        super.updateItem(item, empty);
+        if (item == null || empty) {
+          setText(null);
+          setStyle("");
+        } else {
+          setText(item);
+          if ((getItem()).equals("Yes")) {
+            setStyle("-fx-background-color: lightgreen;");
+          } else if ((getItem()).equals("No")) {
+            setStyle("-fx-background-color: lightcoral;");
+          } else {
+            setStyle("");
           }
-        });
+        }
+      }
+    });
 
-    releaseYearColumn.setCellFactory(e -> new TableCell<PlayedGame, Integer>() {
-          public void updateItem(Integer item, boolean empty) {
-            super.updateItem(item, empty);
-            if (item == null || empty) {
-              setText(null);
-              setStyle("");
-            } else {
-              setText("" + item);
-              if (item == 0)
-                setText(""); 
-            } 
-          }
-        });
+    releaseYearColumn.setCellFactory(e -> new TableCell<>() {
+      public void updateItem(Integer item, boolean empty) {
+        super.updateItem(item, empty);
+        if (item == null || empty) {
+          setText(null);
+          setStyle("");
+        } else {
+          setText("" + item);
+          if (item == 0)
+            setText("");
+        }
+      }
+    });
 
-    completionYearColumn.setCellFactory(e -> new TableCell<PlayedGame, Integer>() {
-          public void updateItem(Integer item, boolean empty) {
-            super.updateItem(item, empty);
-            if (item == null || empty) {
-              setText(null);
-              setStyle("");
-            } else {
-              setText("" + item);
-              if (item == 0)
-                setText(""); 
-              if ((getItem()) == PlayedGamesTable.localDate.getYear()) {
-                setStyle("-fx-background-color: lightgreen;");
-              } else if ((getItem()) == PlayedGamesTable.localDate.getYear() - 1) {
-                setStyle("-fx-background-color: gold;");
-              } else {
-                setStyle("");
-              } 
-            } 
+    completionYearColumn.setCellFactory(e -> new TableCell<>() {
+      public void updateItem(Integer item, boolean empty) {
+        super.updateItem(item, empty);
+        if (item == null || empty) {
+          setText(null);
+          setStyle("");
+        } else {
+          setText("" + item);
+          if (item == 0)
+            setText("");
+          if ((getItem()) == PlayedGamesTable.localDate.getYear()) {
+            setStyle("-fx-background-color: lightgreen;");
+          } else if ((getItem()) == PlayedGamesTable.localDate.getYear() - 1) {
+            setStyle("-fx-background-color: gold;");
+          } else {
+            setStyle("");
           }
-        });
+        }
+      }
+    });
     setRowFactory(tv -> {
           TableRow<PlayedGame> row = new TableRow<>();
           row.setOnMouseClicked(event -> {
@@ -218,67 +218,71 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
           return row;
         });
   }
-  
+
+  //Sends data from each cell to a text object and gets the width of that object. Whatever the greatest value is,
+  // the width should be sightly more
   public void updateColumnWidth() {
     for (int i = 0; i < columnList.size(); i++) {
       Text text = new Text(columnList.get(i).getText());
-      double width = text.getLayoutBounds().getWidth() + 20.0D;
+      double width = text.getLayoutBounds().getWidth() + 20.0;
       for (int j = 0; j < filteredList.size(); j++) {
         if (i == 3 || i == 6 || i == 7) { //Rating, Release year, Completion year
           text = new Text(Integer.toString((int) columnList.get(i).getCellData(j)));
         } else {
           text = new Text((String) columnList.get(i).getCellData(j));
         } 
-        double newWidth = text.getLayoutBounds().getWidth() + 20.0D;
+        double newWidth = text.getLayoutBounds().getWidth() + 20.0;
         if (newWidth > width)
           width = newWidth; 
       } 
       columnList.get(i).setPrefWidth(width);
     } 
   }
-  
+
+  //Calls sort methods based on the selected sort and filter options
   public void sortAndFilter(ChoiceBox<String> sortChoices, ChoiceBox<String> filterChoices) {
-    switch (filterChoices.getSelectionModel().getSelectedIndex()) {
-      case 0:
+    switch (filterChoices.getSelectionModel().getSelectedIndex()) { //Filter first
+      case 0: //Short yes
         filterByShort(true);
         break;
-      case 1:
+      case 1: //Short no
         filterByShort(false);
         break;
-      case 2:
+      case 2: //100 yes
         filterBy100(true);
         break;
-      case 3:
+      case 3: //100 no
         filterBy100(false);
         break;
-      case 4:
+      case 4: //Don't filter
         unFilter();
         break;
     } 
-    switch (sortChoices.getSelectionModel().getSelectedIndex()) {
-      case 0:
+    switch (sortChoices.getSelectionModel().getSelectedIndex()) { //Sort next
+      case 0: //Title
         sortByTitle();
         break;
-      case 1:
+      case 1: //Rating
         sortByRating();
         break;
-      case 2:
+      case 2: //Platform
         sortByPlatform();
         break;
-      case 3:
+      case 3: //Genre
         sortByGenre();
         break;
-      case 4:
+      case 4: //Release Date
         sortByDate(true);
         break;
-      case 5:
+      case 5: //Completion Date
         sortByDate(false);
         break;
     } 
     updateColumnWidth();
     refresh();
   }
-  
+
+  //Consumes the mouse events on the header so the user cant sort manually.
   public static <T> void preventColumnReorderingOrResizing(TableView<T> tableView) {
     Platform.runLater(() -> {
           for (Node header : tableView.lookupAll(".column-header"))
@@ -287,7 +291,8 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
             resizeLine.addEventFilter(MouseEvent.ANY, Event::consume); 
         });
   }
-  
+
+  //Sorts by franchise, within the same franchise, sorts by release date
   public ObservableList<PlayedGame> normalSort(ObservableList<PlayedGame> givenList) {
     ObservableList<PlayedGame> newList = FXCollections.observableArrayList();
 
@@ -322,7 +327,8 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
     } 
     return newList;
   }
-  
+
+  //Sorts by status first, in the order P, C, O, and then does normal sort.
   public void sortByTitle() {
     ObservableList<PlayedGame> newList = FXCollections.observableArrayList();
     String[] statuses = { "Playing", "Completed", "On Hold" };
@@ -337,7 +343,8 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
     filteredList = new FilteredList<>(newList);
     setItems(filteredList);
   }
-  
+
+  //Sorts by rating and then normal sort
   public void sortByRating() {
     ObservableList<PlayedGame> newList = FXCollections.observableArrayList();
     ObservableList<PlayedGame> totalList = FXCollections.observableArrayList(filteredList);
@@ -354,7 +361,8 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
     filteredList = new FilteredList<>(newList);
     setItems(filteredList);
   }
-  
+
+  //Sorts by platform and then normal sort
   public void sortByPlatform() {
     ObservableList<PlayedGame> newList = FXCollections.observableArrayList();
     ObservableList<PlayedGame> totalList = FXCollections.observableArrayList(filteredList);
@@ -372,7 +380,8 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
     filteredList = new FilteredList<>(newList);
     setItems(filteredList);
   }
-  
+
+  //Sorts by genre and then normal sort
   public void sortByGenre() {
     ObservableList<PlayedGame> newList = FXCollections.observableArrayList();
     ObservableList<PlayedGame> totalList = FXCollections.observableArrayList(filteredList);
@@ -390,7 +399,9 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
     this.filteredList = new FilteredList<>(newList);
     setItems(filteredList);
   }
-  
+
+  //Sorts by date and then franchise. Normal sort would be overkill since sorting by date within a franchise
+  //doesn't make sense if it's already sorted by date
   public void sortByDate(boolean release) {
     ObservableList<PlayedGame> newList = FXCollections.observableArrayList();
     ObservableList<PlayedGame> totalList = FXCollections.observableArrayList(filteredList);
@@ -424,21 +435,24 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
     filteredList = new FilteredList<>(newList);
     setItems(filteredList);
   }
-  
+
+  //Filters the list based on whether short yes or short no is selected
   public void filterByShort(boolean yesNo) {
     FilteredList<PlayedGame> newList = new FilteredList<>(GameLists.playedList, p -> true);
     newList.setPredicate(playedGame -> yesNo ? playedGame.getIsItShort().equals("Yes") : playedGame.getIsItShort().equals("No"));
     filteredList = new FilteredList<>(newList);
     setItems(filteredList);
   }
-  
+
+  //Filters the list based on whether 100 yes or 100 no is selected
   public void filterBy100(boolean yesNo) {
     FilteredList<PlayedGame> newList = new FilteredList<>(GameLists.playedList, p -> true);
     newList.setPredicate(playedGame -> yesNo ? playedGame.getPercent100().equals("Yes") : playedGame.getPercent100().equals("No"));
     filteredList = new FilteredList<>(newList);
     setItems(filteredList);
   }
-  
+
+  //Used if no filter is selected.
   public void unFilter() {
     filteredList = new FilteredList<>(GameLists.playedList);
     setItems(filteredList);

@@ -160,7 +160,9 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
           return row;
         });
   }
-  
+
+  //Sends data from each cell to a text object and gets the width of that object. Whatever the greatest value is,
+  // the width should be sightly more
   public void updateColumnWidth() {
     for (int i = 0; i < columnList.size(); i++) {
       Text text = new Text(columnList.get(i).getText());
@@ -180,43 +182,45 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
       columnList.get(i).setPrefWidth(width);
     } 
   }
-  
+
+  //Calls sort and filter methods based on the selected sort and filter options
   public void sortAndFilter(ChoiceBox<String> sortChoice, ChoiceBox<String> filterChoice) {
-    switch (filterChoice.getSelectionModel().getSelectedIndex()) {
-      case 0:
+    switch (filterChoice.getSelectionModel().getSelectedIndex()) { //Filter first
+      case 0: //Deck status yes
         filterByDeck("Yes");
         break;
-      case 1:
+      case 1: //Deck status no
         filterByDeck("No");
         break;
-      case 2:
+      case 2: //Deck status maybe
         filterByDeck("Maybe");
         break;
-      case 3:
+      case 3: //No Filter
         unFilter();
         break;
     } 
-    switch (sortChoice.getSelectionModel().getSelectedIndex()) {
-      case 0:
+    switch (sortChoice.getSelectionModel().getSelectedIndex()) { //Sort next
+      case 0: //Title
         sortByTitle();
         break;
-      case 1:
+      case 1: //Platform
         sortByPlatform();
         break;
-      case 2:
+      case 2: //Genre
         sortByGenre();
         break;
-      case 3:
+      case 3: //Hours
         sortByHours();
         break;
-      case 4:
+      case 4: //Date
         sortByDate();
         break;
     } 
     updateColumnWidth();
     refresh();
   }
-  
+
+  //Prevent the user from sorting manually
   public static <T> void preventColumnReorderingOrResizing(TableView<T> tableView) {
     Platform.runLater(() -> {
           for (Node header : tableView.lookupAll(".column-header"))
@@ -226,7 +230,8 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
             resizeLine.addEventFilter(MouseEvent.ANY, Event::consume); 
         });
   }
-  
+
+  //Sorts based on franchise, within the same franchise, sort by date
   public ObservableList<UnplayedGame> normalSort(ObservableList<UnplayedGame> givenList) {
     ObservableList<UnplayedGame> newList = FXCollections.observableArrayList();
     for (UnplayedGame unplayedGame : givenList) {
@@ -258,7 +263,8 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
     } 
     return newList;
   }
-  
+
+  //Sort by title, then normal sort
   public void sortByTitle() {
     ObservableList<UnplayedGame> newList = FXCollections.observableArrayList();
     String[] statuses = { "Backlog", "SubBacklog", "Wishlist" };
@@ -273,7 +279,8 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
     filteredList = new FilteredList<>(newList);
     setItems(filteredList);
   }
-  
+
+  //Sort by platform, then normal sort
   public void sortByPlatform() {
     ObservableList<UnplayedGame> newList = FXCollections.observableArrayList();
     ObservableList<UnplayedGame> totalList = FXCollections.observableArrayList(filteredList);
@@ -291,7 +298,8 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
     filteredList = new FilteredList<>(newList);
     setItems(filteredList);
   }
-  
+
+  //Sort by genre, then normal sort
   public void sortByGenre() {
     ObservableList<UnplayedGame> newList = FXCollections.observableArrayList();
     ObservableList<UnplayedGame> totalList = FXCollections.observableArrayList(filteredList);
@@ -309,7 +317,8 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
     filteredList = new FilteredList<>(newList);
     setItems(filteredList);
   }
-  
+
+  //Sort by date then franchise. Normal sort is not needed if its already sorted by date.
   public void sortByDate() {
     ObservableList<UnplayedGame> newList = FXCollections.observableArrayList();
     ObservableList<UnplayedGame> totalList = FXCollections.observableArrayList(filteredList);
@@ -335,7 +344,8 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
     filteredList = new FilteredList<>(newList);
     setItems(filteredList);
   }
-  
+
+  //Sorts by hours and then normal sort
   public void sortByHours() {
     ObservableList<UnplayedGame> newList = FXCollections.observableArrayList();
     ObservableList<UnplayedGame> totalList = FXCollections.observableArrayList(filteredList);
@@ -358,14 +368,16 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
     this.filteredList = new FilteredList<>(newList);
     setItems(filteredList);
   }
-  
+
+  //Filters by deck status
   public void filterByDeck(String filter) {
     FilteredList<UnplayedGame> newList = new FilteredList<>(GameLists.unplayedList, p -> true);
     newList.setPredicate(unplayedGame -> unplayedGame.getDeckCompatible().equals(filter));
     this.filteredList = new FilteredList<>(newList);
     setItems(filteredList);
   }
-  
+
+  //Removes filters
   public void unFilter() {
     this.filteredList = new FilteredList<>(GameLists.unplayedList);
     setItems(filteredList);

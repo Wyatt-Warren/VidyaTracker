@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
+//Box on the main unplayed game window that shows stats relating to statuses.
 public class StatusCountBoxUnplayed extends GridPane {
   Label statusLabel = new Label("Status");
   
@@ -69,7 +70,8 @@ public class StatusCountBoxUnplayed extends GridPane {
       } 
     } 
   }
-  
+
+  //Sets the labels' texts accordingly.
   public void updateData() {
     backlogCountLabel.setText("" + GameLists.getBacklogCount());
     subBacklogCountLabel.setText("" + GameLists.getSubBacklogCount());

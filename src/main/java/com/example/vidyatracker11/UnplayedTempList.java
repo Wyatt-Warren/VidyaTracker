@@ -2,15 +2,14 @@ package com.example.vidyatracker11;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+//Section on the main unplayed games window where the user can select games to add to a temporary list.
 public class UnplayedTempList extends HBox {
   ObservableList<String> titles = FXCollections.observableArrayList();
   
@@ -48,7 +47,8 @@ public class UnplayedTempList extends HBox {
           } 
         });
   }
-  
+
+  //Updates labels that show total count of items in the list and total hours.
   public void updateLabels() {
     if (titles.isEmpty()) {
       countLabel.setText("");
@@ -62,7 +62,8 @@ public class UnplayedTempList extends HBox {
       hoursLabel.setText("Total Hours: " + hoursTotal);
     } 
   }
-  
+
+  //titles getter
   public ObservableList<String> getTitles() {
     return titles;
   }

@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
+//Box on the main played game window that shows stats relating to statuses.
 public class StatusCountBoxPlayed extends GridPane {
   Label statusLabel = new Label("Status");
   
@@ -88,7 +89,8 @@ public class StatusCountBoxPlayed extends GridPane {
       } 
     } 
   }
-  
+
+  //Sets labels' texts accordingly
   public void updateData() {
     playingCountLabel.setText("" + GameLists.getPlayingCount());
     completedCountLabel.setText("" + GameLists.getCompletedCount());
