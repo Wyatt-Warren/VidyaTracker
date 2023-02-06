@@ -12,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+//Window used to edit an existing played game.
 public class PlayedEditWindow extends VBox {
   //Status
   Label statusLabel = new Label("Status:");
@@ -94,7 +95,7 @@ public class PlayedEditWindow extends VBox {
             franchiseVBox, ratingVBox, platformVBox,
             genreVBox, releaseVBox, completionVBox, percentVBox);
     Button doneButton = new Button("Save Changes and Close Window");
-    mainHBox.setSpacing(5.0D);
+    mainHBox.setSpacing(5.0);
 
     releaseYearHBox.setAlignment(Pos.CENTER);
     releaseMonthHBox.setAlignment(Pos.CENTER);
@@ -115,7 +116,7 @@ public class PlayedEditWindow extends VBox {
     setAlignment(Pos.CENTER);
 
     getChildren().addAll(mainLabel, mainHBox, doneButton);
-    setPadding(new Insets(5.0D));
+    setPadding(new Insets(5.0));
     statusBox.getItems().addAll("Playing", "Completed", "On Hold");
     statusBox.getSelectionModel().select(game.getStatus());
     shortBox.getItems().addAll("Yes", "No", "Blank");
@@ -169,7 +170,8 @@ public class PlayedEditWindow extends VBox {
           } 
         });
   }
-  
+
+  //Closes the window and saves the inputted data to the given game
   public void saveAndQuit(PlayedGame game, Stage parentStage, PlayedGamesTable table,
                           ChoiceBox<String> sortChoiceBox, ChoiceBox<String> sortFilterBox,
                           StatusCountBoxPlayed statusCountBoxPlayed) throws
@@ -233,7 +235,8 @@ public class PlayedEditWindow extends VBox {
     ApplicationGUI.changeMade = true;
     parentStage.close();
   }
-  
+
+  //Sets the days in the dropdown based on the selected month
   public void setDayCount(int month, ChoiceBox<Integer> dayBox) {
     int dayCount = 0;
     switch (month) {

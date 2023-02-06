@@ -1,12 +1,9 @@
 package com.example.vidyatracker11;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -34,13 +31,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+//The main class
 public class ApplicationGUI extends Application {
   public static void main(String[] args) {
     launch(args);
   }
-  
+
+  //Used to determine whether it is necessary to save the file upon closing the window.
   public static boolean changeMade = false;
-  
+
+  //Used to determine what certain menu items will do regarding which list to regard.
   public static boolean playedOpen = true;
   
   public void start(Stage primaryStage) {
@@ -65,10 +65,10 @@ public class ApplicationGUI extends Application {
     VBox unplayedGamesVBox = new VBox(unplayedChoiceHBox, unplayedGamesTable);
     UnplayedTempList unplayedTempList = new UnplayedTempList(unplayedGamesTable);
 
-    playedChoiceHBox.setSpacing(5.0D);
-    unplayedChoiceHBox.setSpacing(5.0D);
-    playedGamesVBox.setSpacing(5.0D);
-    unplayedGamesVBox.setSpacing(5.0D);
+    playedChoiceHBox.setSpacing(5.0);
+    unplayedChoiceHBox.setSpacing(5.0);
+    playedGamesVBox.setSpacing(5.0);
+    unplayedGamesVBox.setSpacing(5.0);
 
     unplayedSortChoices.getItems().addAll("Title", "Platform", "Genre", "Hours", "Release Date");
     unplayedFilterChoices.getItems().addAll("Deck Status: Yes", "Deck Status: No", "Deck Status: Maybe", "No Filter" );
@@ -125,6 +125,7 @@ public class ApplicationGUI extends Application {
 
     StatsScreen stats = new StatsScreen();
 
+    //Reset all lists.
     newFileMenuItem.setOnAction(e -> {
           Stage stage = new Stage();
           stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
@@ -138,16 +139,16 @@ public class ApplicationGUI extends Application {
           Button noButton = new Button("No");
           yesButton.setStyle("-fx-font-size: 16;");
           noButton.setStyle("-fx-font-size: 16;");
-          yesButton.setPrefWidth(80.0D);
-          noButton.setPrefWidth(80.0D);
+          yesButton.setPrefWidth(80.0);
+          noButton.setPrefWidth(80.0);
           HBox hbox = new HBox(yesButton, noButton);
           hbox.setAlignment(Pos.CENTER);
-          hbox.setSpacing(30.0D);
+          hbox.setSpacing(30.0);
           VBox vbox = new VBox(label, label1, hbox);
-          vbox.setSpacing(20.0D);
+          vbox.setSpacing(20.0);
           vbox.setAlignment(Pos.TOP_CENTER);
-          vbox.setPadding(new Insets(10.0D));
-          Scene scene = new Scene(vbox, 300.0D, 130.0D);
+          vbox.setPadding(new Insets(10.0));
+          Scene scene = new Scene(vbox, 300.0, 130.0);
           stage.setScene(scene);
           stage.show();
           yesButton.setOnAction(e1 -> {
@@ -171,12 +172,14 @@ public class ApplicationGUI extends Application {
     fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
     fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json" ));
     fileChooser.setInitialFileName("List");
+    //Load a file using filechooser
     openFileMenuItem.setOnAction(e ->
             openFile(fileChooser.showOpenDialog(primaryStage).toPath(),
                     playedGamesTable, playedSortChoices, playedFilterChoices,
                     unplayedGamesTable, unplayedSortChoices, unplayedFilterChoices,
                     statusCountBoxPlayed, statusCountBoxUnplayed, stats));
 
+    //Saves to the default "List.json" file
     saveFileMenuItem.setOnAction(e -> {
           try {
             File fileOut = new File("List.json");
@@ -186,6 +189,7 @@ public class ApplicationGUI extends Application {
           } 
         });
 
+    //Saves to a file chosen by the user.
     saveAsFileMenuItem.setOnAction(e -> {
           try {
             File fileOut = fileChooser.showSaveDialog(primaryStage);
@@ -193,6 +197,7 @@ public class ApplicationGUI extends Application {
           } catch (NullPointerException|FileNotFoundException ignored) {}
         });
 
+    //Closes the application, asks the user if they want to save.
     exitMenuItem.setOnAction(e -> {
           if (changeMade) {
             e.consume();
@@ -210,9 +215,9 @@ public class ApplicationGUI extends Application {
             VBox vbox = new VBox(label, hbox);
             label.setStyle("-fx-font-size: 24;");
             hbox.setAlignment(Pos.CENTER);
-            hbox.setSpacing(5.0D);
+            hbox.setSpacing(5.0);
             vbox.setAlignment(Pos.CENTER);
-            vbox.setSpacing(10.0D);
+            vbox.setSpacing(10.0);
 
             saveButton.setOnAction(e1 -> {
                 saveFileMenuItem.fire();
@@ -233,7 +238,7 @@ public class ApplicationGUI extends Application {
 
             cancelButton.setOnAction(e1 -> stage.close());
 
-            Scene scene = new Scene(vbox, 300.0D, 100.0D);
+            Scene scene = new Scene(vbox, 300.0, 100.0);
             stage.setScene(scene);
             stage.show();
           } else {
@@ -241,6 +246,7 @@ public class ApplicationGUI extends Application {
           } 
         });
 
+    //Creates a new game for either the played or unplayed list
     addNewGameMenuItem.setOnAction(e -> {
           if (playedOpen) {//Played Game
             Stage stage = new Stage();
@@ -296,8 +302,9 @@ public class ApplicationGUI extends Application {
           } 
         });
 
+    //Moves the selected game from the currently open list to the other.
     movePlayedGameMenuItem.setOnAction(e -> {
-          if (playedOpen) { //Move Unplayed Game
+          if (playedOpen) { //Played game -> unplayed game
             int gameInt = playedGamesTable.getSelectionModel().getSelectedIndex();
             if (gameInt != -1) {
               PlayedGame game = playedGamesTable.getSelectionModel().getSelectedItem();
@@ -313,16 +320,16 @@ public class ApplicationGUI extends Application {
               Button noButton = new Button("No");
               yesButton.setStyle("-fx-font-size: 16;");
               noButton.setStyle("-fx-font-size: 16;");
-              yesButton.setPrefWidth(80.0D);
-              noButton.setPrefWidth(80.0D);
+              yesButton.setPrefWidth(80.0);
+              noButton.setPrefWidth(80.0);
               HBox hbox = new HBox(yesButton, noButton);
               hbox.setAlignment(Pos.CENTER);
-              hbox.setSpacing(30.0D);
+              hbox.setSpacing(30.0);
               VBox vbox = new VBox(label, label1, hbox);
-              vbox.setSpacing(20.0D);
+              vbox.setSpacing(20.0);
               vbox.setAlignment(Pos.TOP_CENTER);
-              vbox.setPadding(new Insets(10.0D));
-              Scene scene = new Scene(vbox, 300.0D, 150.0D);
+              vbox.setPadding(new Insets(10.0));
+              Scene scene = new Scene(vbox, 300.0, 150.0);
               stage.setScene(scene);
               stage.show();
 
@@ -344,7 +351,7 @@ public class ApplicationGUI extends Application {
               noButton.setOnAction(e1 -> stage.close());
             }
 
-          } else { //Move Played Game
+          } else { //Unplayed Game -> Played Game
             int gameInt = unplayedGamesTable.getSelectionModel().getSelectedIndex();
             if (gameInt != -1) {
               UnplayedGame game = unplayedGamesTable.getSelectionModel().getSelectedItem();
@@ -360,16 +367,16 @@ public class ApplicationGUI extends Application {
               Button noButton = new Button("No");
               yesButton.setStyle("-fx-font-size: 16;");
               noButton.setStyle("-fx-font-size: 16;");
-              yesButton.setPrefWidth(80.0D);
-              noButton.setPrefWidth(80.0D);
+              yesButton.setPrefWidth(80.0);
+              noButton.setPrefWidth(80.0);
               HBox hbox = new HBox(yesButton, noButton);
               hbox.setAlignment(Pos.CENTER);
-              hbox.setSpacing(30.0D);
+              hbox.setSpacing(30.0);
               VBox vbox = new VBox(label, label1, hbox);
-              vbox.setSpacing(20.0D);
+              vbox.setSpacing(20.0);
               vbox.setAlignment(Pos.TOP_CENTER);
-              vbox.setPadding(new Insets(10.0D));
-              Scene scene = new Scene(vbox, 300.0D, 150.0D);
+              vbox.setPadding(new Insets(10.0));
+              Scene scene = new Scene(vbox, 300.0, 150.0);
               stage.setScene(scene);
               stage.show();
 
@@ -393,8 +400,9 @@ public class ApplicationGUI extends Application {
           } 
         });
 
+    //Removed selected game from the list.
     removeGameMenuItem.setOnAction(e -> {
-          if (playedOpen) {
+          if (playedOpen) { //Removed played game
             int gameInt = playedGamesTable.getSelectionModel().getSelectedIndex();
             if (gameInt != -1) {
               PlayedGame game = playedGamesTable.getSelectionModel().getSelectedItem();
@@ -410,16 +418,16 @@ public class ApplicationGUI extends Application {
               Button noButton = new Button("No");
               yesButton.setStyle("-fx-font-size: 16;");
               noButton.setStyle("-fx-font-size: 16;");
-              yesButton.setPrefWidth(80.0D);
-              noButton.setPrefWidth(80.0D);
+              yesButton.setPrefWidth(80.0);
+              noButton.setPrefWidth(80.0);
               HBox hbox = new HBox(yesButton, noButton);
               hbox.setAlignment(Pos.CENTER);
-              hbox.setSpacing(30.0D);
+              hbox.setSpacing(30.0);
               VBox vbox = new VBox(label, label1, hbox);
-              vbox.setSpacing(20.0D);
+              vbox.setSpacing(20.0);
               vbox.setAlignment(Pos.TOP_CENTER);
-              vbox.setPadding(new Insets(10.0D));
-              Scene scene = new Scene(vbox, 300.0D, 150.0D);
+              vbox.setPadding(new Insets(10.0));
+              Scene scene = new Scene(vbox, 300.0, 150.0);
               stage.setScene(scene);
               stage.show();
 
@@ -434,7 +442,7 @@ public class ApplicationGUI extends Application {
 
               noButton.setOnAction(e1 -> stage.close());
             } 
-          } else {
+          } else { //Remove unplayed game
             int gameInt = unplayedGamesTable.getSelectionModel().getSelectedIndex();
             if (gameInt != -1) {
               UnplayedGame game = unplayedGamesTable.getSelectionModel().getSelectedItem();
@@ -450,16 +458,16 @@ public class ApplicationGUI extends Application {
               Button noButton = new Button("No");
               yesButton.setStyle("-fx-font-size: 16;");
               noButton.setStyle("-fx-font-size: 16;");
-              yesButton.setPrefWidth(80.0D);
-              noButton.setPrefWidth(80.0D);
+              yesButton.setPrefWidth(80.0);
+              noButton.setPrefWidth(80.0);
               HBox hbox = new HBox(yesButton, noButton);
               hbox.setAlignment(Pos.CENTER);
-              hbox.setSpacing(30.0D);
+              hbox.setSpacing(30.0);
               VBox vbox = new VBox(label, label1, hbox);
-              vbox.setSpacing(20.0D);
+              vbox.setSpacing(20.0);
               vbox.setAlignment(Pos.TOP_CENTER);
-              vbox.setPadding(new Insets(10.0D));
-              Scene scene = new Scene(vbox, 300.0D, 150.0D);
+              vbox.setPadding(new Insets(10.0));
+              Scene scene = new Scene(vbox, 300.0, 150.0);
               stage.setScene(scene);
               stage.show();
 
@@ -477,6 +485,7 @@ public class ApplicationGUI extends Application {
           } 
         });
 
+    //Opens a window for the user to edit the genre list.
     editGenreListMenuItem.setOnAction(e -> {
           Stage stage = new Stage();
           stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
@@ -500,6 +509,7 @@ public class ApplicationGUI extends Application {
           });
         });
 
+    //Opens a window for the user to edit the platform list.
     editPlatformListMenuItem.setOnAction(e -> {
       Stage stage = new Stage();
       stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
@@ -522,6 +532,7 @@ public class ApplicationGUI extends Application {
         });
     });
 
+    //Chooses a random game from the unplayed list with the status "Backlog", or "Subbacklog"
     chooseRandomGameMenuItem.setOnAction(e -> {
           ArrayList<String> gameList = new ArrayList<>();
           for (int i = 0; i < GameLists.unplayedList.size(); i++) {
@@ -540,10 +551,10 @@ public class ApplicationGUI extends Application {
             Button button = new Button("Close");
             button.setOnAction(e1 -> stage.close());
             VBox vbox = new VBox(label, button);
-            vbox.setSpacing(10.0D);
+            vbox.setSpacing(10.0);
             vbox.setAlignment(Pos.CENTER);
             label.setText(gameList.get(rand.nextInt(gameList.size())));
-            Scene scene = new Scene(vbox, 200.0D, 100.0D);
+            Scene scene = new Scene(vbox, 200.0, 100.0);
             stage.setScene(scene);
             stage.show();
             scene.setOnKeyPressed(e1 -> {
@@ -554,6 +565,7 @@ public class ApplicationGUI extends Application {
           } 
         });
 
+    //Chooses a random game from the unplayed list with the status "Wishlist."
     chooseRandomWishlistGameMenuItem.setOnAction(e -> {
           ArrayList<String> gameList = new ArrayList<>();
           for (int i = 0; i < GameLists.unplayedList.size(); i++) {
@@ -572,10 +584,10 @@ public class ApplicationGUI extends Application {
             Button button = new Button("Close");
             button.setOnAction(e1 -> stage.close());
             VBox vbox = new VBox(label, button);
-            vbox.setSpacing(10.0D);
+            vbox.setSpacing(10.0);
             vbox.setAlignment(Pos.CENTER);
             label.setText(gameList.get(rand.nextInt(gameList.size())));
-            Scene scene = new Scene(vbox, 200.0D, 100.0D);
+            Scene scene = new Scene(vbox, 200.0, 100.0);
             stage.setScene(scene);
             stage.show();
               scene.setOnKeyPressed(e1 -> {
@@ -586,6 +598,7 @@ public class ApplicationGUI extends Application {
           } 
         });
 
+    //Chooses a random game from the temporary list.
     chooseRandomFromList.setOnAction(e -> {
           if (unplayedTempList.getTitles().size() > 0) {
             Stage stage = new Stage();
@@ -599,10 +612,10 @@ public class ApplicationGUI extends Application {
             Button button = new Button("Close");
               button.setOnAction(e1 -> stage.close());
             VBox vbox = new VBox(label, button);
-            vbox.setSpacing(10.0D);
+            vbox.setSpacing(10.0);
             vbox.setAlignment(Pos.CENTER);
             label.setText(unplayedTempList.getTitles().get(rand.nextInt(unplayedTempList.getTitles().size())));
-            Scene scene = new Scene(vbox, 200.0D, 100.0D);
+            Scene scene = new Scene(vbox, 200.0, 100.0);
             stage.setScene(scene);
             stage.show();
               scene.setOnKeyPressed(e1 -> {
@@ -612,6 +625,8 @@ public class ApplicationGUI extends Application {
               });
           } 
         });
+
+    //Generates a random list of unplayed games based on filters provided by the user.
     generateRandomListMenuItem.setOnAction(e -> {
           Stage stage = new Stage();
           stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
@@ -619,7 +634,7 @@ public class ApplicationGUI extends Application {
           stage.setResizable(false);
           stage.initModality(Modality.APPLICATION_MODAL);
           RandomListGenerator window = new RandomListGenerator();
-          Scene scene = new Scene(window, 1600.0D, 500.0D);
+          Scene scene = new Scene(window, 1600.0, 500.0);
           scene.setOnKeyPressed(e1 -> {
               if(e1.getCode() == KeyCode.ESCAPE){
                   stage.close();
@@ -636,14 +651,16 @@ public class ApplicationGUI extends Application {
     HBox topBoxUnplayed = new HBox(statusCountBoxUnplayed, unplayedTempList, switchFromUnplayed);
     topBoxPlayed.setAlignment(Pos.CENTER_LEFT);
     topBoxUnplayed.setAlignment(Pos.CENTER_LEFT);
-    topBoxPlayed.setSpacing(10.0D);
-    topBoxUnplayed.setSpacing(10.0D);
+    topBoxPlayed.setSpacing(10.0);
+    topBoxUnplayed.setSpacing(10.0);
     VBox playedWindow = new VBox(topBoxPlayed, playedGamesVBox);
     VBox unplayedWindow = new VBox(topBoxUnplayed, unplayedGamesVBox);
-    playedWindow.setSpacing(5.0D);
-    unplayedWindow.setSpacing(5.0D);
+    playedWindow.setSpacing(5.0);
+    unplayedWindow.setSpacing(5.0);
     VBox primarySceneVBox = new VBox(menuBar, playedWindow);
-    Scene primaryScene = new Scene(primarySceneVBox, 1300.0D, 900.0D);
+    Scene primaryScene = new Scene(primarySceneVBox, 1300.0, 900.0);
+
+    //Switches the current window from the played list to the unplayed list.
     switchFromPlayed.setOnAction(e -> {
           primarySceneVBox.getChildren().clear();
           primarySceneVBox.getChildren().addAll(menuBar, unplayedWindow);
@@ -652,6 +669,8 @@ public class ApplicationGUI extends Application {
                   chooseRandomFromList, generateRandomListMenuItem);
           playedOpen = false;
         });
+
+    //Switches the current window from the unplayed list to the played list.
     switchFromUnplayed.setOnAction(e -> {
           primarySceneVBox.getChildren().clear();
           primarySceneVBox.getChildren().addAll(menuBar, playedWindow);
@@ -659,10 +678,14 @@ public class ApplicationGUI extends Application {
           randomMenu.getItems().addAll(chooseRandomGameMenuItem, chooseRandomWishlistGameMenuItem, generateRandomListMenuItem);
           playedOpen = true;
         });
+
+    //Consume the close request and fire the exit button so that the program will ask the user if they want to save their list.
     primaryStage.setOnCloseRequest(e -> {
           e.consume();
           exitMenuItem.fire();
         });
+
+    //Open the stats view
     statsMenuItem.setOnAction(e -> {
           primarySceneVBox.getChildren().clear();
           if (statsMenuItem.getText().equals("Show List Window")) {
@@ -678,6 +701,8 @@ public class ApplicationGUI extends Application {
           stats.updateStats();
           StatsScreen.preventColumnReorderingOrResizingForAll();
         });
+
+    //open the default "List.json" file
     openFile(Path.of("List.json").toAbsolutePath(), playedGamesTable,
             playedSortChoices, playedFilterChoices, unplayedGamesTable,
             unplayedSortChoices, unplayedFilterChoices, statusCountBoxPlayed,
@@ -685,7 +710,8 @@ public class ApplicationGUI extends Application {
     primaryStage.setScene(primaryScene);
     primaryStage.show();
   }
-  
+
+  //Saves the current data to a given file object.
   public void saveFile(File fileOut) throws FileNotFoundException {
     Stage stage = new Stage();
     stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
@@ -765,8 +791,13 @@ public class ApplicationGUI extends Application {
     vbox.getChildren().add(button);
     button.setOnAction(e1 -> stage.close());
   }
-  
-  public void openFile(Path filePath, PlayedGamesTable playedGamesTable, ChoiceBox<String> playedSortChoices, ChoiceBox<String> playedFilterChoices, UnplayedGamesTable unplayedGamesTable, ChoiceBox<String> unplayedSortChoices, ChoiceBox<String> unplayedFilterChoices, StatusCountBoxPlayed statusCountBoxPlayed, StatusCountBoxUnplayed statusCountBoxUnplayed, StatsScreen stats) {
+
+  //Opens a file from the given file path
+  public void openFile(Path filePath, PlayedGamesTable playedGamesTable, ChoiceBox<String> playedSortChoices,
+                       ChoiceBox<String> playedFilterChoices, UnplayedGamesTable unplayedGamesTable,
+                       ChoiceBox<String> unplayedSortChoices, ChoiceBox<String> unplayedFilterChoices,
+                       StatusCountBoxPlayed statusCountBoxPlayed, StatusCountBoxUnplayed statusCountBoxUnplayed,
+                       StatsScreen stats) {
     try {
       String jsonString = Files.readString(filePath);
       JSONObject file = new JSONObject(jsonString);
@@ -817,8 +848,13 @@ public class ApplicationGUI extends Application {
       statusCountBoxPlayed.updateData();
       statusCountBoxUnplayed.updateData();
       stats.updateStats();
-    } catch (NullPointerException|java.io.IOException|InvalidShortStatusException|InvalidDeckStatusException|InvalidStatusException|InvalidGenreException|InvalidHoursException|InvalidDayException|InvalidYearException|InvalidMonthException|InvalidPercentException|InvalidRatingException|InvalidPlatformException e1) {
-      e1.printStackTrace();
-    } 
+    }  catch (NoSuchFileException ignored){
+        //This is ok. It just means that the user doesn't currently have a list file.
+    } catch (NullPointerException | InvalidShortStatusException | InvalidDeckStatusException | InvalidStatusException |
+             InvalidGenreException | InvalidHoursException | InvalidDayException | InvalidYearException |
+             InvalidMonthException | InvalidPercentException | InvalidRatingException | InvalidPlatformException |
+             IOException e1) {
+        e1.printStackTrace();
+    }
   }
 }

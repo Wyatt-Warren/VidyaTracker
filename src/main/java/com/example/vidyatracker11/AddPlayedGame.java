@@ -12,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+//The window for adding a new game to the played game list.
 public class AddPlayedGame extends VBox {
   //Status
   Label statusLabel = new Label("Status:");
@@ -117,7 +118,7 @@ public class AddPlayedGame extends VBox {
 
     setAlignment(Pos.CENTER);
     getChildren().addAll(mainLabel, mainHBox, doneButton);
-    setPadding(new Insets(5.0D));
+    setPadding(new Insets(5.0));
 
     statusBox.getItems().addAll("Playing", "Completed", "On Hold");
     statusBox.getSelectionModel().selectFirst();
@@ -162,7 +163,8 @@ public class AddPlayedGame extends VBox {
           } 
         });
   }
-  
+
+  //Closes the window and creates a new game with the inputted data
   public void saveAndQuit(Stage parentStage, PlayedGamesTable table, ChoiceBox<String> sortChoiceBox,
                           ChoiceBox<String> sortFilterBox, StatusCountBoxPlayed statusCountBoxPlayed,
                           StatsScreen stats) throws
@@ -219,7 +221,8 @@ public class AddPlayedGame extends VBox {
     ApplicationGUI.changeMade = true;
     parentStage.close();
   }
-  
+
+  //Sets the days in the day drop down based on the month selected
   public void setDayCount(int month, ChoiceBox<Integer> dayBox) {
     int dayCount = 0;
     switch (month) {

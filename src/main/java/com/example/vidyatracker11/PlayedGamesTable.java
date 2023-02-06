@@ -27,6 +27,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+
 public class PlayedGamesTable extends TableView<PlayedGame> {
   TableColumn<PlayedGame, String> statusColumn = new TableColumn<>("Status");
   

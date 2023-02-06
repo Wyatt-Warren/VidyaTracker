@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
+//The window for editting the genre list
 public class EditGenreList extends VBox {
   Label mainLabel = new Label("Edit Genre List");
   
@@ -43,16 +44,17 @@ public class EditGenreList extends VBox {
     gridPane.add(warningLabel, 1, 1);
     gridPane.add(listView, 0, 2);
     gridPane.add(buttonBox, 1, 2);
-    gridPane.setHgap(5.0D);
-    gridPane.setVgap(5.0D);
+    gridPane.setHgap(5.0);
+    gridPane.setVgap(5.0);
     buttonBox.setAlignment(Pos.TOP_CENTER);
-    buttonBox.setSpacing(10.0D);
+    buttonBox.setSpacing(10.0);
     GridPane.setValignment(removeGenreButton, VPos.TOP);
     setAlignment(Pos.CENTER);
-    setPadding(new Insets(5.0D));
-    setSpacing(5.0D);
+    setPadding(new Insets(5.0));
+    setSpacing(5.0);
     getChildren().addAll(mainLabel, gridPane);
 
+    //Add the current string to the genre list.
     addGenreButton.setOnAction(e -> {
           if (GameLists.genreList.contains(addGenreField.getText())) {
             warningLabel.setText("Genre already in list");
@@ -64,6 +66,7 @@ public class EditGenreList extends VBox {
           } 
         });
 
+    //Remove the selected item from the genre list.
     removeGenreButton.setOnAction(e -> {
           int selectionInt = listView.getSelectionModel().getSelectedIndex();
           if (selectionInt != -1 && GameLists.genreList.size() > 1) {
@@ -99,6 +102,7 @@ public class EditGenreList extends VBox {
           } 
         });
 
+    //Replaces the selected genre with the current string
     renameGenreButton.setOnAction(e -> {
           if (GameLists.genreList.contains(addGenreField.getText())) {
             this.warningLabel.setText("Genre already in list");
@@ -133,6 +137,7 @@ public class EditGenreList extends VBox {
           } 
         });
 
+    //Moves the selected genre up in the list by one position.
     moveUpButton.setOnAction(e -> {
           int selectionIndex = listView.getSelectionModel().getSelectedIndex();
           if (selectionIndex > 0) {
@@ -142,6 +147,7 @@ public class EditGenreList extends VBox {
           } 
         });
 
+    //Moves the selected genre down in the list by one position.
     moveDownButton.setOnAction(e -> {
           int selectionIndex = listView.getSelectionModel().getSelectedIndex();
           if (selectionIndex > -1 && selectionIndex < GameLists.genreList.size() - 1) {

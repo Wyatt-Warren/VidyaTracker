@@ -12,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+//The window for adding a new game to the unplayed game list.
 public class AddUnplayedGame extends VBox {
   //Status
   Label statusLabel = new Label("Status:");
@@ -71,7 +72,7 @@ public class AddUnplayedGame extends VBox {
             this.platformVBox, this.genreVBox, this.hoursVBox,
             this.deckVBox, this.releaseVBox);
     Button doneButton = new Button("Create New Unplayed Game");
-    mainHBox.setSpacing(5.0D);
+    mainHBox.setSpacing(5.0);
 
     this.releaseYearHBox.setAlignment(Pos.CENTER);
     this.releaseMonthHBox.setAlignment(Pos.CENTER);
@@ -87,7 +88,7 @@ public class AddUnplayedGame extends VBox {
 
     setAlignment(Pos.CENTER);
     getChildren().addAll(mainLabel, mainHBox, doneButton );
-    setPadding(new Insets(5.0D));
+    setPadding(new Insets(5.0));
 
     this.statusBox.getItems().addAll("Backlog", "SubBacklog", "Wishlist");
     this.statusBox.getSelectionModel().selectFirst();
@@ -127,7 +128,8 @@ public class AddUnplayedGame extends VBox {
           } 
         });
   }
-  
+
+  //Closes the window and creates a new game based on the inputted data.
   public void saveAndQuit(Stage parentStage, UnplayedGamesTable table, ChoiceBox<String> sortChoiceBox,
                           ChoiceBox<String> sortFilterBox, StatusCountBoxUnplayed statusCountBoxUnplayed,
                           StatsScreen stats) throws InvalidPercentException, InvalidStatusException, InvalidShortStatusException,
@@ -167,7 +169,8 @@ public class AddUnplayedGame extends VBox {
     ApplicationGUI.changeMade = true;
     parentStage.close();
   }
-  
+
+  //Sets the days for the day drop down based on the selected month
   public void setDayCount(int month, ChoiceBox<Integer> dayBox) {
     int dayCount = 0;
     switch (month) {

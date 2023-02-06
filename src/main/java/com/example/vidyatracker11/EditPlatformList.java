@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
+//The window for editting the platform list.
 public class EditPlatformList extends VBox {
   Label mainLabel = new Label("Edit Platform List");
   
@@ -43,16 +44,17 @@ public class EditPlatformList extends VBox {
     gridPane.add(warningLabel, 1, 1);
     gridPane.add(listView, 0, 2);
     gridPane.add(buttonBox, 1, 2);
-    gridPane.setHgap(5.0D);
-    gridPane.setVgap(5.0D);
+    gridPane.setHgap(5.0);
+    gridPane.setVgap(5.0);
     buttonBox.setAlignment(Pos.TOP_CENTER);
-    buttonBox.setSpacing(10.0D);
+    buttonBox.setSpacing(10.0);
     GridPane.setValignment(removePlatformButton, VPos.TOP);
     setAlignment(Pos.CENTER);
-    setPadding(new Insets(5.0D));
-    setSpacing(5.0D);
+    setPadding(new Insets(5.0));
+    setSpacing(5.0);
     getChildren().addAll(mainLabel, gridPane);
 
+    //Adds the current string to the platform list
     addPlatformButton.setOnAction(e -> {
           if (GameLists.platformList.contains(addPlatformField.getText())) {
             warningLabel.setText("Platform already in list");
@@ -64,6 +66,7 @@ public class EditPlatformList extends VBox {
           } 
         });
 
+    //Removes the selected platform from the platform list
     removePlatformButton.setOnAction(e -> {
           int selectionInt = listView.getSelectionModel().getSelectedIndex();
           if (selectionInt != -1 && GameLists.platformList.size() > 1) {
@@ -99,6 +102,7 @@ public class EditPlatformList extends VBox {
           } 
         });
 
+    //Replaces the selected platform with the current string
     renamePlatformButton.setOnAction(e -> {
           if (GameLists.platformList.contains(addPlatformField.getText())) {
             warningLabel.setText("Platform already in list");
@@ -133,6 +137,7 @@ public class EditPlatformList extends VBox {
           } 
         });
 
+    //Moves the selected platform up in the list by one position.
     moveUpButton.setOnAction(e -> {
           int selectionIndex = listView.getSelectionModel().getSelectedIndex();
           if (selectionIndex > 0) {
@@ -142,6 +147,7 @@ public class EditPlatformList extends VBox {
           } 
         });
 
+    //Moves the selected platform down in the list by one position.
     moveDownButton.setOnAction(e -> {
           int selectionIndex = listView.getSelectionModel().getSelectedIndex();
           if (selectionIndex > -1 && selectionIndex < GameLists.platformList.size() - 1) {
