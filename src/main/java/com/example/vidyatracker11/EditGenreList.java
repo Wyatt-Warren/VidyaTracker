@@ -11,7 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
-//The window for editting the genre list
+//The window for editing the genre list
 public class EditGenreList extends VBox {
     Label mainLabel = new Label("Edit Genre List");
 
@@ -21,7 +21,7 @@ public class EditGenreList extends VBox {
 
     Button addGenreButton = new Button("Add Genre");
 
-    ListView < String > listView = new ListView < > (GameLists.genreList);
+    ListView<String> listView = new ListView<> (GameLists.genreList);
 
     Button removeGenreButton = new Button("Remove Selected Genre");
 
@@ -35,9 +35,9 @@ public class EditGenreList extends VBox {
 
     GridPane gridPane = new GridPane();
 
-    public EditGenreList(PlayedGamesTable pTable, UnplayedGamesTable uTable, ChoiceBox < String > pSortChoices,
-                         ChoiceBox < String > pFilterChoices, ChoiceBox < String > uSortChoices,
-                         ChoiceBox < String > uFilterChoices) {
+    public EditGenreList(PlayedGamesTable pTable, UnplayedGamesTable uTable, ChoiceBox<String> pSortChoices,
+                         ChoiceBox<String> pFilterChoices, ChoiceBox<String> uSortChoices,
+                         ChoiceBox<String> uFilterChoices) {
         mainLabel.setStyle("-fx-font-weight:bold;-fx-font-size:24;");
         gridPane.add(addGenreField, 0, 0);
         gridPane.add(addGenreButton, 1, 0);
@@ -97,10 +97,10 @@ public class EditGenreList extends VBox {
         //Replaces the selected genre with the current string
         renameGenreButton.setOnAction(e -> {
             if (GameLists.genreList.contains(addGenreField.getText())) {
-                this.warningLabel.setText("Genre already in list");
+                warningLabel.setText("Genre already in list");
             } else if (!addGenreField.getText().equals("")) {
-                this.warningLabel.setText("");
-                int selectionInt = this.listView.getSelectionModel().getSelectedIndex();
+                warningLabel.setText("");
+                int selectionInt = listView.getSelectionModel().getSelectedIndex();
                 GameLists.genreList.add(selectionInt, addGenreField.getText());
                 if (selectionInt != -1 && GameLists.genreList.size() > 1) {
                     int i;

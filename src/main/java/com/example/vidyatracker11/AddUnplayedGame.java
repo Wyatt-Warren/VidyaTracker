@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 public class AddUnplayedGame extends VBox {
     //Status
     Label statusLabel = new Label("Status:");
-    ChoiceBox < String > statusBox = new ChoiceBox < > ();
+    ChoiceBox<String> statusBox = new ChoiceBox<>();
     VBox statusVBox = new VBox(statusLabel, statusBox);
 
     //Title
@@ -31,12 +31,12 @@ public class AddUnplayedGame extends VBox {
 
     //Platform
     Label platformLabel = new Label("Platform:");
-    ChoiceBox < String > platformBox = new ChoiceBox < > ();
+    ChoiceBox<String> platformBox = new ChoiceBox<>();
     VBox platformVBox = new VBox(platformLabel, platformBox);
 
     //Genre
     Label genreLabel = new Label("Genre:");
-    ChoiceBox < String > genreBox = new ChoiceBox < > ();
+    ChoiceBox<String> genreBox = new ChoiceBox<>();
     VBox genreVBox = new VBox(genreLabel, genreBox);
 
     //Hours
@@ -46,7 +46,7 @@ public class AddUnplayedGame extends VBox {
 
     //Deck Status
     Label deckLabel = new Label("Deck Status:");
-    ChoiceBox < String > deckBox = new ChoiceBox < > ();
+    ChoiceBox<String> deckBox = new ChoiceBox<>();
     VBox deckVBox = new VBox(deckLabel, deckBox);
 
     //Release Date
@@ -57,16 +57,16 @@ public class AddUnplayedGame extends VBox {
     HBox releaseYearHBox = new HBox(releaseYearLabel, releaseYearBox);
     //Month
     Label releaseMonthLabel = new Label("Month:");
-    ChoiceBox < Integer > releaseMonthBox = new ChoiceBox < > ();
+    ChoiceBox<Integer> releaseMonthBox = new ChoiceBox < > ();
     HBox releaseMonthHBox = new HBox(releaseMonthLabel, releaseMonthBox);
     //Day
     Label releaseDayLabel = new Label("Day:");
-    ChoiceBox < Integer > releaseDayBox = new ChoiceBox < > ();
+    ChoiceBox<Integer> releaseDayBox = new ChoiceBox < > ();
     HBox releaseDayHBox = new HBox(releaseDayLabel, releaseDayBox);
     VBox releaseVBox = new VBox(releaseLabel, releaseYearHBox, releaseMonthHBox, releaseDayHBox);
 
-    public AddUnplayedGame(Stage parentStage, UnplayedGamesTable table, ChoiceBox < String > sortChoiceBox,
-                           ChoiceBox < String > sortFilterBox, StatusCountBoxUnplayed statusCountBoxUnplayed,
+    public AddUnplayedGame(Stage parentStage, UnplayedGamesTable table, ChoiceBox<String> sortChoiceBox,
+                           ChoiceBox<String> sortFilterBox, StatusCountBoxUnplayed statusCountBoxUnplayed,
                            StatsScreen stats) {
         Label mainLabel = new Label("Add New Unplayed Game");
         mainLabel.setStyle("-fx-font-size: 24;-fx-font-weight: bold;");
@@ -113,7 +113,7 @@ public class AddUnplayedGame extends VBox {
             return input.matches("[0-9]*") ? change : null;
         };
 
-        releaseYearBox.setTextFormatter(new TextFormatter < > (integerFilter));
+        releaseYearBox.setTextFormatter(new TextFormatter<> (integerFilter));
         releaseMonthBox.getItems().addAll(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
         releaseMonthBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
             int newInt = (int) newNum;
@@ -131,8 +131,8 @@ public class AddUnplayedGame extends VBox {
     }
 
     //Closes the window and creates a new game based on the inputted data.
-    public void saveAndQuit(Stage parentStage, UnplayedGamesTable table, ChoiceBox < String > sortChoiceBox,
-                            ChoiceBox < String > sortFilterBox, StatusCountBoxUnplayed statusCountBoxUnplayed,
+    public void saveAndQuit(Stage parentStage, UnplayedGamesTable table, ChoiceBox<String> sortChoiceBox,
+                            ChoiceBox<String> sortFilterBox, StatusCountBoxUnplayed statusCountBoxUnplayed,
                             StatsScreen stats) throws NumberFormatException {
         int releaseYear;
         if (releaseYearBox.getText().equals("")) {

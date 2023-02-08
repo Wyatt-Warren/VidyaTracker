@@ -11,7 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
-//The window for editting the platform list.
+//The window for editing the platform list.
 public class EditPlatformList extends VBox {
     Label mainLabel = new Label("Edit Platform List");
 
@@ -21,7 +21,7 @@ public class EditPlatformList extends VBox {
 
     Button addPlatformButton = new Button("Add Platform");
 
-    ListView < String > listView = new ListView < > (GameLists.platformList);
+    ListView<String> listView = new ListView<> (GameLists.platformList);
 
     Button removePlatformButton = new Button("Remove Selected Platform");
 
@@ -35,9 +35,9 @@ public class EditPlatformList extends VBox {
 
     GridPane gridPane = new GridPane();
 
-    public EditPlatformList(PlayedGamesTable pTable, UnplayedGamesTable uTable, ChoiceBox < String > pSortChoices,
-                            ChoiceBox < String > pFilterChoices, ChoiceBox < String > uSortChoices,
-                            ChoiceBox < String > uFilterChoices) {
+    public EditPlatformList(PlayedGamesTable pTable, UnplayedGamesTable uTable, ChoiceBox<String> pSortChoices,
+                            ChoiceBox<String> pFilterChoices, ChoiceBox<String> uSortChoices,
+                            ChoiceBox<String> uFilterChoices) {
         mainLabel.setStyle("-fx-font-weight:bold;-fx-font-size:24;");
         gridPane.add(addPlatformField, 0, 0);
         gridPane.add(addPlatformButton, 1, 0);

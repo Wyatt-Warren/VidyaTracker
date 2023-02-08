@@ -32,7 +32,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 //The main class
-
 public class ApplicationGUI extends Application {
 
     public static void main(String[] args) {
@@ -46,65 +45,65 @@ public class ApplicationGUI extends Application {
     public static boolean playedOpen = true;
 
     //Main GUI
-    StatusCountBoxPlayed statusCountBoxPlayed = new StatusCountBoxPlayed();
-    StatusCountBoxUnplayed statusCountBoxUnplayed = new StatusCountBoxUnplayed();
-    ChoiceBox<String> playedSortChoices = new ChoiceBox<>();
-    Label playedSortLabel = new Label("Sort by: ");
-    Label playedFilterLabel = new Label("Filter by: ");
-    ChoiceBox<String> playedFilterChoices = new ChoiceBox<>();
-    PlayedGamesTable playedGamesTable = new PlayedGamesTable(playedSortChoices, playedFilterChoices, statusCountBoxPlayed);
-    HBox playedChoiceHBox = new HBox(playedSortLabel, playedSortChoices, playedFilterLabel, playedFilterChoices);
-    VBox playedGamesVBox = new VBox(playedChoiceHBox, playedGamesTable);
-    ChoiceBox<String> unplayedSortChoices = new ChoiceBox<>();
-    ChoiceBox<String> unplayedFilterChoices = new ChoiceBox<>();
-    UnplayedGamesTable unplayedGamesTable = new UnplayedGamesTable(unplayedSortChoices, unplayedFilterChoices, statusCountBoxUnplayed);
-    Label unplayedSortLabel = new Label("Sort by: ");
-    Label unplayedFilterLabel = new Label("Filter by: ");
-    HBox unplayedChoiceHBox = new HBox(unplayedSortLabel, unplayedSortChoices, unplayedFilterLabel, unplayedFilterChoices);
-    VBox unplayedGamesVBox = new VBox(unplayedChoiceHBox, unplayedGamesTable);
-    UnplayedTempList unplayedTempList = new UnplayedTempList(unplayedGamesTable);
-    Button switchFromPlayed = new Button("Show Unplayed List");
-    Button switchFromUnplayed = new Button("Show Played List");
-    HBox topBoxPlayed = new HBox(statusCountBoxPlayed, switchFromPlayed);
-    HBox topBoxUnplayed = new HBox(statusCountBoxUnplayed, unplayedTempList, switchFromUnplayed);
-    VBox playedWindow = new VBox(topBoxPlayed, playedGamesVBox);
-    VBox unplayedWindow = new VBox(topBoxUnplayed, unplayedGamesVBox);
+    public static StatusCountBoxPlayed statusCountBoxPlayed = new StatusCountBoxPlayed();
+    public static StatusCountBoxUnplayed statusCountBoxUnplayed = new StatusCountBoxUnplayed();
+    public static ChoiceBox<String> playedSortChoices = new ChoiceBox<>();
+    public static Label playedSortLabel = new Label("Sort by: ");
+    public static Label playedFilterLabel = new Label("Filter by: ");
+    public static ChoiceBox<String> playedFilterChoices = new ChoiceBox<>();
+    public static PlayedGamesTable playedGamesTable = new PlayedGamesTable(playedSortChoices, playedFilterChoices, statusCountBoxPlayed);
+    public static HBox playedChoiceHBox = new HBox(playedSortLabel, playedSortChoices, playedFilterLabel, playedFilterChoices);
+    public static VBox playedGamesVBox = new VBox(playedChoiceHBox, playedGamesTable);
+    public static ChoiceBox<String> unplayedSortChoices = new ChoiceBox<>();
+    public static ChoiceBox<String> unplayedFilterChoices = new ChoiceBox<>();
+    public static UnplayedGamesTable unplayedGamesTable = new UnplayedGamesTable(unplayedSortChoices, unplayedFilterChoices, statusCountBoxUnplayed);
+    public static Label unplayedSortLabel = new Label("Sort by: ");
+    public static Label unplayedFilterLabel = new Label("Filter by: ");
+    public static HBox unplayedChoiceHBox = new HBox(unplayedSortLabel, unplayedSortChoices, unplayedFilterLabel, unplayedFilterChoices);
+    public static VBox unplayedGamesVBox = new VBox(unplayedChoiceHBox, unplayedGamesTable);
+    public static UnplayedTempList unplayedTempList = new UnplayedTempList(unplayedGamesTable);
+    public static Button switchFromPlayed = new Button("Show Unplayed List");
+    public static Button switchFromUnplayed = new Button("Show Played List");
+    public static HBox topBoxPlayed = new HBox(statusCountBoxPlayed, switchFromPlayed);
+    public static HBox topBoxUnplayed = new HBox(statusCountBoxUnplayed, unplayedTempList, switchFromUnplayed);
+    public static VBox playedWindow = new VBox(topBoxPlayed, playedGamesVBox);
+    public static VBox unplayedWindow = new VBox(topBoxUnplayed, unplayedGamesVBox);
 
     //File Menu
-    MenuItem newFileMenuItem = new MenuItem("New File");
-    MenuItem openFileMenuItem = new MenuItem("Open File");
-    SeparatorMenuItem separatorMenuItem = new SeparatorMenuItem();
-    MenuItem saveFileMenuItem = new MenuItem("Save File");
-    MenuItem saveAsFileMenuItem = new MenuItem("Save File As");
-    SeparatorMenuItem separatorMenuItem5 = new SeparatorMenuItem();
-    MenuItem exitMenuItem = new MenuItem("Exit");
-    Menu fileMenu = new Menu("File");
+    public static MenuItem newFileMenuItem = new MenuItem("New File");
+    public static MenuItem openFileMenuItem = new MenuItem("Open File");
+    public static SeparatorMenuItem separatorMenuItem = new SeparatorMenuItem();
+    public static MenuItem saveFileMenuItem = new MenuItem("Save File");
+    public static MenuItem saveAsFileMenuItem = new MenuItem("Save File As");
+    public static SeparatorMenuItem separatorMenuItem5 = new SeparatorMenuItem();
+    public static MenuItem exitMenuItem = new MenuItem("Exit");
+    public static Menu fileMenu = new Menu("File");
 
     //List Menu
-    MenuItem addNewGameMenuItem = new MenuItem("Add New Game");
-    SeparatorMenuItem separatorMenuItem1 = new SeparatorMenuItem();
-    MenuItem movePlayedGameMenuItem = new MenuItem("Move Selected Game");
-    SeparatorMenuItem separatorMenuItem2 = new SeparatorMenuItem();
-    MenuItem removeGameMenuItem = new MenuItem("Remove Selected Game");
-    SeparatorMenuItem separatorMenuItem3 = new SeparatorMenuItem();
-    MenuItem editGenreListMenuItem = new MenuItem("Edit Genre List");
-    MenuItem editPlatformListMenuItem = new MenuItem("Edit Platform List");
-    SeparatorMenuItem separatorMenuItem4 = new SeparatorMenuItem();
-    MenuItem statsMenuItem = new MenuItem("Show Stats Window");
-    Menu listMenu = new Menu("List");
+    public static MenuItem addNewGameMenuItem = new MenuItem("Add New Game");
+    public static SeparatorMenuItem separatorMenuItem1 = new SeparatorMenuItem();
+    public static MenuItem movePlayedGameMenuItem = new MenuItem("Move Selected Game");
+    public static SeparatorMenuItem separatorMenuItem2 = new SeparatorMenuItem();
+    public static MenuItem removeGameMenuItem = new MenuItem("Remove Selected Game");
+    public static SeparatorMenuItem separatorMenuItem3 = new SeparatorMenuItem();
+    public static MenuItem editGenreListMenuItem = new MenuItem("Edit Genre List");
+    public static MenuItem editPlatformListMenuItem = new MenuItem("Edit Platform List");
+    public static SeparatorMenuItem separatorMenuItem4 = new SeparatorMenuItem();
+    public static MenuItem statsMenuItem = new MenuItem("Show Stats Window");
+    public static Menu listMenu = new Menu("List");
 
     //Random Menu
-    MenuItem chooseRandomGameMenuItem = new MenuItem("Choose a Random Game to Play");
-    MenuItem chooseRandomWishlistGameMenuItem = new MenuItem("Choose a Random Game to Buy");
-    MenuItem generateRandomListMenuItem = new MenuItem("Generate a Random List of Games Based on Filters");
-    MenuItem chooseRandomFromList = new MenuItem("Choose a Random Game From the Small List");
-    Menu randomMenu = new Menu("Random");
+    public static MenuItem chooseRandomGameMenuItem = new MenuItem("Choose a Random Game to Play");
+    public static MenuItem chooseRandomWishlistGameMenuItem = new MenuItem("Choose a Random Game to Buy");
+    public static MenuItem generateRandomListMenuItem = new MenuItem("Generate a Random List of Games Based on Filters");
+    public static MenuItem chooseRandomFromList = new MenuItem("Choose a Random Game From the Small List");
+    public static Menu randomMenu = new Menu("Random");
 
-    MenuBar menuBar = new MenuBar(fileMenu, listMenu, randomMenu);
-    StatsScreen stats = new StatsScreen();
-    FileChooser fileChooser = new FileChooser();
-    VBox primarySceneVBox = new VBox(menuBar, playedWindow);
-    Scene primaryScene = new Scene(primarySceneVBox, 1300, 900);
+    public static MenuBar menuBar = new MenuBar(fileMenu, listMenu, randomMenu);
+    public static StatsScreen stats = new StatsScreen();
+    public static FileChooser fileChooser = new FileChooser();
+    public static VBox primarySceneVBox = new VBox(menuBar, playedWindow);
+    public static Scene primaryScene = new Scene(primarySceneVBox, 1300, 900);
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Vidya Tracker");
 

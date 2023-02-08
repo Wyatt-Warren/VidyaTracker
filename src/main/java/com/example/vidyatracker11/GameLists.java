@@ -8,13 +8,13 @@ import javafx.collections.ObservableList;
 
 //Class that stores each list: played games list, unplayed games list, platform list, genre list.
 public class GameLists {
-    public static ObservableList < PlayedGame > playedList = FXCollections.observableArrayList();
+    public static ObservableList<PlayedGame> playedList = FXCollections.observableArrayList();
 
-    public static ObservableList < UnplayedGame > unplayedList = FXCollections.observableArrayList();
+    public static ObservableList<UnplayedGame> unplayedList = FXCollections.observableArrayList();
 
-    public static ObservableList < String > platformList = FXCollections.observableArrayList("PC");
+    public static ObservableList<String> platformList = FXCollections.observableArrayList("PC");
 
-    public static ObservableList < String > genreList = FXCollections.observableArrayList("Action");
+    public static ObservableList<String> genreList = FXCollections.observableArrayList("Action");
 
     private static final Date date = new Date();
 
