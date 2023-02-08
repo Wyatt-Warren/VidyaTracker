@@ -3,7 +3,7 @@ VidyaTracker is a desktop application that uses Java 11. The purpose of Vidya Tr
 
 ## TODO
 ### Organizational
-- Global variables in ApplicationGUI
+- Fix tabs problem
 - Utilize superclasses more
 - Fix franchise system
 - Fix exception crap
@@ -11,3 +11,4 @@ VidyaTracker is a desktop application that uses Java 11. The purpose of Vidya Tr
 ### Features
 - Dark theme
 - Franchise column
+- Revised filtering
