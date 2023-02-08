@@ -2,51 +2,51 @@ package com.example.vidyatracker11;
 
 //Used by tableviews in the stats screen
 public class PlayedDataEntry {
-  private String title;
-  
-  private int count;
-  
-  private String percent;
-  
-  private String averageRating;
+    private String title;
 
-  //averageRating getter
-  public String getAverageRating() {
-    return averageRating;
-  }
+    private int count;
 
-  //averageRating setter
-  public void setAverageRating(String averageRating) {
-    this.averageRating = averageRating;
-  }
+    private String percent;
 
-  //count getter
-  public int getCount() {
-    return count;
-  }
+    private String averageRating;
 
-  //count setter
-  public void setCount(int count) {
-    this.count = count;
-  }
+    //averageRating getter
+    public String getAverageRating() {
+        return averageRating;
+    }
 
-  //name getter
-  public String getName() {
-    return title;
-  }
+    //averageRating setter
+    public void setAverageRating(String averageRating) {
+        this.averageRating = averageRating;
+    }
 
-  //name setter
-  public void setName(String name) {
-    this.title = name;
-  }
+    //count getter
+    public int getCount() {
+        return count;
+    }
 
-  //percent getter
-  public String getPercent() {
-    return percent;
-  }
+    //count setter
+    public void setCount(int count) {
+        this.count = count;
+    }
 
-  //percent setter
-  public void setPercent(String percent) {
-    this.percent = percent;
-  }
+    //name getter
+    public String getName() {
+        return title;
+    }
+
+    //name setter
+    public void setName(String name) {
+        this.title = name;
+    }
+
+    //percent getter
+    public String getPercent() {
+        return percent;
+    }
+
+    //percent setter
+    public void setPercent(String percent) {
+        this.percent = percent;
+    }
 }
