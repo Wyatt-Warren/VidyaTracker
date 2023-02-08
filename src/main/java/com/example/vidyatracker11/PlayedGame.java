@@ -13,66 +13,64 @@ public class PlayedGame extends Game {
     //Constructor
     public PlayedGame(String title, String status, String platform,
                       String genre, int releaseYear, int releaseMonth,
-                      int releaseDay) throws
-            InvalidStatusException, InvalidPlatformException, InvalidGenreException,
-            InvalidYearException, InvalidMonthException, InvalidDayException {
+                      int releaseDay) {
         super(title, status, platform, genre, releaseYear, releaseMonth, releaseDay);
         if (!status.equals("Playing") && !status.equals("Completed") && !status.equals("On Hold"))
-            throw new InvalidStatusException();
+            throw new IllegalArgumentException();
         if (getReleaseYear() < 0)
-            throw new InvalidYearException();
+            throw new IllegalArgumentException();
         if (getReleaseMonth() < 0 || getReleaseMonth() > 12)
-            throw new InvalidMonthException();
+            throw new IllegalArgumentException();
         if (getReleaseDay() < 0 || getReleaseDay() > 31)
-            throw new InvalidDayException();
+            throw new IllegalArgumentException();
     }
 
     //Status setter
-    public void setStatus(String status) throws InvalidStatusException {
+    public void setStatus(String status) {
         if (!status.equals("Playing") && !status.equals("Completed") && !status.equals("On Hold"))
-            throw new InvalidStatusException();
+            throw new IllegalArgumentException();
         this.status = status;
     }
 
     //Rating setter
-    public void setRating(int rating) throws InvalidRatingException {
+    public void setRating(int rating) {
         if (0 > rating || rating >= 11)
-            throw new InvalidRatingException();
+            throw new IllegalArgumentException();
         this.rating = rating;
     }
 
     //Short status setter
-    public void setIsItShort(String isItShort) throws InvalidShortStatusException {
+    public void setIsItShort(String isItShort) {
         if (!isItShort.equals("") && !isItShort.equals("Yes") && !isItShort.equals("No"))
-            throw new InvalidShortStatusException();
+            throw new IllegalArgumentException();
         this.isItShort = isItShort;
     }
 
     //Completion Year setter
-    public void setCompletionYear(int completionYear) throws InvalidYearException {
+    public void setCompletionYear(int completionYear) {
         if (completionYear < 0)
-            throw new InvalidYearException();
+            throw new IllegalArgumentException();
         this.completionYear = completionYear;
     }
 
     //Completion month setter
-    public void setCompletionMonth(int completionMonth) throws InvalidMonthException {
+    public void setCompletionMonth(int completionMonth) {
         if (completionMonth < 0 || completionMonth > 12)
-            throw new InvalidMonthException();
+            throw new IllegalArgumentException();
         this.completionMonth = completionMonth;
     }
 
     //Completion day setter
-    public void setCompletionDay(int completionDay) throws InvalidDayException {
+    public void setCompletionDay(int completionDay) {
         if (completionDay < 0 || completionDay > 31)
-            throw new InvalidDayException();
+            throw new IllegalArgumentException();
         this.completionDay = completionDay;
     }
 
     //100 percent status setter
-    public void setPercent100(String percent100) throws InvalidPercentException {
+    public void setPercent100(String percent100) {
         if (!percent100.equals("") && !percent100.equals("Yes") && !percent100.equals("No"))
-            throw new InvalidPercentException();
+            throw new IllegalArgumentException();
         this.percent100 = percent100;
     }
 

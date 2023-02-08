@@ -128,7 +128,7 @@ public class UnplayedEditWindow extends VBox {
         doneButton.setOnAction(e -> {
             try {
                 saveAndQuit(game, parentStage, table, sortChoiceBox, sortFilterBox, statusCountBoxUnplayed);
-            } catch (NumberFormatException|InvalidStatusException|InvalidHoursException|InvalidPlatformException|InvalidGenreException|InvalidYearException|InvalidMonthException|InvalidDayException|InvalidDeckStatusException e1) {
+            }catch (NumberFormatException e1){
                 e1.printStackTrace();
             }
         });
@@ -137,10 +137,7 @@ public class UnplayedEditWindow extends VBox {
     //Closes the window and saves the inputted data to the given unplayed game.
     public void saveAndQuit(UnplayedGame game, Stage parentStage, UnplayedGamesTable table,
                             ChoiceBox<String> sortChoiceBox, ChoiceBox<String> sortFilterBox,
-                            StatusCountBoxUnplayed statusCountBoxUnplayed) throws
-            NumberFormatException, InvalidStatusException, InvalidHoursException,
-            InvalidPlatformException, InvalidGenreException, InvalidYearException,
-            InvalidMonthException, InvalidDayException, InvalidDeckStatusException {
+                            StatusCountBoxUnplayed statusCountBoxUnplayed) throws NumberFormatException{
         game.setStatus(statusBox.getSelectionModel().getSelectedItem());
         game.setTitle(titleBox.getText());
         if (franchiseBox.getText().equals("")) {

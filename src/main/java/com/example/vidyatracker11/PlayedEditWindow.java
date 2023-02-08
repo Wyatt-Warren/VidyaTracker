@@ -163,9 +163,9 @@ public class PlayedEditWindow extends VBox {
             percentBox.getSelectionModel().selectLast();
         }
         doneButton.setOnAction(e -> {
-            try {
+            try{
                 saveAndQuit(game, parentStage, table, sortChoiceBox, sortFilterBox, statusCountBoxPlayed);
-            } catch (InvalidPercentException | InvalidStatusException | InvalidShortStatusException | InvalidRatingException | InvalidPlatformException | InvalidGenreException | InvalidYearException | InvalidMonthException | InvalidDayException e1) {
+            }catch(NumberFormatException e1){
                 e1.printStackTrace();
             }
         });
@@ -174,10 +174,7 @@ public class PlayedEditWindow extends VBox {
     //Closes the window and saves the inputted data to the given game
     public void saveAndQuit(PlayedGame game, Stage parentStage, PlayedGamesTable table,
                             ChoiceBox < String > sortChoiceBox, ChoiceBox < String > sortFilterBox,
-                            StatusCountBoxPlayed statusCountBoxPlayed) throws
-            InvalidPercentException, InvalidStatusException, InvalidShortStatusException,
-            InvalidRatingException, InvalidPlatformException, InvalidGenreException,
-            InvalidYearException, InvalidMonthException, InvalidDayException {
+                            StatusCountBoxPlayed statusCountBoxPlayed) throws NumberFormatException{
         //Status
         game.setStatus(statusBox.getSelectionModel().getSelectedItem());
 

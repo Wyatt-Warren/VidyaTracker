@@ -147,10 +147,9 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
                             stage.close();
                         }else if(e.getCode() == KeyCode.ENTER){
                             try {
-                                window.saveAndQuit(clickedRow, stage, this, sortChoiceBox, filterChoiceBox, statusCountBoxUnplayed);
-                            } catch (NumberFormatException | InvalidStatusException | InvalidHoursException
-                                     | InvalidPlatformException | InvalidGenreException | InvalidYearException
-                                     | InvalidMonthException | InvalidDayException | InvalidDeckStatusException e1) {
+                                window.saveAndQuit(clickedRow, stage, this, sortChoiceBox,
+                                        filterChoiceBox, statusCountBoxUnplayed);
+                            } catch (NumberFormatException e1) {
                                 e1.printStackTrace();
                             }
                         }

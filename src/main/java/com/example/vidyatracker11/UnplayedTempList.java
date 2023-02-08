@@ -25,12 +25,12 @@ public class UnplayedTempList extends HBox {
 
     Label hoursLabel = new Label("");
 
-    VBox vbox = new VBox(5.0, addButton, removeButton, countLabel, hoursLabel);
+    VBox vbox = new VBox(5, addButton, removeButton, countLabel, hoursLabel);
 
     public UnplayedTempList(UnplayedGamesTable table) {
         getChildren().addAll(listView, vbox);
-        setPadding(new Insets(5.0));
-        setSpacing(5.0D);
+        setPadding(new Insets(5));
+        setSpacing(5);
         addButton.setOnAction(e -> {
             if (table.getSelectionModel().getSelectedIndex() != -1) {
                 titles.add(table.getSelectionModel().getSelectedItem().getTitle());

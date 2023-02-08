@@ -72,9 +72,9 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
         completionYearColumn.setCellValueFactory(new PropertyValueFactory<>("completionYear"));
         percent100Column.setCellValueFactory(new PropertyValueFactory<>("percent100"));
 
-        for (TableColumn<PlayedGame, ?> playedGameTableColumn : this.columnList)
+        for (TableColumn<PlayedGame, ?> playedGameTableColumn : columnList)
             playedGameTableColumn.setSortable(false);
-        setPrefSize(900.0D, 99999.0D);
+        setPrefSize(900, 99999);
         preventColumnReorderingOrResizing(this);
         setItems(filteredList);
         getColumns().addAll(columnList);
@@ -204,11 +204,10 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                         if (e.getCode() == KeyCode.ESCAPE) {
                             stage.close();
                         }else if(e.getCode() == KeyCode.ENTER){
-                            try {
-                                window.saveAndQuit(clickedRow, stage, this, sortChoiceBox, filterChoiceBox, statusCountBoxPlayed);
-                            } catch (InvalidPercentException | InvalidStatusException | InvalidShortStatusException
-                                     | InvalidRatingException | InvalidPlatformException | InvalidGenreException
-                                     | InvalidYearException | InvalidMonthException | InvalidDayException e1) {
+                            try{
+                                window.saveAndQuit(clickedRow, stage, this, sortChoiceBox,
+                                        filterChoiceBox, statusCountBoxPlayed);
+                            }catch (NumberFormatException e1){
                                 e1.printStackTrace();
                             }
                         }
@@ -396,7 +395,7 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
             newList.addAll(normalSort(givenGenreList));
         }
         newList.addAll(normalSort(totalList));
-        this.filteredList = new FilteredList<>(newList);
+        filteredList = new FilteredList<>(newList);
         setItems(filteredList);
     }
 

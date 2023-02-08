@@ -156,9 +156,9 @@ public class AddPlayedGame extends VBox {
         percentBox.getItems().addAll("Yes", "No", "Blank");
         percentBox.getSelectionModel().selectLast();
         doneButton.setOnAction(e -> {
-            try {
+            try{
                 saveAndQuit(parentStage, table, sortChoiceBox, sortFilterBox, statusCountBoxPlayed, stats);
-            } catch (InvalidPercentException | InvalidStatusException | InvalidShortStatusException | InvalidRatingException | InvalidPlatformException | InvalidGenreException | InvalidYearException | InvalidMonthException | InvalidDayException e1) {
+            }catch (NumberFormatException e1){
                 e1.printStackTrace();
             }
         });
@@ -167,10 +167,7 @@ public class AddPlayedGame extends VBox {
     //Closes the window and creates a new game with the inputted data
     public void saveAndQuit(Stage parentStage, PlayedGamesTable table, ChoiceBox < String > sortChoiceBox,
                             ChoiceBox < String > sortFilterBox, StatusCountBoxPlayed statusCountBoxPlayed,
-                            StatsScreen stats) throws
-            InvalidPercentException, InvalidStatusException, InvalidShortStatusException,
-            InvalidRatingException, InvalidPlatformException, InvalidGenreException,
-            InvalidYearException, InvalidMonthException, InvalidDayException {
+                            StatsScreen stats) throws NumberFormatException{
         //Set Release Year
         int releaseYear;
         if (releaseYearBox.getText().equals("")) {

@@ -192,11 +192,7 @@ public class RandomListGenerator extends VBox {
                 for (int i = 0; i < GameLists.unplayedList.size(); i++) {
                     UnplayedGame newGame = GameLists.unplayedList.get(i);
                     if (newGame.getDeckCompatible().equals(""))
-                        try {
-                            newGame.setDeckCompatible("Blank");
-                        } catch (InvalidDeckStatusException e1) {
-                            e1.printStackTrace();
-                        }
+                        newGame.setDeckCompatible("Blank");
                     if (statusView.getItems().isEmpty() || statusView.getItems().contains(newGame.getStatus()) &&
                             titleField.getText().equals("") || newGame.getTitle().toLowerCase().contains(titleField.getText().toLowerCase()) &&
                             platformView.getItems().isEmpty() || platformView.getItems().contains(newGame.getPlatform()) &&

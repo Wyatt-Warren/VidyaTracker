@@ -73,26 +73,18 @@ public class EditGenreList extends VBox {
                 int i;
                 for (i = 0; i < GameLists.playedList.size(); i++) {
                     if (GameLists.playedList.get(i).getGenre().equals(listView.getSelectionModel().getSelectedItem()))
-                        try {
-                            if (selectionInt == 0) {
-                                GameLists.playedList.get(i).setGenre(GameLists.genreList.get(1));
-                            } else {
-                                GameLists.playedList.get(i).setGenre(GameLists.genreList.get(0));
-                            }
-                        } catch (InvalidGenreException e1) {
-                            e1.printStackTrace();
+                        if (selectionInt == 0) {
+                            GameLists.playedList.get(i).setGenre(GameLists.genreList.get(1));
+                        } else {
+                            GameLists.playedList.get(i).setGenre(GameLists.genreList.get(0));
                         }
                 }
                 for (i = 0; i < GameLists.unplayedList.size(); i++) {
                     if (GameLists.unplayedList.get(i).getGenre().equals(listView.getSelectionModel().getSelectedItem()))
-                        try {
-                            if (selectionInt == 0) {
-                                GameLists.unplayedList.get(i).setGenre(GameLists.genreList.get(1));
-                            } else {
-                                GameLists.unplayedList.get(i).setGenre(GameLists.genreList.get(0));
-                            }
-                        } catch (InvalidGenreException e1) {
-                            e1.printStackTrace();
+                        if (selectionInt == 0) {
+                            GameLists.unplayedList.get(i).setGenre(GameLists.genreList.get(1));
+                        } else {
+                            GameLists.unplayedList.get(i).setGenre(GameLists.genreList.get(0));
                         }
                 }
                 pTable.sortAndFilter(pSortChoices, pFilterChoices);
@@ -114,19 +106,11 @@ public class EditGenreList extends VBox {
                     int i;
                     for (i = 0; i < GameLists.playedList.size(); i++) {
                         if (GameLists.playedList.get(i).getGenre().equals(listView.getSelectionModel().getSelectedItem()))
-                            try {
-                                GameLists.playedList.get(i).setGenre(addGenreField.getText());
-                            } catch (InvalidGenreException e1) {
-                                e1.printStackTrace();
-                            }
+                            GameLists.playedList.get(i).setGenre(addGenreField.getText());
                     }
                     for (i = 0; i < GameLists.unplayedList.size(); i++) {
                         if (GameLists.unplayedList.get(i).getGenre().equals(listView.getSelectionModel().getSelectedItem()))
-                            try {
-                                GameLists.unplayedList.get(i).setGenre(addGenreField.getText());
-                            } catch (InvalidGenreException e1) {
-                                e1.printStackTrace();
-                            }
+                            GameLists.unplayedList.get(i).setGenre(addGenreField.getText());
                     }
                     pTable.sortAndFilter(pSortChoices, pFilterChoices);
                     uTable.sortAndFilter(uSortChoices, uFilterChoices);

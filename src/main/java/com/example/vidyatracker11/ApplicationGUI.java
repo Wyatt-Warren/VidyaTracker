@@ -284,13 +284,8 @@ public class ApplicationGUI extends Application {
                     if (e1.getCode() == KeyCode.ESCAPE) {
                         stage.close();
                     } else if (e1.getCode() == KeyCode.ENTER) {
-                        try {
-                            addPlayedGame.saveAndQuit(stage, playedGamesTable, playedSortChoices, playedFilterChoices, statusCountBoxPlayed, stats);
-                        } catch (InvalidPercentException | InvalidDayException | InvalidMonthException |
-                                 InvalidYearException | InvalidGenreException | InvalidStatusException |
-                                 InvalidShortStatusException | InvalidRatingException | InvalidPlatformException ex) {
-                            ex.printStackTrace();
-                        }
+                            addPlayedGame.saveAndQuit(stage, playedGamesTable, playedSortChoices,
+                                    playedFilterChoices, statusCountBoxPlayed, stats);
                     }
                 });
 
@@ -309,14 +304,8 @@ public class ApplicationGUI extends Application {
                     if (e1.getCode() == KeyCode.ESCAPE) {
                         stage.close();
                     } else if (e1.getCode() == KeyCode.ENTER) {
-                        try {
-                            addUnplayedGame.saveAndQuit(stage, unplayedGamesTable, playedSortChoices, playedFilterChoices, statusCountBoxUnplayed, stats);
-                        } catch (InvalidPercentException | InvalidDayException | InvalidMonthException |
-                                 InvalidYearException | InvalidGenreException | InvalidStatusException |
-                                 InvalidShortStatusException | InvalidRatingException | InvalidPlatformException |
-                                 InvalidHoursException | InvalidDeckStatusException ex) {
-                            ex.printStackTrace();
-                        }
+                            addUnplayedGame.saveAndQuit(stage, unplayedGamesTable, playedSortChoices,
+                                    playedFilterChoices, statusCountBoxUnplayed, stats);
                     }
                 });
                 statusCountBoxUnplayed.updateData();
@@ -356,12 +345,8 @@ public class ApplicationGUI extends Application {
                     stage.show();
 
                     yesButton.setOnAction(e1 -> {
-                        try {
-                            GameLists.unplayedList.add(new UnplayedGame(game.getTitle(), "Backlog", game.getPlatform(), game.getGenre(), game.getReleaseYear(), game.getReleaseMonth(), game.getReleaseDay()));
-                        } catch (InvalidStatusException | InvalidPlatformException | InvalidGenreException |
-                                 InvalidYearException | InvalidMonthException | InvalidDayException ex) {
-                            ex.printStackTrace();
-                        }
+                            GameLists.unplayedList.add(new UnplayedGame(game.getTitle(), "Backlog", game.getPlatform(),
+                                    game.getGenre(), game.getReleaseYear(), game.getReleaseMonth(), game.getReleaseDay()));
 
                         GameLists.playedList.remove(game);
                         playedGamesTable.sortAndFilter(playedSortChoices, playedFilterChoices);
@@ -405,12 +390,8 @@ public class ApplicationGUI extends Application {
                     stage.show();
 
                     yesButton.setOnAction(e1 -> {
-                        try {
-                            GameLists.playedList.add(new PlayedGame(game.getTitle(), "Playing", game.getPlatform(), game.getGenre(), game.getReleaseYear(), game.getReleaseMonth(), game.getReleaseDay()));
-                        } catch (InvalidStatusException | InvalidPlatformException | InvalidGenreException |
-                                 InvalidYearException | InvalidMonthException | InvalidDayException ex) {
-                            ex.printStackTrace();
-                        }
+                            GameLists.playedList.add(new PlayedGame(game.getTitle(), "Playing", game.getPlatform(),
+                                    game.getGenre(), game.getReleaseYear(), game.getReleaseMonth(), game.getReleaseDay()));
 
                         GameLists.unplayedList.remove(game);
                         playedGamesTable.sortAndFilter(playedSortChoices, playedFilterChoices);
@@ -875,10 +856,7 @@ public class ApplicationGUI extends Application {
             stats.updateStats();
         } catch (NoSuchFileException ignored) {
             //This is ok. It just means that the user doesn't currently have a list file.
-        } catch (NullPointerException | InvalidShortStatusException | InvalidDeckStatusException | InvalidStatusException |
-                 InvalidGenreException | InvalidHoursException | InvalidDayException | InvalidYearException |
-                 InvalidMonthException | InvalidPercentException | InvalidRatingException | InvalidPlatformException |
-                 IOException e1) {
+        } catch (NullPointerException | IOException e1) {
             e1.printStackTrace();
         }
     }

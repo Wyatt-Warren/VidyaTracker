@@ -22,9 +22,7 @@ public abstract class Game {
     //Constructor
     public Game(String title, String status, String platform,
                 String genre, int releaseYear, int releaseMonth,
-                int releaseDay) throws
-            InvalidPlatformException, InvalidGenreException, InvalidYearException,
-            InvalidMonthException, InvalidDayException {
+                int releaseDay) {
         this.status = status;
         this.title = title;
         this.platform = platform;
@@ -42,7 +40,7 @@ public abstract class Game {
             }
         }
         if (!inList)
-            throw new InvalidPlatformException();
+            throw new IllegalArgumentException();
         inList = false;
         for (i = 0; i < GameLists.genreList.size(); i++) {
             if (genre.equals(GameLists.genreList.get(i))) {
@@ -51,18 +49,18 @@ public abstract class Game {
             }
         }
         if (!inList)
-            throw new InvalidGenreException();
+            throw new IllegalArgumentException();
         if (releaseYear < 0)
-            throw new InvalidYearException();
+            throw new IllegalArgumentException();
         if (releaseMonth < 0 || releaseMonth > 12)
-            throw new InvalidMonthException();
+            throw new IllegalArgumentException();
         if (releaseDay < 0 || releaseDay > 31)
-            throw new InvalidDayException();
+            throw new IllegalArgumentException();
         this.platform = platform;
     }
 
     //Status setter
-    public abstract void setStatus(String paramString) throws InvalidStatusException;
+    public abstract void setStatus(String paramString);
 
     //Franchise setter
     public void setFranchise(String franchise) {
@@ -75,7 +73,7 @@ public abstract class Game {
     }
 
     //Platform setter
-    public void setPlatform(String platform) throws InvalidPlatformException {
+    public void setPlatform(String platform) {
         boolean inList = false;
         for (int i = 0; i < GameLists.platformList.size(); i++) {
             if (platform.equals(GameLists.platformList.get(i))) {
@@ -84,12 +82,12 @@ public abstract class Game {
             }
         }
         if (!inList)
-            throw new InvalidPlatformException();
+            throw new IllegalArgumentException();
         this.platform = platform;
     }
 
     //Genre setter
-    public void setGenre(String genre) throws InvalidGenreException {
+    public void setGenre(String genre) {
         boolean inList = false;
         for (int i = 0; i < GameLists.genreList.size(); i++) {
             if (genre.equals(GameLists.genreList.get(i))) {
@@ -98,28 +96,28 @@ public abstract class Game {
             }
         }
         if (!inList)
-            throw new InvalidGenreException();
+            throw new IllegalArgumentException();
         this.genre = genre;
     }
 
     //Release year setter
-    public void setReleaseYear(int releaseYear) throws InvalidYearException {
+    public void setReleaseYear(int releaseYear) {
         if (releaseYear < 0)
-            throw new InvalidYearException();
+            throw new IllegalArgumentException();
         this.releaseYear = releaseYear;
     }
 
     //Release month setter
-    public void setReleaseMonth(int releaseMonth) throws InvalidMonthException {
+    public void setReleaseMonth(int releaseMonth) {
         if (releaseMonth < 0 || releaseMonth > 12)
-            throw new InvalidMonthException();
+            throw new IllegalArgumentException();
         this.releaseMonth = releaseMonth;
     }
 
     //Release day setter
-    public void setReleaseDay(int releaseDay) throws InvalidDayException {
+    public void setReleaseDay(int releaseDay) {
         if (releaseDay < 0 || releaseDay > 31)
-            throw new InvalidDayException();
+            throw new IllegalArgumentException();
         this.releaseDay = releaseDay;
     }
 
