@@ -1,9 +1,6 @@
 package com.example.vidyatracker11;
 
-import java.util.function.UnaryOperator;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -47,75 +44,53 @@ public class AddPlayedGame extends AddEditGame {
     ChoiceBox<String> percentBox = new ChoiceBox<>();
     VBox percentVBox = new VBox(percentLabel, percentBox);
 
-    public AddPlayedGame(Stage parentStage) {
-        Label mainLabel = new Label("Add New Played Game");
-        mainLabel.setStyle("-fx-font-size: 24;-fx-font-weight: bold;");
-        HBox mainHBox = new HBox(statusVBox, shortVBox, titleVBox,
+    public AddPlayedGame(Stage stage) {
+        super();
+        mainLabel.setText("Add New Played Game");
+        mainHBox.getChildren().addAll(statusVBox, shortVBox, titleVBox,
                 franchiseVBox, ratingVBox, platformVBox,
                 genreVBox, releaseVBox, completionVBox,
                 percentVBox);
-        Button doneButton = new Button("Create New Played Game");
-        mainHBox.setSpacing(5);
+        doneButton.setText("Create New Played Game");
+        getChildren().addAll(mainLabel, mainHBox, doneButton);
 
-        releaseYearHBox.setAlignment(Pos.CENTER);
-        releaseMonthHBox.setAlignment(Pos.CENTER);
-        releaseDayHBox.setAlignment(Pos.CENTER);
         completionYearHBox.setAlignment(Pos.CENTER);
         completionMonthHBox.setAlignment(Pos.CENTER);
         completionDayHBox.setAlignment(Pos.CENTER);
-        statusVBox.setAlignment(Pos.CENTER);
         shortVBox.setAlignment(Pos.CENTER);
-        titleVBox.setAlignment(Pos.CENTER);
-        franchiseVBox.setAlignment(Pos.CENTER);
         ratingVBox.setAlignment(Pos.CENTER);
-        platformVBox.setAlignment(Pos.CENTER);
-        genreVBox.setAlignment(Pos.CENTER);
-        releaseVBox.setAlignment(Pos.CENTER);
         completionVBox.setAlignment(Pos.CENTER);
         percentVBox.setAlignment(Pos.CENTER);
 
-        setAlignment(Pos.CENTER);
-        getChildren().addAll(mainLabel, mainHBox, doneButton);
-        setPadding(new Insets(5));
-
+        //Status
         statusBox.getItems().addAll("Playing", "Completed", "On Hold");
         statusBox.getSelectionModel().selectFirst();
+
+        //Short Status
         shortBox.getItems().addAll("Yes", "No", "Blank");
         shortBox.getSelectionModel().selectLast();
+
+        //Rating
         ratingBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         ratingBox.getSelectionModel().selectFirst();
-        platformBox.getItems().addAll(GameLists.platformList);
-        platformBox.getSelectionModel().selectFirst();
-        genreBox.getItems().addAll(GameLists.genreList);
-        genreBox.getSelectionModel().selectFirst();
 
-        UnaryOperator < TextFormatter.Change > integerFilter = change -> {
-            String input = change.getText();
-            return input.matches("[0-9]*") ? change : null;
-        };
-        releaseYearBox.setTextFormatter(new TextFormatter < > (integerFilter));
-        releaseMonthBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
-        releaseMonthBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
-            int newInt = (int) newNum;
-            setDayCount(newInt);
-        });
-        releaseMonthBox.getSelectionModel().selectFirst();
-        releaseDayBox.getSelectionModel().selectFirst();
-
+        //Completion Date
         completionYearBox.setTextFormatter(new TextFormatter < > (integerFilter));
         completionMonthBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
         completionMonthBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
             int newInt = (int) newNum;
-            setDayCount(newInt);
+            setDayCount(newInt, completionDayBox);
         });
         completionMonthBox.getSelectionModel().selectFirst();
         completionDayBox.getSelectionModel().selectFirst();
 
+        //100 Percent Status
         percentBox.getItems().addAll("Yes", "No", "Blank");
         percentBox.getSelectionModel().selectLast();
+
         doneButton.setOnAction(e -> {
             try{
-                saveAndQuit(parentStage);
+                saveAndQuit(stage);
             }catch (NumberFormatException e1){
                 e1.printStackTrace();
             }
@@ -123,7 +98,7 @@ public class AddPlayedGame extends AddEditGame {
     }
 
     //Closes the window and creates a new game with the inputted data
-    public void saveAndQuit(Stage parentStage) throws NumberFormatException{
+    public void saveAndQuit(Stage stage) throws NumberFormatException{
         //Set Release Year
         int releaseYear;
         if (releaseYearBox.getText().equals("")) {
@@ -172,35 +147,6 @@ public class AddPlayedGame extends AddEditGame {
         ApplicationGUI.playedGamesTable.sortAndFilter(ApplicationGUI.playedSortChoices, ApplicationGUI.playedFilterChoices);
         ApplicationGUI.stats.updateStats();
         ApplicationGUI.changeMade = true;
-        parentStage.close();
-    }
-
-    //Sets the days in the day drop down based on the month selected
-    public void setDayCount(int month) {
-        int dayCount = 0;
-        switch (month) {
-            case 1:
-            case 3:
-            case 5:
-            case 7:
-            case 8:
-            case 10:
-            case 12: //January, March, May, July, August, October, December
-                dayCount = 31;
-                break;
-            case 2: //February
-                dayCount = 29;
-                break;
-            case 4:
-            case 6:
-            case 9:
-            case 11: //April, June, September, November
-                dayCount = 30;
-                break;
-        }
-        releaseDayBox.getItems().clear();
-        for (int i = 0; i <= dayCount; i++)
-            releaseDayBox.getItems().add(i);
-        releaseDayBox.getSelectionModel().select(0);
+        stage.close();
     }
 }

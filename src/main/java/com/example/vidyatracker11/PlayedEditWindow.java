@@ -1,9 +1,6 @@
 package com.example.vidyatracker11;
 
-import java.util.function.UnaryOperator;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -13,57 +10,16 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 //Window used to edit an existing played game.
-public class PlayedEditWindow extends VBox {
-    //Status
-    Label statusLabel = new Label("Status:");
-    ChoiceBox<String> statusBox = new ChoiceBox<>();
-    VBox statusVBox = new VBox(statusLabel, statusBox);
-
+public class PlayedEditWindow extends AddEditGame {
     //Short Status
     Label shortLabel = new Label("Short Status:");
     ChoiceBox<String> shortBox = new ChoiceBox<>();
     VBox shortVBox = new VBox(shortLabel, shortBox);
 
-    //Title
-    Label titleLabel = new Label("Title:");
-    TextField titleBox = new TextField();
-    VBox titleVBox = new VBox(titleLabel, titleBox);
-
-    //Franchise
-    Label franchiseLabel = new Label("Franchise (Leave blank if no franchise):");
-    TextField franchiseBox = new TextField();
-    VBox franchiseVBox = new VBox(franchiseLabel, franchiseBox);
-
     //Rating
     Label ratingLabel = new Label("Rating");
     ChoiceBox<Integer> ratingBox = new ChoiceBox<>();
     VBox ratingVBox = new VBox(ratingLabel, ratingBox);
-
-    //Platform
-    Label platformLabel = new Label("Platform:");
-    ChoiceBox<String> platformBox = new ChoiceBox<>();
-    VBox platformVBox = new VBox(platformLabel, platformBox);
-
-    //Genre
-    Label genreLabel = new Label("Genre:");
-    ChoiceBox<String> genreBox = new ChoiceBox<>();
-    VBox genreVBox = new VBox(genreLabel, genreBox);
-
-    //Release
-    Label releaseLabel = new Label("Release Date:");
-    //Year
-    Label releaseYearLabel = new Label("Year:");
-    TextField releaseYearBox = new TextField();
-    HBox releaseYearHBox = new HBox(releaseYearLabel, releaseYearBox);
-    //Month
-    Label releaseMonthLabel = new Label("Month:");
-    ChoiceBox<Integer> releaseMonthBox = new ChoiceBox<>();
-    HBox releaseMonthHBox = new HBox(releaseMonthLabel, releaseMonthBox);
-    //Day
-    Label releaseDayLabel = new Label("Day:");
-    ChoiceBox<Integer> releaseDayBox = new ChoiceBox<>();
-    HBox releaseDayHBox = new HBox(releaseDayLabel, releaseDayBox);
-    VBox releaseVBox = new VBox(releaseLabel, releaseYearHBox, releaseMonthHBox, releaseDayHBox);
 
     //Completion
     Label completionLabel = new Label("Completion Date:");
@@ -86,65 +42,50 @@ public class PlayedEditWindow extends VBox {
     ChoiceBox<String> percentBox = new ChoiceBox<>();
     VBox percentVBox = new VBox(percentLabel, percentBox);
 
-    public PlayedEditWindow(PlayedGame game, Stage parentStage) {
-        Label mainLabel = new Label("Edit Data Values for " + game.getTitle());
-        mainLabel.setStyle("-fx-font-size: 24;-fx-font-weight: bold;");
-        HBox mainHBox = new HBox(statusVBox, shortVBox, titleVBox,
+    public PlayedEditWindow(PlayedGame game, Stage stage) {
+        super();
+        mainLabel.setText("Edit Data Values for " + game.getTitle());
+        mainHBox.getChildren().addAll(statusVBox, shortVBox, titleVBox,
                 franchiseVBox, ratingVBox, platformVBox,
                 genreVBox, releaseVBox, completionVBox, percentVBox);
-        Button doneButton = new Button("Save Changes and Close Window");
-        mainHBox.setSpacing(5);
+        doneButton.setText("Save Changes and Close Window");
+        getChildren().addAll(mainLabel, mainHBox, doneButton);
 
-        releaseYearHBox.setAlignment(Pos.CENTER);
-        releaseMonthHBox.setAlignment(Pos.CENTER);
-        releaseDayHBox.setAlignment(Pos.CENTER);
         completionYearHBox.setAlignment(Pos.CENTER);
         completionMonthHBox.setAlignment(Pos.CENTER);
         completionDayHBox.setAlignment(Pos.CENTER);
-        statusVBox.setAlignment(Pos.CENTER);
-        shortVBox.setAlignment(Pos.CENTER);
-        titleVBox.setAlignment(Pos.CENTER);
-        franchiseVBox.setAlignment(Pos.CENTER);
-        ratingVBox.setAlignment(Pos.CENTER);
-        platformVBox.setAlignment(Pos.CENTER);
-        genreVBox.setAlignment(Pos.CENTER);
-        releaseVBox.setAlignment(Pos.CENTER);
         completionVBox.setAlignment(Pos.CENTER);
+        shortVBox.setAlignment(Pos.CENTER);
+        ratingVBox.setAlignment(Pos.CENTER);
         percentVBox.setAlignment(Pos.CENTER);
-        setAlignment(Pos.CENTER);
 
-        getChildren().addAll(mainLabel, mainHBox, doneButton);
-        setPadding(new Insets(5));
+        //Status
         statusBox.getItems().addAll("Playing", "Completed", "On Hold");
         statusBox.getSelectionModel().select(game.getStatus());
+
+        //Short Status
         shortBox.getItems().addAll("Yes", "No", "Blank");
         if (game.getIsItShort().equals("Yes") || game.getIsItShort().equals("No")) {
             shortBox.getSelectionModel().select(game.getIsItShort());
         } else {
             shortBox.getSelectionModel().selectLast();
         }
+
+        //Title/Franchise
         titleBox.setText(game.getTitle());
         if (!game.getFranchise().equals(game.getTitle()))
             franchiseBox.setText(game.getFranchise());
+
+        //Rating
         ratingBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         ratingBox.getSelectionModel().select(game.getRating());
-        platformBox.getItems().addAll(GameLists.platformList);
-        platformBox.getSelectionModel().select(game.getPlatform());
-        genreBox.getItems().addAll(GameLists.genreList);
-        genreBox.getSelectionModel().select(game.getGenre());
-        UnaryOperator < TextFormatter.Change > integerFilter = change -> {
-            String input = change.getText();
-            return input.matches("[0-9]*") ? change : null;
-        };
+
+        //Release Date
         releaseYearBox.setText("" + game.getReleaseYear());
-        releaseYearBox.setTextFormatter(new TextFormatter < > (integerFilter));
-        releaseMonthBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
-        releaseMonthBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
-            int newInt = (int) newNum;
-            setDayCount(newInt, releaseDayBox);
-        });
         releaseMonthBox.getSelectionModel().select(game.getReleaseMonth());
         releaseDayBox.getSelectionModel().select(game.getReleaseDay());
+
+        //Completion Date
         completionYearBox.setText("" + game.getCompletionYear());
         completionYearBox.setTextFormatter(new TextFormatter < > (integerFilter));
         completionMonthBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
@@ -154,15 +95,18 @@ public class PlayedEditWindow extends VBox {
         });
         completionMonthBox.getSelectionModel().select(game.getCompletionMonth());
         completionDayBox.getSelectionModel().select(game.getCompletionDay());
+
+        //100 Percent Status
         percentBox.getItems().addAll("Yes", "No", "Blank");
         if (game.getPercent100().equals("Yes") || game.getPercent100().equals("No")) {
             percentBox.getSelectionModel().select(game.getPercent100());
         } else {
             percentBox.getSelectionModel().selectLast();
         }
+
         doneButton.setOnAction(e -> {
             try{
-                saveAndQuit(game, parentStage);
+                saveAndQuit(game, stage);
             }catch(NumberFormatException e1){
                 e1.printStackTrace();
             }
@@ -170,7 +114,7 @@ public class PlayedEditWindow extends VBox {
     }
 
     //Closes the window and saves the inputted data to the given game
-    public void saveAndQuit(PlayedGame game, Stage parentStage) throws NumberFormatException{
+    public void saveAndQuit(PlayedGame game, Stage stage) throws NumberFormatException{
         //Status
         game.setStatus(statusBox.getSelectionModel().getSelectedItem());
 
@@ -226,35 +170,6 @@ public class PlayedEditWindow extends VBox {
         ApplicationGUI.statusCountBoxPlayed.updateData();
         ApplicationGUI.playedGamesTable.sortAndFilter(ApplicationGUI.playedSortChoices, ApplicationGUI.playedFilterChoices);
         ApplicationGUI.changeMade = true;
-        parentStage.close();
-    }
-
-    //Sets the days in the dropdown based on the selected month
-    public void setDayCount(int month, ChoiceBox<Integer> dayBox) {
-        int dayCount = 0;
-        switch (month) {
-            case 1:
-            case 3:
-            case 5:
-            case 7:
-            case 8:
-            case 10:
-            case 12: //January, March, May, July, August, October, December
-                dayCount = 31;
-                break;
-            case 2: //February
-                dayCount = 29;
-                break;
-            case 4:
-            case 6:
-            case 9:
-            case 11: //April, June, September, November
-                dayCount = 30;
-                break;
-        }
-        dayBox.getItems().clear();
-        for (int i = 0; i <= dayCount; i++)
-            dayBox.getItems().add(i);
-        dayBox.getSelectionModel().select(0);
+        stage.close();
     }
 }
