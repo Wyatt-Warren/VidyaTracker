@@ -27,14 +27,14 @@ public class UnplayedTempList extends HBox {
 
     VBox vbox = new VBox(5, addButton, removeButton, countLabel, hoursLabel);
 
-    public UnplayedTempList(UnplayedGamesTable table) {
+    public UnplayedTempList() {
         getChildren().addAll(listView, vbox);
         setPadding(new Insets(5));
         setSpacing(5);
         addButton.setOnAction(e -> {
-            if (table.getSelectionModel().getSelectedIndex() != -1) {
-                titles.add(table.getSelectionModel().getSelectedItem().getTitle());
-                hours.add(table.getSelectionModel().getSelectedItem().getHours());
+            if (ApplicationGUI.unplayedGamesTable.getSelectionModel().getSelectedIndex() != -1) {
+                titles.add(ApplicationGUI.unplayedGamesTable.getSelectionModel().getSelectedItem().getTitle());
+                hours.add(ApplicationGUI.unplayedGamesTable.getSelectionModel().getSelectedItem().getHours());
                 updateLabels();
             }
         });

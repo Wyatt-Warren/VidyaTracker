@@ -61,7 +61,7 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
 
     private static final LocalDate localDate = date.toInstant().atZone(timeZone).toLocalDate();
 
-    public PlayedGamesTable(ChoiceBox<String> sortChoiceBox, ChoiceBox<String> filterChoiceBox, StatusCountBoxPlayed statusCountBoxPlayed) {
+    public PlayedGamesTable() {
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         shortColumn.setCellValueFactory(new PropertyValueFactory<>("isItShort"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -194,7 +194,7 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                     Stage stage = new Stage();
                     stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
                     stage.setResizable(false);
-                    PlayedEditWindow window = new PlayedEditWindow(clickedRow, stage, this, sortChoiceBox, filterChoiceBox, statusCountBoxPlayed);
+                    PlayedEditWindow window = new PlayedEditWindow(clickedRow, stage);
                     Scene scene = new Scene(window);
                     stage.setScene(scene);
                     stage.setTitle("Edit Game Data");
@@ -205,8 +205,7 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                             stage.close();
                         }else if(e.getCode() == KeyCode.ENTER){
                             try{
-                                window.saveAndQuit(clickedRow, stage, this, sortChoiceBox,
-                                        filterChoiceBox, statusCountBoxPlayed);
+                                window.saveAndQuit(clickedRow, stage);
                             }catch (NumberFormatException e1){
                                 e1.printStackTrace();
                             }

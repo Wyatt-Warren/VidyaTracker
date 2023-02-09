@@ -47,7 +47,7 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
 
     FilteredList<UnplayedGame> filteredList = new FilteredList<>(sortedList);
 
-    public UnplayedGamesTable(ChoiceBox<String> sortChoiceBox, ChoiceBox<String> filterChoiceBox, StatusCountBoxUnplayed statusCountBoxUnplayed) {
+    public UnplayedGamesTable() {
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         platformColumn.setCellValueFactory(new PropertyValueFactory<>("platform"));
@@ -136,7 +136,7 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
                     Stage stage = new Stage();
                     stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
                     stage.setResizable(false);
-                    UnplayedEditWindow window = new UnplayedEditWindow(clickedRow, stage, this, sortChoiceBox, filterChoiceBox, statusCountBoxUnplayed);
+                    UnplayedEditWindow window = new UnplayedEditWindow(clickedRow, stage);
                     Scene scene = new Scene(window);
                     stage.setScene(scene);
                     stage.setTitle("Edit Game Data");
@@ -147,8 +147,7 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
                             stage.close();
                         }else if(e.getCode() == KeyCode.ENTER){
                             try {
-                                window.saveAndQuit(clickedRow, stage, this, sortChoiceBox,
-                                        filterChoiceBox, statusCountBoxUnplayed);
+                                window.saveAndQuit(clickedRow, stage);
                             } catch (NumberFormatException e1) {
                                 e1.printStackTrace();
                             }

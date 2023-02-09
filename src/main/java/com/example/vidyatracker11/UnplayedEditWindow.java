@@ -65,9 +65,7 @@ public class UnplayedEditWindow extends VBox {
     HBox releaseDayHBox = new HBox(releaseDayLabel, releaseDayBox);
     VBox releaseVBox = new VBox(releaseLabel, releaseYearHBox, releaseMonthHBox, releaseDayHBox);
 
-    public UnplayedEditWindow(UnplayedGame game, Stage parentStage, UnplayedGamesTable table,
-                              ChoiceBox<String> sortChoiceBox, ChoiceBox<String> sortFilterBox,
-                              StatusCountBoxUnplayed statusCountBoxUnplayed) {
+    public UnplayedEditWindow(UnplayedGame game, Stage parentStage) {
         Label mainLabel = new Label("Edit Data Values for " + game.getTitle());
         mainLabel.setStyle("-fx-font-size: 24;-fx-font-weight: bold;");
         HBox mainHBox = new HBox(statusVBox, titleVBox, franchiseVBox, platformVBox, genreVBox, hoursVBox, deckVBox, releaseVBox);
@@ -121,13 +119,13 @@ public class UnplayedEditWindow extends VBox {
         releaseMonthBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
         releaseMonthBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
             int newInt = (int) newNum;
-            setDayCount(newInt, releaseDayBox);
+            setDayCount(newInt);
         });
         releaseMonthBox.getSelectionModel().select(game.getReleaseMonth());
         releaseDayBox.getSelectionModel().select(game.getReleaseDay());
         doneButton.setOnAction(e -> {
             try {
-                saveAndQuit(game, parentStage, table, sortChoiceBox, sortFilterBox, statusCountBoxUnplayed);
+                saveAndQuit(game, parentStage);
             }catch (NumberFormatException e1){
                 e1.printStackTrace();
             }
@@ -135,9 +133,7 @@ public class UnplayedEditWindow extends VBox {
     }
 
     //Closes the window and saves the inputted data to the given unplayed game.
-    public void saveAndQuit(UnplayedGame game, Stage parentStage, UnplayedGamesTable table,
-                            ChoiceBox<String> sortChoiceBox, ChoiceBox<String> sortFilterBox,
-                            StatusCountBoxUnplayed statusCountBoxUnplayed) throws NumberFormatException{
+    public void saveAndQuit(UnplayedGame game, Stage parentStage) throws NumberFormatException{
         game.setStatus(statusBox.getSelectionModel().getSelectedItem());
         game.setTitle(titleBox.getText());
         if (franchiseBox.getText().equals("")) {
@@ -164,14 +160,14 @@ public class UnplayedEditWindow extends VBox {
         }
         game.setReleaseMonth(releaseMonthBox.getValue());
         game.setReleaseDay(releaseDayBox.getValue());
-        statusCountBoxUnplayed.updateData();
-        table.sortAndFilter(sortChoiceBox, sortFilterBox);
+        ApplicationGUI.statusCountBoxUnplayed.updateData();
+        ApplicationGUI.unplayedGamesTable.sortAndFilter(ApplicationGUI.unplayedSortChoices, ApplicationGUI.unplayedFilterChoices);
         ApplicationGUI.changeMade = true;
         parentStage.close();
     }
 
     //Sets the days in the dropdown based on the selected month.
-    public void setDayCount(int month, ChoiceBox<Integer> dayBox) {
+    public void setDayCount(int month) {
         int dayCount = 0;
         switch (month) {
             case 1:
@@ -193,9 +189,9 @@ public class UnplayedEditWindow extends VBox {
                 dayCount = 30;
                 break;
         }
-        dayBox.getItems().clear();
+        releaseDayBox.getItems().clear();
         for (int i = 0; i <= dayCount; i++)
-            dayBox.getItems().add(i);
-        dayBox.getSelectionModel().select(0);
+            releaseDayBox.getItems().add(i);
+        releaseDayBox.getSelectionModel().select(0);
     }
 }

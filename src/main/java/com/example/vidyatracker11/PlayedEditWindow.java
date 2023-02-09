@@ -86,9 +86,7 @@ public class PlayedEditWindow extends VBox {
     ChoiceBox<String> percentBox = new ChoiceBox<>();
     VBox percentVBox = new VBox(percentLabel, percentBox);
 
-    public PlayedEditWindow(PlayedGame game, Stage parentStage, PlayedGamesTable table,
-                            ChoiceBox<String> sortChoiceBox, ChoiceBox<String> sortFilterBox,
-                            StatusCountBoxPlayed statusCountBoxPlayed) {
+    public PlayedEditWindow(PlayedGame game, Stage parentStage) {
         Label mainLabel = new Label("Edit Data Values for " + game.getTitle());
         mainLabel.setStyle("-fx-font-size: 24;-fx-font-weight: bold;");
         HBox mainHBox = new HBox(statusVBox, shortVBox, titleVBox,
@@ -164,7 +162,7 @@ public class PlayedEditWindow extends VBox {
         }
         doneButton.setOnAction(e -> {
             try{
-                saveAndQuit(game, parentStage, table, sortChoiceBox, sortFilterBox, statusCountBoxPlayed);
+                saveAndQuit(game, parentStage);
             }catch(NumberFormatException e1){
                 e1.printStackTrace();
             }
@@ -172,9 +170,7 @@ public class PlayedEditWindow extends VBox {
     }
 
     //Closes the window and saves the inputted data to the given game
-    public void saveAndQuit(PlayedGame game, Stage parentStage, PlayedGamesTable table,
-                            ChoiceBox<String> sortChoiceBox, ChoiceBox<String> sortFilterBox,
-                            StatusCountBoxPlayed statusCountBoxPlayed) throws NumberFormatException{
+    public void saveAndQuit(PlayedGame game, Stage parentStage) throws NumberFormatException{
         //Status
         game.setStatus(statusBox.getSelectionModel().getSelectedItem());
 
@@ -227,8 +223,8 @@ public class PlayedEditWindow extends VBox {
             game.setPercent100(percentBox.getSelectionModel().getSelectedItem());
         }
 
-        statusCountBoxPlayed.updateData();
-        table.sortAndFilter(sortChoiceBox, sortFilterBox);
+        ApplicationGUI.statusCountBoxPlayed.updateData();
+        ApplicationGUI.playedGamesTable.sortAndFilter(ApplicationGUI.playedSortChoices, ApplicationGUI.playedFilterChoices);
         ApplicationGUI.changeMade = true;
         parentStage.close();
     }

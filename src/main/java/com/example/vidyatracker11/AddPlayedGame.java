@@ -13,57 +13,17 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 //The window for adding a new game to the played game list.
-public class AddPlayedGame extends VBox {
-    //Status
-    Label statusLabel = new Label("Status:");
-    ChoiceBox<String> statusBox = new ChoiceBox<>();
-    VBox statusVBox = new VBox(statusLabel, statusBox);
+public class AddPlayedGame extends AddEditGame {
 
     //Short Status
     Label shortLabel = new Label("Short Status:");
     ChoiceBox<String> shortBox = new ChoiceBox<>();
     VBox shortVBox = new VBox(shortLabel, shortBox);
 
-    //Title
-    Label titleLabel = new Label("Title:");
-    TextField titleBox = new TextField();
-    VBox titleVBox = new VBox(titleLabel, titleBox);
-
-    //Franchise
-    Label franchiseLabel = new Label("Franchise (Leave blank if no franchise):");
-    TextField franchiseBox = new TextField();
-    VBox franchiseVBox = new VBox(franchiseLabel, franchiseBox);
-
     //Rating
     Label ratingLabel = new Label("Rating");
     ChoiceBox<Integer> ratingBox = new ChoiceBox<>();
     VBox ratingVBox = new VBox(ratingLabel, ratingBox);
-
-    //Platform
-    Label platformLabel = new Label("Platform:");
-    ChoiceBox<String> platformBox = new ChoiceBox<>();
-    VBox platformVBox = new VBox(platformLabel, platformBox);
-
-    //Genre
-    Label genreLabel = new Label("Genre:");
-    ChoiceBox<String> genreBox = new ChoiceBox<>();
-    VBox genreVBox = new VBox(genreLabel, genreBox);
-
-    //Release Date
-    Label releaseLabel = new Label("Release Date:");
-    //Year
-    Label releaseYearLabel = new Label("Year:");
-    TextField releaseYearBox = new TextField();
-    HBox releaseYearHBox = new HBox(releaseYearLabel, releaseYearBox);
-    //Month
-    Label releaseMonthLabel = new Label("Month:");
-    ChoiceBox<Integer> releaseMonthBox = new ChoiceBox<>();
-    HBox releaseMonthHBox = new HBox(releaseMonthLabel, releaseMonthBox);
-    //Day
-    Label releaseDayLabel = new Label("Day:");
-    ChoiceBox<Integer> releaseDayBox = new ChoiceBox<>();
-    HBox releaseDayHBox = new HBox(releaseDayLabel, releaseDayBox);
-    VBox releaseVBox = new VBox(releaseLabel, releaseYearHBox, releaseMonthHBox, releaseDayHBox);
 
     //Completion Date
     Label completionLabel = new Label("Completion Date:");
@@ -87,9 +47,7 @@ public class AddPlayedGame extends VBox {
     ChoiceBox<String> percentBox = new ChoiceBox<>();
     VBox percentVBox = new VBox(percentLabel, percentBox);
 
-    public AddPlayedGame(Stage parentStage, PlayedGamesTable table, ChoiceBox<String> sortChoiceBox,
-                         ChoiceBox<String> sortFilterBox, StatusCountBoxPlayed statusCountBoxPlayed,
-                         StatsScreen stats) {
+    public AddPlayedGame(Stage parentStage) {
         Label mainLabel = new Label("Add New Played Game");
         mainLabel.setStyle("-fx-font-size: 24;-fx-font-weight: bold;");
         HBox mainHBox = new HBox(statusVBox, shortVBox, titleVBox,
@@ -139,7 +97,7 @@ public class AddPlayedGame extends VBox {
         releaseMonthBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
         releaseMonthBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
             int newInt = (int) newNum;
-            setDayCount(newInt, releaseDayBox);
+            setDayCount(newInt);
         });
         releaseMonthBox.getSelectionModel().selectFirst();
         releaseDayBox.getSelectionModel().selectFirst();
@@ -148,7 +106,7 @@ public class AddPlayedGame extends VBox {
         completionMonthBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
         completionMonthBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
             int newInt = (int) newNum;
-            setDayCount(newInt, completionDayBox);
+            setDayCount(newInt);
         });
         completionMonthBox.getSelectionModel().selectFirst();
         completionDayBox.getSelectionModel().selectFirst();
@@ -157,7 +115,7 @@ public class AddPlayedGame extends VBox {
         percentBox.getSelectionModel().selectLast();
         doneButton.setOnAction(e -> {
             try{
-                saveAndQuit(parentStage, table, sortChoiceBox, sortFilterBox, statusCountBoxPlayed, stats);
+                saveAndQuit(parentStage);
             }catch (NumberFormatException e1){
                 e1.printStackTrace();
             }
@@ -165,9 +123,7 @@ public class AddPlayedGame extends VBox {
     }
 
     //Closes the window and creates a new game with the inputted data
-    public void saveAndQuit(Stage parentStage, PlayedGamesTable table, ChoiceBox<String> sortChoiceBox,
-                            ChoiceBox<String> sortFilterBox, StatusCountBoxPlayed statusCountBoxPlayed,
-                            StatsScreen stats) throws NumberFormatException{
+    public void saveAndQuit(Stage parentStage) throws NumberFormatException{
         //Set Release Year
         int releaseYear;
         if (releaseYearBox.getText().equals("")) {
@@ -212,15 +168,15 @@ public class AddPlayedGame extends VBox {
         }
 
         GameLists.playedList.add(newGame);
-        statusCountBoxPlayed.updateData();
-        table.sortAndFilter(sortChoiceBox, sortFilterBox);
-        stats.updateStats();
+        ApplicationGUI.statusCountBoxPlayed.updateData();
+        ApplicationGUI.playedGamesTable.sortAndFilter(ApplicationGUI.playedSortChoices, ApplicationGUI.playedFilterChoices);
+        ApplicationGUI.stats.updateStats();
         ApplicationGUI.changeMade = true;
         parentStage.close();
     }
 
     //Sets the days in the day drop down based on the month selected
-    public void setDayCount(int month, ChoiceBox < Integer > dayBox) {
+    public void setDayCount(int month) {
         int dayCount = 0;
         switch (month) {
             case 1:
@@ -242,9 +198,9 @@ public class AddPlayedGame extends VBox {
                 dayCount = 30;
                 break;
         }
-        dayBox.getItems().clear();
+        releaseDayBox.getItems().clear();
         for (int i = 0; i <= dayCount; i++)
-            dayBox.getItems().add(i);
-        dayBox.getSelectionModel().select(0);
+            releaseDayBox.getItems().add(i);
+        releaseDayBox.getSelectionModel().select(0);
     }
 }

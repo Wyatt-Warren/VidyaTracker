@@ -51,17 +51,17 @@ public class ApplicationGUI extends Application {
     public static Label playedSortLabel = new Label("Sort by: ");
     public static Label playedFilterLabel = new Label("Filter by: ");
     public static ChoiceBox<String> playedFilterChoices = new ChoiceBox<>();
-    public static PlayedGamesTable playedGamesTable = new PlayedGamesTable(playedSortChoices, playedFilterChoices, statusCountBoxPlayed);
+    public static PlayedGamesTable playedGamesTable = new PlayedGamesTable();
     public static HBox playedChoiceHBox = new HBox(playedSortLabel, playedSortChoices, playedFilterLabel, playedFilterChoices);
     public static VBox playedGamesVBox = new VBox(playedChoiceHBox, playedGamesTable);
     public static ChoiceBox<String> unplayedSortChoices = new ChoiceBox<>();
     public static ChoiceBox<String> unplayedFilterChoices = new ChoiceBox<>();
-    public static UnplayedGamesTable unplayedGamesTable = new UnplayedGamesTable(unplayedSortChoices, unplayedFilterChoices, statusCountBoxUnplayed);
+    public static UnplayedGamesTable unplayedGamesTable = new UnplayedGamesTable();
     public static Label unplayedSortLabel = new Label("Sort by: ");
     public static Label unplayedFilterLabel = new Label("Filter by: ");
     public static HBox unplayedChoiceHBox = new HBox(unplayedSortLabel, unplayedSortChoices, unplayedFilterLabel, unplayedFilterChoices);
     public static VBox unplayedGamesVBox = new VBox(unplayedChoiceHBox, unplayedGamesTable);
-    public static UnplayedTempList unplayedTempList = new UnplayedTempList(unplayedGamesTable);
+    public static UnplayedTempList unplayedTempList = new UnplayedTempList();
     public static Button switchFromPlayed = new Button("Show Unplayed List");
     public static Button switchFromUnplayed = new Button("Show Played List");
     public static HBox topBoxPlayed = new HBox(statusCountBoxPlayed, switchFromPlayed);
@@ -272,8 +272,7 @@ public class ApplicationGUI extends Application {
                 Stage stage = new Stage();
                 stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
                 stage.setResizable(false);
-                AddPlayedGame addPlayedGame = new AddPlayedGame(stage, playedGamesTable,
-                        playedSortChoices, playedFilterChoices, statusCountBoxPlayed, stats);
+                AddPlayedGame addPlayedGame = new AddPlayedGame(stage);
                 Scene scene = new Scene(addPlayedGame);
                 stage.setScene(scene);
                 stage.setTitle("Add New Played Game");
@@ -283,8 +282,7 @@ public class ApplicationGUI extends Application {
                     if (e1.getCode() == KeyCode.ESCAPE) {
                         stage.close();
                     } else if (e1.getCode() == KeyCode.ENTER) {
-                            addPlayedGame.saveAndQuit(stage, playedGamesTable, playedSortChoices,
-                                    playedFilterChoices, statusCountBoxPlayed, stats);
+                            addPlayedGame.saveAndQuit(stage);
                     }
                 });
 
@@ -292,8 +290,7 @@ public class ApplicationGUI extends Application {
                 Stage stage = new Stage();
                 stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
                 stage.setResizable(false);
-                AddUnplayedGame addUnplayedGame = new AddUnplayedGame(stage, unplayedGamesTable,
-                        unplayedSortChoices, unplayedFilterChoices, statusCountBoxUnplayed, stats);
+                AddUnplayedGame addUnplayedGame = new AddUnplayedGame(stage);
                 Scene scene = new Scene(addUnplayedGame);
                 stage.setScene(scene);
                 stage.setTitle("Add New Played Game");
@@ -303,8 +300,7 @@ public class ApplicationGUI extends Application {
                     if (e1.getCode() == KeyCode.ESCAPE) {
                         stage.close();
                     } else if (e1.getCode() == KeyCode.ENTER) {
-                            addUnplayedGame.saveAndQuit(stage, unplayedGamesTable, playedSortChoices,
-                                    playedFilterChoices, statusCountBoxUnplayed, stats);
+                            addUnplayedGame.saveAndQuit(stage);
                     }
                 });
                 statusCountBoxUnplayed.updateData();
