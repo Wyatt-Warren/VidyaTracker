@@ -5,13 +5,10 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.Objects;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.Event;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableCell;
@@ -22,8 +19,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -75,7 +70,7 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
         for (TableColumn<PlayedGame, ?> playedGameTableColumn : columnList)
             playedGameTableColumn.setSortable(false);
         setPrefSize(900, 99999);
-        preventColumnReorderingOrResizing(this);
+        TableMethods.preventColumnReordering(this);
         setItems(filteredList);
         getColumns().addAll(columnList);
 
@@ -217,26 +212,6 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
         });
     }
 
-    //Sends data from each cell to a text object and gets the width of that object. Whatever the greatest value is,
-    // the width should be sightly more
-    public void updateColumnWidth() {
-        for (int i = 0; i < columnList.size(); i++) {
-            Text text = new Text(columnList.get(i).getText());
-            double width = text.getLayoutBounds().getWidth() + 20.0;
-            for (int j = 0; j < filteredList.size(); j++) {
-                if (i == 3 || i == 6 || i == 7) { //Rating, Release year, Completion year
-                    text = new Text(Integer.toString((int) columnList.get(i).getCellData(j)));
-                } else {
-                    text = new Text((String) columnList.get(i).getCellData(j));
-                }
-                double newWidth = text.getLayoutBounds().getWidth() + 20.0;
-                if (newWidth > width)
-                    width = newWidth;
-            }
-            columnList.get(i).setPrefWidth(width);
-        }
-    }
-
     //Calls sort methods based on the selected sort and filter options
     public void sortAndFilter(ChoiceBox<String> sortChoices, ChoiceBox<String> filterChoices) {
         switch (filterChoices.getSelectionModel().getSelectedIndex()) { //Filter first
@@ -276,18 +251,8 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                 sortByDate(false);
                 break;
         }
-        updateColumnWidth();
+        TableMethods.updateColumnWidth(columnList);
         refresh();
-    }
-
-    //Consumes the mouse events on the header so the user cant sort manually.
-    public static <T> void preventColumnReorderingOrResizing(TableView<T> tableView) {
-        Platform.runLater(() -> {
-            for (Node header : tableView.lookupAll(".column-header"))
-                header.addEventFilter(MouseEvent.MOUSE_DRAGGED, Event::consume);
-            for (Node resizeLine : tableView.lookupAll(".column-header-background"))
-                resizeLine.addEventFilter(MouseEvent.ANY, Event::consume);
-        });
     }
 
     //Sorts by franchise, within the same franchise, sorts by release date

@@ -56,7 +56,7 @@ public class StatusCountBoxUnplayed extends GridPane {
         add(wishlistHoursLabel, 2, 3);
         add(totalHoursLabel, 2, 4);
         updateData();
-        setPadding(new Insets(5.0));
+        setPadding(new Insets(5));
         for (Node n : getChildren()) {
             if (n instanceof Control) {
                 Control control = (Control)n;

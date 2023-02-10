@@ -43,15 +43,7 @@ public class AddUnplayedGame extends AddEditGame {
         platformBox.getSelectionModel().selectFirst();
 
         //Hours
-        hoursBox.setTextFormatter(new TextFormatter < > (change -> {
-            String input = change.getText();
-            boolean noPeriods = true;
-            for (int i = 0; i < hoursBox.getText().length(); i++) {
-                if (hoursBox.getText().charAt(i) == '.')
-                    noPeriods = false;
-            }
-            return (input.matches("\\d*") || (input.matches("\\.*") && noPeriods)) ? change : null;
-        }));
+        hoursBox.setTextFormatter(new TextFormatter<>(doubleFilter));
 
         //Deck Status
         deckBox.getItems().addAll("Yes", "No", "Maybe", "Blank");

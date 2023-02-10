@@ -639,7 +639,7 @@ public class ApplicationGUI extends Application {
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
             RandomListGenerator window = new RandomListGenerator();
-            Scene scene = new Scene(window, 1600, 500);
+            Scene scene = new Scene(window, 1600, 400);
             scene.setOnKeyPressed(e1 -> {
                 if (e1.getCode() == KeyCode.ESCAPE) {
                     stage.close();
@@ -666,7 +666,8 @@ public class ApplicationGUI extends Application {
             primarySceneVBox.getChildren().clear();
             primarySceneVBox.getChildren().addAll(menuBar, playedWindow);
             randomMenu.getItems().clear();
-            randomMenu.getItems().addAll(chooseRandomGameMenuItem, chooseRandomWishlistGameMenuItem, generateRandomListMenuItem);
+            randomMenu.getItems().addAll(chooseRandomGameMenuItem, chooseRandomWishlistGameMenuItem,
+                    generateRandomListMenuItem);
             playedOpen = true;
         });
 

@@ -57,8 +57,13 @@ public class AddEditGame extends VBox{
     Button doneButton = new Button();
     HBox mainHBox = new HBox();
     UnaryOperator<TextFormatter.Change> integerFilter = change -> {
-        String input = change.getText();
-        return input.matches("\\d*") ? change : null;
+        String input = change.getControlNewText();
+        return input.matches("\\d{0,9}") ? change : null;
+    };
+
+    UnaryOperator<TextFormatter.Change> doubleFilter = change -> {
+        String input = change.getControlNewText();
+        return input.matches("\\d*\\.\\d*") ? change : null;
     };
 
     public AddEditGame(){

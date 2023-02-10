@@ -75,7 +75,7 @@ public class StatusCountBoxPlayed extends GridPane {
         add(new Label(), 2, 4);
         add(new Label(), 3, 4);
         updateData();
-        setPadding(new Insets(5.0));
+        setPadding(new Insets(5));
         for (Node n : getChildren()) {
             if (n instanceof Control) {
                 Control control = (Control)n;

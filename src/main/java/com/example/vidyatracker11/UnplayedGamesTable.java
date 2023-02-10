@@ -3,13 +3,10 @@ package com.example.vidyatracker11;
 import java.util.Collections;
 import java.util.Objects;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.Event;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableCell;
@@ -20,8 +17,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -57,8 +52,8 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
         releaseYearColumn.setCellValueFactory(new PropertyValueFactory<>("releaseYear"));
         for (TableColumn<UnplayedGame, ?> unplayedGameTableColumn : columnList)
             unplayedGameTableColumn.setSortable(false);
-        setPrefSize(900.0, 99999.0);
-        preventColumnReorderingOrResizing(this);
+        setPrefSize(900, 99999);
+        TableMethods.preventColumnReordering(this);
         setItems(sortedList);
         getColumns().addAll(columnList);
         statusColumn.setCellFactory(e -> new TableCell<>() {
@@ -159,28 +154,6 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
         });
     }
 
-    //Sends data from each cell to a text object and gets the width of that object. Whatever the greatest value is,
-    // the width should be sightly more
-    public void updateColumnWidth() {
-        for (int i = 0; i < columnList.size(); i++) {
-            Text text = new Text(columnList.get(i).getText());
-            double width = text.getLayoutBounds().getWidth() + 20.0;
-            for (int j = 0; j < filteredList.size(); j++) {
-                if (i == 4) {
-                    text = new Text(Double.toString((Double) columnList.get(i).getCellData(j)));
-                } else if (i == 6) {
-                    text = new Text(Integer.toString((Integer) columnList.get(i).getCellData(j)));
-                } else {
-                    text = new Text((String)(columnList.get(i)).getCellData(j));
-                }
-                double newWidth = text.getLayoutBounds().getWidth() + 20.0;
-                if (newWidth > width)
-                    width = newWidth;
-            }
-            columnList.get(i).setPrefWidth(width);
-        }
-    }
-
     //Calls sort and filter methods based on the selected sort and filter options
     public void sortAndFilter(ChoiceBox<String> sortChoice, ChoiceBox<String> filterChoice) {
         switch (filterChoice.getSelectionModel().getSelectedIndex()) { //Filter first
@@ -214,19 +187,8 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
                 sortByDate();
                 break;
         }
-        updateColumnWidth();
+        TableMethods.updateColumnWidth(columnList);
         refresh();
-    }
-
-    //Prevent the user from sorting manually
-    public static <T> void preventColumnReorderingOrResizing(TableView<T> tableView) {
-        Platform.runLater(() -> {
-            for (Node header : tableView.lookupAll(".column-header"))
-                header.addEventFilter(MouseEvent.MOUSE_DRAGGED, Event::consume);
-
-            for (Node resizeLine : tableView.lookupAll(".column-header-background"))
-                resizeLine.addEventFilter(MouseEvent.ANY, Event::consume);
-        });
     }
 
     //Sorts based on franchise, within the same franchise, sort by date

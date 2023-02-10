@@ -1,21 +1,16 @@
 package com.example.vidyatracker11;
 
 import java.util.Collections;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 //Window showing many tableviews of stats relating the game lists
 public class StatsScreen extends VBox {
@@ -99,7 +94,7 @@ public class StatsScreen extends VBox {
 
     HBox unplayedBox = new HBox(unplayedPlatformTable, unplayedGenreTable, unplayedReleaseYearTable, unplayedDeckTable);
 
-    ObservableList<TableColumn<?, ?>> columnList = FXCollections.observableArrayList(
+    ObservableList<TableColumn<PlayedDataEntry, ?>> playedColumnList = FXCollections.observableArrayList(
             playedPlatformTitleColumn, playedPlatformCountColumn, playedPlatformPercentColumn,
             playedPlatformRatingColumn, playedGenreTitleColumn, playedGenreCountColumn,
             playedGenrePercentColumn, playedGenreRatingColumn, playedReleaseYearTitleColumn,
@@ -107,12 +102,14 @@ public class StatsScreen extends VBox {
             playedCompletionYearTitleColumn, playedCompletionYearCountColumn, playedCompletionYearPercentColumn,
             playedCompletionYearRatingColumn, playedRatingTitleColumn, playedRatingCountColumn,
             playedRatingPercentColumn, playedPercent100TitleColumn, playedPercent100CountColumn,
-            playedPercent100PercentColumn, playedPercent100RatingColumn, unplayedPlatformTitleColumn,
-            unplayedPlatformCountColumn, unplayedPlatformPercentColumn, unplayedPlatformHoursColumn,
-            unplayedGenreTitleColumn, unplayedGenreCountColumn, unplayedGenrePercentColumn,
-            unplayedGenreHoursColumn, unplayedReleaseYearTitleColumn, unplayedReleaseYearCountColumn,
-            unplayedReleaseYearPercentColumn, unplayedReleaseYearHoursColumn, unplayedDeckTitleColumn,
-            unplayedDeckCountColumn, unplayedDeckPercentColumn, unplayedDeckHoursColumn);
+            playedPercent100PercentColumn, playedPercent100RatingColumn);
+
+    ObservableList<TableColumn<UnplayedDataEntry, ?>> unplayedColumnList = FXCollections.observableArrayList(
+            unplayedPlatformTitleColumn, unplayedPlatformCountColumn, unplayedPlatformPercentColumn,
+            unplayedPlatformHoursColumn, unplayedGenreTitleColumn, unplayedGenreCountColumn,
+            unplayedGenrePercentColumn, unplayedGenreHoursColumn, unplayedReleaseYearTitleColumn,
+            unplayedReleaseYearCountColumn, unplayedReleaseYearPercentColumn, unplayedReleaseYearHoursColumn,
+            unplayedDeckTitleColumn, unplayedDeckCountColumn, unplayedDeckPercentColumn, unplayedDeckHoursColumn);
 
     public StatsScreen() {
         playedPlatformTitleColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -182,51 +179,21 @@ public class StatsScreen extends VBox {
         playedLabel.setStyle("-fx-font-size: 16;-fx-font-weight: bold;");
         unplayedLabel.setStyle("-fx-font-size: 16;-fx-font-weight: bold;");
         getChildren().addAll(playedLabel, playedBox, unplayedLabel, unplayedBox);
-        setPadding(new Insets(5.0));
+        setPadding(new Insets(5));
         updateStats();
     }
 
     public static void preventColumnReorderingOrResizingForAll() {
-        preventColumnReorderingOrResizing(playedPlatformTable);
-        preventColumnReorderingOrResizing(playedGenreTable);
-        preventColumnReorderingOrResizing(playedReleaseYearTable);
-        preventColumnReorderingOrResizing(playedCompletionYearTable);
-        preventColumnReorderingOrResizing(playedRatingTable);
-        preventColumnReorderingOrResizing(playedPercent100Table);
-        preventColumnReorderingOrResizing(unplayedPlatformTable);
-        preventColumnReorderingOrResizing(unplayedGenreTable);
-        preventColumnReorderingOrResizing(unplayedReleaseYearTable);
-        preventColumnReorderingOrResizing(unplayedDeckTable);
-    }
-
-    //Add the data from each cell to a text object, get that object's width and whatever the greatest value is, set the column width to that.
-    public void updateColumnWidth() {
-        for (int i = 0; i < columnList.size(); i++) {
-            Text text = new Text(columnList.get(i).getText());
-            double width = text.getLayoutBounds().getWidth() + 20.0;
-            for (int j = 0; j < (columnList.get(i)).getTableView().getItems().size(); j++) {
-                ObservableList<Integer> intColIndexes = FXCollections.observableArrayList(1, 5, 9, 13, 17, 20, 24, 28, 32, 36);
-                if (intColIndexes.contains(i)) {
-                    text = new Text(Integer.toString((int) columnList.get(i).getCellData(j)));
-                } else {
-                    text = new Text((String) columnList.get(i).getCellData(j));
-                }
-                double newWidth = text.getLayoutBounds().getWidth() + 20.0;
-                if (newWidth > width)
-                    width = newWidth;
-            }
-            columnList.get(i).setPrefWidth(width);
-        }
-    }
-
-    //Prevents the user from sorting manually
-    public static <T> void preventColumnReorderingOrResizing(TableView<T> tableView) {
-        Platform.runLater(() -> {
-            for (Node header : tableView.lookupAll(".column-header"))
-                header.addEventFilter(MouseEvent.MOUSE_DRAGGED, Event::consume);
-            for (Node resizeLine : tableView.lookupAll(".column-header-background"))
-                resizeLine.addEventFilter(MouseEvent.ANY, Event::consume);
-        });
+        TableMethods.preventColumnReordering(playedPlatformTable);
+        TableMethods.preventColumnReordering(playedGenreTable);
+        TableMethods.preventColumnReordering(playedReleaseYearTable);
+        TableMethods.preventColumnReordering(playedCompletionYearTable);
+        TableMethods.preventColumnReordering(playedRatingTable);
+        TableMethods.preventColumnReordering(playedPercent100Table);
+        TableMethods.preventColumnReordering(unplayedPlatformTable);
+        TableMethods.preventColumnReordering(unplayedGenreTable);
+        TableMethods.preventColumnReordering(unplayedReleaseYearTable);
+        TableMethods.preventColumnReordering(unplayedDeckTable);
     }
 
     //Refresh the data
@@ -245,7 +212,8 @@ public class StatsScreen extends VBox {
             unplayedReleaseYearTable.setItems(setUnplayedYearData());
             unplayedDeckTable.setItems(setUnplayedDeckData());
         }
-        updateColumnWidth();
+        TableMethods.updateColumnWidth(playedColumnList);
+        TableMethods.updateColumnWidth(unplayedColumnList);
     }
 
     //Sets the data in the played game platform table or genre table. What a silly name for this method.
@@ -254,9 +222,9 @@ public class StatsScreen extends VBox {
         for (String s : list) {
             PlayedDataEntry newPlatGenre = new PlayedDataEntry();
             newPlatGenre.setName(s);
-            double count = 0.0;
+            double count = 0;
             int ratingCount = 0;
-            double totalRating = 0.0;
+            double totalRating = 0;
             for (int j = 0; j < GameLists.playedList.size(); j++) {
                 String compareString;
                 if (platform) {
