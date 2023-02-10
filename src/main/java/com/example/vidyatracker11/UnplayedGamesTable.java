@@ -25,6 +25,8 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
 
     TableColumn<UnplayedGame, String> titleColumn = new TableColumn<>("Title");
 
+    TableColumn<UnplayedGame, String> franchiseColumn = new TableColumn<>("Franchise");
+
     TableColumn<UnplayedGame, String> platformColumn = new TableColumn<>("Platform");
 
     TableColumn<UnplayedGame, String> genreColumn = new TableColumn<>("Genre");
@@ -36,7 +38,8 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
     TableColumn<UnplayedGame, Integer> releaseYearColumn = new TableColumn<>("Release Year");
 
     ObservableList<TableColumn<UnplayedGame, ?>> columnList = FXCollections.observableArrayList(
-            statusColumn, titleColumn, platformColumn, genreColumn, hoursColumn, deckColumn, releaseYearColumn);
+            statusColumn, titleColumn, franchiseColumn, platformColumn, genreColumn, hoursColumn,
+            deckColumn, releaseYearColumn);
 
     SortedList<UnplayedGame> sortedList = new SortedList<>(GameLists.unplayedList);
 
@@ -45,6 +48,7 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
     public UnplayedGamesTable() {
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        franchiseColumn.setCellValueFactory(new PropertyValueFactory<>("franchise"));
         platformColumn.setCellValueFactory(new PropertyValueFactory<>("platform"));
         genreColumn.setCellValueFactory(new PropertyValueFactory<>("genre"));
         hoursColumn.setCellValueFactory(new PropertyValueFactory<>("hours"));
@@ -194,23 +198,34 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
     //Sorts based on franchise, within the same franchise, sort by date
     public ObservableList<UnplayedGame> normalSort(ObservableList<UnplayedGame> givenList) {
         ObservableList<UnplayedGame> newList = FXCollections.observableArrayList();
+
         for (UnplayedGame unplayedGame : givenList) {
             boolean placed = false;
+
             for (int j = 0; j < newList.size(); j++) {
-                String givenFranchise = unplayedGame.getFranchise().toLowerCase();
-                String newFranchise = newList.get(j).getFranchise().toLowerCase();
+                String oldSortingName;
+                if(unplayedGame.getFranchise().equals(""))
+                    oldSortingName = unplayedGame.getTitle().toLowerCase();
+                else
+                    oldSortingName = unplayedGame.getFranchise().toLowerCase();
 
-                if (givenFranchise.startsWith("the "))
-                    givenFranchise = givenFranchise.replace("the ", "");
-                if (newFranchise.startsWith("the "))
-                    newFranchise = newFranchise.replace("the ", "");
+                String newSortingName;
+                if(newList.get(j).getFranchise().equals(""))
+                    newSortingName = newList.get(j).getTitle().toLowerCase();
+                else
+                    newSortingName = newList.get(j).getFranchise().toLowerCase();
 
-                String givenListsDate = String.format("%04d%02d%02d", unplayedGame.getReleaseYear(),
+                if (oldSortingName.startsWith("the "))
+                    oldSortingName = oldSortingName.replace("the ", "");
+                if (newSortingName.startsWith("the "))
+                    newSortingName = newSortingName.replace("the ", "");
+
+                String oldListsDate = String.format("%04d%02d%02d", unplayedGame.getReleaseYear(),
                         unplayedGame.getReleaseMonth(), unplayedGame.getReleaseDay());
                 String newListsDate = String.format("%04d%02d%02d", newList.get(j).getReleaseYear(),
                         newList.get(j).getReleaseMonth(), newList.get(j).getReleaseDay());
-                String gameListFranchiseDate = givenFranchise + givenListsDate;
-                String newListsFranchiseDate = newFranchise + newListsDate;
+                String gameListFranchiseDate = oldSortingName + oldListsDate;
+                String newListsFranchiseDate = newSortingName + newListsDate;
                 int comparedFranchiseNum = gameListFranchiseDate.compareTo(newListsFranchiseDate);
                 if (comparedFranchiseNum < 0) {
                     newList.add(j, unplayedGame);
@@ -285,12 +300,24 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
         for (UnplayedGame unplayedGame : totalList) {
             boolean placed = false;
             for (int j = 0; j < newList.size(); j++) {
+                String oldFranchise;
+                if(unplayedGame.getFranchise().equals(""))
+                    oldFranchise = unplayedGame.getTitle().toLowerCase();
+                else
+                    oldFranchise = unplayedGame.getFranchise().toLowerCase();
+
+                String newFranchise;
+                if(newList.get(j).getFranchise().equals(""))
+                    newFranchise = newList.get(j).getTitle().toLowerCase();
+                else
+                    newFranchise = newList.get(j).getFranchise().toLowerCase();
+
                 String givenListsDate = String.format("%04d%02d%02d", unplayedGame.getReleaseYear(),
                         unplayedGame.getReleaseMonth(), unplayedGame.getReleaseDay());
                 String newListsDate = String.format("%04d%02d%02d", newList.get(j).getReleaseYear(),
                         newList.get(j).getReleaseMonth(), newList.get(j).getReleaseDay());
-                String gameListFranchiseDate = "" + givenListsDate + unplayedGame.getFranchise();
-                String newListsFranchiseDate = "" + newListsDate + newList.get(j).getFranchise();
+                String gameListFranchiseDate = "" + givenListsDate + oldFranchise;
+                String newListsFranchiseDate = "" + newListsDate + newFranchise;
                 int comparedFranchiseNum = gameListFranchiseDate.compareTo(newListsFranchiseDate);
                 if (comparedFranchiseNum < 0) {
                     newList.add(j, unplayedGame);

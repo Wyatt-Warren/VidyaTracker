@@ -74,8 +74,7 @@ public class AddUnplayedGame extends AddEditGame {
                 releaseYear, releaseMonthBox.getValue(), releaseDayBox.getValue());
 
         //Set Franchise
-        if (!franchiseBox.getText().equals(""))
-            newGame.setFranchise(franchiseBox.getText());
+        newGame.setFranchise(franchiseBox.getText());
 
         //Set Hours
         if (hoursBox.getText().equals("") || hoursBox.getText().equals(".")) {

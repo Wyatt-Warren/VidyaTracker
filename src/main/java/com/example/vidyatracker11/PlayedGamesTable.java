@@ -30,6 +30,8 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
 
     TableColumn<PlayedGame, String> titleColumn = new TableColumn<>("Title");
 
+    TableColumn<PlayedGame, String> franchiseColumn = new TableColumn<>("Franchise");
+
     TableColumn<PlayedGame, Integer> ratingColumn = new TableColumn<>("Rating");
 
     TableColumn<PlayedGame, String> platformColumn = new TableColumn<>("Platform");
@@ -47,8 +49,8 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
     FilteredList<PlayedGame> filteredList = new FilteredList<>(sortedList);
 
     ObservableList<TableColumn<PlayedGame, ?>> columnList = FXCollections.observableArrayList(
-            statusColumn, shortColumn, titleColumn, ratingColumn, platformColumn, genreColumn,
-            releaseYearColumn, completionYearColumn, percent100Column);
+            statusColumn, shortColumn, titleColumn, franchiseColumn, ratingColumn, platformColumn,
+            genreColumn, releaseYearColumn, completionYearColumn, percent100Column);
 
     private static final Date date = new Date();
 
@@ -60,6 +62,7 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         shortColumn.setCellValueFactory(new PropertyValueFactory<>("isItShort"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        franchiseColumn.setCellValueFactory(new PropertyValueFactory<>("franchise"));
         ratingColumn.setCellValueFactory(new PropertyValueFactory<>("rating"));
         platformColumn.setCellValueFactory(new PropertyValueFactory<>("platform"));
         genreColumn.setCellValueFactory(new PropertyValueFactory<>("genre"));
@@ -263,20 +266,29 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
             boolean placed = false;
 
             for (int j = 0; j < newList.size(); j++) {
-                String givenFranchise = playedGame.getFranchise().toLowerCase();
-                String newFranchise = newList.get(j).getFranchise().toLowerCase();
+                String oldSortingName;
+                if(playedGame.getFranchise().equals(""))
+                    oldSortingName = playedGame.getTitle().toLowerCase();
+                else
+                    oldSortingName = playedGame.getFranchise().toLowerCase();
 
-                if (givenFranchise.startsWith("the "))
-                    givenFranchise = givenFranchise.replace("the ", "");
-                if (newFranchise.startsWith("the "))
-                    newFranchise = newFranchise.replace("the ", "");
+                String newSortingName;
+                if(newList.get(j).getFranchise().equals(""))
+                    newSortingName = newList.get(j).getTitle().toLowerCase();
+                else
+                    newSortingName = newList.get(j).getFranchise().toLowerCase();
 
-                String givenListsDate = String.format("%04d%02d%02d", playedGame.getReleaseYear(),
+                if (oldSortingName.startsWith("the "))
+                    oldSortingName = oldSortingName.replace("the ", "");
+                if (newSortingName.startsWith("the "))
+                    newSortingName = newSortingName.replace("the ", "");
+
+                String oldListsDate = String.format("%04d%02d%02d", playedGame.getReleaseYear(),
                         playedGame.getReleaseMonth(), playedGame.getReleaseDay());
                 String newListsDate = String.format("%04d%02d%02d", newList.get(j).getReleaseYear(),
                         newList.get(j).getReleaseMonth(), newList.get(j).getReleaseDay());
-                String givenListFranchiseDate =  givenFranchise + givenListsDate;
-                String newListsFranchiseDate = newFranchise + newListsDate;
+                String givenListFranchiseDate =  oldSortingName + oldListsDate;
+                String newListsFranchiseDate = newSortingName + newListsDate;
                 int comparedFranchiseNum = givenListFranchiseDate.compareTo(newListsFranchiseDate);
                 if (comparedFranchiseNum < 0) {
                     newList.add(j, playedGame);
@@ -371,6 +383,18 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
         for (PlayedGame playedGame : totalList) {
             boolean placed = false;
             for (int j = 0; j < newList.size(); j++) {
+                String oldFranchise;
+                if(playedGame.getFranchise().equals(""))
+                    oldFranchise = playedGame.getTitle().toLowerCase();
+                else
+                    oldFranchise = playedGame.getFranchise().toLowerCase();
+
+                String newFranchise;
+                if(newList.get(j).getFranchise().equals(""))
+                    newFranchise = newList.get(j).getTitle().toLowerCase();
+                else
+                    newFranchise = newList.get(j).getFranchise().toLowerCase();
+
                 String givenListsDate, newListsDate;
                 if (release) {
                     givenListsDate = String.format("%04d%02d%02d", playedGame.getReleaseYear(),
@@ -383,8 +407,8 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                     newListsDate = String.format("%04d%02d%02d", newList.get(j).getCompletionYear(),
                             newList.get(j).getCompletionMonth(), newList.get(j).getCompletionDay());
                 }
-                String gameListFranchiseDate = "" + givenListsDate + playedGame.getFranchise();
-                String newListsFranchiseDate = "" + newListsDate + newList.get(j).getFranchise();
+                String gameListFranchiseDate = "" + givenListsDate + oldFranchise;
+                String newListsFranchiseDate = "" + newListsDate + newFranchise;
                 int comparedFranchiseNum = gameListFranchiseDate.compareTo(newListsFranchiseDate);
                 if (comparedFranchiseNum < 0) {
                     newList.add(j, playedGame);

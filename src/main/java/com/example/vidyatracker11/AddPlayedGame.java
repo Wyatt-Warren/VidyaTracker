@@ -126,8 +126,7 @@ public class AddPlayedGame extends AddEditGame {
         }
 
         //Set Franchise
-        if (!franchiseBox.getText().equals(""))
-            newGame.setFranchise(franchiseBox.getText());
+        newGame.setFranchise(franchiseBox.getText());
 
         //Set Rating
         newGame.setRating(ratingBox.getSelectionModel().getSelectedItem());

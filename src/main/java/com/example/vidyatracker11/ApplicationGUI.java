@@ -1,6 +1,7 @@
 package com.example.vidyatracker11;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
@@ -43,6 +44,9 @@ public class ApplicationGUI extends Application {
 
     //Used to determine what certain menu items will do regarding which list to regard.
     public static boolean playedOpen = true;
+
+    //Default saving path. Should be the currently open file or List.json by default.
+    public static Path currentFilePathOut = Path.of("List.json").toAbsolutePath();
 
     //Main GUI
     public static StatusCountBoxPlayed statusCountBoxPlayed = new StatusCountBoxPlayed();
@@ -186,6 +190,7 @@ public class ApplicationGUI extends Application {
                 unplayedGamesTable.sortAndFilter(unplayedSortChoices, unplayedFilterChoices);
                 statusCountBoxPlayed.updateData();
                 statusCountBoxUnplayed.updateData();
+                currentFilePathOut = Path.of("List.json").toAbsolutePath();
                 stage.close();
                 stats.updateStats();
             });
@@ -196,13 +201,15 @@ public class ApplicationGUI extends Application {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
         fileChooser.setInitialFileName("List");
         //Load a file using filechooser
-        openFileMenuItem.setOnAction(e ->
-                openFile(fileChooser.showOpenDialog(primaryStage).toPath()));
+        openFileMenuItem.setOnAction(e -> {
+                currentFilePathOut = fileChooser.showOpenDialog(primaryStage).toPath();
+                openFile(currentFilePathOut);
+         });
 
         //Saves to the default "List.json" file
         saveFileMenuItem.setOnAction(e -> {
             try {
-                File fileOut = new File("List.json");
+                File fileOut = new File(currentFilePathOut.toString());
                 saveFile(fileOut);
             } catch (NullPointerException | FileNotFoundException e1) {
                 e1.printStackTrace();
@@ -697,7 +704,7 @@ public class ApplicationGUI extends Application {
         });
 
         //open the default "List.json" file
-        openFile(Path.of("List.json").toAbsolutePath());
+        openFile(currentFilePathOut);
         primaryStage.setScene(primaryScene);
         primaryStage.show();
     }
@@ -834,7 +841,7 @@ public class ApplicationGUI extends Application {
                         (int) newObj.get("Release Month"), (int) newObj.get("Release Day"));
                 newGame.setFranchise((String) newObj.get("Franchise"));
                 try {
-                    newGame.setHours((double) newObj.get("Hours"));
+                    newGame.setHours(((BigDecimal) newObj.get("Hours")).doubleValue());
                 } catch (ClassCastException e2) {
                     newGame.setHours((int) newObj.get("Hours"));
                 }

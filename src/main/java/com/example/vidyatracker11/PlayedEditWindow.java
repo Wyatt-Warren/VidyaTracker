@@ -73,8 +73,7 @@ public class PlayedEditWindow extends AddEditGame {
 
         //Title/Franchise
         titleBox.setText(game.getTitle());
-        if (!game.getFranchise().equals(game.getTitle()))
-            franchiseBox.setText(game.getFranchise());
+        franchiseBox.setText(game.getFranchise());
 
         //Rating
         ratingBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
@@ -131,13 +130,11 @@ public class PlayedEditWindow extends AddEditGame {
             game.setIsItShort(shortBox.getSelectionModel().getSelectedItem());
         }
 
-        //Title/Franchise
+        //Title
         game.setTitle(titleBox.getText());
-        if (franchiseBox.getText().equals("")) {
-            game.setFranchise(titleBox.getText());
-        } else {
-            game.setFranchise(franchiseBox.getText());
-        }
+
+        //Franchise
+        game.setFranchise(franchiseBox.getText());
 
         //Rating
         game.setRating(ratingBox.getSelectionModel().getSelectedItem());

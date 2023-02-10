@@ -22,7 +22,7 @@ public class AddEditGame extends VBox{
     VBox titleVBox = new VBox(titleLabel, titleBox);
 
     //Franchise
-    Label franchiseLabel = new Label("Franchise (Leave blank if no franchise):");
+    Label franchiseLabel = new Label("Franchise:");
     TextField franchiseBox = new TextField();
     VBox franchiseVBox = new VBox(franchiseLabel, franchiseBox);
 

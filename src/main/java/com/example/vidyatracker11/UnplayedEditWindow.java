@@ -43,8 +43,7 @@ public class UnplayedEditWindow extends AddEditGame {
 
         //Title/Franchise
         titleBox.setText(game.getTitle());
-        if (!game.getFranchise().equals(game.getTitle()))
-            franchiseBox.setText(game.getFranchise());
+        franchiseBox.setText(game.getFranchise());
 
         //Hours
         hoursBox.setText("" + game.getHours());
@@ -81,11 +80,7 @@ public class UnplayedEditWindow extends AddEditGame {
         game.setTitle(titleBox.getText());
 
         //Set Franchise
-        if (franchiseBox.getText().equals("")) {
-            game.setFranchise(titleBox.getText());
-        } else {
-            game.setFranchise(franchiseBox.getText());
-        }
+        game.setFranchise(franchiseBox.getText());
 
         //Set Platform
         game.setPlatform(platformBox.getSelectionModel().getSelectedItem());
