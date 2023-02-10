@@ -48,6 +48,11 @@ public class ApplicationGUI extends Application {
     //Default saving path. Should be the currently open file or List.json by default.
     public static Path currentFilePathOut = Path.of("List.json").toAbsolutePath();
 
+    public static final int screenWidthMain = 1500;
+    public static final int screenHeightMain = 800;
+    public static final int screenWidthStats = 1800;
+    public static final int screenHeightStats = 800;
+
     //Main GUI
     public static StatusCountBoxPlayed statusCountBoxPlayed = new StatusCountBoxPlayed();
     public static StatusCountBoxUnplayed statusCountBoxUnplayed = new StatusCountBoxUnplayed();
@@ -107,7 +112,7 @@ public class ApplicationGUI extends Application {
     public static StatsScreen stats = new StatsScreen();
     public static FileChooser fileChooser = new FileChooser();
     public static VBox primarySceneVBox = new VBox(menuBar, playedWindow);
-    public static Scene primaryScene = new Scene(primarySceneVBox, 1300, 900);
+    public static Scene primaryScene = new Scene(primarySceneVBox, screenWidthMain, screenHeightMain);
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Vidya Tracker");
 
@@ -646,7 +651,7 @@ public class ApplicationGUI extends Application {
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
             RandomListGenerator window = new RandomListGenerator();
-            Scene scene = new Scene(window, 1600, 400);
+            Scene scene = new Scene(window, 1600, 500);
             scene.setOnKeyPressed(e1 -> {
                 if (e1.getCode() == KeyCode.ESCAPE) {
                     stage.close();
@@ -692,11 +697,13 @@ public class ApplicationGUI extends Application {
                 primarySceneVBox.getChildren().addAll(menuBar, playedWindow);
                 playedOpen = true;
                 statsMenuItem.setText("Show Stats Window");
-                primaryStage.setWidth(1300);
+                primaryStage.setWidth(screenWidthMain);
+                primaryStage.setHeight(screenHeightMain);
             } else {
                 primarySceneVBox.getChildren().addAll(menuBar, stats);
                 statsMenuItem.setText("Show List Window");
-                primaryStage.setWidth(1800);
+                primaryStage.setWidth(screenWidthStats);
+                primaryStage.setHeight(screenHeightStats);
             }
 
             stats.updateStats();
