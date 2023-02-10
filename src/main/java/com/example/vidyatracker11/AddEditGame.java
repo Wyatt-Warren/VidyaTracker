@@ -63,7 +63,7 @@ public class AddEditGame extends VBox{
 
     UnaryOperator<TextFormatter.Change> doubleFilter = change -> {
         String input = change.getControlNewText();
-        return input.matches("\\d*\\.\\d*") ? change : null;
+        return input.matches("\\d*\\.\\d*")||input.matches("\\d{0,9}") ? change : null;
     };
 
     public AddEditGame(){
