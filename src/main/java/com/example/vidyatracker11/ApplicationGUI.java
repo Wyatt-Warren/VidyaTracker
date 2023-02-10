@@ -495,8 +495,7 @@ public class ApplicationGUI extends Application {
             stage.setTitle("Edit Genre List");
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
-            EditGenreList window = new EditGenreList(playedGamesTable, unplayedGamesTable,
-                    playedSortChoices, playedFilterChoices, unplayedSortChoices, unplayedFilterChoices);
+            EditGenreList window = new EditGenreList();
             Scene scene = new Scene(window);
             stage.setScene(scene);
             stage.show();
@@ -505,8 +504,8 @@ public class ApplicationGUI extends Application {
                 if (e1.getCode() == KeyCode.ESCAPE) {
                     stage.close();
                 } else if (e1.getCode() == KeyCode.ENTER) {
-                    if (window.addGenreField.isFocused()) {
-                        window.addGenreButton.fire();
+                    if (window.addItemField.isFocused()) {
+                        window.addItemButton.fire();
                     }
                 }
             });
@@ -519,8 +518,7 @@ public class ApplicationGUI extends Application {
             stage.setTitle("Edit Platform List");
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
-            EditPlatformList window = new EditPlatformList(playedGamesTable, unplayedGamesTable,
-                    playedSortChoices, playedFilterChoices, unplayedSortChoices, unplayedFilterChoices);
+            EditPlatformList window = new EditPlatformList();
             Scene scene = new Scene(window);
             stage.setScene(scene);
             stage.show();
@@ -528,8 +526,8 @@ public class ApplicationGUI extends Application {
                 if (e1.getCode() == KeyCode.ESCAPE) {
                     stage.close();
                 } else if (e1.getCode() == KeyCode.ENTER) {
-                    if (window.addPlatformField.isFocused()) {
-                        window.addPlatformButton.fire();
+                    if (window.addItemField.isFocused()) {
+                        window.addItemButton.fire();
                     }
                 }
             });
