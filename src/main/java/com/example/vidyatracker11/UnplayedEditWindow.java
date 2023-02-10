@@ -35,6 +35,12 @@ public class UnplayedEditWindow extends AddEditGame {
         statusBox.getItems().addAll("Backlog", "SubBacklog", "Wishlist");
         statusBox.getSelectionModel().select(game.getStatus());
 
+        //Genre
+        genreBox.getSelectionModel().select(game.getGenre());
+
+        //Platform
+        platformBox.getSelectionModel().select(game.getPlatform());
+
         //Title/Franchise
         titleBox.setText(game.getTitle());
         if (!game.getFranchise().equals(game.getTitle()))
@@ -49,7 +55,7 @@ public class UnplayedEditWindow extends AddEditGame {
                 if (hoursBox.getText().charAt(i) == '.')
                     noPeriods = false;
             }
-            return (input.matches("[0-9]*") || (input.matches("\\.*") && noPeriods)) ? change : null;
+            return (input.matches("\\d*") || (input.matches("\\.*") && noPeriods)) ? change : null;
         }));
 
         //Deck Status

@@ -74,6 +74,12 @@ public class AddPlayedGame extends AddEditGame {
         ratingBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         ratingBox.getSelectionModel().selectFirst();
 
+        //Genre
+        genreBox.getSelectionModel().selectFirst();
+
+        //Platform
+        platformBox.getSelectionModel().selectFirst();
+
         //Completion Date
         completionYearBox.setTextFormatter(new TextFormatter < > (integerFilter));
         completionMonthBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);

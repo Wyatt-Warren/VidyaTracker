@@ -80,6 +80,12 @@ public class PlayedEditWindow extends AddEditGame {
         ratingBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         ratingBox.getSelectionModel().select(game.getRating());
 
+        //Genre
+        genreBox.getSelectionModel().select(game.getGenre());
+
+        //Platform
+        platformBox.getSelectionModel().select(game.getPlatform());
+
         //Release Date
         releaseYearBox.setText("" + game.getReleaseYear());
         releaseMonthBox.getSelectionModel().select(game.getReleaseMonth());

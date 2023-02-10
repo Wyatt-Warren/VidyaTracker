@@ -58,7 +58,7 @@ public class AddEditGame extends VBox{
     HBox mainHBox = new HBox();
     UnaryOperator<TextFormatter.Change> integerFilter = change -> {
         String input = change.getText();
-        return input.matches("[0-9]*") ? change : null;
+        return input.matches("\\d*") ? change : null;
     };
 
     public AddEditGame(){
@@ -79,11 +79,9 @@ public class AddEditGame extends VBox{
 
         //Platform
         platformBox.getItems().addAll(GameLists.platformList);
-        platformBox.getSelectionModel().selectFirst();
 
         //Genre
         genreBox.getItems().addAll(GameLists.genreList);
-        genreBox.getSelectionModel().selectFirst();
 
         //Release Date
         releaseYearBox.setTextFormatter(new TextFormatter < > (integerFilter));

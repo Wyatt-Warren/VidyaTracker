@@ -36,6 +36,12 @@ public class AddUnplayedGame extends AddEditGame {
         statusBox.getItems().addAll("Backlog", "SubBacklog", "Wishlist");
         statusBox.getSelectionModel().selectFirst();
 
+        //Genre
+        genreBox.getSelectionModel().selectFirst();
+
+        //Platform
+        platformBox.getSelectionModel().selectFirst();
+
         //Hours
         hoursBox.setTextFormatter(new TextFormatter < > (change -> {
             String input = change.getText();
@@ -44,7 +50,7 @@ public class AddUnplayedGame extends AddEditGame {
                 if (hoursBox.getText().charAt(i) == '.')
                     noPeriods = false;
             }
-            return (input.matches("[0-9]*") || (input.matches("\\.*") && noPeriods)) ? change : null;
+            return (input.matches("\\d*") || (input.matches("\\.*") && noPeriods)) ? change : null;
         }));
 
         //Deck Status
