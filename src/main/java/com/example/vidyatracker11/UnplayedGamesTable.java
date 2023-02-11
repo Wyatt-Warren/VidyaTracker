@@ -8,7 +8,6 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -69,11 +68,11 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
                 } else {
                     setText(item);
                     if (getItem().equals("Backlog")) {
-                        setStyle("-fx-background-color: darkgray;");
+                        setStyle("-fx-background-color: #545454;");
                     } else if (getItem().equals("SubBacklog")) {
-                        setStyle("-fx-background-color: lightgrey;");
+                        setStyle("-fx-background-color: #666666;");
                     } else {
-                        setStyle("-fx-background-color: lightcoral;");
+                        setStyle("-fx-background-color: #993745;");
                     }
                 }
             }
@@ -100,11 +99,11 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
                 } else {
                     setText(item);
                     if (getItem().equals("Yes")) {
-                        setStyle("-fx-background-color: lightgreen;");
+                        setStyle("-fx-background-color: #4a8c32;");
                     } else if (getItem().equals("No")) {
-                        setStyle("-fx-background-color: lightcoral;");
+                        setStyle("-fx-background-color: #993737;");
                     } else if (getItem().equals("Maybe")) {
-                        setStyle("-fx-background-color: gold;");
+                        setStyle("-fx-background-color: #aa9120;");
                     } else {
                         setStyle("");
                         setText("");
@@ -137,6 +136,7 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
                     stage.setResizable(false);
                     UnplayedEditWindow window = new UnplayedEditWindow(clickedRow, stage);
                     Scene scene = new Scene(window);
+                    scene.getStylesheets().add(ApplicationGUI.styleSheet);
                     stage.setScene(scene);
                     stage.setTitle("Edit Game Data");
                     stage.initModality(Modality.APPLICATION_MODAL);
@@ -159,8 +159,8 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
     }
 
     //Calls sort and filter methods based on the selected sort and filter options
-    public void sortAndFilter(ChoiceBox<String> sortChoice, ChoiceBox<String> filterChoice) {
-        switch (filterChoice.getSelectionModel().getSelectedIndex()) { //Filter first
+    public void sortAndFilter() {
+        switch (ApplicationGUI.unplayedFilterChoices.getSelectionModel().getSelectedIndex()) { //Filter first
             case 0: //Deck status yes
                 filterByDeck("Yes");
                 break;
@@ -174,7 +174,7 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
                 unFilter();
                 break;
         }
-        switch (sortChoice.getSelectionModel().getSelectedIndex()) { //Sort next
+        switch (ApplicationGUI.unplayedSortChoices.getSelectionModel().getSelectedIndex()) { //Sort next
             case 0: //Title
                 sortByTitle();
                 break;

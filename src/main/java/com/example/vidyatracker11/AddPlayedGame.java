@@ -149,7 +149,7 @@ public class AddPlayedGame extends AddEditGame {
 
         GameLists.playedList.add(newGame);
         ApplicationGUI.statusCountBoxPlayed.updateData();
-        ApplicationGUI.playedGamesTable.sortAndFilter(ApplicationGUI.playedSortChoices, ApplicationGUI.playedFilterChoices);
+        ApplicationGUI.playedGamesTable.sortAndFilter();
         ApplicationGUI.stats.updateStats();
         ApplicationGUI.changeMade = true;
         stage.close();

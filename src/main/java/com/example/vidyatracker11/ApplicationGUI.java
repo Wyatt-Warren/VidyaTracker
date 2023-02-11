@@ -23,8 +23,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -108,6 +107,7 @@ public class ApplicationGUI extends Application {
     public static MenuItem chooseRandomFromList = new MenuItem("Choose a Random Game From the Small List");
     public static Menu randomMenu = new Menu("Random");
 
+    public static String styleSheet = "style.css";
     public static MenuBar menuBar = new MenuBar(fileMenu, listMenu, randomMenu);
     public static StatsScreen stats = new StatsScreen();
     public static FileChooser fileChooser = new FileChooser();
@@ -115,8 +115,9 @@ public class ApplicationGUI extends Application {
     public static Scene primaryScene = new Scene(primarySceneVBox, screenWidthMain, screenHeightMain);
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Vidya Tracker");
-
         primaryStage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+
+        primaryScene.getStylesheets().add(styleSheet);
 
         playedChoiceHBox.setSpacing(5);
         unplayedChoiceHBox.setSpacing(5);
@@ -129,13 +130,13 @@ public class ApplicationGUI extends Application {
         playedFilterChoices.getItems().addAll("Short: Yes", "Short: No", "100%: Yes", "100%: No", "No Filter");
 
         playedSortChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) ->
-                playedGamesTable.sortAndFilter(playedSortChoices, playedFilterChoices));
+                playedGamesTable.sortAndFilter());
         playedFilterChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) ->
-                playedGamesTable.sortAndFilter(playedSortChoices, playedFilterChoices));
+                playedGamesTable.sortAndFilter());
         unplayedSortChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) ->
-                unplayedGamesTable.sortAndFilter(unplayedSortChoices, unplayedFilterChoices));
+                unplayedGamesTable.sortAndFilter());
         unplayedFilterChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) ->
-                unplayedGamesTable.sortAndFilter(unplayedSortChoices, unplayedFilterChoices));
+                unplayedGamesTable.sortAndFilter());
 
         playedSortChoices.getSelectionModel().selectFirst();
         playedFilterChoices.getSelectionModel().selectLast();
@@ -182,6 +183,7 @@ public class ApplicationGUI extends Application {
             vbox.setAlignment(Pos.TOP_CENTER);
             vbox.setPadding(new Insets(10));
             Scene scene = new Scene(vbox, 300, 130);
+            scene.getStylesheets().add(styleSheet);
             stage.setScene(scene);
             stage.show();
             yesButton.setOnAction(e1 -> {
@@ -191,8 +193,8 @@ public class ApplicationGUI extends Application {
                 GameLists.genreList.add("Action");
                 GameLists.platformList.clear();
                 GameLists.platformList.add("PC");
-                playedGamesTable.sortAndFilter(playedSortChoices, playedFilterChoices);
-                unplayedGamesTable.sortAndFilter(unplayedSortChoices, unplayedFilterChoices);
+                playedGamesTable.sortAndFilter();
+                unplayedGamesTable.sortAndFilter();
                 statusCountBoxPlayed.updateData();
                 statusCountBoxUnplayed.updateData();
                 currentFilePathOut = Path.of("List.json").toAbsolutePath();
@@ -271,6 +273,7 @@ public class ApplicationGUI extends Application {
                 cancelButton.setOnAction(e1 -> stage.close());
 
                 Scene scene = new Scene(vbox, 300, 100);
+                scene.getStylesheets().add(styleSheet);
                 stage.setScene(scene);
                 stage.show();
             } else {
@@ -286,6 +289,7 @@ public class ApplicationGUI extends Application {
                 stage.setResizable(false);
                 AddPlayedGame addPlayedGame = new AddPlayedGame(stage);
                 Scene scene = new Scene(addPlayedGame);
+                scene.getStylesheets().add(styleSheet);
                 stage.setScene(scene);
                 stage.setTitle("Add New Played Game");
                 stage.initModality(Modality.APPLICATION_MODAL);
@@ -304,6 +308,7 @@ public class ApplicationGUI extends Application {
                 stage.setResizable(false);
                 AddUnplayedGame addUnplayedGame = new AddUnplayedGame(stage);
                 Scene scene = new Scene(addUnplayedGame);
+                scene.getStylesheets().add(styleSheet);
                 stage.setScene(scene);
                 stage.setTitle("Add New Played Game");
                 stage.initModality(Modality.APPLICATION_MODAL);
@@ -348,6 +353,7 @@ public class ApplicationGUI extends Application {
                     vbox.setAlignment(Pos.TOP_CENTER);
                     vbox.setPadding(new Insets(10));
                     Scene scene = new Scene(vbox, 300, 150);
+                    scene.getStylesheets().add(styleSheet);
                     stage.setScene(scene);
                     stage.show();
 
@@ -356,8 +362,8 @@ public class ApplicationGUI extends Application {
                                     game.getGenre(), game.getReleaseYear(), game.getReleaseMonth(), game.getReleaseDay()));
 
                         GameLists.playedList.remove(game);
-                        playedGamesTable.sortAndFilter(playedSortChoices, playedFilterChoices);
-                        unplayedGamesTable.sortAndFilter(unplayedSortChoices, unplayedFilterChoices);
+                        playedGamesTable.sortAndFilter();
+                        unplayedGamesTable.sortAndFilter();
                         stage.close();
                         stats.updateStats();
                         changeMade = true;
@@ -393,6 +399,7 @@ public class ApplicationGUI extends Application {
                     vbox.setAlignment(Pos.TOP_CENTER);
                     vbox.setPadding(new Insets(10));
                     Scene scene = new Scene(vbox, 300, 150);
+                    scene.getStylesheets().add(styleSheet);
                     stage.setScene(scene);
                     stage.show();
 
@@ -401,8 +408,8 @@ public class ApplicationGUI extends Application {
                                     game.getGenre(), game.getReleaseYear(), game.getReleaseMonth(), game.getReleaseDay()));
 
                         GameLists.unplayedList.remove(game);
-                        playedGamesTable.sortAndFilter(playedSortChoices, playedFilterChoices);
-                        unplayedGamesTable.sortAndFilter(unplayedSortChoices, unplayedFilterChoices);
+                        playedGamesTable.sortAndFilter();
+                        unplayedGamesTable.sortAndFilter();
                         stage.close();
                         stats.updateStats();
                         changeMade = true;
@@ -442,13 +449,14 @@ public class ApplicationGUI extends Application {
                     vbox.setAlignment(Pos.TOP_CENTER);
                     vbox.setPadding(new Insets(10));
                     Scene scene = new Scene(vbox, 300, 150);
+                    scene.getStylesheets().add(styleSheet);
                     stage.setScene(scene);
                     stage.show();
 
                     yesButton.setOnAction(e1 -> {
                         GameLists.playedList.remove(game);
                         statusCountBoxPlayed.updateData();
-                        playedGamesTable.sortAndFilter(playedSortChoices, playedFilterChoices);
+                        playedGamesTable.sortAndFilter();
                         stage.close();
                         stats.updateStats();
                         changeMade = true;
@@ -483,13 +491,14 @@ public class ApplicationGUI extends Application {
                     vbox.setAlignment(Pos.TOP_CENTER);
                     vbox.setPadding(new Insets(10));
                     Scene scene = new Scene(vbox, 300, 150);
+                    scene.getStylesheets().add(styleSheet);
                     stage.setScene(scene);
                     stage.show();
 
                     yesButton.setOnAction(e1 -> {
                         GameLists.unplayedList.remove(game);
                         statusCountBoxUnplayed.updateData();
-                        unplayedGamesTable.sortAndFilter(unplayedSortChoices, unplayedFilterChoices);
+                        unplayedGamesTable.sortAndFilter();
                         stage.close();
                         stats.updateStats();
                         changeMade = true;
@@ -509,6 +518,7 @@ public class ApplicationGUI extends Application {
             stage.initModality(Modality.APPLICATION_MODAL);
             EditGenreList window = new EditGenreList();
             Scene scene = new Scene(window);
+            scene.getStylesheets().add(styleSheet);
             stage.setScene(scene);
             stage.show();
 
@@ -532,6 +542,7 @@ public class ApplicationGUI extends Application {
             stage.initModality(Modality.APPLICATION_MODAL);
             EditPlatformList window = new EditPlatformList();
             Scene scene = new Scene(window);
+            scene.getStylesheets().add(styleSheet);
             stage.setScene(scene);
             stage.show();
             scene.setOnKeyPressed(e1 -> {
@@ -570,6 +581,7 @@ public class ApplicationGUI extends Application {
                 vbox.setAlignment(Pos.CENTER);
                 label.setText(gameList.get(rand.nextInt(gameList.size())));
                 Scene scene = new Scene(vbox, 200, 100);
+                scene.getStylesheets().add(styleSheet);
                 stage.setScene(scene);
                 stage.show();
                 scene.setOnKeyPressed(e1 -> {
@@ -605,6 +617,7 @@ public class ApplicationGUI extends Application {
                 vbox.setAlignment(Pos.CENTER);
                 label.setText(gameList.get(rand.nextInt(gameList.size())));
                 Scene scene = new Scene(vbox, 200, 100);
+                scene.getStylesheets().add(styleSheet);
                 stage.setScene(scene);
                 stage.show();
                 scene.setOnKeyPressed(e1 -> {
@@ -633,6 +646,7 @@ public class ApplicationGUI extends Application {
                 vbox.setAlignment(Pos.CENTER);
                 label.setText(unplayedTempList.getTitles().get(rand.nextInt(unplayedTempList.getTitles().size())));
                 Scene scene = new Scene(vbox, 200, 100);
+                scene.getStylesheets().add(styleSheet);
                 stage.setScene(scene);
                 stage.show();
                 scene.setOnKeyPressed(e1 -> {
@@ -652,6 +666,7 @@ public class ApplicationGUI extends Application {
             stage.initModality(Modality.APPLICATION_MODAL);
             RandomListGenerator window = new RandomListGenerator();
             Scene scene = new Scene(window, 1600, 500);
+            scene.getStylesheets().add(styleSheet);
             scene.setOnKeyPressed(e1 -> {
                 if (e1.getCode() == KeyCode.ESCAPE) {
                     stage.close();
@@ -729,6 +744,7 @@ public class ApplicationGUI extends Application {
         label.setStyle("-fx-font-size: 24;");
         vbox.setAlignment(Pos.CENTER);
         Scene scene = new Scene(vbox, 300, 200);
+        scene.getStylesheets().add(styleSheet);
         stage.setScene(scene);
         stage.show();
         JSONObject file = new JSONObject();
@@ -857,8 +873,8 @@ public class ApplicationGUI extends Application {
                 GameLists.unplayedList.add(newGame);
             }
 
-            playedGamesTable.sortAndFilter(playedSortChoices, playedFilterChoices);
-            unplayedGamesTable.sortAndFilter(unplayedSortChoices, unplayedFilterChoices);
+            playedGamesTable.sortAndFilter();
+            unplayedGamesTable.sortAndFilter();
             statusCountBoxPlayed.updateData();
             statusCountBoxUnplayed.updateData();
             stats.updateStats();

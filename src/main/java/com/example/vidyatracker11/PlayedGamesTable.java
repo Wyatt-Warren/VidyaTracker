@@ -10,7 +10,6 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -86,11 +85,11 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                 } else {
                     setText(item);
                     if ((getItem()).equals("Playing")) {
-                        setStyle("-fx-background-color: lightgreen;");
+                        setStyle("-fx-background-color: #4a8c32;");
                     } else if ((getItem()).equals("Completed")) {
-                        setStyle("-fx-background-color: cornflowerblue;");
+                        setStyle("-fx-background-color: #225089;");
                     } else {
-                        setStyle("-fx-background-color: sandybrown;");
+                        setStyle("-fx-background-color: #894a22;");
                     }
                 }
             }
@@ -105,9 +104,9 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                 } else {
                     setText(item);
                     if ((getItem()).equals("Yes")) {
-                        setStyle("-fx-background-color: lightgreen;");
+                        setStyle("-fx-background-color: #4a8c32;");
                     } else if ((getItem()).equals("No")) {
-                        setStyle("-fx-background-color: lightcoral;");
+                        setStyle("-fx-background-color: #993737;");
                     } else {
                         setStyle("");
                     }
@@ -138,9 +137,9 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                 } else {
                     setText(item);
                     if ((getItem()).equals("Yes")) {
-                        setStyle("-fx-background-color: lightgreen;");
+                        setStyle("-fx-background-color: #4a8c32;");
                     } else if ((getItem()).equals("No")) {
-                        setStyle("-fx-background-color: lightcoral;");
+                        setStyle("-fx-background-color: #993737;");
                     } else {
                         setStyle("");
                     }
@@ -158,6 +157,13 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                     setText("" + item);
                     if (item == 0)
                         setText("");
+                    if ((getItem()) == PlayedGamesTable.localDate.getYear()) {
+                        setStyle("-fx-background-color: #4a8c32;");
+                    } else if ((getItem()) == PlayedGamesTable.localDate.getYear() - 1) {
+                        setStyle("-fx-background-color: #aa9120;");
+                    } else {
+                        setStyle("");
+                    }
                 }
             }
         });
@@ -173,9 +179,9 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                     if (item == 0)
                         setText("");
                     if ((getItem()) == PlayedGamesTable.localDate.getYear()) {
-                        setStyle("-fx-background-color: lightgreen;");
+                        setStyle("-fx-background-color: #4a8c32;");
                     } else if ((getItem()) == PlayedGamesTable.localDate.getYear() - 1) {
-                        setStyle("-fx-background-color: gold;");
+                        setStyle("-fx-background-color: #aa9120;");
                     } else {
                         setStyle("");
                     }
@@ -194,6 +200,7 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                     stage.setResizable(false);
                     PlayedEditWindow window = new PlayedEditWindow(clickedRow, stage);
                     Scene scene = new Scene(window);
+                    scene.getStylesheets().add(ApplicationGUI.styleSheet);
                     stage.setScene(scene);
                     stage.setTitle("Edit Game Data");
                     stage.initModality(Modality.APPLICATION_MODAL);
@@ -216,8 +223,8 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
     }
 
     //Calls sort methods based on the selected sort and filter options
-    public void sortAndFilter(ChoiceBox<String> sortChoices, ChoiceBox<String> filterChoices) {
-        switch (filterChoices.getSelectionModel().getSelectedIndex()) { //Filter first
+    public void sortAndFilter() {
+        switch (ApplicationGUI.playedFilterChoices.getSelectionModel().getSelectedIndex()) { //Filter first
             case 0: //Short yes
                 filterByShort(true);
                 break;
@@ -234,7 +241,7 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                 unFilter();
                 break;
         }
-        switch (sortChoices.getSelectionModel().getSelectedIndex()) { //Sort next
+        switch (ApplicationGUI.playedSortChoices.getSelectionModel().getSelectedIndex()) { //Sort next
             case 0: //Title
                 sortByTitle();
                 break;

@@ -1,0 +1,120 @@
+.root {
+    -fx-background-color: #3b3b3b;
+    -fx-text-background-color: #ffffff;
+}
+
+.root *{
+     -fx-background-color: #3b3b3b;
+     -fx-text-background-color: #ffffff;
+ }
+
+.table-view * {
+    -fx-background-color: #444444;
+    -fx-text-background-color: #ffffff;
+    -fx-border-color: white;
+    -fx-border-width: .1
+}
+
+.menu-bar * {
+    -fx-background-color: #444444;
+    -fx-text-fill: #ffffff;
+    -fx-text-background-color: #ffffff;
+}
+
+.menu-bar {
+     -fx-background-color: #444444;
+     -fx-text-fill: #ffffff;
+     -fx-text-background-color: #ffffff;
+ }
+
+.menu:hover{
+    -fx-background-color: #545454;
+}
+.menu:hover > .label*{
+    -fx-background-color: #545454;
+}
+
+.menu .menu-item:focused{
+    -fx-background-color: #545454;
+}
+
+.menu .menu-item:focused *{
+    -fx-background-color: #545454;
+}
+
+.button {
+    -fx-background-color: #444444;
+    -fx-text-fill: #ffffff;
+    -fx-text-background-color: #ffffff;
+    -fx-border-color: white;
+    -fx-border-width: .1
+}
+
+.choice-box * {
+    -fx-background-color: #444444;
+    -fx-text-fill: #ffffff;
+    -fx-text-background-color: #ffffff;
+}
+
+
+.choice-box .menu-item:focused {
+    -fx-background-color: #545454;
+    -fx-text-fill: #ffffff;
+    -fx-text-background-color: #ffffff;
+    -fx-border-color: white;
+    -fx-border-width: .1
+}
+
+.choice-box .menu-item:focused * {
+    -fx-background-color: #545454;
+    -fx-text-fill: #ffffff;
+    -fx-text-background-color: #ffffff;
+}
+
+.cell * {
+    -fx-background-color: #444444;
+    -fx-text-fill: #ffffff;
+    -fx-text-background-color: #ffffff;
+}
+
+.cell:focused * {
+    -fx-background-color: #545454;
+    -fx-text-fill: #ffffff;
+    -fx-text-background-color: #ffffff;
+}
+
+.list-view {
+    -fx-background-color: #444444;
+    -fx-text-fill: #ffffff;
+    -fx-text-background-color: #ffffff;
+    -fx-border-color: white;
+    -fx-border-width: .1
+}
+
+.list-view * {
+    -fx-background-color: #444444;
+    -fx-text-fill: #ffffff;
+    -fx-text-background-color: #ffffff;
+}
+
+.list-cell:focused {
+    -fx-background-color: #545454;
+    -fx-text-fill: #ffffff;
+    -fx-text-background-color: #ffffff;
+    -fx-border-color: white;
+    -fx-border-width: .1
+}
+
+.text-field {
+    -fx-background-color: #444444;
+    -fx-text-fill: #ffffff;
+    -fx-text-background-color: #ffffff;
+    -fx-border-color: white;
+    -fx-border-width: .1
+}
+
+.text-field *{
+    -fx-background-color: #444444;
+    -fx-text-fill: #ffffff;
+    -fx-text-background-color: #ffffff;
+}

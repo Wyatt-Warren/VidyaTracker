@@ -171,7 +171,7 @@ public class PlayedEditWindow extends AddEditGame {
         }
 
         ApplicationGUI.statusCountBoxPlayed.updateData();
-        ApplicationGUI.playedGamesTable.sortAndFilter(ApplicationGUI.playedSortChoices, ApplicationGUI.playedFilterChoices);
+        ApplicationGUI.playedGamesTable.sortAndFilter();
         ApplicationGUI.changeMade = true;
         stage.close();
     }

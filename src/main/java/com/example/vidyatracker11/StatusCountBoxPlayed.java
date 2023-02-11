@@ -80,12 +80,16 @@ public class StatusCountBoxPlayed extends GridPane {
             if (n instanceof Control) {
                 Control control = (Control)n;
                 control.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                control.setStyle("-fx-border-color: black; -fx-alignment: center;");
+                control.setStyle("-fx-border-color: white;" +
+                        "-fx-border-width: .2; " +
+                        "-fx-alignment: center;");
             }
             if (n instanceof Pane) {
                 Pane pane = (Pane)n;
                 pane.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                pane.setStyle("-fx-border-color: black; -fx-alignment: center;");
+                pane.setStyle("-fx-border-color: white;" +
+                        "-fx-border-width: .2; " +
+                        "-fx-alignment: center;");
             }
         }
     }
