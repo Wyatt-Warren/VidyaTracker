@@ -209,8 +209,12 @@ public class ApplicationGUI extends Application {
         fileChooser.setInitialFileName("List");
         //Load a file using filechooser
         openFileMenuItem.setOnAction(e -> {
+            try {
                 currentFilePathOut = fileChooser.showOpenDialog(primaryStage).toPath();
                 openFile(currentFilePathOut);
+            }catch (NullPointerException ignored){
+                //Who cares.
+            }
          });
 
         //Saves to the default "List.json" file
@@ -358,8 +362,10 @@ public class ApplicationGUI extends Application {
                     stage.show();
 
                     yesButton.setOnAction(e1 -> {
-                            GameLists.unplayedList.add(new UnplayedGame(game.getTitle(), "Backlog", game.getPlatform(),
-                                    game.getGenre(), game.getReleaseYear(), game.getReleaseMonth(), game.getReleaseDay()));
+                        UnplayedGame newGame = new UnplayedGame(game.getTitle(), "Backlog", game.getPlatform(),
+                                game.getGenre(), game.getReleaseYear(), game.getReleaseMonth(), game.getReleaseDay());
+                        newGame.setFranchise(game.getFranchise());
+                        GameLists.unplayedList.add(newGame);
 
                         GameLists.playedList.remove(game);
                         playedGamesTable.sortAndFilter();
@@ -404,8 +410,10 @@ public class ApplicationGUI extends Application {
                     stage.show();
 
                     yesButton.setOnAction(e1 -> {
-                            GameLists.playedList.add(new PlayedGame(game.getTitle(), "Playing", game.getPlatform(),
-                                    game.getGenre(), game.getReleaseYear(), game.getReleaseMonth(), game.getReleaseDay()));
+                        PlayedGame newGame = new PlayedGame(game.getTitle(), "Playing", game.getPlatform(),
+                                game.getGenre(), game.getReleaseYear(), game.getReleaseMonth(), game.getReleaseDay());
+                        newGame.setFranchise(game.getFranchise());
+                        GameLists.playedList.add(newGame);
 
                         GameLists.unplayedList.remove(game);
                         playedGamesTable.sortAndFilter();

@@ -17,7 +17,7 @@ public abstract class Game {
 
     private int releaseDay;
 
-    private String franchise;
+    private String franchise = "";
 
     //Constructor
     public Game(String title, String status, String platform,
@@ -30,7 +30,6 @@ public abstract class Game {
         this.releaseYear = releaseYear;
         this.releaseMonth = releaseMonth;
         this.releaseDay = releaseDay;
-        this.franchise = title;
         boolean inList = false;
         int i;
         for (i = 0; i < GameLists.platformList.size(); i++) {
