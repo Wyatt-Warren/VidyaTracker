@@ -8,3 +8,4 @@ VidyaTracker is a desktop application that uses Java 11. The purpose of Vidya Tr
 ### Features
 - Revised filtering
 - Revise stats window
+- Keyboard Shortcuts
