@@ -5,15 +5,15 @@ public class PlayedDataEntry extends DataEntry{
 
     private int totalRating = 0;
     private int ratingCount = 0;
-    private String averageRating;
+    private Double averageRating;
 
     //averageRating getter
-    public String getAverageRating() {
+    public Double getAverageRating() {
         return averageRating;
     }
 
     //averageRating setter
-    public void setAverageRating(String averageRating) {
+    public void setAverageRating(Double averageRating) {
         this.averageRating = averageRating;
     }
 

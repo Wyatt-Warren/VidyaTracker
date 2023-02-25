@@ -1,17 +1,13 @@
 package com.example.vidyatracker11;
 
 import java.util.Collections;
-import java.util.Dictionary;
 import java.util.HashMap;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -22,85 +18,85 @@ public class StatsScreen extends HBox {
     //Franchise
     TableColumn<PlayedDataEntry, String> playedFranchiseTitleColumn = new TableColumn<>("Franchise");
     TableColumn<PlayedDataEntry, Integer> playedFranchiseCountColumn = new TableColumn<>("Count");
-    TableColumn<PlayedDataEntry, String> playedFranchisePercentColumn = new TableColumn<>("Percent");
-    TableColumn<PlayedDataEntry, String> playedFranchiseRatingColumn = new TableColumn<>("Average Rating");
+    TableColumn<PlayedDataEntry, Double> playedFranchisePercentColumn = new TableColumn<>("Percent");
+    TableColumn<PlayedDataEntry, Double> playedFranchiseRatingColumn = new TableColumn<>("Average Rating");
     static TableView<PlayedDataEntry> playedFranchiseTable = new TableView<>();
 
     //Platform
     TableColumn<PlayedDataEntry, String> playedPlatformTitleColumn = new TableColumn<>("Platform");
     TableColumn<PlayedDataEntry, Integer> playedPlatformCountColumn = new TableColumn<>("Count");
-    TableColumn<PlayedDataEntry, String> playedPlatformPercentColumn = new TableColumn<>("Percent");
-    TableColumn<PlayedDataEntry, String> playedPlatformRatingColumn = new TableColumn<>("Average Rating");
+    TableColumn<PlayedDataEntry, Double> playedPlatformPercentColumn = new TableColumn<>("Percent");
+    TableColumn<PlayedDataEntry, Double> playedPlatformRatingColumn = new TableColumn<>("Average Rating");
     static TableView<PlayedDataEntry> playedPlatformTable = new TableView<>();
 
     //Genre
     TableColumn<PlayedDataEntry, String> playedGenreTitleColumn = new TableColumn<>("Genre");
     TableColumn<PlayedDataEntry, Integer> playedGenreCountColumn = new TableColumn<>("Count");
-    TableColumn<PlayedDataEntry, String> playedGenrePercentColumn = new TableColumn<>("Percent");
-    TableColumn<PlayedDataEntry, String> playedGenreRatingColumn = new TableColumn<>("Average Rating");
+    TableColumn<PlayedDataEntry, Double> playedGenrePercentColumn = new TableColumn<>("Percent");
+    TableColumn<PlayedDataEntry, Double> playedGenreRatingColumn = new TableColumn<>("Average Rating");
     static TableView<PlayedDataEntry> playedGenreTable = new TableView<>();
 
     //Release Year
-    TableColumn<PlayedDataEntry, String> playedReleaseYearTitleColumn = new TableColumn<>("Release Year");
+    TableColumn<PlayedDataEntry, Integer> playedReleaseYearTitleColumn = new TableColumn<>("Release Year");
     TableColumn<PlayedDataEntry, Integer> playedReleaseYearCountColumn = new TableColumn<>("Count");
-    TableColumn<PlayedDataEntry, String> playedReleaseYearPercentColumn = new TableColumn<>("Percent");
-    TableColumn<PlayedDataEntry, String> playedReleaseYearRatingColumn = new TableColumn<>("Average Rating");
+    TableColumn<PlayedDataEntry, Double> playedReleaseYearPercentColumn = new TableColumn<>("Percent");
+    TableColumn<PlayedDataEntry, Double> playedReleaseYearRatingColumn = new TableColumn<>("Average Rating");
     static TableView<PlayedDataEntry> playedReleaseYearTable = new TableView<>();
 
     //Completion Year
-    TableColumn<PlayedDataEntry, String> playedCompletionYearTitleColumn = new TableColumn<>("Completion Year");
+    TableColumn<PlayedDataEntry, Integer> playedCompletionYearTitleColumn = new TableColumn<>("Completion Year");
     TableColumn<PlayedDataEntry, Integer> playedCompletionYearCountColumn = new TableColumn<>("Count");
-    TableColumn<PlayedDataEntry, String> playedCompletionYearPercentColumn = new TableColumn<>("Percent");
-    TableColumn<PlayedDataEntry, String> playedCompletionYearRatingColumn = new TableColumn<>("Average Rating");
+    TableColumn<PlayedDataEntry, Double> playedCompletionYearPercentColumn = new TableColumn<>("Percent");
+    TableColumn<PlayedDataEntry, Double> playedCompletionYearRatingColumn = new TableColumn<>("Average Rating");
     static TableView<PlayedDataEntry> playedCompletionYearTable = new TableView<>();
 
     //Rating
-    TableColumn<PlayedDataEntry, String> playedRatingTitleColumn = new TableColumn<>("Rating");
+    TableColumn<PlayedDataEntry, Integer> playedRatingTitleColumn = new TableColumn<>("Rating");
     TableColumn<PlayedDataEntry, Integer> playedRatingCountColumn = new TableColumn<>("Count");
-    TableColumn<PlayedDataEntry, String> playedRatingPercentColumn = new TableColumn<>("Percent");
+    TableColumn<PlayedDataEntry, Double> playedRatingPercentColumn = new TableColumn<>("Percent");
     static TableView<PlayedDataEntry> playedRatingTable = new TableView<>();
 
     //100 Percent Status
     TableColumn<PlayedDataEntry, String> playedPercent100TitleColumn = new TableColumn<>("100% Status");
     TableColumn<PlayedDataEntry, Integer> playedPercent100CountColumn = new TableColumn<>("Count");
-    TableColumn<PlayedDataEntry, String> playedPercent100PercentColumn = new TableColumn<>("Percent");
-    TableColumn<PlayedDataEntry, String> playedPercent100RatingColumn = new TableColumn<>("Average Rating");
+    TableColumn<PlayedDataEntry, Double> playedPercent100PercentColumn = new TableColumn<>("Percent");
+    TableColumn<PlayedDataEntry, Double> playedPercent100RatingColumn = new TableColumn<>("Average Rating");
     static TableView<PlayedDataEntry> playedPercent100Table = new TableView<>();
 
     //Unplayed Games
     //Franchise
     TableColumn<UnplayedDataEntry, String> unplayedFranchiseTitleColumn = new TableColumn<>("Franchise");
     TableColumn<UnplayedDataEntry, Integer> unplayedFranchiseCountColumn = new TableColumn<>("Count");
-    TableColumn<UnplayedDataEntry, String> unplayedFranchisePercentColumn = new TableColumn<>("Percent");
-    TableColumn<UnplayedDataEntry, String> unplayedFranchiseHoursColumn = new TableColumn<>("Total Hours");
+    TableColumn<UnplayedDataEntry, Double> unplayedFranchisePercentColumn = new TableColumn<>("Percent");
+    TableColumn<UnplayedDataEntry, Double> unplayedFranchiseHoursColumn = new TableColumn<>("Total Hours");
     static TableView<UnplayedDataEntry> unplayedFranchiseTable = new TableView<>();
 
     //Platform
     TableColumn<UnplayedDataEntry, String> unplayedPlatformTitleColumn = new TableColumn<>("Platform");
     TableColumn<UnplayedDataEntry, Integer> unplayedPlatformCountColumn = new TableColumn<>("Count");
-    TableColumn<UnplayedDataEntry, String> unplayedPlatformPercentColumn = new TableColumn<>("Percent");
-    TableColumn<UnplayedDataEntry, String> unplayedPlatformHoursColumn = new TableColumn<>("Total Hours");
+    TableColumn<UnplayedDataEntry, Double> unplayedPlatformPercentColumn = new TableColumn<>("Percent");
+    TableColumn<UnplayedDataEntry, Double> unplayedPlatformHoursColumn = new TableColumn<>("Total Hours");
     static TableView<UnplayedDataEntry> unplayedPlatformTable = new TableView<>();
 
     //Genre
     TableColumn<UnplayedDataEntry, String> unplayedGenreTitleColumn = new TableColumn<>("Genre");
     TableColumn<UnplayedDataEntry, Integer> unplayedGenreCountColumn = new TableColumn<>("Count");
-    TableColumn<UnplayedDataEntry, String> unplayedGenrePercentColumn = new TableColumn<>("Percent");
-    TableColumn<UnplayedDataEntry, String> unplayedGenreHoursColumn = new TableColumn<>("Total Hours");
+    TableColumn<UnplayedDataEntry, Double> unplayedGenrePercentColumn = new TableColumn<>("Percent");
+    TableColumn<UnplayedDataEntry, Double> unplayedGenreHoursColumn = new TableColumn<>("Total Hours");
     static TableView<UnplayedDataEntry> unplayedGenreTable = new TableView<>();
 
     //Release Year
-    TableColumn<UnplayedDataEntry, String> unplayedReleaseYearTitleColumn = new TableColumn<>("Release Year");
+    TableColumn<UnplayedDataEntry, Integer> unplayedReleaseYearTitleColumn = new TableColumn<>("Release Year");
     TableColumn<UnplayedDataEntry, Integer> unplayedReleaseYearCountColumn = new TableColumn<>("Count");
-    TableColumn<UnplayedDataEntry, String> unplayedReleaseYearPercentColumn = new TableColumn<>("Percent");
-    TableColumn<UnplayedDataEntry, String> unplayedReleaseYearHoursColumn = new TableColumn<>("Total Hours");
+    TableColumn<UnplayedDataEntry, Double> unplayedReleaseYearPercentColumn = new TableColumn<>("Percent");
+    TableColumn<UnplayedDataEntry, Double> unplayedReleaseYearHoursColumn = new TableColumn<>("Total Hours");
     static TableView<UnplayedDataEntry> unplayedReleaseYearTable = new TableView<>();
 
     //Deck Status
     TableColumn<UnplayedDataEntry, String> unplayedDeckTitleColumn = new TableColumn<>("Deck Status");
     TableColumn<UnplayedDataEntry, Integer> unplayedDeckCountColumn = new TableColumn<>("Count");
-    TableColumn<UnplayedDataEntry, String> unplayedDeckPercentColumn = new TableColumn<>("Percent");
-    TableColumn<UnplayedDataEntry, String> unplayedDeckHoursColumn = new TableColumn<>("Total Hours");
+    TableColumn<UnplayedDataEntry, Double> unplayedDeckPercentColumn = new TableColumn<>("Percent");
+    TableColumn<UnplayedDataEntry, Double> unplayedDeckHoursColumn = new TableColumn<>("Total Hours");
     static TableView<UnplayedDataEntry> unplayedDeckTable = new TableView<>();
 
     Label playedLabel = new Label("Played Games");
@@ -121,7 +117,7 @@ public class StatsScreen extends HBox {
             playedPlatformPercentColumn, playedPlatformRatingColumn, playedGenreTitleColumn,
             playedGenreCountColumn, playedGenrePercentColumn, playedGenreRatingColumn,
             playedReleaseYearTitleColumn, playedReleaseYearCountColumn, playedReleaseYearPercentColumn,
-            playedPlatformRatingColumn, playedCompletionYearTitleColumn, playedCompletionYearCountColumn,
+            playedReleaseYearRatingColumn, playedCompletionYearTitleColumn, playedCompletionYearCountColumn,
             playedCompletionYearPercentColumn, playedCompletionYearRatingColumn, playedRatingTitleColumn,
             playedRatingCountColumn, playedRatingPercentColumn, playedPercent100TitleColumn,
             playedPercent100CountColumn, playedPercent100PercentColumn, playedPercent100RatingColumn);
@@ -135,18 +131,31 @@ public class StatsScreen extends HBox {
             unplayedReleaseYearHoursColumn, unplayedDeckTitleColumn, unplayedDeckCountColumn,
             unplayedDeckPercentColumn, unplayedDeckHoursColumn);
 
+    ObservableList<TableColumn<PlayedDataEntry, Double>> playedDoubleColumnList = FXCollections.observableArrayList(
+            playedFranchisePercentColumn, playedFranchiseRatingColumn, playedPlatformPercentColumn,
+            playedPlatformRatingColumn, playedGenrePercentColumn, playedGenreRatingColumn,
+            playedReleaseYearPercentColumn, playedReleaseYearRatingColumn, playedCompletionYearPercentColumn,
+            playedCompletionYearRatingColumn, playedRatingPercentColumn, playedPercent100PercentColumn,
+            playedPercent100RatingColumn);
+
+    ObservableList<TableColumn<UnplayedDataEntry, Double>> unplayedDoubleColumnList = FXCollections.observableArrayList(
+            unplayedFranchisePercentColumn, unplayedFranchiseHoursColumn, unplayedPlatformPercentColumn,
+            unplayedPlatformHoursColumn, unplayedGenrePercentColumn, unplayedGenreHoursColumn,
+            unplayedReleaseYearPercentColumn, unplayedReleaseYearHoursColumn, unplayedDeckPercentColumn,
+            unplayedDeckHoursColumn);
+
     public StatsScreen() {
         playedFranchiseTitleColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         playedPlatformTitleColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         playedGenreTitleColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        playedReleaseYearTitleColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        playedCompletionYearTitleColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        playedRatingTitleColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        playedReleaseYearTitleColumn.setCellValueFactory(new PropertyValueFactory<>("intName"));
+        playedCompletionYearTitleColumn.setCellValueFactory(new PropertyValueFactory<>("intName"));
+        playedRatingTitleColumn.setCellValueFactory(new PropertyValueFactory<>("intName"));
         playedPercent100TitleColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         unplayedFranchiseTitleColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         unplayedPlatformTitleColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         unplayedGenreTitleColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        unplayedReleaseYearTitleColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        unplayedReleaseYearTitleColumn.setCellValueFactory(new PropertyValueFactory<>("intName"));
         unplayedDeckTitleColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         playedFranchiseCountColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
         playedPlatformCountColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
@@ -316,6 +325,36 @@ public class StatsScreen extends HBox {
 
         updateStats();
         StatsScreen.preventColumnReorderingOrResizingForAll();
+        formatDoubleColumns();
+    }
+
+    public void formatDoubleColumns(){
+        for(TableColumn<PlayedDataEntry, Double> column : playedDoubleColumnList){
+            column.setCellFactory(col -> new TableCell<>() {
+                @Override
+                public void updateItem(Double someDouble, boolean empty){
+                    super.updateItem(someDouble, empty);
+                    if (empty || someDouble == null){
+                        setText(null);
+                    }else{
+                        setText(String.format("%.2f", someDouble));
+                    }
+                }
+            });
+        }
+        for(TableColumn<UnplayedDataEntry, Double> column : unplayedDoubleColumnList){
+            column.setCellFactory(col -> new TableCell<>() {
+                @Override
+                public void updateItem(Double someDouble, boolean empty){
+                    super.updateItem(someDouble, empty);
+                    if (empty || someDouble == null){
+                        setText(null);
+                    }else{
+                        setText(String.format("%.2f", someDouble));
+                    }
+                }
+            });
+        }
     }
 
     public static void preventColumnReorderingOrResizingForAll() {
@@ -366,9 +405,9 @@ public class StatsScreen extends HBox {
                 if(game.getRating()!=0){
                     data.setRatingCount(data.getRatingCount()+1);
                     data.setTotalRating(data.getTotalRating()+game.getRating());
-                    data.setAverageRating(String.format("%.2f", data.getTotalRating()*1.0 / data.getRatingCount()));
+                    data.setAverageRating(data.getTotalRating()*1.0 / data.getRatingCount());
                 }
-                data.setPercent(String.format("%.2f", data.getCount()*1.0 / GameLists.playedList.size() * 100));
+                data.setPercent(data.getCount()*1.0 / GameLists.playedList.size() * 100);
 
             }else if(!game.getFranchise().equals("")){
                 PlayedDataEntry newData = new PlayedDataEntry();
@@ -377,9 +416,9 @@ public class StatsScreen extends HBox {
                 if(game.getRating()!=0){
                     newData.setRatingCount(1);
                     newData.setTotalRating(game.getRating());
-                    newData.setAverageRating(String.format("%.2f", newData.getTotalRating() * 1.0));
+                    newData.setAverageRating(newData.getTotalRating() * 1.0);
                 }
-                newData.setPercent(String.format("%.2f", newData.getCount()*1.0 / GameLists.playedList.size() * 100));
+                newData.setPercent(newData.getCount()*1.0 / GameLists.playedList.size() * 100);
                 map.put(game.getFranchise(), newData);
                 if (dataList.isEmpty()){
                     dataList.add(newData);
@@ -409,15 +448,15 @@ public class StatsScreen extends HBox {
             if(map.containsKey(game.getFranchise())){
                 UnplayedDataEntry data = map.get(game.getFranchise());
                 data.setCount(data.getCount()+1);
-                data.setTotalHours(String.valueOf(Double.parseDouble(data.getTotalHours())+game.getHours())); //FUCK
-                data.setPercent(String.format("%.2f", data.getCount()*1.0 / GameLists.unplayedList.size() * 100));
+                data.setTotalHours(data.getTotalHours()+game.getHours());
+                data.setPercent(data.getCount()*1.0 / GameLists.unplayedList.size() * 100);
 
             }else if(!game.getFranchise().equals("")){
                 UnplayedDataEntry newData = new UnplayedDataEntry();
                 newData.setName(game.getFranchise());
                 newData.setCount(1);
-                newData.setTotalHours(String.valueOf(game.getHours())); //FUCKASDF)OHAFBHWIYU@BIOBAWIUFBIAUWFUI WHY
-                newData.setPercent(String.format("%.2f", newData.getCount()*1.0 / GameLists.playedList.size() * 100));
+                newData.setTotalHours(game.getHours());
+                newData.setPercent(newData.getCount()*1.0 / GameLists.playedList.size() * 100);
                 map.put(game.getFranchise(), newData);
                 if (dataList.isEmpty()){
                     dataList.add(newData);
@@ -464,9 +503,9 @@ public class StatsScreen extends HBox {
                 }
             }
             newPlatGenre.setCount((int)count);
-            newPlatGenre.setPercent(String.format("%.2f", count / GameLists.playedList.size() * 100.0));
+            newPlatGenre.setPercent(count / GameLists.playedList.size() * 100.0);
             if (ratingCount != 0)
-                newPlatGenre.setAverageRating(String.format("%.2f", totalRating / ratingCount));
+                newPlatGenre.setAverageRating(totalRating / ratingCount);
             dataList.add(newPlatGenre);
         }
         return dataList;
@@ -493,8 +532,8 @@ public class StatsScreen extends HBox {
                 }
             }
             newPlatGenre.setCount((int)count);
-            newPlatGenre.setPercent(String.format("%.2f", count / GameLists.unplayedList.size() * 100.0));
-            newPlatGenre.setTotalHours(String.format("%.2f", totalHours));
+            newPlatGenre.setPercent(count / GameLists.unplayedList.size() * 100.0);
+            newPlatGenre.setTotalHours(totalHours);
             dataList.add(newPlatGenre);
         }
         return dataList;
@@ -538,9 +577,9 @@ public class StatsScreen extends HBox {
                 }
             }
             newYear.setCount((int)count);
-            newYear.setPercent(String.format("%.2f", count / GameLists.playedList.size() * 100.0));
+            newYear.setPercent(count / GameLists.playedList.size() * 100.0);
             if (ratingCount != 0)
-                newYear.setAverageRating(String.format("%.2f", totalRating / ratingCount));
+                newYear.setAverageRating(totalRating / ratingCount);
             dataList.add(newYear);
         }
         return dataList;
@@ -567,8 +606,8 @@ public class StatsScreen extends HBox {
                 }
             }
             newYear.setCount((int)count);
-            newYear.setPercent(String.format("%.2f", count / GameLists.unplayedList.size() * 100.0));
-            newYear.setTotalHours(String.format("%.2f", totalHours));
+            newYear.setPercent(count / GameLists.unplayedList.size() * 100.0);
+            newYear.setTotalHours(totalHours);
             dataList.add(newYear);
         }
         return dataList;
@@ -587,7 +626,7 @@ public class StatsScreen extends HBox {
                     count++;
             }
             newRating.setCount((int)count);
-            newRating.setPercent(String.format("%.2f", count / GameLists.playedList.size() * 100.0));
+            newRating.setPercent(count / GameLists.playedList.size() * 100.0);
             dataList.add(newRating);
         }
         return dataList;
@@ -617,9 +656,9 @@ public class StatsScreen extends HBox {
                 }
             }
             newPercent.setCount((int)count);
-            newPercent.setPercent(String.format("%.2f", count / GameLists.playedList.size() * 100.0));
+            newPercent.setPercent(count / GameLists.playedList.size() * 100.0);
             if (ratingCount != 0)
-                newPercent.setAverageRating(String.format("%.2f", totalRating / ratingCount));
+                newPercent.setAverageRating(totalRating / ratingCount);
             dataList.add(newPercent);
         }
         return dataList;
@@ -645,8 +684,8 @@ public class StatsScreen extends HBox {
                 }
             }
             newDeck.setCount((int)count);
-            newDeck.setPercent(String.format("%.2f", count / GameLists.unplayedList.size() * 100.0));
-            newDeck.setTotalHours(String.format("%.2f", totalHours));
+            newDeck.setPercent(count / GameLists.unplayedList.size() * 100.0);
+            newDeck.setTotalHours(totalHours);
             dataList.add(newDeck);
         }
         return dataList;

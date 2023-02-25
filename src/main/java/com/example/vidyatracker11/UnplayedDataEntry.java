@@ -3,15 +3,15 @@ package com.example.vidyatracker11;
 //Used by tableviews in the stats screen
 public class UnplayedDataEntry extends DataEntry{
 
-    private String totalHours;
+    private Double totalHours;
 
     //Total hours getter
-    public String getTotalHours() {
+    public Double getTotalHours() {
         return totalHours;
     }
 
     //Total hours setter
-    public void setTotalHours(String totalHours) {
+    public void setTotalHours(Double totalHours) {
         this.totalHours = totalHours;
     }
 }

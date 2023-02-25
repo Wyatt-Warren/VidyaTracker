@@ -3,9 +3,11 @@ package com.example.vidyatracker11;
 public class DataEntry {
     protected String name;
 
+    protected int intName;
+
     protected int count;
 
-    protected String percent;
+    protected Double percent;
 
     //Count getter
     public int getCount() {
@@ -28,12 +30,20 @@ public class DataEntry {
     }
 
     //percent getter
-    public String getPercent() {
+    public Double getPercent() {
         return percent;
     }
 
     //percent setter
-    public void setPercent(String percent) {
+    public void setPercent(Double percent) {
         this.percent = percent;
+    }
+
+    public int getIntName() {
+        return intName;
+    }
+
+    public void setIntName(int intName) {
+        this.intName = intName;
     }
 }

@@ -6,7 +6,6 @@ VidyaTracker is a desktop application that uses Java 11. The purpose of Vidya Tr
 - Put code into neater blocks with comments
 - Fix issues in stats window
   - Fix shitty n^2 methods
-  - double values are stored as strings?????
 
 ### Features
 - Revised filtering
