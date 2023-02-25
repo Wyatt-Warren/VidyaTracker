@@ -17,7 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 //Window showing many tableviews of stats relating the game lists
-public class StatsScreen extends VBox {
+public class StatsScreen extends HBox {
     //Played Games
     //Franchise
     TableColumn<PlayedDataEntry, String> playedFranchiseTitleColumn = new TableColumn<>("Franchise");
@@ -111,9 +111,9 @@ public class StatsScreen extends VBox {
 
     ChoiceBox<String> unplayedChoices = new ChoiceBox<>();
 
-    HBox playedBox = new HBox(playedFranchiseTable);
+    VBox playedBox = new VBox(playedLabel, playedChoices, playedFranchiseTable);
 
-    HBox unplayedBox = new HBox(unplayedFranchiseTable);
+    VBox unplayedBox = new VBox(unplayedLabel, unplayedChoices, unplayedFranchiseTable);
 
     ObservableList<TableColumn<PlayedDataEntry, ?>> playedColumnList = FXCollections.observableArrayList(
             playedFranchiseTitleColumn, playedFranchiseCountColumn, playedFranchisePercentColumn,
@@ -184,6 +184,19 @@ public class StatsScreen extends VBox {
         unplayedReleaseYearHoursColumn.setCellValueFactory(new PropertyValueFactory<>("totalHours"));
         unplayedDeckHoursColumn.setCellValueFactory(new PropertyValueFactory<>("totalHours"));
 
+        playedFranchiseTable.setPrefHeight(99999999);
+        playedPlatformTable.setPrefHeight(99999999);
+        playedGenreTable.setPrefHeight(99999999);
+        playedReleaseYearTable.setPrefHeight(99999999);
+        playedCompletionYearTable.setPrefHeight(99999999);
+        playedRatingTable.setPrefHeight(99999999);
+        playedPercent100Table.setPrefHeight(99999999);
+        unplayedFranchiseTable.setPrefHeight(99999999);
+        unplayedPlatformTable.setPrefHeight(99999999);
+        unplayedGenreTable.setPrefHeight(99999999);
+        unplayedReleaseYearTable.setPrefHeight(99999999);
+        unplayedDeckTable.setPrefHeight(99999999);
+
         //For some reason it keeps adding columns every time the window is opened so this is a quick fix to just delete the columns first
         playedFranchiseTable.getColumns().clear();
         playedPlatformTable.getColumns().clear();
@@ -230,31 +243,31 @@ public class StatsScreen extends VBox {
         playedChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
             switch ((int) newNum){
                 case 0: //Franchise
-                    playedBox.getChildren().clear();
+                    playedBox.getChildren().remove(playedBox.getChildren().size()-1);
                     playedBox.getChildren().add(playedFranchiseTable);
                     break;
                 case 1: //Platform
-                    playedBox.getChildren().clear();
+                    playedBox.getChildren().remove(playedBox.getChildren().size()-1);
                     playedBox.getChildren().add(playedPlatformTable);
                     break;
                 case 2: //Genre
-                    playedBox.getChildren().clear();
+                    playedBox.getChildren().remove(playedBox.getChildren().size()-1);
                     playedBox.getChildren().add(playedGenreTable);
                     break;
                 case 3: //Release Year
-                    playedBox.getChildren().clear();
+                    playedBox.getChildren().remove(playedBox.getChildren().size()-1);
                     playedBox.getChildren().add(playedReleaseYearTable);
                     break;
                 case 4: //Completion Year
-                    playedBox.getChildren().clear();
+                    playedBox.getChildren().remove(playedBox.getChildren().size()-1);
                     playedBox.getChildren().add(playedCompletionYearTable);
                     break;
                 case 5: //Rating
-                    playedBox.getChildren().clear();
+                    playedBox.getChildren().remove(playedBox.getChildren().size()-1);
                     playedBox.getChildren().add(playedRatingTable);
                     break;
                 case 6: //100% Status
-                    playedBox.getChildren().clear();
+                    playedBox.getChildren().remove(playedBox.getChildren().size()-1);
                     playedBox.getChildren().add(playedPercent100Table);
                     break;
             }
@@ -263,23 +276,23 @@ public class StatsScreen extends VBox {
         unplayedChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
             switch ((int) newNum){
                 case 0: //Franchise
-                    unplayedBox.getChildren().clear();
+                    unplayedBox.getChildren().remove(unplayedBox.getChildren().size()-1);
                     unplayedBox.getChildren().add(unplayedFranchiseTable);
                     break;
                 case 1: //Platform
-                    unplayedBox.getChildren().clear();
+                    unplayedBox.getChildren().remove(unplayedBox.getChildren().size()-1);
                     unplayedBox.getChildren().add(unplayedPlatformTable);
                     break;
                 case 2: //Genre
-                    unplayedBox.getChildren().clear();
+                    unplayedBox.getChildren().remove(unplayedBox.getChildren().size()-1);
                     unplayedBox.getChildren().add(unplayedGenreTable);
                     break;
                 case 3: //Release Year
-                    unplayedBox.getChildren().clear();
+                    unplayedBox.getChildren().remove(unplayedBox.getChildren().size()-1);
                     unplayedBox.getChildren().add(unplayedReleaseYearTable);
                     break;
                 case 4: //Completion Year
-                    unplayedBox.getChildren().clear();
+                    unplayedBox.getChildren().remove(unplayedBox.getChildren().size()-1);
                     unplayedBox.getChildren().add(unplayedDeckTable);
                     break;
             }
@@ -291,11 +304,16 @@ public class StatsScreen extends VBox {
         playedBox.setAlignment(Pos.CENTER);
         unplayedBox.setAlignment(Pos.CENTER);
         setAlignment(Pos.CENTER);
+
+        playedBox.setSpacing(5);
+        unplayedBox.setSpacing(5);
+
         playedLabel.setStyle("-fx-font-size: 16;-fx-font-weight: bold;");
         unplayedLabel.setStyle("-fx-font-size: 16;-fx-font-weight: bold;");
-        getChildren().addAll(playedLabel, playedChoices, playedBox, unplayedLabel, unplayedChoices, unplayedBox);
-        setSpacing(5);
+        getChildren().addAll(playedBox, unplayedBox);
+        setSpacing(20);
         setPadding(new Insets(5));
+
         updateStats();
         StatsScreen.preventColumnReorderingOrResizingForAll();
     }

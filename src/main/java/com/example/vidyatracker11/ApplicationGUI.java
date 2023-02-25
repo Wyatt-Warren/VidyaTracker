@@ -49,8 +49,6 @@ public class ApplicationGUI extends Application {
 
     public static final int screenWidthMain = 1500;
     public static final int screenHeightMain = 800;
-    public static final int screenWidthStats = 1800;
-    public static final int screenHeightStats = 800;
 
     //Main GUI
     public static StatusCountBoxPlayed statusCountBoxPlayed = new StatusCountBoxPlayed();
@@ -714,7 +712,7 @@ public class ApplicationGUI extends Application {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Stats");
             StatsScreen statsScreen = new StatsScreen();
-            Scene scene = new Scene(statsScreen, 500, 950);
+            Scene scene = new Scene(statsScreen, 1000, 800);
             scene.getStylesheets().add(styleSheet);
             stage.setScene(scene);
             stage.show();
