@@ -79,7 +79,7 @@ public abstract class EditGenPlatList extends VBox {
 
             if(list.contains(newName)){
                 warningLabel.setText(inListWarning);
-            }else if(!newName.equals("") && selectionInt != 1){
+            }else if(!newName.equals("") && selectionInt != -1){
                 warningLabel.setText("");
                 list.remove(selectionInt);
                 list.add(selectionInt, newName);
