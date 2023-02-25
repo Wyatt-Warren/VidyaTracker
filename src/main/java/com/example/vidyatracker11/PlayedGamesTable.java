@@ -89,7 +89,7 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                     } else if ((getItem()).equals("Completed")) {
                         setStyle("-fx-background-color: #225089;");
                     } else {
-                        setStyle("-fx-background-color: #894a22;");
+                        setStyle("-fx-background-color: #aa5825;");
                     }
                 }
             }

@@ -50,12 +50,33 @@
     -fx-border-width: .1
 }
 
+.button:hover {
+    -fx-background-color: #484848;
+    -fx-text-fill: #ffffff;
+    -fx-text-background-color: #ffffff;
+    -fx-border-color: white;
+    -fx-border-width: .1
+}
+
+.button:pressed {
+    -fx-background-color: #545454;
+    -fx-text-fill: #ffffff;
+    -fx-text-background-color: #ffffff;
+    -fx-border-color: white;
+    -fx-border-width: .1
+}
+
 .choice-box * {
     -fx-background-color: #444444;
     -fx-text-fill: #ffffff;
     -fx-text-background-color: #ffffff;
 }
 
+.choice-box:hover * {
+    -fx-background-color: #484848;
+    -fx-text-fill: #ffffff;
+    -fx-text-background-color: #ffffff;
+}
 
 .choice-box .menu-item:focused {
     -fx-background-color: #545454;
@@ -73,6 +94,12 @@
 
 .cell * {
     -fx-background-color: #444444;
+    -fx-text-fill: #ffffff;
+    -fx-text-background-color: #ffffff;
+}
+
+.cell:hover * {
+    -fx-background-color: #484848;
     -fx-text-fill: #ffffff;
     -fx-text-background-color: #ffffff;
 }
@@ -101,6 +128,14 @@
 
 .list-cell:focused {
     -fx-background-color: #545454;
+    -fx-text-fill: #ffffff;
+    -fx-text-background-color: #ffffff;
+    -fx-border-color: white;
+    -fx-border-width: .1
+}
+
+.list-cell:hover {
+    -fx-background-color: #484848;
     -fx-text-fill: #ffffff;
     -fx-text-background-color: #ffffff;
     -fx-border-color: white;
