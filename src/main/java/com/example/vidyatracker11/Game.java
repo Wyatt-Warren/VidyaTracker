@@ -31,8 +31,7 @@ public abstract class Game {
         this.releaseMonth = releaseMonth;
         this.releaseDay = releaseDay;
         boolean inList = false;
-        int i;
-        for (i = 0; i < GameLists.platformList.size(); i++) {
+        for (int i = 0; i < GameLists.platformList.size(); i++) {
             if (platform.equals(GameLists.platformList.get(i))) {
                 inList = true;
                 break;
@@ -40,8 +39,9 @@ public abstract class Game {
         }
         if (!inList)
             throw new IllegalArgumentException();
+
         inList = false;
-        for (i = 0; i < GameLists.genreList.size(); i++) {
+        for (int i = 0; i < GameLists.genreList.size(); i++) {
             if (genre.equals(GameLists.genreList.get(i))) {
                 inList = true;
                 break;
@@ -55,7 +55,6 @@ public abstract class Game {
             throw new IllegalArgumentException();
         if (releaseDay < 0 || releaseDay > 31)
             throw new IllegalArgumentException();
-        this.platform = platform;
     }
 
     //Status setter

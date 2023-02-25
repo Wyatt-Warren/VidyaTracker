@@ -376,8 +376,8 @@ public class StatsScreen extends HBox {
     public void updateStats() {
         if (GameLists.playedList.size() != 0) {
             playedFranchiseTable.setItems(setPlayedFranchiseData());
-            playedPlatformTable.setItems(setPlayedPlatformData(GameLists.platformList, true));
-            playedGenreTable.setItems(setPlayedPlatformData(GameLists.genreList, false));
+            playedPlatformTable.setItems(setPlayedPlatGenData(GameLists.platformList, true));
+            playedGenreTable.setItems(setPlayedPlatGenData(GameLists.genreList, false));
             playedReleaseYearTable.setItems(setPlayedYearData(true));
             playedCompletionYearTable.setItems(setPlayedYearData(false));
             playedRatingTable.setItems(setPlayedRatingData());
@@ -385,8 +385,8 @@ public class StatsScreen extends HBox {
         }
         if (GameLists.unplayedList.size() != 0) {
             unplayedFranchiseTable.setItems(setUnplayedFranchiseData());
-            unplayedPlatformTable.setItems(setUnplayedPlatformData(GameLists.platformList, true));
-            unplayedGenreTable.setItems(setUnplayedPlatformData(GameLists.genreList, false));
+            unplayedPlatformTable.setItems(setUnplayedPlatGenData(GameLists.platformList, true));
+            unplayedGenreTable.setItems(setUnplayedPlatGenData(GameLists.genreList, false));
             unplayedReleaseYearTable.setItems(setUnplayedYearData());
             unplayedDeckTable.setItems(setUnplayedDeckData());
         }
@@ -418,7 +418,7 @@ public class StatsScreen extends HBox {
                     newData.setTotalRating(game.getRating());
                     newData.setAverageRating(newData.getTotalRating() * 1.0);
                 }
-                newData.setPercent(newData.getCount()*1.0 / GameLists.playedList.size() * 100);
+                newData.setPercent(1.0 / GameLists.playedList.size() * 100);
                 map.put(game.getFranchise(), newData);
                 if (dataList.isEmpty()){
                     dataList.add(newData);
@@ -456,7 +456,7 @@ public class StatsScreen extends HBox {
                 newData.setName(game.getFranchise());
                 newData.setCount(1);
                 newData.setTotalHours(game.getHours());
-                newData.setPercent(newData.getCount()*1.0 / GameLists.playedList.size() * 100);
+                newData.setPercent(1.0 / GameLists.playedList.size() * 100);
                 map.put(game.getFranchise(), newData);
                 if (dataList.isEmpty()){
                     dataList.add(newData);
@@ -479,188 +479,221 @@ public class StatsScreen extends HBox {
     }
 
     //Sets the data in the played game platform table or genre table.
-    public ObservableList<PlayedDataEntry> setPlayedPlatformData(ObservableList<String> list, boolean platform) {
+    public ObservableList<PlayedDataEntry> setPlayedPlatGenData(ObservableList<String> list, boolean platform) {
         ObservableList<PlayedDataEntry> dataList = FXCollections.observableArrayList();
-        for (String s : list) {
-            PlayedDataEntry newPlatGenre = new PlayedDataEntry();
-            newPlatGenre.setName(s);
-            double count = 0;
-            int ratingCount = 0;
-            double totalRating = 0;
-            for (int j = 0; j < GameLists.playedList.size(); j++) {
-                String compareString;
-                if (platform) {
-                    compareString = GameLists.playedList.get(j).getPlatform();
-                } else {
-                    compareString = GameLists.playedList.get(j).getGenre();
-                }
-                if (compareString.equals(s)) {
-                    count++;
-                    if (GameLists.playedList.get(j).getRating() != 0) {
-                        ratingCount++;
-                        totalRating += GameLists.playedList.get(j).getRating();
-                    }
-                }
+        HashMap<String, PlayedDataEntry> map = new HashMap<>();
+
+        //Populate the map with platforms or genres
+        for(String genPlat : list){
+            PlayedDataEntry newData = new PlayedDataEntry();
+            newData.setName(genPlat);
+            newData.setCount(0);
+            newData.setPercent(0.0);
+            map.put(genPlat, newData);
+            dataList.add(newData);
+        }
+
+        //Accumulate data for each platform or genre
+        for(PlayedGame game : GameLists.playedList){
+            PlayedDataEntry data;
+            if(platform){
+                data = map.get(game.getPlatform());
+            }else{
+                data = map.get(game.getGenre());
             }
-            newPlatGenre.setCount((int)count);
-            newPlatGenre.setPercent(count / GameLists.playedList.size() * 100.0);
-            if (ratingCount != 0)
-                newPlatGenre.setAverageRating(totalRating / ratingCount);
-            dataList.add(newPlatGenre);
+            data.setCount(data.getCount()+1);
+            if(game.getRating()!=0){
+                data.setRatingCount(data.getRatingCount()+1);
+                data.setTotalRating(data.getTotalRating()+game.getRating());
+                data.setAverageRating(data.getTotalRating()*1.0 / data.getRatingCount());
+            }
+            data.setPercent(data.getCount()*1.0 / GameLists.playedList.size() * 100);
         }
         return dataList;
     }
 
     //Sets the data for the unplayed game platform table or genre table.
-    public ObservableList<UnplayedDataEntry> setUnplayedPlatformData(ObservableList<String> list, boolean platform) {
+    public ObservableList<UnplayedDataEntry> setUnplayedPlatGenData(ObservableList<String> list, boolean platform) {
         ObservableList<UnplayedDataEntry> dataList = FXCollections.observableArrayList();
-        for (String s : list) {
-            UnplayedDataEntry newPlatGenre = new UnplayedDataEntry();
-            newPlatGenre.setName(s);
-            double count = 0.0;
-            double totalHours = 0.0;
-            for (int j = 0; j < GameLists.unplayedList.size(); j++) {
-                String compareString;
-                if (platform) {
-                    compareString = GameLists.unplayedList.get(j).getPlatform();
-                } else {
-                    compareString = GameLists.unplayedList.get(j).getGenre();
-                }
-                if (compareString.equals(s)) {
-                    count++;
-                    totalHours += GameLists.unplayedList.get(j).getHours();
-                }
+        HashMap<String, UnplayedDataEntry> map = new HashMap<>();
+
+        //Populate the map with platforms or genres
+        for(String genPlat : list){
+            UnplayedDataEntry newData = new UnplayedDataEntry();
+            newData.setName(genPlat);
+            newData.setCount(0);
+            newData.setPercent(0.0);
+            map.put(genPlat, newData);
+            dataList.add(newData);
+        }
+
+        //Accumulate data for each platform or genre
+        for(UnplayedGame game : GameLists.unplayedList){
+            UnplayedDataEntry data;
+            if(platform){
+                data = map.get(game.getPlatform());
+            }else{
+                data = map.get(game.getGenre());
             }
-            newPlatGenre.setCount((int)count);
-            newPlatGenre.setPercent(count / GameLists.unplayedList.size() * 100.0);
-            newPlatGenre.setTotalHours(totalHours);
-            dataList.add(newPlatGenre);
+            data.setCount(data.getCount()+1);
+            data.setTotalHours(data.getTotalHours() + game.getHours());
+            data.setPercent(data.getCount()*1.0 / GameLists.unplayedList.size() * 100);
         }
         return dataList;
     }
 
     //Sets data in the played release year table or completion year table.
     public ObservableList<PlayedDataEntry> setPlayedYearData(boolean release) {
-        ObservableList<Integer> yearList = FXCollections.observableArrayList();
-        if (release) {
-            for (int i = 0; i < GameLists.playedList.size(); i++) {
-                if (!yearList.contains(GameLists.playedList.get(i).getReleaseYear()))
-                    yearList.add(GameLists.playedList.get(i).getReleaseYear());
-            }
-        } else {
-            for (int i = 0; i < GameLists.playedList.size(); i++) {
-                if (!yearList.contains(GameLists.playedList.get(i).getCompletionYear()))
-                    yearList.add(GameLists.playedList.get(i).getCompletionYear());
-            }
-        }
-        Collections.sort(yearList);
         ObservableList<PlayedDataEntry> dataList = FXCollections.observableArrayList();
-        for (Integer integer : yearList) {
-            PlayedDataEntry newYear = new PlayedDataEntry();
-            newYear.setName("" + integer);
-            double count = 0.0;
-            int ratingCount = 0;
-            double totalRating = 0.0;
-            for (int j = 0; j < GameLists.playedList.size(); j++) {
-                int compare;
-                if (release) {
-                    compare = GameLists.playedList.get(j).getReleaseYear();
-                } else {
-                    compare = GameLists.playedList.get(j).getCompletionYear();
+        HashMap<Integer, PlayedDataEntry> map = new HashMap<>();
+
+        for(PlayedGame game : GameLists.playedList){
+            int year;
+            if(release){
+                year  = game.getReleaseYear();
+            }else{
+                year = game.getCompletionYear();
+            }
+
+            if(map.containsKey(year)){
+                PlayedDataEntry data = map.get(year);
+                data.setCount(data.getCount()+1);
+                if(game.getRating()!=0){
+                    data.setRatingCount(data.getRatingCount()+1);
+                    data.setTotalRating(data.getTotalRating()+game.getRating());
+                    data.setAverageRating(data.getTotalRating()*1.0 / data.getRatingCount());
                 }
-                if (compare == integer) {
-                    count++;
-                    if (GameLists.playedList.get(j).getRating() != 0) {
-                        ratingCount++;
-                        totalRating += GameLists.playedList.get(j).getRating();
+                data.setPercent(data.getCount()*1.0 / GameLists.playedList.size() * 100);
+
+            }else{
+                PlayedDataEntry newData = new PlayedDataEntry();
+                newData.setIntName(year);
+                newData.setCount(1);
+                newData.setPercent(1.0 / GameLists.playedList.size() * 100);
+                if(game.getRating()!=0){
+                    newData.setTotalRating(game.getRating());
+                    newData.setRatingCount(1);
+                    newData.setAverageRating(game.getRating()*1.0);
+                }
+                map.put(year, newData);
+                if (dataList.isEmpty()){
+                    dataList.add(newData);
+                }else {
+                    boolean placed = false;
+                    for (int i = 0; i < dataList.size(); i++) {
+                        if(dataList.get(i).getIntName() > year){
+                            dataList.add(i, newData);
+                            placed = true;
+                            break;
+                        }
+                    }
+                    if(!placed){
+                        dataList.add(newData);
                     }
                 }
             }
-            newYear.setCount((int)count);
-            newYear.setPercent(count / GameLists.playedList.size() * 100.0);
-            if (ratingCount != 0)
-                newYear.setAverageRating(totalRating / ratingCount);
-            dataList.add(newYear);
         }
         return dataList;
     }
 
     //Sets the data for the unplayed release year table.
     public ObservableList<UnplayedDataEntry> setUnplayedYearData() {
-        ObservableList<Integer> yearList = FXCollections.observableArrayList();
-        for (int i = 0; i < GameLists.unplayedList.size(); i++) {
-            if (!yearList.contains(GameLists.unplayedList.get(i).getReleaseYear()))
-                yearList.add(GameLists.unplayedList.get(i).getReleaseYear());
-        }
-        Collections.sort(yearList);
         ObservableList<UnplayedDataEntry> dataList = FXCollections.observableArrayList();
-        for (Integer integer : yearList) {
-            UnplayedDataEntry newYear = new UnplayedDataEntry();
-            newYear.setName("" + integer);
-            double count = 0.0;
-            double totalHours = 0.0;
-            for (int j = 0; j < GameLists.unplayedList.size(); j++) {
-                if (GameLists.unplayedList.get(j).getReleaseYear() == integer) {
-                    count++;
-                    totalHours += GameLists.unplayedList.get(j).getHours();
+        HashMap<Integer, UnplayedDataEntry> map = new HashMap<>();
+
+        for(UnplayedGame game : GameLists.unplayedList){
+            int year = game.getReleaseYear();
+
+            if(map.containsKey(year)){
+                UnplayedDataEntry data = map.get(year);
+                data.setCount(data.getCount()+1);
+                data.setTotalHours(data.getTotalHours() + game.getHours());
+                data.setPercent(data.getCount()*1.0 / GameLists.unplayedList.size() * 100);
+
+            }else{
+                UnplayedDataEntry newData = new UnplayedDataEntry();
+                newData.setIntName(year);
+                newData.setCount(1);
+                newData.setPercent(1.0 / GameLists.unplayedList.size() * 100);
+                newData.setTotalHours(game.getHours());
+                map.put(year, newData);
+                if (dataList.isEmpty()){
+                    dataList.add(newData);
+                }else {
+                    boolean placed = false;
+                    for (int i = 0; i < dataList.size(); i++) {
+                        if(dataList.get(i).getIntName() > year){
+                            dataList.add(i, newData);
+                            placed = true;
+                            break;
+                        }
+                    }
+                    if(!placed){
+                        dataList.add(newData);
+                    }
                 }
             }
-            newYear.setCount((int)count);
-            newYear.setPercent(count / GameLists.unplayedList.size() * 100.0);
-            newYear.setTotalHours(totalHours);
-            dataList.add(newYear);
         }
         return dataList;
     }
 
     //Sets the data for the played rating table
     public ObservableList<PlayedDataEntry> setPlayedRatingData() {
-        ObservableList<Integer> ratingList = FXCollections.observableArrayList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         ObservableList<PlayedDataEntry> dataList = FXCollections.observableArrayList();
-        for (Integer integer : ratingList) {
-            PlayedDataEntry newRating = new PlayedDataEntry();
-            newRating.setName("" + integer);
-            double count = 0.0;
-            for (int j = 0; j < GameLists.playedList.size(); j++) {
-                if (GameLists.playedList.get(j).getRating() == integer)
-                    count++;
-            }
-            newRating.setCount((int)count);
-            newRating.setPercent(count / GameLists.playedList.size() * 100.0);
-            dataList.add(newRating);
+        HashMap<Integer, PlayedDataEntry> map = new HashMap<>();
+
+        //Populate map with ratings 0-10
+        for(int i = 0; i <=  10; i++){
+            PlayedDataEntry newData = new PlayedDataEntry();
+            newData.setIntName(i);
+            newData.setCount(0);
+            newData.setPercent(0.0);
+            map.put(i, newData);
+            dataList.add(newData);
         }
+
+        //Accumulate data for each rating
+        for(PlayedGame game : GameLists.playedList){
+            PlayedDataEntry data = map.get(game.getRating());
+            data.setCount(data.getCount()+1);
+            data.setPercent(data.getCount() * 1.0 / GameLists.playedList.size() * 100);
+        }
+
         return dataList;
     }
 
     //Sets the data for the played percent100 table
     public ObservableList<PlayedDataEntry> setPlayedPercentData() {
-        ObservableList<String> percentList = FXCollections.observableArrayList("", "Yes", "No");
+        String[] statuses = {"", "Yes", "No"};
         ObservableList<PlayedDataEntry> dataList = FXCollections.observableArrayList();
-        for (String s : percentList) {
-            PlayedDataEntry newPercent = new PlayedDataEntry();
-            if (s.equals("")) {
-                newPercent.setName("Blank");
-            } else {
-                newPercent.setName(s);
+        HashMap<String, PlayedDataEntry> map = new HashMap<>();
+
+        //Populate map with each status
+        for(String s : statuses){
+            PlayedDataEntry newData = new PlayedDataEntry();
+            if(s.equals("")){
+                newData.setName("Blank");
+            }else {
+                newData.setName(s);
             }
-            double count = 0.0;
-            int ratingCount = 0;
-            double totalRating = 0.0;
-            for (int j = 0; j < GameLists.playedList.size(); j++) {
-                if (GameLists.playedList.get(j).getPercent100().equals(s)) {
-                    count++;
-                    if (GameLists.playedList.get(j).getRating() != 0) {
-                        ratingCount++;
-                        totalRating += GameLists.playedList.get(j).getRating();
-                    }
-                }
-            }
-            newPercent.setCount((int)count);
-            newPercent.setPercent(count / GameLists.playedList.size() * 100.0);
-            if (ratingCount != 0)
-                newPercent.setAverageRating(totalRating / ratingCount);
-            dataList.add(newPercent);
+            newData.setCount(0);
+            newData.setPercent(0.0);
+            map.put(s, newData);
+            dataList.add(newData);
         }
+
+        //Accumulate data for each status
+        for(PlayedGame game : GameLists.playedList){
+            PlayedDataEntry data = map.get(game.getPercent100());
+            data.setCount(data.getCount()+1);
+            if(game.getRating()!=0){
+                data.setRatingCount(data.getRatingCount() + 1);
+                data.setTotalRating(data.getTotalRating() + game.getRating());
+                data.setAverageRating(data.getTotalRating()*1.0 / data.getRatingCount());
+            }
+            data.setPercent(data.getCount() * 1.0 / GameLists.playedList.size() * 100);
+        }
+
         return dataList;
     }
 
@@ -668,26 +701,30 @@ public class StatsScreen extends HBox {
     public ObservableList<UnplayedDataEntry> setUnplayedDeckData() {
         ObservableList<String> deckList = FXCollections.observableArrayList("", "Yes", "No", "Maybe");
         ObservableList<UnplayedDataEntry> dataList = FXCollections.observableArrayList();
-        for (String s : deckList) {
-            UnplayedDataEntry newDeck = new UnplayedDataEntry();
-            if (s.equals("")) {
-                newDeck.setName("Blank");
-            } else {
-                newDeck.setName(s);
+        HashMap<String, UnplayedDataEntry> map = new HashMap<>();
+
+        //Populate map with each status
+        for(String s : deckList){
+            UnplayedDataEntry newData = new UnplayedDataEntry();
+            if(s.equals("")){
+                newData.setName("Blank");
+            }else {
+                newData.setName(s);
             }
-            double count = 0.0;
-            double totalHours = 0.0;
-            for (int j = 0; j < GameLists.unplayedList.size(); j++) {
-                if (GameLists.unplayedList.get(j).getDeckCompatible().equals(s)) {
-                    count++;
-                    totalHours += GameLists.unplayedList.get(j).getHours();
-                }
-            }
-            newDeck.setCount((int)count);
-            newDeck.setPercent(count / GameLists.unplayedList.size() * 100.0);
-            newDeck.setTotalHours(totalHours);
-            dataList.add(newDeck);
+            newData.setCount(0);
+            newData.setPercent(0.0);
+            map.put(s, newData);
+            dataList.add(newData);
         }
+
+        //Accumulate data for each status
+        for(UnplayedGame game : GameLists.unplayedList){
+            UnplayedDataEntry data = map.get(game.getDeckCompatible());
+            data.setCount(data.getCount()+1);
+            data.setTotalHours(data.getTotalHours() + data.getTotalHours());
+            data.setPercent(data.getCount() * 1.0 / GameLists.unplayedList.size() * 100);
+        }
+
         return dataList;
     }
 }
