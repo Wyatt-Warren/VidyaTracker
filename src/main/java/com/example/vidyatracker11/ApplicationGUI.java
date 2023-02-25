@@ -109,7 +109,6 @@ public class ApplicationGUI extends Application {
 
     public static String styleSheet = "style.css";
     public static MenuBar menuBar = new MenuBar(fileMenu, listMenu, randomMenu);
-    public static StatsScreen stats = new StatsScreen();
     public static FileChooser fileChooser = new FileChooser();
     public static VBox primarySceneVBox = new VBox(menuBar, playedWindow);
     public static Scene primaryScene = new Scene(primarySceneVBox, screenWidthMain, screenHeightMain);
@@ -199,7 +198,6 @@ public class ApplicationGUI extends Application {
                 statusCountBoxUnplayed.updateData();
                 currentFilePathOut = Path.of("List.json").toAbsolutePath();
                 stage.close();
-                stats.updateStats();
             });
             noButton.setOnAction(e1 -> stage.close());
         });
@@ -371,7 +369,6 @@ public class ApplicationGUI extends Application {
                         playedGamesTable.sortAndFilter();
                         unplayedGamesTable.sortAndFilter();
                         stage.close();
-                        stats.updateStats();
                         changeMade = true;
                     });
 
@@ -419,7 +416,6 @@ public class ApplicationGUI extends Application {
                         playedGamesTable.sortAndFilter();
                         unplayedGamesTable.sortAndFilter();
                         stage.close();
-                        stats.updateStats();
                         changeMade = true;
                     });
 
@@ -466,7 +462,6 @@ public class ApplicationGUI extends Application {
                         statusCountBoxPlayed.updateData();
                         playedGamesTable.sortAndFilter();
                         stage.close();
-                        stats.updateStats();
                         changeMade = true;
                     });
 
@@ -508,7 +503,6 @@ public class ApplicationGUI extends Application {
                         statusCountBoxUnplayed.updateData();
                         unplayedGamesTable.sortAndFilter();
                         stage.close();
-                        stats.updateStats();
                         changeMade = true;
                     });
 
@@ -714,23 +708,16 @@ public class ApplicationGUI extends Application {
 
         //Open the stats view
         statsMenuItem.setOnAction(e -> {
-            primarySceneVBox.getChildren().clear();
-
-            if (statsMenuItem.getText().equals("Show List Window")) {
-                primarySceneVBox.getChildren().addAll(menuBar, playedWindow);
-                playedOpen = true;
-                statsMenuItem.setText("Show Stats Window");
-                primaryStage.setWidth(screenWidthMain);
-                primaryStage.setHeight(screenHeightMain);
-            } else {
-                primarySceneVBox.getChildren().addAll(menuBar, stats);
-                statsMenuItem.setText("Show List Window");
-                primaryStage.setWidth(screenWidthStats);
-                primaryStage.setHeight(screenHeightStats);
-            }
-
-            stats.updateStats();
-            StatsScreen.preventColumnReorderingOrResizingForAll();
+            Stage stage = new Stage();
+            stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Stats");
+            StatsScreen statsScreen = new StatsScreen();
+            Scene scene = new Scene(statsScreen, 500, 950);
+            scene.getStylesheets().add(styleSheet);
+            stage.setScene(scene);
+            stage.show();
         });
 
         //open the default "List.json" file
@@ -885,7 +872,6 @@ public class ApplicationGUI extends Application {
             unplayedGamesTable.sortAndFilter();
             statusCountBoxPlayed.updateData();
             statusCountBoxUnplayed.updateData();
-            stats.updateStats();
         } catch (NoSuchFileException ignored) {
             //This is ok. It just means that the user doesn't currently have a list file.
         } catch (NullPointerException | IOException e1) {

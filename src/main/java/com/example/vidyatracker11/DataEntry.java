@@ -1,7 +1,7 @@
 package com.example.vidyatracker11;
 
 public class DataEntry {
-    protected String title;
+    protected String name;
 
     protected int count;
 
@@ -19,12 +19,12 @@ public class DataEntry {
 
     //name getter
     public String getName() {
-        return title;
+        return name;
     }
 
     //name setter
     public void setName(String name) {
-        this.title = name;
+        this.name = name;
     }
 
     //percent getter
