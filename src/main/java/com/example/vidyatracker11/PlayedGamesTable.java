@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -223,21 +224,71 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
     }
 
     //Calls sort methods based on the selected sort and filter options
-    public void sortAndFilter() {
+    //When an item is selected it tries to do sortAndFilter before setting the new value, so we just pass the variable
+    //NewValue from the listener so it will use the right one. That's why filterToken is a parameter
+    public void sortAndFilter(String filterToken) {
+        try {
+            if (filterToken.equals("Blank")) filterToken = "";
+        }catch (NullPointerException ignored){
+          //lol
+        }
+        final String finalFilterToken = filterToken;
         switch (ApplicationGUI.playedFilterChoices.getSelectionModel().getSelectedIndex()) { //Filter first
-            case 0: //Short yes
-                filterByShort(true);
+            case 0: //Status
+                filterByAny(playedGame ->
+                        playedGame.getStatus().equals(finalFilterToken));
                 break;
-            case 1: //Short no
-                filterByShort(false);
+            case 1: //Short
+                filterByAny(playedGame ->
+                        playedGame.getIsItShort().equals(finalFilterToken));
                 break;
-            case 2: //100 yes
-                filterBy100(true);
+            case 2: //Franchise
+                filterByAny(playedGame ->
+                        playedGame.getFranchise().equals(finalFilterToken));
                 break;
-            case 3: //100 no
-                filterBy100(false);
+            case 3: //Rating
+                try{
+                    filterByAny(playedGame -> {
+                        int intToken = Integer.parseInt(finalFilterToken);
+                        return playedGame.getRating() == intToken;
+                    });
+                }catch (NumberFormatException ignored){
+                    //lol
+                }
                 break;
-            case 4: //Don't filter
+            case 4: //Platform
+                filterByAny(playedGame ->
+                        playedGame.getPlatform().equals(finalFilterToken));
+                break;
+            case 5: //Genre
+                filterByAny(playedGame ->
+                        playedGame.getGenre().equals(finalFilterToken));
+                break;
+            case 6: //Release Year
+                try{
+                    filterByAny(playedGame -> {
+                        int intToken = Integer.parseInt(finalFilterToken);
+                        return playedGame.getReleaseYear()==intToken;
+                    });
+                }catch (NumberFormatException ignored){
+                    //lol
+                }
+                break;
+            case 7: //Completion Year
+                try{
+                    filterByAny(playedGame -> {
+                        int intToken = Integer.parseInt(finalFilterToken);
+                        return playedGame.getCompletionYear()==intToken;
+                    });
+                }catch (NumberFormatException ignored){
+                    //lol
+                }
+                break;
+            case 8: //100%
+                filterByAny(playedGame ->
+                        playedGame.getPercent100().equals(finalFilterToken));
+                break;
+            case 9: //Don't filter
                 unFilter();
                 break;
         }
@@ -430,18 +481,10 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
         setItems(filteredList);
     }
 
-    //Filters the list based on whether short yes or short no is selected
-    public void filterByShort(boolean yesNo) {
+    //Filters the list based on a predicate
+    public void filterByAny(Predicate<PlayedGame> predicate){
         FilteredList<PlayedGame> newList = new FilteredList<>(GameLists.playedList, p -> true);
-        newList.setPredicate(playedGame -> yesNo ? playedGame.getIsItShort().equals("Yes") : playedGame.getIsItShort().equals("No"));
-        filteredList = new FilteredList<>(newList);
-        setItems(filteredList);
-    }
-
-    //Filters the list based on whether 100 yes or 100 no is selected
-    public void filterBy100(boolean yesNo) {
-        FilteredList<PlayedGame> newList = new FilteredList<>(GameLists.playedList, p -> true);
-        newList.setPredicate(playedGame -> yesNo ? playedGame.getPercent100().equals("Yes") : playedGame.getPercent100().equals("No"));
+        newList.setPredicate(predicate);
         filteredList = new FilteredList<>(newList);
         setItems(filteredList);
     }

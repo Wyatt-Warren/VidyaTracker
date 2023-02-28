@@ -2,6 +2,7 @@ package com.example.vidyatracker11;
 
 import java.util.Collections;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -159,18 +160,47 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
     }
 
     //Calls sort and filter methods based on the selected sort and filter options
-    public void sortAndFilter() {
+    //When an item is selected it tries to do sortAndFilter before setting the new value, so we just pass the variable
+    //NewValue from the listener so it will use the right one. That's why filterToken is a parameter
+    public void sortAndFilter(String filterToken) {
+        try {
+            if (filterToken.equals("Blank")) filterToken = "";
+        }catch (NullPointerException ignored){
+            //lol
+        }
+        final String finalFilterToken = filterToken;
         switch (ApplicationGUI.unplayedFilterChoices.getSelectionModel().getSelectedIndex()) { //Filter first
-            case 0: //Deck status yes
-                filterByDeck("Yes");
+            case 0: //Status
+                filterByAny(unplayedGame ->
+                        unplayedGame.getStatus().equals(finalFilterToken));
                 break;
-            case 1: //Deck status no
-                filterByDeck("No");
+            case 1: //Franchise
+                filterByAny(unplayedGame ->
+                        unplayedGame.getFranchise().equals(finalFilterToken));
                 break;
-            case 2: //Deck status maybe
-                filterByDeck("Maybe");
+            case 2: //Platform
+                filterByAny(unplayedGame ->
+                        unplayedGame.getPlatform().equals(finalFilterToken));
                 break;
-            case 3: //No Filter
+            case 3: //Genre
+                filterByAny(unplayedGame ->
+                        unplayedGame.getGenre().equals(finalFilterToken));
+                break;
+            case 4: //Deck Status
+                filterByAny(unplayedGame ->
+                        unplayedGame.getDeckCompatible().equals(finalFilterToken));
+                break;
+            case 5: //Release Year
+                try{
+                    filterByAny(playedGame -> {
+                        int intToken = Integer.parseInt(finalFilterToken);
+                        return playedGame.getReleaseYear() == intToken;
+                    });
+                }catch (NumberFormatException ignored){
+                    //lol
+                }
+                break;
+            case 6: //No Filter
                 unFilter();
                 break;
         }
@@ -356,11 +386,10 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
         setItems(filteredList);
     }
 
-    //Filters by deck status
-    public void filterByDeck(String filter) {
+    public void filterByAny(Predicate<UnplayedGame> predicate){
         FilteredList<UnplayedGame> newList = new FilteredList<>(GameLists.unplayedList, p -> true);
-        newList.setPredicate(unplayedGame -> unplayedGame.getDeckCompatible().equals(filter));
-        this.filteredList = new FilteredList<>(newList);
+        newList.setPredicate(predicate);
+        filteredList = new FilteredList<>(newList);
         setItems(filteredList);
     }
 

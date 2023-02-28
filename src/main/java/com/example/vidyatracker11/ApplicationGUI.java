@@ -7,10 +7,12 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Random;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -54,18 +56,24 @@ public class ApplicationGUI extends Application {
     public static StatusCountBoxPlayed statusCountBoxPlayed = new StatusCountBoxPlayed();
     public static StatusCountBoxUnplayed statusCountBoxUnplayed = new StatusCountBoxUnplayed();
     public static ChoiceBox<String> playedSortChoices = new ChoiceBox<>();
-    public static Label playedSortLabel = new Label("Sort by: ");
-    public static Label playedFilterLabel = new Label("Filter by: ");
+    public static Label playedSortLabel = new Label("Sort by:");
+    public static Label playedFilterLabel = new Label("Filter by:");
+    public static Label playedFilterTokenLabel = new Label("Filter Token:");
     public static ChoiceBox<String> playedFilterChoices = new ChoiceBox<>();
+    public static ChoiceBox<String> playedFilterTokenChoices = new ChoiceBox<>();
     public static PlayedGamesTable playedGamesTable = new PlayedGamesTable();
-    public static HBox playedChoiceHBox = new HBox(playedSortLabel, playedSortChoices, playedFilterLabel, playedFilterChoices);
+    public static HBox playedChoiceHBox = new HBox(playedSortLabel, playedSortChoices, playedFilterLabel,
+            playedFilterChoices, playedFilterTokenLabel, playedFilterTokenChoices);
     public static VBox playedGamesVBox = new VBox(playedChoiceHBox, playedGamesTable);
     public static ChoiceBox<String> unplayedSortChoices = new ChoiceBox<>();
     public static ChoiceBox<String> unplayedFilterChoices = new ChoiceBox<>();
+    public static ChoiceBox<String> unplayedFilterTokenChoices = new ChoiceBox<>();
     public static UnplayedGamesTable unplayedGamesTable = new UnplayedGamesTable();
-    public static Label unplayedSortLabel = new Label("Sort by: ");
-    public static Label unplayedFilterLabel = new Label("Filter by: ");
-    public static HBox unplayedChoiceHBox = new HBox(unplayedSortLabel, unplayedSortChoices, unplayedFilterLabel, unplayedFilterChoices);
+    public static Label unplayedSortLabel = new Label("Sort by:");
+    public static Label unplayedFilterLabel = new Label("Filter by:");
+    public static Label unplayedFilterTokenLabel = new Label("Filter Token:");
+    public static HBox unplayedChoiceHBox = new HBox(unplayedSortLabel, unplayedSortChoices, unplayedFilterLabel,
+            unplayedFilterChoices, unplayedFilterTokenLabel, unplayedFilterTokenChoices);
     public static VBox unplayedGamesVBox = new VBox(unplayedChoiceHBox, unplayedGamesTable);
     public static UnplayedTempList unplayedTempList = new UnplayedTempList();
     public static Button switchFromPlayed = new Button("Show Unplayed List");
@@ -122,18 +130,124 @@ public class ApplicationGUI extends Application {
         unplayedGamesVBox.setSpacing(5);
 
         unplayedSortChoices.getItems().addAll("Title", "Platform", "Genre", "Hours", "Release Date");
-        unplayedFilterChoices.getItems().addAll("Deck Status: Yes", "Deck Status: No", "Deck Status: Maybe", "No Filter");
+        unplayedFilterChoices.getItems().addAll("Status", "Franchise", "Platform", "Genre", "Deck Status",
+                "Release Year", "No Filter");
         playedSortChoices.getItems().addAll("Title", "Rating", "Platform", "Genre", "Release Date", "Completion Date");
-        playedFilterChoices.getItems().addAll("Short: Yes", "Short: No", "100%: Yes", "100%: No", "No Filter");
+        playedFilterChoices.getItems().addAll("Status", "Short", "Franchise", "Rating", "Platform",
+                "Genre", "Release Year", "Completion Year", "100%", "No Filter");
 
         playedSortChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) ->
-                playedGamesTable.sortAndFilter());
-        playedFilterChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) ->
-                playedGamesTable.sortAndFilter());
+                playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem()));
         unplayedSortChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) ->
-                unplayedGamesTable.sortAndFilter());
-        unplayedFilterChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) ->
-                unplayedGamesTable.sortAndFilter());
+                unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem()));
+
+        playedFilterTokenChoices.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+                playedGamesTable.sortAndFilter(newValue));
+        unplayedFilterTokenChoices.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+                unplayedGamesTable.sortAndFilter(newValue));
+
+        playedFilterChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            playedFilterTokenChoices.getItems().clear();
+            switch (playedFilterChoices.getSelectionModel().getSelectedIndex()){
+                case 0: //Status
+                    playedFilterTokenChoices.getItems().addAll("Playing", "Completed", "On Hold");
+                    break;
+                case 1: //Short
+                case 8: //100%
+                    playedFilterTokenChoices.getItems().addAll("Yes", "No", "Blank");
+                    break;
+                case 2: //Franchise
+                    ObservableList<String> franchises = FXCollections.observableArrayList();
+                    for(PlayedGame game : GameLists.playedList){
+                        if(!franchises.contains(game.getFranchise()) && !game.getFranchise().equals("")){
+                            franchises.add(game.getFranchise());
+                        }
+                    }
+                    Collections.sort(franchises);
+                    playedFilterTokenChoices.getItems().addAll(franchises);
+                    break;
+                case 3: //Rating
+                    playedFilterTokenChoices.getItems().addAll("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
+                    break;
+                case 4: //Platform
+                    playedFilterTokenChoices.getItems().addAll(GameLists.platformList);
+                    break;
+                case 5: //Genre
+                    playedFilterTokenChoices.getItems().addAll(GameLists.genreList);
+                    break;
+                case 6: //Release Year
+                case 7: //Completion Year
+                    ObservableList<Integer> years = FXCollections.observableArrayList();
+                    for(PlayedGame game : GameLists.playedList){
+                        int year;
+                        if (playedFilterChoices.getSelectionModel().getSelectedIndex()==6){
+                            year = game.getReleaseYear();
+                        }else{
+                            year = game.getCompletionYear();
+                        }
+
+                        if(!years.contains((year)) && year!=0){
+                            years.add(year);
+                        }
+                    }
+                    Collections.sort(years);
+                    for(int i : years){
+                        playedFilterTokenChoices.getItems().add(""+i);
+                    }
+                    break;
+                case 9: //Don't filter
+                    playedFilterTokenChoices.getItems().clear();
+                    break;
+            }
+            playedFilterTokenChoices.getSelectionModel().selectFirst();
+        });
+
+        unplayedFilterChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
+            unplayedFilterTokenChoices.getItems().clear();
+            switch (ApplicationGUI.unplayedFilterChoices.getSelectionModel().getSelectedIndex()) { //Filter first
+                case 0: //Status
+                    unplayedFilterTokenChoices.getItems().addAll("Backlog", "SubBacklog", "Wishlist");
+                    break;
+                case 1: //Franchise
+                    ObservableList<String> franchises = FXCollections.observableArrayList();
+                    for(UnplayedGame game : GameLists.unplayedList){
+                        if(!franchises.contains(game.getFranchise()) && !game.getFranchise().equals("")){
+                            franchises.add(game.getFranchise());
+                        }
+                    }
+                    Collections.sort(franchises);
+                    unplayedFilterTokenChoices.getItems().addAll(franchises);
+                    break;
+                case 2: //Platform
+                    unplayedFilterTokenChoices.getItems().addAll(GameLists.platformList);
+                    break;
+                case 3: //Genre
+                    unplayedFilterTokenChoices.getItems().addAll(GameLists.genreList);
+                    break;
+                case 4: //Deck Status
+                    unplayedFilterTokenChoices.getItems().addAll("Yes", "No", "Maybe", "Blank");
+                    break;
+                case 5: //Release Year
+                    ObservableList<Integer> years = FXCollections.observableArrayList();
+                    for(UnplayedGame game : GameLists.unplayedList){
+                        int year;
+                        year = game.getReleaseYear();
+
+                        if(!years.contains((year)) && year!=0){
+                            years.add(year);
+                        }
+                    }
+                    Collections.sort(years);
+                    for(int i : years){
+                        unplayedFilterTokenChoices.getItems().add(""+i);
+                    }
+                    break;
+                case 6: //No Filter
+                    unplayedFilterTokenChoices.getItems().clear();
+                    break;
+            }
+            unplayedFilterTokenChoices.getSelectionModel().selectFirst();
+        });
 
         playedSortChoices.getSelectionModel().selectFirst();
         playedFilterChoices.getSelectionModel().selectLast();
@@ -190,8 +304,8 @@ public class ApplicationGUI extends Application {
                 GameLists.genreList.add("Action");
                 GameLists.platformList.clear();
                 GameLists.platformList.add("PC");
-                playedGamesTable.sortAndFilter();
-                unplayedGamesTable.sortAndFilter();
+                playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
+                unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
                 statusCountBoxPlayed.updateData();
                 statusCountBoxUnplayed.updateData();
                 currentFilePathOut = Path.of("List.json").toAbsolutePath();
@@ -364,8 +478,8 @@ public class ApplicationGUI extends Application {
                         GameLists.unplayedList.add(newGame);
 
                         GameLists.playedList.remove(game);
-                        playedGamesTable.sortAndFilter();
-                        unplayedGamesTable.sortAndFilter();
+                        playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
+                        unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
                         stage.close();
                         changeMade = true;
                     });
@@ -411,8 +525,8 @@ public class ApplicationGUI extends Application {
                         GameLists.playedList.add(newGame);
 
                         GameLists.unplayedList.remove(game);
-                        playedGamesTable.sortAndFilter();
-                        unplayedGamesTable.sortAndFilter();
+                        playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
+                        unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
                         stage.close();
                         changeMade = true;
                     });
@@ -458,7 +572,7 @@ public class ApplicationGUI extends Application {
                     yesButton.setOnAction(e1 -> {
                         GameLists.playedList.remove(game);
                         statusCountBoxPlayed.updateData();
-                        playedGamesTable.sortAndFilter();
+                        playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
                         stage.close();
                         changeMade = true;
                     });
@@ -499,7 +613,7 @@ public class ApplicationGUI extends Application {
                     yesButton.setOnAction(e1 -> {
                         GameLists.unplayedList.remove(game);
                         statusCountBoxUnplayed.updateData();
-                        unplayedGamesTable.sortAndFilter();
+                        unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
                         stage.close();
                         changeMade = true;
                     });
@@ -866,8 +980,8 @@ public class ApplicationGUI extends Application {
                 GameLists.unplayedList.add(newGame);
             }
 
-            playedGamesTable.sortAndFilter();
-            unplayedGamesTable.sortAndFilter();
+            playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
+            unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
             statusCountBoxPlayed.updateData();
             statusCountBoxUnplayed.updateData();
         } catch (NoSuchFileException ignored) {

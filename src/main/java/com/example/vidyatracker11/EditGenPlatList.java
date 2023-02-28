@@ -65,8 +65,8 @@ public abstract class EditGenPlatList extends VBox {
                 String toRemove = listView.getSelectionModel().getSelectedItem();
                 list.remove(selectionInt);
                 removeGameItems(toRemove);
-                ApplicationGUI.playedGamesTable.sortAndFilter();
-                ApplicationGUI.unplayedGamesTable.sortAndFilter();
+                ApplicationGUI.playedGamesTable.sortAndFilter(ApplicationGUI.playedFilterTokenChoices.getSelectionModel().getSelectedItem());
+                ApplicationGUI.unplayedGamesTable.sortAndFilter(ApplicationGUI.unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
                 ApplicationGUI.changeMade = true;
             }
         });
@@ -84,8 +84,8 @@ public abstract class EditGenPlatList extends VBox {
                 list.remove(selectionInt);
                 list.add(selectionInt, newName);
                 renameGameItems(oldName, newName);
-                ApplicationGUI.playedGamesTable.sortAndFilter();
-                ApplicationGUI.unplayedGamesTable.sortAndFilter();
+                ApplicationGUI.playedGamesTable.sortAndFilter(ApplicationGUI.playedFilterTokenChoices.getSelectionModel().getSelectedItem());
+                ApplicationGUI.unplayedGamesTable.sortAndFilter(ApplicationGUI.unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
                 ApplicationGUI.changeMade = true;
                 addItemField.setText("");
             }

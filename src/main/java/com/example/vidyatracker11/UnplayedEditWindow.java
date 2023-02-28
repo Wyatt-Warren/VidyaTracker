@@ -112,7 +112,7 @@ public class UnplayedEditWindow extends AddEditGame {
         game.setReleaseDay(releaseDayBox.getValue());
 
         ApplicationGUI.statusCountBoxUnplayed.updateData();
-        ApplicationGUI.unplayedGamesTable.sortAndFilter();
+        ApplicationGUI.unplayedGamesTable.sortAndFilter(ApplicationGUI.unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
         ApplicationGUI.changeMade = true;
         stage.close();
     }

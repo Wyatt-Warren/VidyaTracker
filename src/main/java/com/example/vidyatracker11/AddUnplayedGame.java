@@ -92,7 +92,7 @@ public class AddUnplayedGame extends AddEditGame {
 
         GameLists.unplayedList.add(newGame);
         ApplicationGUI.statusCountBoxUnplayed.updateData();
-        ApplicationGUI.unplayedGamesTable.sortAndFilter();
+        ApplicationGUI.unplayedGamesTable.sortAndFilter(ApplicationGUI.unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
         ApplicationGUI.changeMade = true;
         stage.close();
     }
