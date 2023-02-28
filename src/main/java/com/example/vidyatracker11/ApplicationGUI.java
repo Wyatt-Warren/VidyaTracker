@@ -147,7 +147,14 @@ public class ApplicationGUI extends Application {
                 unplayedGamesTable.sortAndFilter(newValue));
 
         playedFilterChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-            playedFilterTokenChoices.getItems().clear();
+            //This shit fixes an issue where playedFilterTokenChoices would remember how far down you scrolled after changing filter type
+            //For example, Franchise to Status. It would be scrolled past the available options
+            playedFilterTokenChoices = new ChoiceBox<>();
+            playedFilterTokenChoices.getSelectionModel().selectedItemProperty().addListener((observable1, oldValue1, newValue1) ->
+                    playedGamesTable.sortAndFilter(newValue1));
+            playedChoiceHBox.getChildren().remove(playedChoiceHBox.getChildren().size()-1);
+            playedChoiceHBox.getChildren().add(playedFilterTokenChoices);
+
             switch (playedFilterChoices.getSelectionModel().getSelectedIndex()){
                 case 0: //Status
                     playedFilterTokenChoices.getItems().addAll("Playing", "Completed", "On Hold");
@@ -203,7 +210,14 @@ public class ApplicationGUI extends Application {
         });
 
         unplayedFilterChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
-            unplayedFilterTokenChoices.getItems().clear();
+            //This shit fixes an issue where unplayedFilterTokenChoices would remember how far down you scrolled after changing filter type
+            //For example, Franchise to Status. It would be scrolled past the available options
+            unplayedFilterTokenChoices = new ChoiceBox<>();
+            unplayedFilterTokenChoices.getSelectionModel().selectedItemProperty().addListener((observable1, oldValue1, newValue1) ->
+                    unplayedGamesTable.sortAndFilter(newValue1));
+            unplayedChoiceHBox.getChildren().remove(unplayedChoiceHBox.getChildren().size()-1);
+            unplayedChoiceHBox.getChildren().add(unplayedFilterTokenChoices);
+
             switch (ApplicationGUI.unplayedFilterChoices.getSelectionModel().getSelectedIndex()) { //Filter first
                 case 0: //Status
                     unplayedFilterTokenChoices.getItems().addAll("Backlog", "SubBacklog", "Wishlist");
