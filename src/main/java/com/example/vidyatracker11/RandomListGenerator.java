@@ -3,6 +3,8 @@ package com.example.vidyatracker11;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+import java.util.function.UnaryOperator;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -16,7 +18,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-//Window used to generate a random list baased on filters.
+//Window used to generate a random list based on filters.
 public class RandomListGenerator extends VBox {
     Label mainLabel = new Label("Generate List Based on Filters");
 
@@ -89,6 +91,15 @@ public class RandomListGenerator extends VBox {
     Button generateButton = new Button("Generate List");
     ListView<String> generatedList = new ListView<>();
 
+    UnaryOperator<TextFormatter.Change> integerFilter = change -> {
+        String input = change.getControlNewText();
+        return input.matches("\\d{0,9}") ? change : null;
+    };
+    UnaryOperator<TextFormatter.Change> doubleFilter = change -> {
+        String input = change.getControlNewText();
+        return input.matches("\\d*\\.\\d*")||input.matches("\\d{0,9}") ? change : null;
+    };
+
     public RandomListGenerator() {
         getChildren().addAll(mainLabel, mainHBox, generateButton, generatedList);
         mainLabel.setStyle("-fx-font-size: 24;-fx-font-weight: bold;");
@@ -112,33 +123,15 @@ public class RandomListGenerator extends VBox {
 
         setPadding(new Insets(5.0));
         setSpacing(5.0);
-        lengthField.setTextFormatter(new TextFormatter<>(change -> {
-            String input = change.getText();
-            return input.matches("[0-9]*") ? change : null;
-        }));
+        lengthField.setTextFormatter(new TextFormatter<>(integerFilter));
+
         statusBox.getItems().addAll("Backlog", "SubBacklog", "Wishlist");
         platformBox.getItems().addAll(GameLists.platformList);
         genreBox.getItems().addAll(GameLists.genreList);
 
-        hoursMinField.setTextFormatter(new TextFormatter<>(change -> {
-            String input = change.getText();
-            boolean noPeriods = true;
-            for (int i = 0; i < hoursMinField.getText().length(); i++) {
-                if (hoursMinField.getText().charAt(i) == '.')
-                    noPeriods = false;
-            }
-            return (input.matches("[0-9]*") || (input.matches("\\.*") && noPeriods)) ? change : null;
-        }));
+        hoursMinField.setTextFormatter(new TextFormatter<>(doubleFilter));
 
-        hoursMaxField.setTextFormatter(new TextFormatter<>(change -> {
-            String input = change.getText();
-            boolean noPeriods = true;
-            for (int i = 0; i < hoursMaxField.getText().length(); i++) {
-                if (hoursMaxField.getText().charAt(i) == '.')
-                    noPeriods = false;
-            }
-            return (input.matches("[0-9]*") || (input.matches("\\.*") && noPeriods)) ? change : null;
-        }));
+        hoursMaxField.setTextFormatter(new TextFormatter<>(doubleFilter));
 
         deckBox.getItems().addAll("Yes", "No", "Maybe", "Blank");
         ObservableList<Integer> yearList = FXCollections.observableArrayList();
@@ -193,14 +186,14 @@ public class RandomListGenerator extends VBox {
                     UnplayedGame newGame = GameLists.unplayedList.get(i);
                     if (newGame.getDeckCompatible().equals(""))
                         newGame.setDeckCompatible("Blank");
-                    if (statusView.getItems().isEmpty() || statusView.getItems().contains(newGame.getStatus()) &&
-                            titleField.getText().equals("") || newGame.getTitle().toLowerCase().contains(titleField.getText().toLowerCase()) &&
-                            platformView.getItems().isEmpty() || platformView.getItems().contains(newGame.getPlatform()) &&
-                            genreView.getItems().isEmpty() || genreView.getItems().contains(newGame.getGenre()) &&
-                            hoursMinField.getText().equals("") || newGame.getHours() >= Double.parseDouble(hoursMinField.getText()) &&
-                            hoursMaxField.getText().equals("") || newGame.getHours() <= Double.parseDouble(hoursMaxField.getText()) &&
-                            deckView.getItems().isEmpty() || deckView.getItems().contains(newGame.getDeckCompatible()) &&
-                            yearView.getItems().isEmpty() || yearView.getItems().contains(newGame.getReleaseYear()))
+                    if ((statusView.getItems().isEmpty() || statusView.getItems().contains(newGame.getStatus())) &&
+                            (titleField.getText().equals("") || newGame.getTitle().toLowerCase().contains(titleField.getText().toLowerCase())) &&
+                            (platformView.getItems().isEmpty() || platformView.getItems().contains(newGame.getPlatform())) &&
+                            (genreView.getItems().isEmpty() || genreView.getItems().contains(newGame.getGenre())) &&
+                            (hoursMinField.getText().equals("") || newGame.getHours() >= Double.parseDouble(hoursMinField.getText())) &&
+                            (hoursMaxField.getText().equals("") || newGame.getHours() <= Double.parseDouble(hoursMaxField.getText())) &&
+                            (deckView.getItems().isEmpty() || deckView.getItems().contains(newGame.getDeckCompatible())) &&
+                            (yearView.getItems().isEmpty() || yearView.getItems().contains(newGame.getReleaseYear())))
                         potentialList.add(newGame);
                 }
                 if (!potentialList.isEmpty()) {
