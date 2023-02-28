@@ -203,7 +203,7 @@ public class ApplicationGUI extends Application {
                     }
                     break;
                 case 9: //Don't filter
-                    playedFilterTokenChoices.getItems().clear();
+                    playedGamesTable.sortAndFilter("");
                     break;
             }
             playedFilterTokenChoices.getSelectionModel().selectFirst();
@@ -218,7 +218,7 @@ public class ApplicationGUI extends Application {
             unplayedChoiceHBox.getChildren().remove(unplayedChoiceHBox.getChildren().size()-1);
             unplayedChoiceHBox.getChildren().add(unplayedFilterTokenChoices);
 
-            switch (ApplicationGUI.unplayedFilterChoices.getSelectionModel().getSelectedIndex()) { //Filter first
+            switch (ApplicationGUI.unplayedFilterChoices.getSelectionModel().getSelectedIndex()) {
                 case 0: //Status
                     unplayedFilterTokenChoices.getItems().addAll("Backlog", "SubBacklog", "Wishlist");
                     break;
@@ -257,7 +257,7 @@ public class ApplicationGUI extends Application {
                     }
                     break;
                 case 6: //No Filter
-                    unplayedFilterTokenChoices.getItems().clear();
+                    unplayedGamesTable.sortAndFilter("");
                     break;
             }
             unplayedFilterTokenChoices.getSelectionModel().selectFirst();
