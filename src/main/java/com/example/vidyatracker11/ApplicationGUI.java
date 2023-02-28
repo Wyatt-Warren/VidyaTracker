@@ -869,20 +869,20 @@ public class ApplicationGUI extends Application {
             JSONObject newGame = new JSONObject();
             PlayedGame game = GameLists.playedList.get(k);
             try {
-                newGame.put("Status", game.getStatus());
-                newGame.put("Title", game.getTitle());
-                newGame.put("Platform", game.getPlatform());
-                newGame.put("Genre", game.getGenre());
-                newGame.put("Release Year", game.getReleaseYear());
-                newGame.put("Release Month", game.getReleaseMonth());
-                newGame.put("Release Day", game.getReleaseDay());
-                newGame.put("Franchise", game.getFranchise());
-                newGame.put("Rating", game.getRating());
-                newGame.put("Short Status", game.getIsItShort());
-                newGame.put("Completion Year", game.getCompletionYear());
-                newGame.put("Completion Month", game.getCompletionMonth());
-                newGame.put("Completion Day", game.getCompletionDay());
-                newGame.put("100% Status", game.getPercent100());
+                newGame.put("S", game.getStatus());
+                newGame.put("T", game.getTitle());
+                newGame.put("P", game.getPlatform());
+                newGame.put("G", game.getGenre());
+                newGame.put("RY", game.getReleaseYear());
+                newGame.put("RM", game.getReleaseMonth());
+                newGame.put("RD", game.getReleaseDay());
+                newGame.put("F", game.getFranchise());
+                newGame.put("R", game.getRating());
+                newGame.put("SS", game.getIsItShort());
+                newGame.put("CY", game.getCompletionYear());
+                newGame.put("CM", game.getCompletionMonth());
+                newGame.put("CD", game.getCompletionDay());
+                newGame.put("1", game.getPercent100());
                 playedGameArray.put(newGame);
             } catch (JSONException e1) {
                 e1.printStackTrace();
@@ -895,26 +895,26 @@ public class ApplicationGUI extends Application {
             JSONObject newGame = new JSONObject();
             UnplayedGame game = GameLists.unplayedList.get(m);
             try {
-                newGame.put("Status", game.getStatus());
-                newGame.put("Title", game.getTitle());
-                newGame.put("Platform", game.getPlatform());
-                newGame.put("Genre", game.getGenre());
-                newGame.put("Release Year", game.getReleaseYear());
-                newGame.put("Release Month", game.getReleaseMonth());
-                newGame.put("Release Day", game.getReleaseDay());
-                newGame.put("Franchise", game.getFranchise());
-                newGame.put("Hours", game.getHours());
-                newGame.put("Deck Status", game.getDeckCompatible());
+                newGame.put("S", game.getStatus());
+                newGame.put("T", game.getTitle());
+                newGame.put("P", game.getPlatform());
+                newGame.put("G", game.getGenre());
+                newGame.put("RY", game.getReleaseYear());
+                newGame.put("RM", game.getReleaseMonth());
+                newGame.put("RD", game.getReleaseDay());
+                newGame.put("F", game.getFranchise());
+                newGame.put("H", game.getHours());
+                newGame.put("D", game.getDeckCompatible());
                 unplayedGameArray.put(newGame);
             } catch (JSONException e1) {
                 e1.printStackTrace();
             }
         }
 
-        file.put("Platform List", platformListArray);
-        file.put("Genre List", genreListArray);
-        file.put("Played Games", playedGameArray);
-        file.put("Unplayed Games", unplayedGameArray);
+        file.put("PL", platformListArray);
+        file.put("GL", genreListArray);
+        file.put("P", playedGameArray);
+        file.put("U", unplayedGameArray);
         PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(fileOut), StandardCharsets.UTF_8));
         pw.write(file.toString());
         pw.flush();
@@ -931,52 +931,52 @@ public class ApplicationGUI extends Application {
         try {
             String jsonString = Files.readString(filePath);
             JSONObject file = new JSONObject(jsonString);
-            JSONArray platformList = file.getJSONArray("Platform List");
+            JSONArray platformList = file.getJSONArray("PL");
             GameLists.platformList = FXCollections.observableArrayList();
 
             for (int i = 0; i < platformList.length(); i++)
                 GameLists.platformList.add((String) platformList.get(i));
-            JSONArray genreList = file.getJSONArray("Genre List");
+            JSONArray genreList = file.getJSONArray("GL");
             GameLists.genreList = FXCollections.observableArrayList();
 
             for (int j = 0; j < genreList.length(); j++)
                 GameLists.genreList.add((String) genreList.get(j));
-            JSONArray playedGameList = file.getJSONArray("Played Games");
+            JSONArray playedGameList = file.getJSONArray("P");
             GameLists.playedList = FXCollections.observableArrayList();
 
             for (int k = 0; k < playedGameList.length(); k++) {
                 Object obj = playedGameList.get(k);
                 JSONObject newObj = (JSONObject) obj;
-                PlayedGame newGame = new PlayedGame((String) newObj.get("Title"), (String) newObj.get("Status"),
-                        (String) newObj.get("Platform"), (String) newObj.get("Genre"), (int) newObj.get("Release Year"),
-                        (int) newObj.get("Release Month"), (int) newObj.get("Release Day"));
-                newGame.setCompletionYear((int) newObj.get("Completion Year"));
-                newGame.setCompletionMonth((int) newObj.get("Completion Month"));
-                newGame.setCompletionDay((int) newObj.get("Completion Day"));
-                newGame.setIsItShort((String) newObj.get("Short Status"));
-                newGame.setRating((int) newObj.get("Rating"));
-                newGame.setPercent100((String) newObj.get("100% Status"));
-                newGame.setFranchise((String) newObj.get("Franchise"));
+                PlayedGame newGame = new PlayedGame((String) newObj.get("T"), (String) newObj.get("S"),
+                        (String) newObj.get("P"), (String) newObj.get("G"), (int) newObj.get("RY"),
+                        (int) newObj.get("RM"), (int) newObj.get("RD"));
+                newGame.setCompletionYear((int) newObj.get("CY"));
+                newGame.setCompletionMonth((int) newObj.get("CM"));
+                newGame.setCompletionDay((int) newObj.get("CD"));
+                newGame.setIsItShort((String) newObj.get("SS"));
+                newGame.setRating((int) newObj.get("R"));
+                newGame.setPercent100((String) newObj.get("1"));
+                newGame.setFranchise((String) newObj.get("F"));
                 GameLists.playedList.add(newGame);
             }
 
-            JSONArray unplayedGameList = file.getJSONArray("Unplayed Games");
+            JSONArray unplayedGameList = file.getJSONArray("U");
             GameLists.unplayedList = FXCollections.observableArrayList();
 
             for (int m = 0; m < unplayedGameList.length(); m++) {
                 Object obj = unplayedGameList.get(m);
                 JSONObject newObj = (JSONObject) obj;
-                UnplayedGame newGame = new UnplayedGame((String) newObj.get("Title"), (String) newObj.get("Status"),
-                        (String) newObj.get("Platform"), (String) newObj.get("Genre"), (int) newObj.get("Release Year"),
-                        (int) newObj.get("Release Month"), (int) newObj.get("Release Day"));
-                newGame.setFranchise((String) newObj.get("Franchise"));
+                UnplayedGame newGame = new UnplayedGame((String) newObj.get("T"), (String) newObj.get("S"),
+                        (String) newObj.get("P"), (String) newObj.get("G"), (int) newObj.get("RY"),
+                        (int) newObj.get("RM"), (int) newObj.get("RD"));
+                newGame.setFranchise((String) newObj.get("F"));
                 try {
-                    newGame.setHours(((BigDecimal) newObj.get("Hours")).doubleValue());
+                    newGame.setHours(((BigDecimal) newObj.get("H")).doubleValue());
                 } catch (ClassCastException e2) {
-                    newGame.setHours((int) newObj.get("Hours"));
+                    newGame.setHours((int) newObj.get("H"));
                 }
 
-                newGame.setDeckCompatible((String) newObj.get("Deck Status"));
+                newGame.setDeckCompatible((String) newObj.get("D"));
                 GameLists.unplayedList.add(newGame);
             }
 
