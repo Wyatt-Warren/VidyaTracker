@@ -149,11 +149,12 @@ public class ApplicationGUI extends Application {
         playedFilterChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
             //This shit fixes an issue where playedFilterTokenChoices would remember how far down you scrolled after changing filter type
             //For example, Franchise to Status. It would be scrolled past the available options
+            int index = playedChoiceHBox.getChildren().indexOf(playedFilterTokenChoices);
+            playedChoiceHBox.getChildren().remove(playedFilterTokenChoices);
             playedFilterTokenChoices = new ChoiceBox<>();
             playedFilterTokenChoices.getSelectionModel().selectedItemProperty().addListener((observable1, oldValue1, newValue1) ->
                     playedGamesTable.sortAndFilter(newValue1));
-            playedChoiceHBox.getChildren().remove(playedChoiceHBox.getChildren().size()-1);
-            playedChoiceHBox.getChildren().add(playedFilterTokenChoices);
+            playedChoiceHBox.getChildren().add(index, playedFilterTokenChoices);
 
             switch (playedFilterChoices.getSelectionModel().getSelectedIndex()){
                 case 0: //Status
@@ -212,11 +213,12 @@ public class ApplicationGUI extends Application {
         unplayedFilterChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
             //This shit fixes an issue where unplayedFilterTokenChoices would remember how far down you scrolled after changing filter type
             //For example, Franchise to Status. It would be scrolled past the available options
+            int index = unplayedChoiceHBox.getChildren().indexOf(unplayedFilterTokenChoices);
+            unplayedChoiceHBox.getChildren().remove(unplayedFilterTokenChoices);
             unplayedFilterTokenChoices = new ChoiceBox<>();
             unplayedFilterTokenChoices.getSelectionModel().selectedItemProperty().addListener((observable1, oldValue1, newValue1) ->
                     unplayedGamesTable.sortAndFilter(newValue1));
-            unplayedChoiceHBox.getChildren().remove(unplayedChoiceHBox.getChildren().size()-1);
-            unplayedChoiceHBox.getChildren().add(unplayedFilterTokenChoices);
+            unplayedChoiceHBox.getChildren().add(index, unplayedFilterTokenChoices);
 
             switch (ApplicationGUI.unplayedFilterChoices.getSelectionModel().getSelectedIndex()) {
                 case 0: //Status
