@@ -9,10 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.Scene;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -134,6 +131,7 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
                     editGame(row.getItem());
                 }
             });
+            row.setContextMenu(ApplicationGUI.rowContextMenu);
             return row;
         });
     }

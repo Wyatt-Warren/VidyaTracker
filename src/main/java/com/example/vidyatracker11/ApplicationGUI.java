@@ -16,13 +16,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -53,6 +47,37 @@ public class ApplicationGUI extends Application {
 
     public static final int screenWidthMain = 1500;
     public static final int screenHeightMain = 800;
+
+
+    //File Menu
+    public static MenuItem newFileMenuItem = new MenuItem("New File");
+    public static MenuItem openFileMenuItem = new MenuItem("Open File");
+    public static SeparatorMenuItem separatorMenuItem = new SeparatorMenuItem();
+    public static MenuItem saveFileMenuItem = new MenuItem("Save File");
+    public static MenuItem saveAsFileMenuItem = new MenuItem("Save File As");
+    public static SeparatorMenuItem separatorMenuItem5 = new SeparatorMenuItem();
+    public static MenuItem exitMenuItem = new MenuItem("Exit");
+    public static Menu fileMenu = new Menu("File");
+
+    //List Menu
+    public static MenuItem addNewGameMenuItem = new MenuItem("Add New Game");
+    public static MenuItem editGameMenuItem = new MenuItem("Edit Selected Game");
+    public static MenuItem moveGameMenuItem = new MenuItem("Move Selected Game");
+    public static MenuItem removeGameMenuItem = new MenuItem("Remove Selected Game");
+    public static SeparatorMenuItem separatorMenuItem3 = new SeparatorMenuItem();
+    public static MenuItem editGenreListMenuItem = new MenuItem("Edit Genre List");
+    public static MenuItem editPlatformListMenuItem = new MenuItem("Edit Platform List");
+    public static SeparatorMenuItem separatorMenuItem4 = new SeparatorMenuItem();
+    public static MenuItem statsMenuItem = new MenuItem("Show Stats Window");
+    public static Menu listMenu = new Menu("List");
+
+    //Random Menu
+    public static MenuItem chooseRandomGameMenuItem = new MenuItem("Choose a Random Game to Play");
+    public static MenuItem chooseRandomWishlistGameMenuItem = new MenuItem("Choose a Random Game to Buy");
+    public static MenuItem generateRandomListMenuItem = new MenuItem("Generate a Random List of Games Based on Filters");
+    public static MenuItem chooseRandomFromList = new MenuItem("Choose a Random Game From the Small List");
+    public static Menu randomMenu = new Menu("Random");
+
 
     //Main GUI
     public static StatusCountBoxPlayed statusCountBoxPlayed = new StatusCountBoxPlayed();
@@ -85,35 +110,9 @@ public class ApplicationGUI extends Application {
     public static VBox playedWindow = new VBox(topBoxPlayed, playedGamesVBox);
     public static VBox unplayedWindow = new VBox(topBoxUnplayed, unplayedGamesVBox);
 
-    //File Menu
-    public static MenuItem newFileMenuItem = new MenuItem("New File");
-    public static MenuItem openFileMenuItem = new MenuItem("Open File");
-    public static SeparatorMenuItem separatorMenuItem = new SeparatorMenuItem();
-    public static MenuItem saveFileMenuItem = new MenuItem("Save File");
-    public static MenuItem saveAsFileMenuItem = new MenuItem("Save File As");
-    public static SeparatorMenuItem separatorMenuItem5 = new SeparatorMenuItem();
-    public static MenuItem exitMenuItem = new MenuItem("Exit");
-    public static Menu fileMenu = new Menu("File");
-
-    //List Menu
-    public static MenuItem addNewGameMenuItem = new MenuItem("Add New Game");
-    public static MenuItem editGameMenuItem = new MenuItem("Edit Selected Game");
-    public static MenuItem moveGameMenuItem = new MenuItem("Move Selected Game");
-    public static MenuItem removeGameMenuItem = new MenuItem("Remove Selected Game");
-    public static SeparatorMenuItem separatorMenuItem3 = new SeparatorMenuItem();
-    public static MenuItem editGenreListMenuItem = new MenuItem("Edit Genre List");
-    public static MenuItem editPlatformListMenuItem = new MenuItem("Edit Platform List");
-    public static SeparatorMenuItem separatorMenuItem4 = new SeparatorMenuItem();
-    public static MenuItem statsMenuItem = new MenuItem("Show Stats Window");
-    public static Menu listMenu = new Menu("List");
-
-    //Random Menu
-    public static MenuItem chooseRandomGameMenuItem = new MenuItem("Choose a Random Game to Play");
-    public static MenuItem chooseRandomWishlistGameMenuItem = new MenuItem("Choose a Random Game to Buy");
-    public static MenuItem generateRandomListMenuItem = new MenuItem("Generate a Random List of Games Based on Filters");
-    public static MenuItem chooseRandomFromList = new MenuItem("Choose a Random Game From the Small List");
-    public static Menu randomMenu = new Menu("Random");
-
+    //Other
+    public static ContextMenu rowContextMenu = new ContextMenu(ApplicationGUI.addNewGameMenuItem,
+            ApplicationGUI.editGameMenuItem, ApplicationGUI.moveGameMenuItem, ApplicationGUI.removeGameMenuItem);
     public static String styleSheet = "style.css";
     public static MenuBar menuBar = new MenuBar(fileMenu, listMenu, randomMenu);
     public static FileChooser fileChooser = new FileChooser();

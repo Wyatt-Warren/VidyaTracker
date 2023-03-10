@@ -42,6 +42,24 @@
     -fx-background-color: #545454;
 }
 
+.context-menu * {
+    -fx-background-color: #444444;
+     -fx-text-fill: #ffffff;
+     -fx-text-background-color: #ffffff;
+}
+
+.context-menu .menu-item:hover{
+    -fx-background-color: #545454;
+     -fx-text-fill: #ffffff;
+     -fx-text-background-color: #ffffff;
+}
+
+.context-menu .menu-item:hover * {
+    -fx-background-color: #545454;
+     -fx-text-fill: #ffffff;
+     -fx-text-background-color: #ffffff;
+}
+
 .button {
     -fx-background-color: #444444;
     -fx-text-fill: #ffffff;
