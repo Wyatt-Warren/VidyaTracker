@@ -6,7 +6,6 @@ VidyaTracker is a desktop application that uses Java 11. The purpose of Vidya Tr
 - Put code into neater blocks with comments
 
 ### Features
-- Keyboard Shortcuts
 - Right click drop-down on lists.
 - Gamey "achievement" window
 - Collections
