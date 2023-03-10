@@ -119,7 +119,7 @@ public class ApplicationGUI extends Application {
     public static VBox primarySceneVBox = new VBox(menuBar, playedWindow);
     public static Scene primaryScene = new Scene(primarySceneVBox, screenWidthMain, screenHeightMain);
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Vidya Tracker");
+        primaryStage.setTitle("Vidya Tracker - " + currentFilePathOut.getFileName().toString());
         primaryStage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
 
         primaryScene.getStylesheets().add(styleSheet);
@@ -325,6 +325,7 @@ public class ApplicationGUI extends Application {
                 statusCountBoxPlayed.updateData();
                 statusCountBoxUnplayed.updateData();
                 currentFilePathOut = Path.of("List.json").toAbsolutePath();
+                primaryStage.setTitle("Vidya Tracker - " + currentFilePathOut.getFileName().toString());
                 stage.close();
             });
             noButton.setOnAction(e1 -> stage.close());
@@ -338,6 +339,7 @@ public class ApplicationGUI extends Application {
             try {
                 currentFilePathOut = fileChooser.showOpenDialog(primaryStage).toPath();
                 openFile(currentFilePathOut);
+                primaryStage.setTitle("Vidya Tracker - " + currentFilePathOut.getFileName().toString());
             }catch (NullPointerException ignored){
                 //Who cares.
             }
@@ -356,8 +358,9 @@ public class ApplicationGUI extends Application {
         //Saves to a file chosen by the user.
         saveAsFileMenuItem.setOnAction(e -> {
             try {
-                File fileOut = fileChooser.showSaveDialog(primaryStage);
-                saveFile(fileOut);
+                currentFilePathOut = fileChooser.showSaveDialog(primaryStage).toPath();
+                saveFile(currentFilePathOut.toFile());
+                primaryStage.setTitle("Vidya Tracker - " + currentFilePathOut.getFileName().toString());
             } catch (NullPointerException | FileNotFoundException ignored) {}
         });
 
