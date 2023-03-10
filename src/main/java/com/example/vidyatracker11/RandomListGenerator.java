@@ -76,18 +76,19 @@ public class RandomListGenerator extends VBox {
     ListView<String> deckView = new ListView<>();
     VBox deckVBox = new VBox(deckLabel, deckBox, deckButtonBox, deckView);
 
-    //Year
-    Label yearLabel = new Label("Possible Release Years:");
-    ChoiceBox<Integer> yearBox = new ChoiceBox<>();
-    Button yearAddButton = new Button("Add");
-    Button yearRemoveButton = new Button("Remove");
-    HBox yearButtonBox = new HBox(yearAddButton, yearRemoveButton);
-    ListView<Integer> yearView = new ListView<>();
-    VBox yearVBox = new VBox(yearLabel, yearBox, yearButtonBox, yearView);
+
+
+    //Years
+    Label yearsMinLabel = new Label("Years Minimum:");
+    TextField yearsMinField = new TextField();
+    VBox yearsMinVBox = new VBox(yearsMinLabel, yearsMinField);
+    Label yearsMaxLabel = new Label("Years Maximum:");
+    TextField yearsMaxField = new TextField();
+    VBox yearsMaxVBox = new VBox(yearsMaxLabel, yearsMaxField);
 
     HBox mainHBox = new HBox(lengthVBox, statusVBox, titleVBox,
             platformVBox, genreVBox, hoursMinVBox,
-            hoursMaxVBox, deckVBox, yearVBox);
+            hoursMaxVBox, deckVBox, yearsMinVBox, yearsMaxVBox);
     Button generateButton = new Button("Generate List");
     ListView<String> generatedList = new ListView<>();
 
@@ -109,7 +110,6 @@ public class RandomListGenerator extends VBox {
         platformButtonBox.setAlignment(Pos.CENTER);
         genreButtonBox.setAlignment(Pos.CENTER);
         deckButtonBox.setAlignment(Pos.CENTER);
-        yearButtonBox.setAlignment(Pos.CENTER);
         lengthVBox.setAlignment(Pos.TOP_CENTER);
         statusVBox.setAlignment(Pos.TOP_CENTER);
         titleVBox.setAlignment(Pos.TOP_CENTER);
@@ -118,7 +118,8 @@ public class RandomListGenerator extends VBox {
         hoursMinVBox.setAlignment(Pos.TOP_CENTER);
         hoursMaxVBox.setAlignment(Pos.TOP_CENTER);
         deckVBox.setAlignment(Pos.TOP_CENTER);
-        yearVBox.setAlignment(Pos.TOP_CENTER);
+        yearsMinVBox.setAlignment(Pos.TOP_CENTER);
+        yearsMaxVBox.setAlignment(Pos.TOP_CENTER);
         setAlignment(Pos.CENTER);
 
         setPadding(new Insets(5.0));
@@ -130,8 +131,10 @@ public class RandomListGenerator extends VBox {
         genreBox.getItems().addAll(GameLists.genreList);
 
         hoursMinField.setTextFormatter(new TextFormatter<>(doubleFilter));
-
         hoursMaxField.setTextFormatter(new TextFormatter<>(doubleFilter));
+
+        yearsMinField.setTextFormatter(new TextFormatter<>(integerFilter));
+        yearsMaxField.setTextFormatter(new TextFormatter<>(integerFilter));
 
         deckBox.getItems().addAll("Yes", "No", "Maybe", "Blank");
         ObservableList<Integer> yearList = FXCollections.observableArrayList();
@@ -140,7 +143,6 @@ public class RandomListGenerator extends VBox {
                 yearList.add(GameLists.unplayedList.get(i).getReleaseYear());
         }
         Collections.sort(yearList);
-        yearBox.getItems().addAll(yearList);
 
         statusAddButton.setOnAction(e -> {
             if (!statusView.getItems().contains(statusBox.getSelectionModel().getSelectedItem()) &&
@@ -170,13 +172,6 @@ public class RandomListGenerator extends VBox {
         });
         deckRemoveButton.setOnAction(e -> deckView.getItems().remove(deckView.getSelectionModel().getSelectedItem()));
 
-        yearAddButton.setOnAction(e -> {
-            if (!yearView.getItems().contains(yearBox.getSelectionModel().getSelectedItem()) &&
-                    yearBox.getSelectionModel().getSelectedItem() != null)
-                yearView.getItems().add(yearBox.getSelectionModel().getSelectedItem());
-        });
-        yearRemoveButton.setOnAction(e -> yearView.getItems().remove(yearView.getSelectionModel().getSelectedItem()));
-
         generateButton.setOnAction(e -> {
             if (!lengthField.getText().equals("")) {
                 generatedList.getItems().clear();
@@ -193,7 +188,8 @@ public class RandomListGenerator extends VBox {
                             (hoursMinField.getText().equals("") || newGame.getHours() >= Double.parseDouble(hoursMinField.getText())) &&
                             (hoursMaxField.getText().equals("") || newGame.getHours() <= Double.parseDouble(hoursMaxField.getText())) &&
                             (deckView.getItems().isEmpty() || deckView.getItems().contains(newGame.getDeckCompatible())) &&
-                            (yearView.getItems().isEmpty() || yearView.getItems().contains(newGame.getReleaseYear())))
+                            (yearsMinField.getText().equals("") || newGame.getReleaseYear() >= Integer.parseInt(yearsMinField.getText())) &&
+                            (yearsMaxField.getText().equals("") || newGame.getReleaseYear() <= Integer.parseInt(yearsMaxField.getText())))
                         potentialList.add(newGame);
                 }
                 if (!potentialList.isEmpty()) {
