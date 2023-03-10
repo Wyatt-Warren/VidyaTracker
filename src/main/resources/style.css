@@ -144,7 +144,7 @@
     -fx-border-width: .1
 }
 
-.list-cell:focused {
+.list-view:focused .list-cell:focused {
     -fx-background-color: #545454;
     -fx-text-fill: #ffffff;
     -fx-text-background-color: #ffffff;
