@@ -25,6 +25,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -95,9 +97,8 @@ public class ApplicationGUI extends Application {
 
     //List Menu
     public static MenuItem addNewGameMenuItem = new MenuItem("Add New Game");
-    public static SeparatorMenuItem separatorMenuItem1 = new SeparatorMenuItem();
-    public static MenuItem movePlayedGameMenuItem = new MenuItem("Move Selected Game");
-    public static SeparatorMenuItem separatorMenuItem2 = new SeparatorMenuItem();
+    public static MenuItem editGameMenuItem = new MenuItem("Edit Selected Game");
+    public static MenuItem moveGameMenuItem = new MenuItem("Move Selected Game");
     public static MenuItem removeGameMenuItem = new MenuItem("Remove Selected Game");
     public static SeparatorMenuItem separatorMenuItem3 = new SeparatorMenuItem();
     public static MenuItem editGenreListMenuItem = new MenuItem("Edit Genre List");
@@ -273,8 +274,8 @@ public class ApplicationGUI extends Application {
         fileMenu.getItems().addAll(newFileMenuItem, openFileMenuItem, separatorMenuItem,
                 saveFileMenuItem, saveAsFileMenuItem, separatorMenuItem5, exitMenuItem);
 
-        listMenu.getItems().addAll(addNewGameMenuItem, separatorMenuItem1, movePlayedGameMenuItem,
-                separatorMenuItem2, removeGameMenuItem, separatorMenuItem3, editGenreListMenuItem,
+        listMenu.getItems().addAll(addNewGameMenuItem, editGameMenuItem, moveGameMenuItem,
+                removeGameMenuItem, separatorMenuItem3, editGenreListMenuItem,
                 editPlatformListMenuItem, separatorMenuItem4, statsMenuItem);
 
         randomMenu.getItems().addAll(chooseRandomGameMenuItem, chooseRandomWishlistGameMenuItem, generateRandomListMenuItem);
@@ -454,8 +455,19 @@ public class ApplicationGUI extends Application {
             }
         });
 
+        //Opens the edit window for the selected game.
+        editGameMenuItem.setOnAction(e -> {
+            if(playedOpen){//played game
+                if(playedGamesTable.getSelectionModel().getSelectedIndex()!=-1)
+                    playedGamesTable.editGame(playedGamesTable.getSelectionModel().getSelectedItem());
+            }else{//unplayed game
+                if(unplayedGamesTable.getSelectionModel().getSelectedIndex()!=-1)
+                    unplayedGamesTable.editGame(unplayedGamesTable.getSelectionModel().getSelectedItem());
+            }
+        });
+
         //Moves the selected game from the currently open list to the other.
-        movePlayedGameMenuItem.setOnAction(e -> {
+        moveGameMenuItem.setOnAction(e -> {
             if (playedOpen) { //Played game -> unplayed game
                 int gameInt = playedGamesTable.getSelectionModel().getSelectedIndex();
 
@@ -847,6 +859,25 @@ public class ApplicationGUI extends Application {
             stage.setScene(scene);
             stage.show();
         });
+
+        openFileMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O,
+                KeyCombination.CONTROL_DOWN));
+        saveFileMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S,
+                KeyCombination.CONTROL_DOWN));
+        saveAsFileMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S,
+                KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN));
+        exitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Q,
+                KeyCombination.CONTROL_DOWN));
+        addNewGameMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N,
+                KeyCombination.CONTROL_DOWN));
+        editGameMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.E,
+                KeyCombination.CONTROL_DOWN));
+        moveGameMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.M,
+                KeyCombination.CONTROL_DOWN));
+        removeGameMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.R,
+                KeyCombination.CONTROL_DOWN));
+
+
 
         //open the default "List.json" file
         openFile(currentFilePathOut);

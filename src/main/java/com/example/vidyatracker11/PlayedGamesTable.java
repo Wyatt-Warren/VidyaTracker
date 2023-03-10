@@ -195,31 +195,34 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                 if (! row.isEmpty() && event.getButton()== MouseButton.PRIMARY
                         && event.getClickCount() == 2) {
 
-                    PlayedGame clickedRow = row.getItem();
-                    Stage stage = new Stage();
-                    stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
-                    stage.setResizable(false);
-                    PlayedEditWindow window = new PlayedEditWindow(clickedRow, stage);
-                    Scene scene = new Scene(window);
-                    scene.getStylesheets().add(ApplicationGUI.styleSheet);
-                    stage.setScene(scene);
-                    stage.setTitle("Edit Game Data");
-                    stage.initModality(Modality.APPLICATION_MODAL);
-                    stage.show();
-                    scene.setOnKeyPressed(e -> {
-                        if (e.getCode() == KeyCode.ESCAPE) {
-                            stage.close();
-                        }else if(e.getCode() == KeyCode.ENTER){
-                            try{
-                                window.saveAndQuit(clickedRow, stage);
-                            }catch (NumberFormatException e1){
-                                e1.printStackTrace();
-                            }
-                        }
-                    });
+                    editGame(row.getItem());
                 }
             });
             return row;
+        });
+    }
+
+    public void editGame(PlayedGame game){
+        Stage stage = new Stage();
+        stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+        stage.setResizable(false);
+        PlayedEditWindow window = new PlayedEditWindow(game, stage);
+        Scene scene = new Scene(window);
+        scene.getStylesheets().add(ApplicationGUI.styleSheet);
+        stage.setScene(scene);
+        stage.setTitle("Edit Game Data");
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
+        scene.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ESCAPE) {
+                stage.close();
+            }else if(e.getCode() == KeyCode.ENTER){
+                try{
+                    window.saveAndQuit(game, stage);
+                }catch (NumberFormatException e1){
+                    e1.printStackTrace();
+                }
+            }
         });
     }
 

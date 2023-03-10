@@ -104,7 +104,7 @@
     -fx-text-background-color: #ffffff;
 }
 
-.cell:focused * {
+.table-view:focused .cell:focused * {
     -fx-background-color: #545454;
     -fx-text-fill: #ffffff;
     -fx-text-background-color: #ffffff;
