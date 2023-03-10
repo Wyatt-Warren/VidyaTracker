@@ -456,7 +456,7 @@ public class StatsScreen extends HBox {
                 newData.setName(game.getFranchise());
                 newData.setCount(1);
                 newData.setTotalHours(game.getHours());
-                newData.setPercent(1.0 / GameLists.playedList.size() * 100);
+                newData.setPercent(1.0 / GameLists.unplayedList.size() * 100);
                 map.put(game.getFranchise(), newData);
                 if (dataList.isEmpty()){
                     dataList.add(newData);
