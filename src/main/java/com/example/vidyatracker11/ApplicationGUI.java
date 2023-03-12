@@ -510,6 +510,13 @@ public class ApplicationGUI extends Application {
                         newGame.setFranchise(game.getFranchise());
                         GameLists.unplayedList.add(newGame);
 
+                        for(GameCollection collection : GameLists.collectionList){
+                            if(collection.getGames().contains(game)) {
+                                collection.getGames().add(collection.getGames().indexOf(game), newGame);
+                                collection.getGames().remove(game);
+                            }
+                        }
+
                         GameLists.playedList.remove(game);
                         playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
                         unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
@@ -556,6 +563,13 @@ public class ApplicationGUI extends Application {
                                 game.getGenre(), game.getReleaseYear(), game.getReleaseMonth(), game.getReleaseDay());
                         newGame.setFranchise(game.getFranchise());
                         GameLists.playedList.add(newGame);
+
+                        for(GameCollection collection : GameLists.collectionList){
+                            if(collection.getGames().contains(game)) {
+                                collection.getGames().add(collection.getGames().indexOf(game), newGame);
+                                collection.getGames().remove(game);
+                            }
+                        }
 
                         GameLists.unplayedList.remove(game);
                         playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
@@ -604,6 +618,11 @@ public class ApplicationGUI extends Application {
 
                     yesButton.setOnAction(e1 -> {
                         GameLists.playedList.remove(game);
+
+                        //Apparently this is fine even if the collection doesn't have the game.
+                        for(GameCollection collection : GameLists.collectionList)
+                            collection.getGames().remove(game);
+
                         statusCountBoxPlayed.updateData();
                         playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
                         stage.close();
@@ -645,6 +664,11 @@ public class ApplicationGUI extends Application {
 
                     yesButton.setOnAction(e1 -> {
                         GameLists.unplayedList.remove(game);
+
+                        //Apparently this is fine even if the collection doesn't have the game.
+                        for(GameCollection collection : GameLists.collectionList)
+                            collection.getGames().remove(game);
+
                         statusCountBoxUnplayed.updateData();
                         unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
                         stage.close();
