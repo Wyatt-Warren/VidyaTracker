@@ -21,7 +21,7 @@ public class TableMethods {
     public static <T> void updateColumnWidth(ObservableList<TableColumn<T, ?>> columnList) {
         for (TableColumn<T, ?> tableColumn : columnList) {
             Text text = new Text(tableColumn.getText());
-            double width = text.getLayoutBounds().getWidth() + 10;
+            double width = text.getLayoutBounds().getWidth() + 20;
             for (int j = 0; j < tableColumn.getTableView().getItems().size(); j++) {
                 if (tableColumn.getCellData(j) instanceof Double) {
                     text = new Text(Double.toString((Double) tableColumn.getCellData(j)));
@@ -30,7 +30,7 @@ public class TableMethods {
                 } else {
                     text = new Text((String) tableColumn.getCellData(j));
                 }
-                double newWidth = text.getLayoutBounds().getWidth() + 10;
+                double newWidth = text.getLayoutBounds().getWidth() + 20;
                 if (newWidth > width)
                     width = newWidth;
             }
