@@ -312,7 +312,7 @@ public class ApplicationGUI extends Application {
             vbox.setSpacing(20);
             vbox.setAlignment(Pos.TOP_CENTER);
             vbox.setPadding(new Insets(10));
-            Scene scene = new Scene(vbox, 300, 130);
+            Scene scene = new Scene(vbox);
             scene.getStylesheets().add(styleSheet);
             stage.setScene(scene);
             stage.show();
@@ -408,7 +408,7 @@ public class ApplicationGUI extends Application {
 
                 cancelButton.setOnAction(e1 -> stage.close());
 
-                Scene scene = new Scene(vbox, 300, 100);
+                Scene scene = new Scene(vbox);
                 scene.getStylesheets().add(styleSheet);
                 stage.setScene(scene);
                 stage.show();
@@ -499,7 +499,7 @@ public class ApplicationGUI extends Application {
                     vbox.setSpacing(20);
                     vbox.setAlignment(Pos.TOP_CENTER);
                     vbox.setPadding(new Insets(10));
-                    Scene scene = new Scene(vbox, 300, 150);
+                    Scene scene = new Scene(vbox);
                     scene.getStylesheets().add(styleSheet);
                     stage.setScene(scene);
                     stage.show();
@@ -553,7 +553,7 @@ public class ApplicationGUI extends Application {
                     vbox.setSpacing(20);
                     vbox.setAlignment(Pos.TOP_CENTER);
                     vbox.setPadding(new Insets(10));
-                    Scene scene = new Scene(vbox, 300, 150);
+                    Scene scene = new Scene(vbox);
                     scene.getStylesheets().add(styleSheet);
                     stage.setScene(scene);
                     stage.show();
@@ -611,7 +611,7 @@ public class ApplicationGUI extends Application {
                     vbox.setSpacing(20);
                     vbox.setAlignment(Pos.TOP_CENTER);
                     vbox.setPadding(new Insets(10));
-                    Scene scene = new Scene(vbox, 300, 150);
+                    Scene scene = new Scene(vbox);
                     scene.getStylesheets().add(styleSheet);
                     stage.setScene(scene);
                     stage.show();
@@ -657,7 +657,7 @@ public class ApplicationGUI extends Application {
                     vbox.setSpacing(20);
                     vbox.setAlignment(Pos.TOP_CENTER);
                     vbox.setPadding(new Insets(10));
-                    Scene scene = new Scene(vbox, 300, 150);
+                    Scene scene = new Scene(vbox);
                     scene.getStylesheets().add(styleSheet);
                     stage.setScene(scene);
                     stage.show();
@@ -692,7 +692,7 @@ public class ApplicationGUI extends Application {
                 VBox vbox = new VBox(label);
                 label.setStyle("-fx-font-size: 24;");
                 vbox.setAlignment(Pos.CENTER);
-                Scene scene = new Scene(vbox, 200, 100);
+                Scene scene = new Scene(vbox);
                 scene.getStylesheets().add(styleSheet);
                 stage.setScene(scene);
                 stage.show();
@@ -733,7 +733,7 @@ public class ApplicationGUI extends Application {
                     vbox.setSpacing(20);
                     vbox.setAlignment(Pos.TOP_CENTER);
                     vbox.setPadding(new Insets(10));
-                    Scene scene = new Scene(vbox, 300, 200);
+                    Scene scene = new Scene(vbox);
                     scene.getStylesheets().add(styleSheet);
                     stage.setScene(scene);
                     stage.show();
@@ -813,6 +813,7 @@ public class ApplicationGUI extends Application {
             scene.getStylesheets().add(styleSheet);
             stage.setScene(scene);
             stage.show();
+            stage.setWidth(stage.getWidth() + 10);
         });
 
         //Open the collection view
@@ -853,8 +854,9 @@ public class ApplicationGUI extends Application {
                 VBox vbox = new VBox(label, button);
                 vbox.setSpacing(10);
                 vbox.setAlignment(Pos.CENTER);
+                vbox.setPadding(new Insets(5));
                 label.setText(gameList.get(rand.nextInt(gameList.size())));
-                Scene scene = new Scene(vbox, 200, 100);
+                Scene scene = new Scene(vbox);
                 scene.getStylesheets().add(styleSheet);
                 stage.setScene(scene);
                 stage.show();
@@ -889,8 +891,9 @@ public class ApplicationGUI extends Application {
                 VBox vbox = new VBox(label, button);
                 vbox.setSpacing(10);
                 vbox.setAlignment(Pos.CENTER);
+                vbox.setPadding(new Insets(5));
                 label.setText(gameList.get(rand.nextInt(gameList.size())));
-                Scene scene = new Scene(vbox, 200, 100);
+                Scene scene = new Scene(vbox);
                 scene.getStylesheets().add(styleSheet);
                 stage.setScene(scene);
                 stage.show();
@@ -918,8 +921,9 @@ public class ApplicationGUI extends Application {
                 VBox vbox = new VBox(label, button);
                 vbox.setSpacing(10);
                 vbox.setAlignment(Pos.CENTER);
+                vbox.setPadding(new Insets(5));
                 label.setText(unplayedTempList.getTitles().get(rand.nextInt(unplayedTempList.getTitles().size())));
-                Scene scene = new Scene(vbox, 200, 100);
+                Scene scene = new Scene(vbox);
                 scene.getStylesheets().add(styleSheet);
                 stage.setScene(scene);
                 stage.show();
@@ -1015,7 +1019,7 @@ public class ApplicationGUI extends Application {
         VBox vbox = new VBox(label);
         label.setStyle("-fx-font-size: 24;");
         vbox.setAlignment(Pos.CENTER);
-        Scene scene = new Scene(vbox, 300, 200);
+        Scene scene = new Scene(vbox, 200, 100);
         scene.getStylesheets().add(styleSheet);
         stage.setScene(scene);
         stage.show();
