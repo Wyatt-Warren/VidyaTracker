@@ -304,7 +304,7 @@ public class CollectionsWindow extends VBox {
             if(getScene()!=null) {
                 parentStage.setScene(null);
                 parentStage.setScene(getScene());
-                parentStage.setWidth(getScene().getWidth() + 20);
+                parentStage.setWidth(getScene().getWidth() + 30);
             }
         }else{
             setLabels(null);
