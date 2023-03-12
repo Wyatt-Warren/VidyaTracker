@@ -721,7 +721,7 @@ public class StatsScreen extends HBox {
         for(UnplayedGame game : GameLists.unplayedList){
             UnplayedDataEntry data = map.get(game.getDeckCompatible());
             data.setCount(data.getCount()+1);
-            data.setTotalHours(data.getTotalHours() + data.getTotalHours());
+            data.setTotalHours(data.getTotalHours() + game.getHours());
             data.setPercent(data.getCount() * 1.0 / GameLists.unplayedList.size() * 100);
         }
 
