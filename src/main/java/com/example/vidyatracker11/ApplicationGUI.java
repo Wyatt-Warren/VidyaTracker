@@ -822,7 +822,7 @@ public class ApplicationGUI extends Application {
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Collections");
-            CollectionsWindow collectionsWindow = new CollectionsWindow();
+            CollectionsWindow collectionsWindow = new CollectionsWindow(stage);
             Scene scene = new Scene(collectionsWindow);
             scene.getStylesheets().add(styleSheet);
             stage.setScene(scene);

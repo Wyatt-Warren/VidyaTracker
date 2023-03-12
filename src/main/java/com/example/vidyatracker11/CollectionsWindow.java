@@ -46,7 +46,10 @@ public class CollectionsWindow extends VBox {
     ObservableList<TableColumn<Game, ?>> columnList = FXCollections.observableArrayList(
             statusColumn, titleColumn, percent100Column);
 
-    public CollectionsWindow(){
+    Stage parentStage;
+
+    public CollectionsWindow(Stage parentStage){
+        this.parentStage = parentStage;
         getChildren().addAll(mainLabel, manageButton, collectionChoices, collectionBox);
         mainLabel.setStyle("-fx-font-weight:bold;-fx-font-size:24;");
         setAlignment(Pos.CENTER);
@@ -298,6 +301,11 @@ public class CollectionsWindow extends VBox {
 
             TableMethods.updateColumnWidth(columnList);
             setLabels(collection);
+            if(getScene()!=null) {
+                parentStage.setScene(null);
+                parentStage.setScene(getScene());
+                parentStage.setWidth(getScene().getWidth() + 20);
+            }
         }else{
             setLabels(null);
         }
