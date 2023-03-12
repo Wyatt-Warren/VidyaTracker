@@ -330,10 +330,14 @@ public class CollectionsWindow extends VBox {
             colorLabels(percentLabel, percent);
 
             int total100 = 0;
+            int totalWithPercent = 0;
             for(Game game : collection.getGames())
-                if(game instanceof PlayedGame && ((PlayedGame) game).getPercent100().equals("Yes"))
-                    total100++;
-            double percentPercent = total100 * 100.0 / collection.getGames().size();
+                if(game instanceof PlayedGame && (((PlayedGame) game).getPercent100().equals("Yes")||((PlayedGame) game).getPercent100().equals("No"))) {
+                    totalWithPercent++;
+                    if(((PlayedGame) game).getPercent100().equals("Yes"))
+                        total100++;
+                }
+            double percentPercent = total100 * 100.0 / totalWithPercent;
             percentPercentLabel.setText(String.format("%.2f%%", percentPercent));
             colorLabels(percentPercentLabel, percentPercent);
 

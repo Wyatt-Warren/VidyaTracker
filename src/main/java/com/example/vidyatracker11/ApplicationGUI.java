@@ -741,6 +741,7 @@ public class ApplicationGUI extends Application {
                     addButton.setOnAction(e1 -> {
                         collectionChoiceBox.getSelectionModel().getSelectedItem().getGames().add(game);
                         stage.close();
+                        changeMade = true;
                     });
 
                     scene.setOnKeyPressed(e1 -> {
