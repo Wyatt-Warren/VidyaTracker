@@ -64,11 +64,13 @@ public class ApplicationGUI extends Application {
     public static MenuItem editGameMenuItem = new MenuItem("Edit Selected Game");
     public static MenuItem moveGameMenuItem = new MenuItem("Move Selected Game");
     public static MenuItem removeGameMenuItem = new MenuItem("Remove Selected Game");
+    public static MenuItem collectGameMenuItem = new MenuItem("Add Selected Game to Collection");
     public static SeparatorMenuItem separatorMenuItem3 = new SeparatorMenuItem();
     public static MenuItem editGenreListMenuItem = new MenuItem("Edit Genre List");
     public static MenuItem editPlatformListMenuItem = new MenuItem("Edit Platform List");
     public static SeparatorMenuItem separatorMenuItem4 = new SeparatorMenuItem();
     public static MenuItem statsMenuItem = new MenuItem("Show Stats Window");
+    public static MenuItem collectionsMenuItem = new MenuItem("Show Collections Window");
     public static Menu listMenu = new Menu("List");
 
     //Random Menu
@@ -111,8 +113,8 @@ public class ApplicationGUI extends Application {
     public static VBox unplayedWindow = new VBox(topBoxUnplayed, unplayedGamesVBox);
 
     //Other
-    public static ContextMenu rowContextMenu = new ContextMenu(ApplicationGUI.addNewGameMenuItem,
-            ApplicationGUI.editGameMenuItem, ApplicationGUI.moveGameMenuItem, ApplicationGUI.removeGameMenuItem);
+    public static ContextMenu rowContextMenu = new ContextMenu(addNewGameMenuItem,
+            editGameMenuItem, moveGameMenuItem, removeGameMenuItem, collectGameMenuItem);
     public static String styleSheet = "style.css";
     public static MenuBar menuBar = new MenuBar(fileMenu, listMenu, randomMenu);
     public static FileChooser fileChooser = new FileChooser();
@@ -274,8 +276,9 @@ public class ApplicationGUI extends Application {
                 saveFileMenuItem, saveAsFileMenuItem, separatorMenuItem5, exitMenuItem);
 
         listMenu.getItems().addAll(addNewGameMenuItem, editGameMenuItem, moveGameMenuItem,
-                removeGameMenuItem, separatorMenuItem3, editGenreListMenuItem,
-                editPlatformListMenuItem, separatorMenuItem4, statsMenuItem);
+                removeGameMenuItem, collectGameMenuItem, separatorMenuItem3,
+                editGenreListMenuItem, editPlatformListMenuItem, separatorMenuItem4,
+                statsMenuItem, collectionsMenuItem);
 
         randomMenu.getItems().addAll(chooseRandomGameMenuItem, chooseRandomWishlistGameMenuItem, generateRandomListMenuItem);
 
@@ -653,6 +656,80 @@ public class ApplicationGUI extends Application {
             }
         });
 
+        collectGameMenuItem.setOnAction(e -> {
+            if(GameLists.collectionList.isEmpty()) {
+                Stage stage = new Stage();
+                stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+                stage.setResizable(false);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setTitle("No Collections");
+                Label label = new Label("No Collections");
+                label.setAlignment(Pos.CENTER);
+                VBox vbox = new VBox(label);
+                label.setStyle("-fx-font-size: 24;");
+                vbox.setAlignment(Pos.CENTER);
+                Scene scene = new Scene(vbox, 200, 100);
+                scene.getStylesheets().add(styleSheet);
+                stage.setScene(scene);
+                stage.show();
+            }else {
+                Game game;
+                int gameInt;
+                if (playedOpen) { //Removed played game
+                    gameInt = playedGamesTable.getSelectionModel().getSelectedIndex();
+
+                    if (gameInt != -1) {
+                        game = playedGamesTable.getSelectionModel().getSelectedItem();
+                    } else {
+                        game = null;
+                    }
+
+                } else { //Remove unplayed game
+                    gameInt = unplayedGamesTable.getSelectionModel().getSelectedIndex();
+
+                    if (gameInt != -1) {
+                        game = unplayedGamesTable.getSelectionModel().getSelectedItem();
+                    } else {
+                        game = null;
+                    }
+                }
+                if (gameInt != -1) {
+                    Stage stage = new Stage();
+                    stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+                    stage.setResizable(false);
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    stage.setTitle("Select Collection");
+                    Label label = new Label("Add " + game.getTitle() + " to Collection");
+                    Label label1 = new Label("Choose Collection");
+                    label.setStyle("-fx-font-weight: bold;-fx-font-size: 16;");
+                    ChoiceBox<GameCollection> collectionChoiceBox = new ChoiceBox<>(GameLists.collectionList);
+                    collectionChoiceBox.getSelectionModel().selectFirst();
+                    Button addButton = new Button("Add Game");
+                    VBox vbox = new VBox(label, label1, collectionChoiceBox, addButton);
+                    vbox.setSpacing(20);
+                    vbox.setAlignment(Pos.TOP_CENTER);
+                    vbox.setPadding(new Insets(10));
+                    Scene scene = new Scene(vbox, 300, 200);
+                    scene.getStylesheets().add(styleSheet);
+                    stage.setScene(scene);
+                    stage.show();
+
+                    addButton.setOnAction(e1 -> {
+                        collectionChoiceBox.getSelectionModel().getSelectedItem().getGames().add(game);
+                        stage.close();
+                    });
+
+                    scene.setOnKeyPressed(e1 -> {
+                        if (e1.getCode() == KeyCode.ESCAPE) {
+                            stage.close();
+                        } else if (e1.getCode() == KeyCode.ENTER) {
+                            addButton.fire();
+                        }
+                    });
+                }
+            }
+        });
+
         //Opens a window for the user to edit the genre list.
         editGenreListMenuItem.setOnAction(e -> {
             Stage stage = new Stage();
@@ -698,6 +775,35 @@ public class ApplicationGUI extends Application {
                     }
                 }
             });
+        });
+
+        //Open the stats view
+        statsMenuItem.setOnAction(e -> {
+            Stage stage = new Stage();
+            stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Stats");
+            StatsScreen statsScreen = new StatsScreen();
+            Scene scene = new Scene(statsScreen, 1000, 800);
+            scene.getStylesheets().add(styleSheet);
+            stage.setScene(scene);
+            stage.show();
+        });
+
+        //Open the collection view
+        collectionsMenuItem.setOnAction(e -> {
+            Stage stage = new Stage();
+            stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Collections");
+            CollectionsWindow collectionsWindow = new CollectionsWindow();
+            Scene scene = new Scene(collectionsWindow);
+            scene.getStylesheets().add(styleSheet);
+            stage.setScene(scene);
+            stage.show();
+            stage.setWidth(stage.getWidth()+10);
         });
 
         //Chooses a random game from the unplayed list with the status "Backlog", or "Subbacklog"
@@ -848,20 +954,6 @@ public class ApplicationGUI extends Application {
             exitMenuItem.fire();
         });
 
-        //Open the stats view
-        statsMenuItem.setOnAction(e -> {
-            Stage stage = new Stage();
-            stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
-            stage.setResizable(false);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Stats");
-            StatsScreen statsScreen = new StatsScreen();
-            Scene scene = new Scene(statsScreen, 1000, 800);
-            scene.getStylesheets().add(styleSheet);
-            stage.setScene(scene);
-            stage.show();
-        });
-
         openFileMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O,
                 KeyCombination.CONTROL_DOWN));
         saveFileMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S,
@@ -878,8 +970,8 @@ public class ApplicationGUI extends Application {
                 KeyCombination.CONTROL_DOWN));
         removeGameMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.R,
                 KeyCombination.CONTROL_DOWN));
-
-
+        collectGameMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.C,
+                KeyCombination.CONTROL_DOWN));
 
         //open the default "List.json" file
         openFile(currentFilePathOut);
@@ -932,6 +1024,7 @@ public class ApplicationGUI extends Application {
                 newGame.put("CM", game.getCompletionMonth());
                 newGame.put("CD", game.getCompletionDay());
                 newGame.put("1", game.getPercent100());
+                newGame.put("I", k); //Order doesn't actually matter, this is just to store games by reference in collections
                 playedGameArray.put(newGame);
             } catch (JSONException e1) {
                 e1.printStackTrace();
@@ -954,7 +1047,35 @@ public class ApplicationGUI extends Application {
                 newGame.put("F", game.getFranchise());
                 newGame.put("H", game.getHours());
                 newGame.put("D", game.getDeckCompatible());
+                newGame.put("I", m); //Order doesn't actually matter, this is just to store games by reference in collections
                 unplayedGameArray.put(newGame);
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+        JSONArray collectionArray = new JSONArray();
+
+        for (int n = 0; n < GameLists.collectionList.size(); n++){
+            JSONObject newCollection = new JSONObject();
+            GameCollection collection = GameLists.collectionList.get(n);
+            JSONArray games = new JSONArray();
+            try {
+                newCollection.put("CT", collection.getTitle());
+                for(int o = 0; o < collection.getGames().size(); o++){
+                    Game game = collection.getGames().get(o);
+                    String gameID = "";
+                    if(game instanceof PlayedGame){
+                        gameID = "p" + GameLists.playedList.indexOf(game);
+                    }else if(game instanceof UnplayedGame){
+                        gameID = "u" + GameLists.unplayedList.indexOf(game);
+                    }else{
+                        System.out.println("?????????????");
+                    }
+                    games.put(gameID);
+                }
+                newCollection.put("CG", games);
+                collectionArray.put(newCollection);
             } catch (JSONException e1) {
                 e1.printStackTrace();
             }
@@ -964,6 +1085,7 @@ public class ApplicationGUI extends Application {
         file.put("GL", genreListArray);
         file.put("P", playedGameArray);
         file.put("U", unplayedGameArray);
+        file.put("C", collectionArray);
         PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(fileOut), StandardCharsets.UTF_8));
         pw.write(file.toString());
         pw.flush();
@@ -980,19 +1102,19 @@ public class ApplicationGUI extends Application {
         try {
             String jsonString = Files.readString(filePath);
             JSONObject file = new JSONObject(jsonString);
+
             JSONArray platformList = file.getJSONArray("PL");
             GameLists.platformList = FXCollections.observableArrayList();
-
             for (int i = 0; i < platformList.length(); i++)
                 GameLists.platformList.add((String) platformList.get(i));
+
             JSONArray genreList = file.getJSONArray("GL");
             GameLists.genreList = FXCollections.observableArrayList();
-
             for (int j = 0; j < genreList.length(); j++)
                 GameLists.genreList.add((String) genreList.get(j));
+
             JSONArray playedGameList = file.getJSONArray("P");
             GameLists.playedList = FXCollections.observableArrayList();
-
             for (int k = 0; k < playedGameList.length(); k++) {
                 Object obj = playedGameList.get(k);
                 JSONObject newObj = (JSONObject) obj;
@@ -1006,12 +1128,11 @@ public class ApplicationGUI extends Application {
                 newGame.setRating((int) newObj.get("R"));
                 newGame.setPercent100((String) newObj.get("1"));
                 newGame.setFranchise((String) newObj.get("F"));
-                GameLists.playedList.add(newGame);
+                GameLists.playedList.add((int) newObj.get("I"), newGame);
             }
 
             JSONArray unplayedGameList = file.getJSONArray("U");
             GameLists.unplayedList = FXCollections.observableArrayList();
-
             for (int m = 0; m < unplayedGameList.length(); m++) {
                 Object obj = unplayedGameList.get(m);
                 JSONObject newObj = (JSONObject) obj;
@@ -1026,7 +1147,26 @@ public class ApplicationGUI extends Application {
                 }
 
                 newGame.setDeckCompatible((String) newObj.get("D"));
-                GameLists.unplayedList.add(newGame);
+                GameLists.unplayedList.add((int) newObj.get("I"), newGame);
+            }
+
+            JSONArray collectionArray = file.getJSONArray("C");
+            GameLists.collectionList = FXCollections.observableArrayList();
+            for(int n = 0; n < collectionArray.length(); n++){
+                Object obj = collectionArray.get(n);
+                JSONObject newObj = (JSONObject) obj;
+                GameCollection newCollection = new GameCollection((String) newObj.get("CT"));
+                JSONArray collectionGameArray = newObj.getJSONArray("CG");
+                for(int o = 0; o < collectionGameArray.length(); o++){
+                    String gameID = (String) collectionGameArray.get(o);
+                    int gameIndex = Integer.parseInt(gameID.substring(1));
+                    if(gameID.charAt(0)=='p'){
+                        newCollection.getGames().add(GameLists.playedList.get(gameIndex));
+                    }else if(gameID.charAt(0)=='u'){
+                        newCollection.getGames().add(GameLists.unplayedList.get(gameIndex));
+                    }
+                }
+                GameLists.collectionList.add(newCollection);
             }
 
             playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());

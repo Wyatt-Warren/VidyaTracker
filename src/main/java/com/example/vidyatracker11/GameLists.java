@@ -16,6 +16,8 @@ public class GameLists {
 
     public static ObservableList<String> genreList = FXCollections.observableArrayList("Action");
 
+    public static ObservableList<GameCollection> collectionList = FXCollections.observableArrayList();
+
     private static final Date date = new Date();
 
     private static final ZoneId timeZone = ZoneId.systemDefault();
