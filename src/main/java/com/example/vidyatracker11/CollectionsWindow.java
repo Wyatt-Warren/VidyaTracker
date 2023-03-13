@@ -337,7 +337,12 @@ public class CollectionsWindow extends VBox {
                     if(((PlayedGame) game).getPercent100().equals("Yes"))
                         total100++;
                 }
-            double percentPercent = total100 * 100.0 / totalWithPercent;
+            double percentPercent;
+            //It says NaN if you don't do this
+            if(totalWithPercent==0)
+                percentPercent = 0;
+            else
+                percentPercent = total100 * 100.0 / totalWithPercent;
             percentPercentLabel.setText(String.format("%.2f%%", percentPercent));
             colorLabels(percentPercentLabel, percentPercent);
 

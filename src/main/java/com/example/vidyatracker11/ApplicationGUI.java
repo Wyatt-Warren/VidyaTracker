@@ -829,7 +829,7 @@ public class ApplicationGUI extends Application {
             scene.getStylesheets().add(styleSheet);
             stage.setScene(scene);
             stage.show();
-            stage.setWidth(stage.getWidth()+10);
+            stage.setWidth(stage.getWidth()+25);
         });
 
         //Chooses a random game from the unplayed list with the status "Backlog", or "Subbacklog"
@@ -1053,7 +1053,6 @@ public class ApplicationGUI extends Application {
                 newGame.put("CM", game.getCompletionMonth());
                 newGame.put("CD", game.getCompletionDay());
                 newGame.put("1", game.getPercent100());
-                newGame.put("I", k); //Order doesn't actually matter, this is just to store games by reference in collections
                 playedGameArray.put(newGame);
             } catch (JSONException e1) {
                 e1.printStackTrace();
@@ -1076,7 +1075,6 @@ public class ApplicationGUI extends Application {
                 newGame.put("F", game.getFranchise());
                 newGame.put("H", game.getHours());
                 newGame.put("D", game.getDeckCompatible());
-                newGame.put("I", m); //Order doesn't actually matter, this is just to store games by reference in collections
                 unplayedGameArray.put(newGame);
             } catch (JSONException e1) {
                 e1.printStackTrace();
@@ -1157,7 +1155,7 @@ public class ApplicationGUI extends Application {
                 newGame.setRating((int) newObj.get("R"));
                 newGame.setPercent100((String) newObj.get("1"));
                 newGame.setFranchise((String) newObj.get("F"));
-                GameLists.playedList.add((int) newObj.get("I"), newGame);
+                GameLists.playedList.add(newGame);
             }
 
             JSONArray unplayedGameList = file.getJSONArray("U");
@@ -1176,7 +1174,7 @@ public class ApplicationGUI extends Application {
                 }
 
                 newGame.setDeckCompatible((String) newObj.get("D"));
-                GameLists.unplayedList.add((int) newObj.get("I"), newGame);
+                GameLists.unplayedList.add(newGame);
             }
 
             JSONArray collectionArray = file.getJSONArray("C");

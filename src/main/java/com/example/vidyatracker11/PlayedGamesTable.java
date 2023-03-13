@@ -353,7 +353,6 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                 String newListsFranchiseDate = newSortingName + newListsDate;
                 int comparedFranchiseNum = givenListFranchiseDate.compareTo(newListsFranchiseDate);
                 if (comparedFranchiseNum < 0) {
-                    System.out.println(newListsFranchiseDate);
                     newList.add(j, playedGame);
                     placed = true;
                     break;
