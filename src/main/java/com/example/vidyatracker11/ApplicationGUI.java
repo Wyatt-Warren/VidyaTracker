@@ -131,10 +131,10 @@ public class ApplicationGUI extends Application {
         playedGamesVBox.setSpacing(5);
         unplayedGamesVBox.setSpacing(5);
 
-        unplayedSortChoices.getItems().addAll("Title", "Platform", "Genre", "Hours", "Release Date");
+        unplayedSortChoices.getItems().addAll("Status", "Title", "Platform", "Genre", "Hours", "Release Date");
         unplayedFilterChoices.getItems().addAll("Status", "Franchise", "Platform", "Genre", "Deck Status",
                 "Release Year", "No Filter");
-        playedSortChoices.getItems().addAll("Title", "Rating", "Platform", "Genre", "Release Date", "Completion Date");
+        playedSortChoices.getItems().addAll("Status", "Title", "Rating", "Platform", "Genre", "Release Date", "Completion Date");
         playedFilterChoices.getItems().addAll("Status", "Short", "Franchise", "Rating", "Platform",
                 "Genre", "Release Year", "Completion Year", "100%", "No Filter");
 

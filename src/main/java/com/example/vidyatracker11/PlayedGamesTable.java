@@ -294,22 +294,25 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                 break;
         }
         switch (ApplicationGUI.playedSortChoices.getSelectionModel().getSelectedIndex()) { //Sort next
-            case 0: //Title
-                sortByTitle();
+            case 0://Status
+                sortByStatus();
                 break;
-            case 1: //Rating
+            case 1: //Title
+                setItems(new FilteredList<>(normalSort(filteredList)));
+                break;
+            case 2: //Rating
                 sortByRating();
                 break;
-            case 2: //Platform
+            case 3: //Platform
                 sortByPlatform();
                 break;
-            case 3: //Genre
+            case 4: //Genre
                 sortByGenre();
                 break;
-            case 4: //Release Date
+            case 5: //Release Date
                 sortByDate(true);
                 break;
-            case 5: //Completion Date
+            case 6: //Completion Date
                 sortByDate(false);
                 break;
         }
@@ -350,6 +353,7 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                 String newListsFranchiseDate = newSortingName + newListsDate;
                 int comparedFranchiseNum = givenListFranchiseDate.compareTo(newListsFranchiseDate);
                 if (comparedFranchiseNum < 0) {
+                    System.out.println(newListsFranchiseDate);
                     newList.add(j, playedGame);
                     placed = true;
                     break;
@@ -363,12 +367,12 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
     }
 
     //Sorts by status first, in the order P, C, O, and then does normal sort.
-    public void sortByTitle() {
+    public void sortByStatus() {
         ObservableList<PlayedGame> newList = FXCollections.observableArrayList();
         String[] statuses = { "Playing", "Completed", "On Hold" };
         for (String status : statuses) {
             ObservableList<PlayedGame> givenStatusList = FXCollections.observableArrayList();
-            for (PlayedGame playedGame : this.filteredList) {
+            for (PlayedGame playedGame : filteredList) {
                 if (playedGame.getStatus().equals(status))
                     givenStatusList.add(playedGame);
             }

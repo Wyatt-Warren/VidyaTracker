@@ -206,19 +206,22 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
                 break;
         }
         switch (ApplicationGUI.unplayedSortChoices.getSelectionModel().getSelectedIndex()) { //Sort next
-            case 0: //Title
-                sortByTitle();
+            case 0:
+                sortByStatus();
                 break;
-            case 1: //Platform
+            case 1: //Title
+                setItems(new FilteredList<>(normalSort(filteredList)));
+                break;
+            case 2: //Platform
                 sortByPlatform();
                 break;
-            case 2: //Genre
+            case 3: //Genre
                 sortByGenre();
                 break;
-            case 3: //Hours
+            case 4: //Hours
                 sortByHours();
                 break;
-            case 4: //Date
+            case 5: //Date
                 sortByDate();
                 break;
         }
@@ -271,7 +274,7 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
     }
 
     //Sort by title, then normal sort
-    public void sortByTitle() {
+    public void sortByStatus() {
         ObservableList<UnplayedGame> newList = FXCollections.observableArrayList();
         String[] statuses = { "Backlog", "SubBacklog", "Wishlist" };
         for (String status : statuses) {
