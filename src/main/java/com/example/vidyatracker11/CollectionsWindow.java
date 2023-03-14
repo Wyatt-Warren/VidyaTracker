@@ -31,7 +31,7 @@ public class CollectionsWindow extends VBox {
     Button removeButton = new Button("Remove Selected Game");
     Button moveUpButton = new Button("Move Selected Game Up");
     Button moveDownButton = new Button("Move Selected Game Down");
-    Button chooseRandomGameButton = new Button("Choose a Random Game");
+    Button chooseRandomGameButton = new Button("Choose a Random Unplayed Game");
     Label countTextLabel = new Label("Count:");
     Label hoursTextLabel = new Label("Total Hours:");
     Label percentTextLabel = new Label("Percent Complete:");
@@ -274,7 +274,10 @@ public class CollectionsWindow extends VBox {
         });
 
         chooseRandomGameButton.setOnAction(e -> {
-            ObservableList<Game> gameList = collectionChoices.getSelectionModel().getSelectedItem().getGames();
+            ObservableList<Game> gameList = FXCollections.observableArrayList(collectionChoices.getSelectionModel().getSelectedItem().getGames());
+
+            gameList.removeIf(game -> game instanceof PlayedGame);
+
             if (gameList.size() > 0) {
                 Stage stage = new Stage();
                 Random rand = new Random();
