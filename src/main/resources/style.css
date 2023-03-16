@@ -187,3 +187,11 @@
     -fx-text-fill: #ffffff;
     -fx-text-background-color: #ffffff;
 }
+
+.progress-bar *{
+    -fx-background-color: #444444;
+}
+
+.progress-bar .bar {
+    -fx-background-color: #880000;
+}

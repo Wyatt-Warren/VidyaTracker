@@ -86,6 +86,8 @@ public class AchievementWindow extends VBox {
             }
         }
         bigFranchisesAchievement.setItems(newFranchiseList);
+
+        lastYearReleasesAchievement.updateProgress();
     }
 
     public void populateAchievements(){

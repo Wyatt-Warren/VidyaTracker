@@ -2,6 +2,7 @@ package com.example.vidyatracker11;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -31,6 +32,10 @@ public class AchievementBox<T> extends HBox {
         this.ranks = ranks;
         titleLabel.setText(title);
         descriptionLabel.setText(description);
+        setMinWidth(500);
+        setAlignment(Pos.CENTER);
+        vbox.setMaxWidth(Double.MAX_VALUE);
+        progressBar.setMaxWidth(Double.MAX_VALUE);
 
         getChildren().addAll(vbox, badge);
 
@@ -51,6 +56,11 @@ public class AchievementBox<T> extends HBox {
             stage.setScene(scene);
             stage.show();
         });
+    }
+
+    public void updateProgress(){
+        progressBar.setProgress(0.5);
+        System.out.println(progressBar.getProgress());
     }
 
     public ObservableList<T> getItems() {
