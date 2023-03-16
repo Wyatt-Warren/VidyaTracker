@@ -319,7 +319,7 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
     }
 
     //Sorts by franchise, within the same franchise, sorts by release date
-    public ObservableList<PlayedGame> normalSort(ObservableList<PlayedGame> givenList) {
+    public static ObservableList<PlayedGame> normalSort(ObservableList<PlayedGame> givenList) {
         ObservableList<PlayedGame> newList = FXCollections.observableArrayList();
 
         for (PlayedGame playedGame : givenList) {

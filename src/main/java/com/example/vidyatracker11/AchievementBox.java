@@ -14,7 +14,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class AchievementBox<T> extends HBox {
-    ObservableList<T> items = FXCollections.observableArrayList();
+    private ObservableList<T> items = FXCollections.observableArrayList();
     int[] ranks;
     Label titleLabel = new Label();
     Label progressLabel = new Label("");
@@ -55,5 +55,9 @@ public class AchievementBox<T> extends HBox {
 
     public ObservableList<T> getItems() {
         return items;
+    }
+
+    public void setItems(ObservableList<T> items) {
+        this.items = items;
     }
 }
