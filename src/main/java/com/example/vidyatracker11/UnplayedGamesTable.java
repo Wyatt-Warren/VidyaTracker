@@ -1,7 +1,6 @@
 package com.example.vidyatracker11;
 
 import java.util.Collections;
-import java.util.Objects;
 import java.util.function.Predicate;
 
 import javafx.collections.FXCollections;
@@ -11,7 +10,6 @@ import javafx.collections.transformation.SortedList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Modality;
@@ -138,7 +136,7 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
 
     public void editGame(UnplayedGame game){
         Stage stage = new Stage();
-        stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+        stage.getIcons().add(ApplicationGUI.icon);
         stage.setResizable(false);
         UnplayedEditWindow window = new UnplayedEditWindow(game, stage);
         Scene scene = new Scene(window);

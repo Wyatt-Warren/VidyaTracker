@@ -8,7 +8,6 @@ import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -17,7 +16,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import java.util.Objects;
 import java.util.Random;
 
 public class CollectionsWindow extends VBox {
@@ -138,7 +136,7 @@ public class CollectionsWindow extends VBox {
 
         manageButton.setOnAction(e -> {
             Stage stage = new Stage();
-            stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+            stage.getIcons().add(ApplicationGUI.icon);
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Manage Collections");
@@ -281,7 +279,7 @@ public class CollectionsWindow extends VBox {
             if (gameList.size() > 0) {
                 Stage stage = new Stage();
                 Random rand = new Random();
-                stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+                stage.getIcons().add(ApplicationGUI.icon);
                 stage.setTitle("Random Game");
                 stage.setResizable(false);
                 stage.initModality(Modality.APPLICATION_MODAL);

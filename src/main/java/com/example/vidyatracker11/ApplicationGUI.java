@@ -71,6 +71,7 @@ public class ApplicationGUI extends Application {
     public static SeparatorMenuItem separatorMenuItem4 = new SeparatorMenuItem();
     public static MenuItem statsMenuItem = new MenuItem("Show Stats Window");
     public static MenuItem collectionsMenuItem = new MenuItem("Show Collections Window");
+    public static MenuItem achievementsMenuItem = new MenuItem("Show Achievements Window");
     public static Menu listMenu = new Menu("List");
 
     //Random Menu
@@ -116,13 +117,14 @@ public class ApplicationGUI extends Application {
     public static ContextMenu rowContextMenu = new ContextMenu(addNewGameMenuItem,
             editGameMenuItem, moveGameMenuItem, removeGameMenuItem, collectGameMenuItem);
     public static String styleSheet = "style.css";
+    public static Image icon = new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png")));
     public static MenuBar menuBar = new MenuBar(fileMenu, listMenu, randomMenu);
     public static FileChooser fileChooser = new FileChooser();
     public static VBox primarySceneVBox = new VBox(menuBar, playedWindow);
     public static Scene primaryScene = new Scene(primarySceneVBox, screenWidthMain, screenHeightMain);
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Vidya Tracker - " + currentFilePathOut.getFileName().toString());
-        primaryStage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+        primaryStage.getIcons().add(icon);
 
         primaryScene.getStylesheets().add(styleSheet);
 
@@ -278,7 +280,7 @@ public class ApplicationGUI extends Application {
         listMenu.getItems().addAll(addNewGameMenuItem, editGameMenuItem, moveGameMenuItem,
                 removeGameMenuItem, collectGameMenuItem, separatorMenuItem3,
                 editGenreListMenuItem, editPlatformListMenuItem, separatorMenuItem4,
-                statsMenuItem, collectionsMenuItem);
+                statsMenuItem, collectionsMenuItem, achievementsMenuItem);
 
         randomMenu.getItems().addAll(chooseRandomGameMenuItem, chooseRandomWishlistGameMenuItem, generateRandomListMenuItem);
 
@@ -292,7 +294,7 @@ public class ApplicationGUI extends Application {
         //Reset all lists.
         newFileMenuItem.setOnAction(e -> {
             Stage stage = new Stage();
-            stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+            stage.getIcons().add(icon);
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Create New File");
@@ -372,7 +374,7 @@ public class ApplicationGUI extends Application {
             if (changeMade) {
                 e.consume();
                 Stage stage = new Stage();
-                stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+                stage.getIcons().add(icon);
                 stage.setTitle("Save File");
                 stage.setResizable(false);
                 stage.initModality(Modality.APPLICATION_MODAL);
@@ -421,7 +423,7 @@ public class ApplicationGUI extends Application {
         addNewGameMenuItem.setOnAction(e -> {
             if (playedOpen) { //Played Game
                 Stage stage = new Stage();
-                stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+                stage.getIcons().add(icon);
                 stage.setResizable(false);
                 AddPlayedGame addPlayedGame = new AddPlayedGame(stage);
                 Scene scene = new Scene(addPlayedGame);
@@ -440,7 +442,7 @@ public class ApplicationGUI extends Application {
 
             } else { //Unplayed Game
                 Stage stage = new Stage();
-                stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+                stage.getIcons().add(icon);
                 stage.setResizable(false);
                 AddUnplayedGame addUnplayedGame = new AddUnplayedGame(stage);
                 Scene scene = new Scene(addUnplayedGame);
@@ -479,7 +481,7 @@ public class ApplicationGUI extends Application {
                 if (gameInt != -1) {
                     PlayedGame game = playedGamesTable.getSelectionModel().getSelectedItem();
                     Stage stage = new Stage();
-                    stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+                    stage.getIcons().add(icon);
                     stage.setResizable(false);
                     stage.initModality(Modality.APPLICATION_MODAL);
                     stage.setTitle("Move Played Game");
@@ -533,7 +535,7 @@ public class ApplicationGUI extends Application {
                 if (gameInt != -1) {
                     UnplayedGame game = unplayedGamesTable.getSelectionModel().getSelectedItem();
                     Stage stage = new Stage();
-                    stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+                    stage.getIcons().add(icon);
                     stage.setResizable(false);
                     stage.initModality(Modality.APPLICATION_MODAL);
                     stage.setTitle("Move Unplayed Game");
@@ -591,7 +593,7 @@ public class ApplicationGUI extends Application {
                 if (gameInt != -1) {
                     PlayedGame game = playedGamesTable.getSelectionModel().getSelectedItem();
                     Stage stage = new Stage();
-                    stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+                    stage.getIcons().add(icon);
                     stage.setResizable(false);
                     stage.initModality(Modality.APPLICATION_MODAL);
                     stage.setTitle("Remove Played Game");
@@ -637,7 +639,7 @@ public class ApplicationGUI extends Application {
                 if (gameInt != -1) {
                     UnplayedGame game = unplayedGamesTable.getSelectionModel().getSelectedItem();
                     Stage stage = new Stage();
-                    stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+                    stage.getIcons().add(icon);
                     stage.setResizable(false);
                     stage.initModality(Modality.APPLICATION_MODAL);
                     stage.setTitle("Remove Unplayed Game");
@@ -683,7 +685,7 @@ public class ApplicationGUI extends Application {
         collectGameMenuItem.setOnAction(e -> {
             if(GameLists.collectionList.isEmpty()) {
                 Stage stage = new Stage();
-                stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+                stage.getIcons().add(icon);
                 stage.setResizable(false);
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.setTitle("No Collections");
@@ -719,7 +721,7 @@ public class ApplicationGUI extends Application {
                 }
                 if (gameInt != -1) {
                     Stage stage = new Stage();
-                    stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+                    stage.getIcons().add(icon);
                     stage.setResizable(false);
                     stage.initModality(Modality.APPLICATION_MODAL);
                     stage.setTitle("Select Collection");
@@ -758,7 +760,7 @@ public class ApplicationGUI extends Application {
         //Opens a window for the user to edit the genre list.
         editGenreListMenuItem.setOnAction(e -> {
             Stage stage = new Stage();
-            stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+            stage.getIcons().add(icon);
             stage.setTitle("Edit Genre List");
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -782,7 +784,7 @@ public class ApplicationGUI extends Application {
         //Opens a window for the user to edit the platform list.
         editPlatformListMenuItem.setOnAction(e -> {
             Stage stage = new Stage();
-            stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+            stage.getIcons().add(icon);
             stage.setTitle("Edit Platform List");
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -805,7 +807,7 @@ public class ApplicationGUI extends Application {
         //Open the stats view
         statsMenuItem.setOnAction(e -> {
             Stage stage = new Stage();
-            stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+            stage.getIcons().add(icon);
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Stats");
@@ -820,7 +822,7 @@ public class ApplicationGUI extends Application {
         //Open the collection view
         collectionsMenuItem.setOnAction(e -> {
             Stage stage = new Stage();
-            stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+            stage.getIcons().add(icon);
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Collections");
@@ -830,6 +832,19 @@ public class ApplicationGUI extends Application {
             stage.setScene(scene);
             stage.show();
             stage.setWidth(stage.getWidth()+25);
+        });
+
+        achievementsMenuItem.setOnAction(e -> {
+            Stage stage = new Stage();
+            stage.getIcons().add(icon);
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Achievements");
+            AchievementWindow achievementWindow = new AchievementWindow();
+            Scene scene = new Scene(achievementWindow);
+            scene.getStylesheets().add(styleSheet);
+            stage.setScene(scene);
+            stage.show();
         });
 
         //Chooses a random game from the unplayed list with the status "Backlog", or "Subbacklog"
@@ -844,7 +859,7 @@ public class ApplicationGUI extends Application {
             if (gameList.size() > 0) {
                 Stage stage = new Stage();
                 Random rand = new Random();
-                stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+                stage.getIcons().add(icon);
                 stage.setTitle("Random Game");
                 stage.setResizable(false);
                 stage.initModality(Modality.APPLICATION_MODAL);
@@ -881,7 +896,7 @@ public class ApplicationGUI extends Application {
             if (gameList.size() > 0) {
                 Stage stage = new Stage();
                 Random rand = new Random();
-                stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+                stage.getIcons().add(icon);
                 stage.setTitle("Random Game");
                 stage.setResizable(false);
                 stage.initModality(Modality.APPLICATION_MODAL);
@@ -911,7 +926,7 @@ public class ApplicationGUI extends Application {
             if (unplayedTempList.getTitles().size() > 0) {
                 Stage stage = new Stage();
                 Random rand = new Random();
-                stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+                stage.getIcons().add(icon);
                 stage.setTitle("Random Game");
                 stage.setResizable(false);
                 stage.initModality(Modality.APPLICATION_MODAL);
@@ -939,7 +954,7 @@ public class ApplicationGUI extends Application {
         //Generates a random list of unplayed games based on filters provided by the user.
         generateRandomListMenuItem.setOnAction(e -> {
             Stage stage = new Stage();
-            stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+            stage.getIcons().add(icon);
             stage.setTitle("Random Game List");
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -1011,7 +1026,7 @@ public class ApplicationGUI extends Application {
     //Saves the current data to a given file object.
     public void saveFile(File fileOut) throws FileNotFoundException {
         Stage stage = new Stage();
-        stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+        stage.getIcons().add(icon);
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Saving...");

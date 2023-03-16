@@ -3,7 +3,6 @@ package com.example.vidyatracker11;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.Objects;
 import java.util.function.Predicate;
 
 import javafx.collections.FXCollections;
@@ -13,7 +12,6 @@ import javafx.collections.transformation.SortedList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Modality;
@@ -202,7 +200,7 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
 
     public void editGame(PlayedGame game){
         Stage stage = new Stage();
-        stage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png"))));
+        stage.getIcons().add(ApplicationGUI.icon);
         stage.setResizable(false);
         PlayedEditWindow window = new PlayedEditWindow(game, stage);
         Scene scene = new Scene(window);

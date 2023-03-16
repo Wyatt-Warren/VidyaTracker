@@ -158,4 +158,9 @@ public abstract class Game {
     public String getFranchise() {
         return franchise;
     }
+
+    @Override
+    public String toString() {
+        return title;
+    }
 }
