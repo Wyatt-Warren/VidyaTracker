@@ -9,12 +9,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.util.Objects;
 
 public class AchievementBox<T> extends HBox {
     private ObservableList<T> items = FXCollections.observableArrayList();
@@ -26,7 +29,7 @@ public class AchievementBox<T> extends HBox {
     HBox labelBox = new HBox(countLabel, nextRankLabel);
     HBox topBox = new HBox(titleLabel, labelBox);
     ProgressBar progressBar = new ProgressBar();
-    ImageView badge = new ImageView(ApplicationGUI.icon);
+    ImageView badge = new ImageView();
     VBox badgeBox = new VBox(badge, rankLabel);
     Label descriptionLabel = new Label();
     Button showListButton = new Button("Show Applicable Items");
@@ -89,10 +92,16 @@ public class AchievementBox<T> extends HBox {
                     label.setStyle("-fx-font-size: 18;-fx-font-weight: bold;-fx-text-fill: #00ffff;");
                 else
                     label.setStyle("-fx-font-size: 18;-fx-font-weight: bold;");
-                box.getChildren().add(label);
+                ImageView badgeImage = new ImageView(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/Rank" + i + ".png"))));
+                HBox rankBox = new HBox(badgeImage, label);
+                rankBox.setSpacing(20);
+                rankBox.setAlignment(Pos.CENTER_LEFT);
+                box.getChildren().add(rankBox);
             }
             Scene scene = new Scene(box);
             box.setPadding(new Insets(5));
+            box.setSpacing(10);
+            box.setAlignment(Pos.CENTER);
             scene.getStylesheets().add(ApplicationGUI.styleSheet);
             stage.setScene(scene);
             stage.show();
@@ -114,6 +123,7 @@ public class AchievementBox<T> extends HBox {
         countLabel.setText("Count: " + count);
         nextRankLabel.setText("Progress to next rank: " + progress + "/" + (ranks[rank+1]-ranks[rank]));
         rankLabel.setText("Rank: " + rank);
+        badge.setImage(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/Rank" + rank + ".png"))));
     }
 
     public ObservableList<T> getItems() {
