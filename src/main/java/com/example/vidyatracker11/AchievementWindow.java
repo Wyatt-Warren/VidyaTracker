@@ -26,6 +26,10 @@ public class AchievementWindow extends VBox {
             "New Releases", "Completed games from " + localDate.getYear(), new int[]{0,1,2,3,4,5,6,8,10,15,20}, false);
     public AchievementBox<PlayedGame> lastYearReleasesAchievement = new AchievementBox<>(
             "Last Year Releases", "Completed games from " + (localDate.getYear()-1), new int[]{0,2,4,6,8,10,12,16,20,30,40}, false);
+    public AchievementBox<PlayedGame> currentYearAchievement = new AchievementBox<>(
+            "Current Year", "Games completed in " + localDate.getYear(), new int[]{0,15,30,45,60,75,90,120,150,225,300}, false);
+    public AchievementBox<PlayedGame> lastYearAchievement = new AchievementBox<>(
+            "Last Year", "Games Completed in " + (localDate.getYear()-1), new int[]{0,15,30,45,60,75,90,120,150,225,300}, false);
     public AchievementBox<PlayedGame> newGamesAchievement = new AchievementBox<>(
             "New Games", "Games beaten within the release year", new int[]{0,5,10,20,30,40,50,75,100,150,200}, false);
     public AchievementBox<PlayedGame> oldGamesAchievement = new AchievementBox<>(
@@ -42,14 +46,14 @@ public class AchievementWindow extends VBox {
             "Completionist", "Games with 100% completion", new int[]{0,10,20,40,60,80,100,150,200,300,400}, false);
     public ObservableList<AchievementBox<?>> achievementBoxes = FXCollections.observableArrayList(
             totalAchievement, newReleasesAchievement, lastYearReleasesAchievement,
-            newGamesAchievement, oldGamesAchievement, shortGamesAchievement,
-            bigFranchisesAchievement, masteredGenresAchievement, masteredPlatformsAchievement,
-            completionistAchievement);
+            currentYearAchievement, lastYearAchievement, newGamesAchievement,
+            oldGamesAchievement, shortGamesAchievement, bigFranchisesAchievement,
+            masteredGenresAchievement, masteredPlatformsAchievement, completionistAchievement);
 
     public ObservableList<AchievementBox<PlayedGame>> gameCountAchievementBoxes = FXCollections.observableArrayList(
             totalAchievement, newReleasesAchievement, lastYearReleasesAchievement,
-            newGamesAchievement, oldGamesAchievement, shortGamesAchievement,
-            completionistAchievement);
+            currentYearAchievement, lastYearAchievement, newGamesAchievement,
+            oldGamesAchievement, shortGamesAchievement, completionistAchievement);
 
     public AchievementWindow(){
         setPadding(new Insets(10));
@@ -118,13 +122,21 @@ public class AchievementWindow extends VBox {
             if(!game.getIsItShort().equals("Yes") && game.getStatus().equals("Completed")){
                 totalAchievement.getItems().add(game);
 
-                //Games beat in current year
+                //Games released in current year
                 if(game.getReleaseYear()==localDate.getYear())
                     newReleasesAchievement.getItems().add(game);
 
-                //Games beat last year
+                //Games released last year
                 if(game.getReleaseYear()==localDate.getYear()-1)
                     lastYearReleasesAchievement.getItems().add(game);
+
+                //Games beat this year
+                if(game.getCompletionYear()==localDate.getYear())
+                    currentYearAchievement.getItems().add(game);
+
+                //Games beat last year
+                if(game.getCompletionYear()==localDate.getYear()-1)
+                    lastYearAchievement.getItems().add(game);
 
                 //Games beat the same year they were released
                 if(game.getReleaseYear()==game.getCompletionYear())
