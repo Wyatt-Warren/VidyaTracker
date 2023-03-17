@@ -5,10 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ProgressBar;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -92,13 +89,24 @@ public class AchievementBox<T> extends HBox {
                     label.setStyle("-fx-font-size: 18;-fx-font-weight: bold;-fx-text-fill: #00ffff;");
                 else
                     label.setStyle("-fx-font-size: 18;-fx-font-weight: bold;");
-                ImageView badgeImage = new ImageView(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/Rank" + i + ".png"))));
+                ImageView badgeImage;
+
+                if(big) {
+                    badgeImage = new ImageView(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/RankBig" + i + ".png"))));
+                    stage.setHeight(900);
+                }
+                else
+                    badgeImage = new ImageView(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/Rank" + i + ".png"))));
+
                 HBox rankBox = new HBox(badgeImage, label);
                 rankBox.setSpacing(20);
                 rankBox.setAlignment(Pos.CENTER_LEFT);
                 box.getChildren().add(rankBox);
             }
-            Scene scene = new Scene(box);
+            ScrollPane scrollPane = new ScrollPane(box);
+            scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+            Scene scene = new Scene(scrollPane);
             box.setPadding(new Insets(5));
             box.setSpacing(10);
             box.setAlignment(Pos.CENTER);
@@ -123,7 +131,10 @@ public class AchievementBox<T> extends HBox {
         countLabel.setText("Count: " + count);
         nextRankLabel.setText("Progress to next rank: " + progress + "/" + (ranks[rank+1]-ranks[rank]));
         rankLabel.setText("Rank: " + rank);
-        badge.setImage(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/Rank" + rank + ".png"))));
+        if(big)
+            badge.setImage(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/RankBig" + rank + ".png"))));
+        else
+            badge.setImage(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/Rank" + rank + ".png"))));
     }
 
     public ObservableList<T> getItems() {

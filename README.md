@@ -4,7 +4,3 @@ VidyaTracker is a desktop application that uses Java 11. The purpose of Vidya Tr
 ## TODO
 ### Organizational
 - Put code into neater blocks with comments
-
-### Features
-- Gamey "achievement" window
-  - 128x128 badges for total completed
