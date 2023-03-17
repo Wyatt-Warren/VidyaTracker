@@ -3,6 +3,7 @@ package com.example.vidyatracker11;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
@@ -18,26 +19,27 @@ public class AchievementWindow extends VBox {
 
     private static final LocalDate localDate = date.toInstant().atZone(timeZone).toLocalDate();
     public Label mainLabel = new Label("Achievements");
+    public Label spacingLabel = new Label();
     public AchievementBox<PlayedGame> totalAchievement = new AchievementBox<>(
-            "Total", "Total games completed", new int[]{0,50,100,200,300,400,500,750,1000,1500}, true);
+            "Total", "Total games completed", new int[]{0,50,100,200,300,400,500,750,1000,1500,2000}, true);
     public AchievementBox<PlayedGame> newReleasesAchievement = new AchievementBox<>(
-            "New Releases", "Completed games from " + localDate.getYear(), new int[]{0,1,2,3,4,5,6,8,10,15}, false);
+            "New Releases", "Completed games from " + localDate.getYear(), new int[]{0,1,2,3,4,5,6,8,10,15,20}, false);
     public AchievementBox<PlayedGame> lastYearReleasesAchievement = new AchievementBox<>(
-            "Last Year Releases", "Completed games from " + (localDate.getYear()-1), new int[]{0,2,4,6,8,10,12,16,20,30}, false);
+            "Last Year Releases", "Completed games from " + (localDate.getYear()-1), new int[]{0,2,4,6,8,10,12,16,20,30,40}, false);
     public AchievementBox<PlayedGame> newGamesAchievement = new AchievementBox<>(
-            "New Games", "Games beaten within the release year", new int[]{0,5,10,20,30,40,50,75,100,150}, false);
+            "New Games", "Games beaten within the release year", new int[]{0,5,10,20,30,40,50,75,100,150,200}, false);
     public AchievementBox<PlayedGame> oldGamesAchievement = new AchievementBox<>(
-            "Old Games", "Games beaten 20 or more years after the release date", new int[]{0,25,50,100,150,200,250,375,500,750}, false);
+            "Old Games", "Games beaten 20 or more years after the release date", new int[]{0,25,50,100,150,200,250,375,500,750,1000}, false);
     public AchievementBox<PlayedGame> shortGamesAchievement = new AchievementBox<>(
-            "Short Games", "Short games beaten", new int[]{0,25,50,100,150,200,250,375,500,750}, false);
+            "Short Games", "Short games beaten", new int[]{0,25,50,100,150,200,250,375,500,750,1000}, false);
     public AchievementBox<String> bigFranchisesAchievement = new AchievementBox<>(
-            "Big Franchises", "Franchises with 6 or more games completed", new int[]{0,2,4,6,8,10,15,20,30,40}, false);
+            "Big Franchises", "Franchises with 6 or more games completed", new int[]{0,2,4,6,8,10,15,20,30,40,50}, false);
     public AchievementBox<String> masteredGenresAchievement = new AchievementBox<>(
-            "Mastered Genres", "Genres with 15 or more games completed", new int[]{0,2,4,6,8,10,15,20,30,40}, false);
+            "Mastered Genres", "Genres with 15 or more games completed", new int[]{0,2,4,6,8,10,15,20,30,40,50}, false);
     public AchievementBox<String> masteredPlatformsAchievement = new AchievementBox<>(
-            "Mastered Platforms", "Platforms with 20 or more games completed", new int[]{0,1,2,3,4,5,7,10,15,20}, false);
+            "Mastered Platforms", "Platforms with 20 or more games completed", new int[]{0,1,2,3,4,5,7,10,15,20,25}, false);
     public AchievementBox<PlayedGame> completionistAchievement = new AchievementBox<>(
-            "Completionist", "Games with 100% completion", new int[]{0,10,20,40,60,80,100,150,200,300}, false);
+            "Completionist", "Games with 100% completion", new int[]{0,10,20,40,60,80,100,150,200,300,400}, false);
     public ObservableList<AchievementBox<?>> achievementBoxes = FXCollections.observableArrayList(
             totalAchievement, newReleasesAchievement, lastYearReleasesAchievement,
             newGamesAchievement, oldGamesAchievement, shortGamesAchievement,
@@ -50,12 +52,17 @@ public class AchievementWindow extends VBox {
             completionistAchievement);
 
     public AchievementWindow(){
-        setPadding(new Insets(5));
-        setSpacing(10);
+        setPadding(new Insets(10));
+        setSpacing(20);
+        setAlignment(Pos.CENTER);
+        mainLabel.setStyle("-fx-font-size: 24;-fx-font-weight: bold;");
 
         getChildren().add(mainLabel);
         for(AchievementBox<?> achievementBox : achievementBoxes)
             getChildren().add(achievementBox);
+
+        spacingLabel.setMinHeight(20);
+        getChildren().add(2, spacingLabel);
 
         populateAchievements();
         for(AchievementBox<PlayedGame> achievementBox : gameCountAchievementBoxes)
@@ -87,7 +94,8 @@ public class AchievementWindow extends VBox {
         }
         bigFranchisesAchievement.setItems(newFranchiseList);
 
-        lastYearReleasesAchievement.updateProgress();
+        for(AchievementBox<?> achievementBox : achievementBoxes)
+            achievementBox.updateProgress();
     }
 
     public void populateAchievements(){

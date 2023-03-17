@@ -2,6 +2,7 @@ package com.example.vidyatracker11;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -11,6 +12,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -18,29 +20,46 @@ public class AchievementBox<T> extends HBox {
     private ObservableList<T> items = FXCollections.observableArrayList();
     int[] ranks;
     Label titleLabel = new Label();
-    Label progressLabel = new Label("");
-    Label rankLabel = new Label("");
-    HBox topBox = new HBox(titleLabel, progressLabel,rankLabel);
+    Label countLabel = new Label("Count: ");
+    Label nextRankLabel = new Label("Progress: ");
+    Label rankLabel = new Label("Rank: ");
+    HBox labelBox = new HBox(countLabel, nextRankLabel);
+    HBox topBox = new HBox(titleLabel, labelBox);
     ProgressBar progressBar = new ProgressBar();
     ImageView badge = new ImageView(ApplicationGUI.icon);
+    VBox badgeBox = new VBox(badge, rankLabel);
     Label descriptionLabel = new Label();
     Button showListButton = new Button("Show Applicable Items");
     HBox bottomBox = new HBox(descriptionLabel, showListButton);
     VBox vbox = new VBox(topBox, progressBar, bottomBox);
+    private int rank = 0;
+    private boolean big;
 
     public AchievementBox(String title, String description, int[] ranks, boolean big){
+        this.big = big;
         this.ranks = ranks;
         titleLabel.setText(title);
+        titleLabel.setStyle("-fx-font-size: 18;-fx-font-weight: bold;");
         descriptionLabel.setText(description);
-        setMinWidth(500);
-        setAlignment(Pos.CENTER);
-        vbox.setMaxWidth(Double.MAX_VALUE);
+        vbox.setMinWidth(500);
+        vbox.setMaxWidth(500);
+        vbox.setSpacing(5);
         progressBar.setMaxWidth(Double.MAX_VALUE);
+        descriptionLabel.setMinWidth(480-(new Text(showListButton.getText())).getLayoutBounds().getWidth());
+        labelBox.setAlignment(Pos.CENTER_RIGHT);
+        labelBox.setSpacing(20);
+        badgeBox.setAlignment(Pos.CENTER);
+        rankLabel.setStyle("-fx-font-size: 14;-fx-font-weight: bold;");
+        setSpacing(10);
 
-        getChildren().addAll(vbox, badge);
+        getChildren().addAll(vbox, badgeBox);
 
         if(big){
-            vbox.getChildren().add(0, badge);
+            vbox.setMinWidth(564);
+            vbox.setMaxWidth(564);
+            vbox.setAlignment(Pos.CENTER);
+            descriptionLabel.setMinWidth(544-(new Text(showListButton.getText())).getLayoutBounds().getWidth());
+            vbox.getChildren().add(0, badgeBox);
         }
 
         showListButton.setOnAction(e -> {
@@ -56,15 +75,53 @@ public class AchievementBox<T> extends HBox {
             stage.setScene(scene);
             stage.show();
         });
+
+        badge.setOnMouseClicked(e -> {
+            Stage stage = new Stage();
+            stage.getIcons().add(ApplicationGUI.icon);
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Ranks");
+            VBox box = new VBox();
+            for(int i = 0; i < ranks.length; i++) {
+                Label label = new Label(i + ":\t" + ranks[i]);
+                if(i==rank)
+                    label.setStyle("-fx-font-size: 18;-fx-font-weight: bold;-fx-text-fill: #00ffff;");
+                else
+                    label.setStyle("-fx-font-size: 18;-fx-font-weight: bold;");
+                box.getChildren().add(label);
+            }
+            Scene scene = new Scene(box);
+            box.setPadding(new Insets(5));
+            scene.getStylesheets().add(ApplicationGUI.styleSheet);
+            stage.setScene(scene);
+            stage.show();
+
+        });
     }
 
     public void updateProgress(){
-        progressBar.setProgress(0.5);
-        System.out.println(progressBar.getProgress());
+        int count = items.size();
+        rank = 0;
+        for(int i = 10; i >= 0; i--)
+            if(count >= ranks[i]){
+               rank = i;
+               break;
+            }
+        int progress = count-ranks[rank];
+
+        progressBar.setProgress((progress*1.0) / (ranks[rank+1]-ranks[rank]));
+        countLabel.setText("Count: " + count);
+        nextRankLabel.setText("Progress to next rank: " + progress + "/" + (ranks[rank+1]-ranks[rank]));
+        rankLabel.setText("Rank: " + rank);
     }
 
     public ObservableList<T> getItems() {
         return items;
+    }
+
+    public boolean isBig() {
+        return big;
     }
 
     public void setItems(ObservableList<T> items) {

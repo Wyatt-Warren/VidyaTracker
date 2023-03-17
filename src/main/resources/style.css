@@ -193,5 +193,17 @@
 }
 
 .progress-bar .bar {
-    -fx-background-color: #880000;
+    -fx-background-color: #00ffff;
+}
+
+.scroll-bar * {
+    -fx-background-color: #444444;
+    -fx-border-color: white;
+    -fx-border-width: .1
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #545454;
+    -fx-border-color: white;
+    -fx-border-width: 0
 }

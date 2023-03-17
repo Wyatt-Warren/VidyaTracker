@@ -841,10 +841,22 @@ public class ApplicationGUI extends Application {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Achievements");
             AchievementWindow achievementWindow = new AchievementWindow();
-            Scene scene = new Scene(achievementWindow);
+            ScrollPane scrollPane = new ScrollPane(achievementWindow);
+
+            scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+
+            Scene scene = new Scene(scrollPane);
+            stage.setHeight(900);
+
             scene.getStylesheets().add(styleSheet);
             stage.setScene(scene);
             stage.show();
+            for(AchievementBox<?> achievementBox : achievementWindow.achievementBoxes)
+                if(achievementBox.isBig())
+                    achievementBox.labelBox.setMinWidth(564-achievementBox.titleLabel.getBoundsInParent().getWidth());
+                else
+                    achievementBox.labelBox.setMinWidth(500-achievementBox.titleLabel.getBoundsInParent().getWidth());
         });
 
         //Chooses a random game from the unplayed list with the status "Backlog", or "Subbacklog"
