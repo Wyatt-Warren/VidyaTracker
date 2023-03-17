@@ -189,25 +189,25 @@ public class AchievementWindow extends VBox {
     public int dayDifference(PlayedGame game){
         int dayCountRelease = 0;
         dayCountRelease += (game.getReleaseYear() - 1) * 365;
-        dayCountRelease += dayCountMonthsInYear(game.getReleaseMonth()-1);
+        dayCountRelease += dayCountMonthsInYear(game.getReleaseMonth()-1, game.getReleaseYear());
         dayCountRelease += game.getReleaseDay();
 
         int dayCountCompleted = 0;
         dayCountCompleted += (game.getCompletionYear() - 1) * 365;
-        dayCountCompleted += dayCountMonthsInYear(game.getCompletionMonth()-1);
+        dayCountCompleted += dayCountMonthsInYear(game.getCompletionMonth()-1, game.getCompletionYear());
         dayCountCompleted += game.getCompletionDay();
 
         return (dayCountCompleted - dayCountRelease) + getLeapDaysBetween(game);
     }
 
-    public int dayCountMonthsInYear(int n){
+    public int dayCountMonthsInYear(int month, int year){
         int count = 0;
 
-        if(n > 12 || n <= 0)
+        if(month > 12 || month <= 0)
             return -1;
 
-        for(int i = n; i > 0; i--){
-            count += getDayCount(i);
+        for(int i = month; i > 0; i--){
+            count += getDayCount(i, year);
         }
 
         return count;
@@ -224,10 +224,9 @@ public class AchievementWindow extends VBox {
             first++;
 
         //If the end date is before february
-        if(game.getCompletionMonth() < 2)
-            last--;
-        //If the end date is in february, but before leap day
-        else if(game.getCompletionMonth()==2 && game.getCompletionDay() < 29)
+        if((game.getCompletionMonth() < 2) ||
+                //If the end date is in february, but before leap day
+                (game.getCompletionMonth()==2 && game.getCompletionDay() < 29))
             last--;
 
         //Check each year in the range, inclusively
@@ -245,7 +244,7 @@ public class AchievementWindow extends VBox {
         return count;
     }
 
-    public int getDayCount(int month){
+    public int getDayCount(int month, int year){
         switch (month) {
             case 1:
             case 3:
@@ -256,7 +255,10 @@ public class AchievementWindow extends VBox {
             case 12: //January, March, May, July, August, October, December
                 return 31;
             case 2: //February
-                return 29;
+                if(ApplicationGUI.isLeapYear(year))
+                    return 29;
+                else
+                    return 28;
             case 4:
             case 6:
             case 9:

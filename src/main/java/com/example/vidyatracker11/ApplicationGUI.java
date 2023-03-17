@@ -1233,4 +1233,15 @@ public class ApplicationGUI extends Application {
             e1.printStackTrace();
         }
     }
+    public static boolean isLeapYear(int year){
+        if(year % 4 == 0)
+            //but not 100,
+            if(year % 100 == 0) {
+                //but yes 400
+                return year % 400 == 0;
+            }else
+                return true;
+        return false;
+    }
+
 }

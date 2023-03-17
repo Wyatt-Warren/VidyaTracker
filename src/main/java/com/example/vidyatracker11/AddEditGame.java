@@ -89,18 +89,20 @@ public class AddEditGame extends VBox{
         genreBox.getItems().addAll(GameLists.genreList);
 
         //Release Date
-        releaseYearBox.setTextFormatter(new TextFormatter < > (integerFilter));
+        releaseYearBox.setTextFormatter(new TextFormatter<>(integerFilter));
+        releaseYearBox.textProperty().addListener(e ->
+                setDayCount(releaseMonthBox.getSelectionModel().getSelectedItem(), releaseDayBox, releaseYearBox));
         releaseMonthBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
         releaseMonthBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
             int newInt = (int) newNum;
-            setDayCount(newInt, releaseDayBox);
+            setDayCount(newInt, releaseDayBox, releaseYearBox);
         });
         releaseMonthBox.getSelectionModel().selectFirst();
         releaseDayBox.getSelectionModel().selectFirst();
     }
 
     //Sets the days in the day drop down based on the month selected
-    public void setDayCount(int month, ChoiceBox<Integer> dayBox) {
+    public void setDayCount(int month, ChoiceBox<Integer> dayBox, TextField yearBox) {
         int dayCount = 0;
         switch (month) {
             case 1:
@@ -113,7 +115,10 @@ public class AddEditGame extends VBox{
                 dayCount = 31;
                 break;
             case 2: //February
-                dayCount = 29;
+                if(ApplicationGUI.isLeapYear(Integer.parseInt(yearBox.getText())))
+                    dayCount = 29;
+                else
+                    dayCount = 28;
                 break;
             case 4:
             case 6:

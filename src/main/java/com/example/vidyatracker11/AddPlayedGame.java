@@ -81,11 +81,13 @@ public class AddPlayedGame extends AddEditGame {
         platformBox.getSelectionModel().selectFirst();
 
         //Completion Date
-        completionYearBox.setTextFormatter(new TextFormatter < > (integerFilter));
+        completionYearBox.setTextFormatter(new TextFormatter<>(integerFilter));
+        completionYearBox.textProperty().addListener(e ->
+                setDayCount(completionMonthBox.getSelectionModel().getSelectedItem(), completionDayBox, completionYearBox));
         completionMonthBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
         completionMonthBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
             int newInt = (int) newNum;
-            setDayCount(newInt, completionDayBox);
+            setDayCount(newInt, completionDayBox, completionYearBox);
         });
         completionMonthBox.getSelectionModel().selectFirst();
         completionDayBox.getSelectionModel().selectFirst();
