@@ -83,6 +83,8 @@ public class AchievementBox<T> extends HBox {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Ranks");
             VBox box = new VBox();
+            ScrollPane scrollPane = new ScrollPane(box);
+            scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
             for(int i = 0; i < ranks.length; i++) {
                 Label label = new Label(i + ":\t" + ranks[i]);
                 if(i==rank)
@@ -94,6 +96,7 @@ public class AchievementBox<T> extends HBox {
                 if(big) {
                     badgeImage = new ImageView(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/RankBig" + i + ".png"))));
                     stage.setHeight(900);
+                    scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
                 }
                 else
                     badgeImage = new ImageView(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/Rank" + i + ".png"))));
@@ -103,9 +106,6 @@ public class AchievementBox<T> extends HBox {
                 rankBox.setAlignment(Pos.CENTER_LEFT);
                 box.getChildren().add(rankBox);
             }
-            ScrollPane scrollPane = new ScrollPane(box);
-            scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-            scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
             Scene scene = new Scene(scrollPane);
             box.setPadding(new Insets(5));
             box.setSpacing(10);
