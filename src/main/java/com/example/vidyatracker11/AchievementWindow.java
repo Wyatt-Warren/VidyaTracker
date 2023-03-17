@@ -31,11 +31,11 @@ public class AchievementWindow extends VBox {
     public AchievementBox<PlayedGame> lastYearAchievement = new AchievementBox<>(
             "Last Year", "Games Completed in " + (localDate.getYear()-1), new int[]{0,15,30,45,60,75,90,120,150,225,300}, false);
     public AchievementBox<PlayedGame> newGamesAchievement = new AchievementBox<>(
-            "New Games", "Games beaten within the release year", new int[]{0,5,10,20,30,40,50,75,100,150,200}, false);
+            "New Games", "Games completed within the release year", new int[]{0,5,10,20,30,40,50,75,100,150,200}, false);
     public AchievementBox<PlayedGame> oldGamesAchievement = new AchievementBox<>(
-            "Old Games", "Games beaten 20 or more years after the release date", new int[]{0,25,50,100,150,200,250,375,500,750,1000}, false);
+            "Old Games", "Games completed 20 or more years after the release date", new int[]{0,25,50,100,150,200,250,375,500,750,1000}, false);
     public AchievementBox<PlayedGame> shortGamesAchievement = new AchievementBox<>(
-            "Short Games", "Short games beaten", new int[]{0,25,50,100,150,200,250,375,500,750,1000}, false);
+            "Short Games", "Short games completed", new int[]{0,25,50,100,150,200,250,375,500,750,1000}, false);
     public AchievementBox<String> bigFranchisesAchievement = new AchievementBox<>(
             "Big Franchises", "Franchises with 6 or more games completed", new int[]{0,2,4,6,8,10,15,20,30,40,50}, false);
     public AchievementBox<String> masteredGenresAchievement = new AchievementBox<>(
