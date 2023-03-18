@@ -214,7 +214,7 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                 stage.close();
             }else if(e.getCode() == KeyCode.ENTER){
                 try{
-                    window.saveAndQuit(game, stage);
+                    window.saveAndQuit(stage);
                 }catch (NumberFormatException e1){
                     e1.printStackTrace();
                 }

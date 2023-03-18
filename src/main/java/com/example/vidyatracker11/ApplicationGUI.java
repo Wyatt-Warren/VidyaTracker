@@ -426,8 +426,8 @@ public class ApplicationGUI extends Application {
                 Stage stage = new Stage();
                 stage.getIcons().add(icon);
                 stage.setResizable(false);
-                AddPlayedGame addPlayedGame = new AddPlayedGame(stage);
-                Scene scene = new Scene(addPlayedGame);
+                PlayedAddWindow playedAddWindow = new PlayedAddWindow(stage);
+                Scene scene = new Scene(playedAddWindow);
                 scene.getStylesheets().add(styleSheet);
                 stage.setScene(scene);
                 stage.setTitle("Add New Played Game");
@@ -437,7 +437,7 @@ public class ApplicationGUI extends Application {
                     if (e1.getCode() == KeyCode.ESCAPE) {
                         stage.close();
                     } else if (e1.getCode() == KeyCode.ENTER) {
-                            addPlayedGame.saveAndQuit(stage);
+                            playedAddWindow.saveAndQuit(stage);
                     }
                 });
 
@@ -445,8 +445,8 @@ public class ApplicationGUI extends Application {
                 Stage stage = new Stage();
                 stage.getIcons().add(icon);
                 stage.setResizable(false);
-                AddUnplayedGame addUnplayedGame = new AddUnplayedGame(stage);
-                Scene scene = new Scene(addUnplayedGame);
+                UnplayedAddWindow unplayedAddWindow = new UnplayedAddWindow(stage);
+                Scene scene = new Scene(unplayedAddWindow);
                 scene.getStylesheets().add(styleSheet);
                 stage.setScene(scene);
                 stage.setTitle("Add New Played Game");
@@ -456,7 +456,7 @@ public class ApplicationGUI extends Application {
                     if (e1.getCode() == KeyCode.ESCAPE) {
                         stage.close();
                     } else if (e1.getCode() == KeyCode.ENTER) {
-                            addUnplayedGame.saveAndQuit(stage);
+                            unplayedAddWindow.saveAndQuit(stage);
                     }
                 });
                 statusCountBoxUnplayed.updateData();

@@ -9,7 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 //The window for adding a new game to the unplayed game list.
-public class AddUnplayedGame extends AddEditGame {
+public class UnplayedAddWindow extends AddEditGame {
 
     //Hours
     Label hoursLabel = new Label("Predicted Hours:");
@@ -21,7 +21,7 @@ public class AddUnplayedGame extends AddEditGame {
     ChoiceBox<String> deckBox = new ChoiceBox<>();
     VBox deckVBox = new VBox(deckLabel, deckBox);
 
-    public AddUnplayedGame(Stage stage) {
+    public UnplayedAddWindow(Stage stage) {
         super();
         mainLabel.setText("Add New Unplayed Game");
         mainHBox.getChildren().addAll(statusVBox, titleVBox, franchiseVBox,

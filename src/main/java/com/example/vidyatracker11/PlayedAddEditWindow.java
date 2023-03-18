@@ -1,0 +1,89 @@
+package com.example.vidyatracker11;
+
+import javafx.geometry.Pos;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+//Window for adding or editing played games
+public abstract class PlayedAddEditWindow extends AddEditGame{
+    //GUI
+    //Short Status
+    Label shortLabel = new Label("Short Status:");
+    ChoiceBox<String> shortBox = new ChoiceBox<>();
+    VBox shortVBox = new VBox(shortLabel, shortBox);
+
+    //Rating
+    Label ratingLabel = new Label("Rating");
+    ChoiceBox<Integer> ratingBox = new ChoiceBox<>();
+    VBox ratingVBox = new VBox(ratingLabel, ratingBox);
+
+    //Completion Date
+    Label completionLabel = new Label("Completion Date:");
+    //Year
+    Label completionYearLabel = new Label("Year:");
+    TextField completionYearBox = new TextField();
+    HBox completionYearHBox = new HBox(completionYearLabel, completionYearBox);
+    //Month
+    Label completionMonthLabel = new Label("Month:");
+    ChoiceBox<Integer> completionMonthBox = new ChoiceBox<>();
+    HBox completionMonthHBox = new HBox(completionMonthLabel, completionMonthBox);
+    //Day
+    Label completionDayLabel = new Label("Day:");
+    ChoiceBox<Integer> completionDayBox = new ChoiceBox<>();
+    HBox completionDayHBox = new HBox(completionDayLabel, completionDayBox);
+    VBox completionVBox = new VBox(completionLabel, completionYearHBox, completionMonthHBox,
+            completionDayHBox);
+
+    //100Percent Status
+    Label percentLabel = new Label("100% Status:");
+    ChoiceBox<String> percentBox = new ChoiceBox<>();
+    VBox percentVBox = new VBox(percentLabel, percentBox);
+
+    public PlayedAddEditWindow(Stage stage){
+        super();
+        //GUI
+        mainLabel.setText("Add New Played Game");
+        shortVBox.setAlignment(Pos.CENTER);
+        ratingVBox.setAlignment(Pos.CENTER);
+        completionYearHBox.setAlignment(Pos.CENTER);
+        completionMonthHBox.setAlignment(Pos.CENTER);
+        completionDayHBox.setAlignment(Pos.CENTER);
+        completionVBox.setAlignment(Pos.CENTER);
+        percentVBox.setAlignment(Pos.CENTER);
+        mainHBox.getChildren().addAll(statusVBox, shortVBox, titleVBox,
+                franchiseVBox, ratingVBox, platformVBox,
+                genreVBox, releaseVBox, completionVBox,
+                percentVBox);
+        doneButton.setText("Create New Played Game");
+
+        getChildren().addAll(mainLabel, mainHBox, doneButton);
+        statusBox.getItems().addAll("Playing", "Completed", "On Hold");
+        shortBox.getItems().addAll("Yes", "No", "Blank");
+        ratingBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        completionYearBox.setTextFormatter(new TextFormatter<>(integerFilter));
+        completionYearBox.textProperty().addListener(e ->
+                setDayCount(completionMonthBox.getSelectionModel().getSelectedItem(), completionDayBox, completionYearBox));
+        completionMonthBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+        completionMonthBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
+            //Set day count when month is changed
+            setDayCount((int) newNum, completionDayBox, completionYearBox);
+        });
+        percentBox.getItems().addAll("Yes", "No", "Blank");
+        doneButton.setOnAction(e -> {
+            //Save new game
+            try{
+                saveAndQuit(stage);
+            }catch (NumberFormatException e1){
+                e1.printStackTrace();
+            }
+        });
+
+    }
+
+    public abstract void saveAndQuit(Stage stage);
+}

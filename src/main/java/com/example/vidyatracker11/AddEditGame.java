@@ -8,9 +8,13 @@ import javafx.scene.layout.VBox;
 
 import java.util.function.UnaryOperator;
 
-//Superclass containing common code for
-//PlayedEditWindow, UnplayedEditWindow, AddPlayedGame, and AddUnplayedGame
+//Superclass containing for PlayedEditWindow, UnplayedEditWindow, PlayedAddWindow, and UnplayedAddWindow
 public class AddEditGame extends VBox{
+    //GUI
+    Label mainLabel = new Label();
+    Button doneButton = new Button();
+    HBox mainHBox = new HBox();
+
     //Status
     Label statusLabel = new Label("Status:");
     ChoiceBox<String> statusBox = new ChoiceBox<>();
@@ -52,83 +56,99 @@ public class AddEditGame extends VBox{
     HBox releaseDayHBox = new HBox(releaseDayLabel, releaseDayBox);
     VBox releaseVBox = new VBox(releaseLabel, releaseYearHBox, releaseMonthHBox, releaseDayHBox);
 
-    //Misc
-    Label mainLabel = new Label();
-    Button doneButton = new Button();
-    HBox mainHBox = new HBox();
-    UnaryOperator<TextFormatter.Change> integerFilter = change -> {
+    //Fields
+    UnaryOperator<TextFormatter.Change> integerFilter = change -> {                                 //Filters if text is not a valid integer
         String input = change.getControlNewText();
         return input.matches("\\d{0,9}") ? change : null;
     };
-
-    UnaryOperator<TextFormatter.Change> doubleFilter = change -> {
+    UnaryOperator<TextFormatter.Change> doubleFilter = change -> {                                  //Filters if text is not a valid double
         String input = change.getControlNewText();
         return input.matches("\\d*\\.\\d*")||input.matches("\\d{0,9}") ? change : null;
     };
 
     public AddEditGame(){
-        releaseYearHBox.setAlignment(Pos.CENTER);
-        releaseMonthHBox.setAlignment(Pos.CENTER);
-        releaseDayHBox.setAlignment(Pos.CENTER);
-        releaseVBox.setAlignment(Pos.CENTER);
+        //GUI
+        mainLabel.setStyle("-fx-font-size: 24;-fx-font-weight: bold;");
         statusVBox.setAlignment(Pos.CENTER);
         titleVBox.setAlignment(Pos.CENTER);
         franchiseVBox.setAlignment(Pos.CENTER);
         platformVBox.setAlignment(Pos.CENTER);
         genreVBox.setAlignment(Pos.CENTER);
-        setAlignment(Pos.CENTER);
-
-        mainLabel.setStyle("-fx-font-size: 24;-fx-font-weight: bold;");
+        releaseYearHBox.setAlignment(Pos.CENTER);
+        releaseMonthHBox.setAlignment(Pos.CENTER);
+        releaseDayHBox.setAlignment(Pos.CENTER);
+        releaseVBox.setAlignment(Pos.CENTER);
         mainHBox.setSpacing(5);
+        setAlignment(Pos.CENTER);
         setPadding(new Insets(5));
 
-        //Platform
+        //Set platform values
         platformBox.getItems().addAll(GameLists.platformList);
+        platformBox.getSelectionModel().selectFirst();
 
-        //Genre
+        //Set genre values
         genreBox.getItems().addAll(GameLists.genreList);
+        genreBox.getSelectionModel().selectFirst();
 
-        //Release Date
+        //Only allow integers for releaseYearBox
         releaseYearBox.setTextFormatter(new TextFormatter<>(integerFilter));
+
+        //Update releaseDayBox if a leap year is changed
         releaseYearBox.textProperty().addListener(e ->
                 setDayCount(releaseMonthBox.getSelectionModel().getSelectedItem(), releaseDayBox, releaseYearBox));
+
+        //Set releaseMonthValues
         releaseMonthBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+
         releaseMonthBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
-            int newInt = (int) newNum;
-            setDayCount(newInt, releaseDayBox, releaseYearBox);
+            //setDayCount when month is changed
+            setDayCount((int) newNum, releaseDayBox, releaseYearBox);
         });
+
+        //Select the first options of ChoiceBoxes
         releaseMonthBox.getSelectionModel().selectFirst();
         releaseDayBox.getSelectionModel().selectFirst();
     }
 
-    //Sets the days in the day drop down based on the month selected
+    //Sets the days in releaseDayBox based on the month selected
     public void setDayCount(int month, ChoiceBox<Integer> dayBox, TextField yearBox) {
+        //Local variables
         int dayCount = 0;
+
         switch (month) {
+            //Switch for each month
             case 1:
             case 3:
             case 5:
             case 7:
             case 8:
             case 10:
-            case 12: //January, March, May, July, August, October, December
+            case 12:
+                //January, March, May, July, August, October, December
                 dayCount = 31;
                 break;
-            case 2: //February
+            case 2:
+                //February
                 if(ApplicationGUI.isLeapYear(Integer.parseInt(yearBox.getText())))
+                    //Leap year
                     dayCount = 29;
                 else
+                    //Not leap year
                     dayCount = 28;
                 break;
             case 4:
             case 6:
             case 9:
-            case 11: //April, June, September, November
+            case 11:
+                //April, June, September, November
                 dayCount = 30;
                 break;
         }
+
+        //Set dayBox values
         dayBox.getItems().clear();
         for (int i = 0; i <= dayCount; i++)
+            //Add each day individually
             dayBox.getItems().add(i);
         dayBox.getSelectionModel().select(0);
     }
