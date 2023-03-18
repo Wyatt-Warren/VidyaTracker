@@ -143,7 +143,7 @@ public class AchievementWindow extends VBox {
                     newGamesAchievement.getItems().add(game);
 
                 //Games beat twenty years or more after they were released
-                if(game.getReleaseYear()!=0 && game.getCompletionYear()!=0 && dayDifference(game) >= 7300)
+                if(game.getReleaseYear()!=0 && game.getCompletionYear()!=0 && isTwentyYears(game))
                     oldGamesAchievement.getItems().add(game);
 
                 //Games that have a franchise
@@ -183,89 +183,32 @@ public class AchievementWindow extends VBox {
         for(String franchise : franchiseKeys)
             if(franchiseMap.get(franchise) >= 6)
                 bigFranchisesAchievement.getItems().add(franchise);
-
     }
 
-    public int dayDifference(PlayedGame game){
-        int dayCountRelease = 0;
-        dayCountRelease += (game.getReleaseYear() - 1) * 365;
-        dayCountRelease += dayCountMonthsInYear(game.getReleaseMonth()-1, game.getReleaseYear());
-        dayCountRelease += game.getReleaseDay();
+    public boolean isTwentyYears(PlayedGame game){
+        int years = game.getCompletionYear()-game.getReleaseYear();
 
-        int dayCountCompleted = 0;
-        dayCountCompleted += (game.getCompletionYear() - 1) * 365;
-        dayCountCompleted += dayCountMonthsInYear(game.getCompletionMonth()-1, game.getCompletionYear());
-        dayCountCompleted += game.getCompletionDay();
+        //First we just look at years before anything else
+        //Over twenty years
+        if(years > 20)
+            return true;
+        //Less than twenty years
+        else if(years < 20)
+            return false;
+        //Twenty years
+        else
 
-        return (dayCountCompleted - dayCountRelease) + getLeapDaysBetween(game);
-    }
+            //If year difference is exactly twenty, we should look at months
+            //Completion month is further into the year than release month
+            if(game.getCompletionMonth() > game.getReleaseMonth())
+                return true;
+            //Release month is further into the year than completion month
+            else if(game.getCompletionMonth() < game.getReleaseMonth())
+                return false;
+            //Released and completed in the same month
+            else
 
-    public int dayCountMonthsInYear(int month, int year){
-        int count = 0;
-
-        if(month > 12 || month <= 0)
-            return -1;
-
-        for(int i = month; i > 0; i--){
-            count += getDayCount(i, year);
-        }
-
-        return count;
-    }
-
-    public int getLeapDaysBetween(PlayedGame game){
-        int count = 0;
-        int first = game.getReleaseYear();
-        int last = game.getCompletionYear();
-
-        //We need to only include the start and end year if leap day would be within the range
-        //If the start date is after february
-        if(game.getReleaseMonth() > 2)
-            first++;
-
-        //If the end date is before february
-        if((game.getCompletionMonth() < 2) ||
-                //If the end date is in february, but before leap day
-                (game.getCompletionMonth()==2 && game.getCompletionDay() < 29))
-            last--;
-
-        //Check each year in the range, inclusively
-        for(int i = first; i <= last; i++)
-            //Year is divisible by four,
-            if(i % 4 == 0)
-                //but not 100,
-                if(i % 100 == 0) {
-                    //but yes 400
-                    if (i % 400 == 0)
-                        count++;
-                }else
-                    count++;
-
-        return count;
-    }
-
-    public int getDayCount(int month, int year){
-        switch (month) {
-            case 1:
-            case 3:
-            case 5:
-            case 7:
-            case 8:
-            case 10:
-            case 12: //January, March, May, July, August, October, December
-                return 31;
-            case 2: //February
-                if(ApplicationGUI.isLeapYear(year))
-                    return 29;
-                else
-                    return 28;
-            case 4:
-            case 6:
-            case 9:
-            case 11: //April, June, September, November
-                return 30;
-            default:
-                return -1;
-        }
+                //Finally, if the months are the same, we can just look at the days.
+                return game.getCompletionDay() >= game.getReleaseDay();
     }
 }

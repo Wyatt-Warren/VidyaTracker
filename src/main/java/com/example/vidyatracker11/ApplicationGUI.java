@@ -325,6 +325,7 @@ public class ApplicationGUI extends Application {
                 GameLists.genreList.add("Action");
                 GameLists.platformList.clear();
                 GameLists.platformList.add("PC");
+                GameLists.collectionList.clear();
                 playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
                 unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
                 statusCountBoxPlayed.updateData();
