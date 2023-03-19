@@ -3,4 +3,33 @@ VidyaTracker is a desktop application that uses Java 11. The purpose of Vidya Tr
 
 ## TODO
 ### Organizational
-- Put code into neater blocks with comments
+- Commenting and cleaning 
+  - ApplicationGUI
+  - DataEntry
+  - EditGenPlatList
+  - EditGenreList
+  - EditPlatformList
+  - Game
+  - GameCollection
+  - GameLists
+  - Launcher
+  - PlayedAddEditWindow
+  - PlayedAddWindow
+  - PlayedDataEntry
+  - PlayedEditWindow
+  - PlayedGame
+  - PlayedGamesTable
+  - RandomListGenerator
+  - StatsScreen
+  - StatusCountBoxPlayed
+  - StatusCountBoxUnplayed
+  - TableMethods
+  - UnplayedAddWindow
+  - UnplayedDataEntry
+  - UnplayedEditWindow
+  - UnplayedGame
+  - UnplayedGamesTable
+  - UnplayedTempList
+
+## Features
+- "Are you sure?" window on  every remove button

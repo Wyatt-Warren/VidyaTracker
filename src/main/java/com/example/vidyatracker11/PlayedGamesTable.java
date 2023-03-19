@@ -65,12 +65,12 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
         completionYearColumn.setCellValueFactory(new PropertyValueFactory<>("completionYear"));
         percent100Column.setCellValueFactory(new PropertyValueFactory<>("percent100"));
 
-        for (TableColumn<PlayedGame, ?> playedGameTableColumn : columnList)
-            playedGameTableColumn.setSortable(false);
+        getColumns().addAll(columnList);
+        TableMethods.preventColumnSorting(this);
+        TableMethods.preventColumnResizing(this);
         setPrefSize(900, 99999);
         TableMethods.preventColumnReordering(this);
         setItems(filteredList);
-        getColumns().addAll(columnList);
 
         statusColumn.setCellFactory(e -> new TableCell<>() {
             public void updateItem(String item, boolean empty) {

@@ -3,17 +3,24 @@ package com.example.vidyatracker11;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.skin.TableHeaderRow;
 import javafx.scene.text.Text;
 
 public class TableMethods {
 
     //Prevents the user reordering columns
     public static <T> void preventColumnReordering(TableView<T> tableView) {
-        tableView.widthProperty().addListener((source, oldWidth, newWidth) -> {
-            TableHeaderRow headerRow = (TableHeaderRow) tableView.lookup("TableHeaderRow");
-            headerRow.reorderingProperty().addListener((observableValue, aBoolean, t1) -> headerRow.setReordering(false));
-        });
+        for(TableColumn<?, ?> column : tableView.getColumns())
+            column.setReorderable(false);
+    }
+
+    public static <T> void preventColumnSorting(TableView<T> tableView){
+        for(TableColumn<?, ?> column : tableView.getColumns())
+            column.setSortable(false);
+    }
+
+    public static <T> void preventColumnResizing(TableView<T> tableView){
+        for(TableColumn<?, ?> column : tableView.getColumns())
+            column.setResizable(false);
     }
 
     //Sends data from each cell to a text object and gets the width of that object. Whatever the greatest value is,

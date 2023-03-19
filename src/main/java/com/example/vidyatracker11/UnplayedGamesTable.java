@@ -49,12 +49,12 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
         hoursColumn.setCellValueFactory(new PropertyValueFactory<>("hours"));
         deckColumn.setCellValueFactory(new PropertyValueFactory<>("deckCompatible"));
         releaseYearColumn.setCellValueFactory(new PropertyValueFactory<>("releaseYear"));
-        for (TableColumn<UnplayedGame, ?> unplayedGameTableColumn : columnList)
-            unplayedGameTableColumn.setSortable(false);
+        getColumns().addAll(columnList);
+        TableMethods.preventColumnSorting(this);
         setPrefSize(900, 99999);
+        TableMethods.preventColumnResizing(this);
         TableMethods.preventColumnReordering(this);
         setItems(sortedList);
-        getColumns().addAll(columnList);
         statusColumn.setCellFactory(e -> new TableCell<>() {
             public void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);

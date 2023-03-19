@@ -6,10 +6,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -47,6 +45,8 @@ public class ApplicationGUI extends Application {
 
     public static final int screenWidthMain = 1500;
     public static final int screenHeightMain = 800;
+
+    public static HashMap<String, String> colorMap = new HashMap<>();
 
 
     //File Menu
@@ -125,6 +125,16 @@ public class ApplicationGUI extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Vidya Tracker - " + currentFilePathOut.getFileName().toString());
         primaryStage.getIcons().add(icon);
+
+        colorMap.put("", "");
+        colorMap.put("Playing", "-fx-background-color: #4a8c32;");
+        colorMap.put("Completed", "-fx-background-color: #225089;");
+        colorMap.put("On Hold", "-fx-background-color: #aa5825;");
+        colorMap.put("Backlog", "-fx-background-color: #545454;");
+        colorMap.put("SubBacklog", "-fx-background-color: #666666;");
+        colorMap.put("Wishlist", "-fx-background-color: #993745;");
+        colorMap.put("Yes", "-fx-background-color: #4a8c32;");
+        colorMap.put("No", "-fx-background-color: #993737;");
 
         primaryScene.getStylesheets().add(styleSheet);
 
@@ -832,7 +842,6 @@ public class ApplicationGUI extends Application {
             scene.getStylesheets().add(styleSheet);
             stage.setScene(scene);
             stage.show();
-            stage.setWidth(stage.getWidth()+25);
         });
 
         achievementsMenuItem.setOnAction(e -> {

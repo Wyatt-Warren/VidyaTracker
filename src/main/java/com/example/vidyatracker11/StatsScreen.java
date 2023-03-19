@@ -323,7 +323,7 @@ public class StatsScreen extends HBox {
         setPadding(new Insets(5));
 
         updateStats();
-        StatsScreen.preventColumnReorderingOrResizingForAll();
+        StatsScreen.preventColumnReorderingAndResizingForAll();
         formatDoubleColumns();
     }
 
@@ -356,7 +356,7 @@ public class StatsScreen extends HBox {
         }
     }
 
-    public static void preventColumnReorderingOrResizingForAll() {
+    public static void preventColumnReorderingAndResizingForAll() {
         TableMethods.preventColumnReordering(playedFranchiseTable);
         TableMethods.preventColumnReordering(playedPlatformTable);
         TableMethods.preventColumnReordering(playedGenreTable);
@@ -369,6 +369,19 @@ public class StatsScreen extends HBox {
         TableMethods.preventColumnReordering(unplayedGenreTable);
         TableMethods.preventColumnReordering(unplayedReleaseYearTable);
         TableMethods.preventColumnReordering(unplayedDeckTable);
+
+        TableMethods.preventColumnResizing(playedFranchiseTable);
+        TableMethods.preventColumnResizing(playedPlatformTable);
+        TableMethods.preventColumnResizing(playedGenreTable);
+        TableMethods.preventColumnResizing(playedReleaseYearTable);
+        TableMethods.preventColumnResizing(playedCompletionYearTable);
+        TableMethods.preventColumnResizing(playedRatingTable);
+        TableMethods.preventColumnResizing(playedPercent100Table);
+        TableMethods.preventColumnResizing(unplayedFranchiseTable);
+        TableMethods.preventColumnResizing(unplayedPlatformTable);
+        TableMethods.preventColumnResizing(unplayedGenreTable);
+        TableMethods.preventColumnResizing(unplayedReleaseYearTable);
+        TableMethods.preventColumnResizing(unplayedDeckTable);
     }
 
     //Refresh the data
