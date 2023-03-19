@@ -19,48 +19,48 @@ public class StatsScreen extends HBox {
     TableColumn<PlayedDataEntry, Integer> playedFranchiseCountColumn = new TableColumn<>("Count");
     TableColumn<PlayedDataEntry, Double> playedFranchisePercentColumn = new TableColumn<>("Percent");
     TableColumn<PlayedDataEntry, Double> playedFranchiseRatingColumn = new TableColumn<>("Average Rating");
-    static TableView<PlayedDataEntry> playedFranchiseTable = new TableView<>();
+    TableView<PlayedDataEntry> playedFranchiseTable = new TableView<>();
 
     //Platform
     TableColumn<PlayedDataEntry, String> playedPlatformTitleColumn = new TableColumn<>("Platform");
     TableColumn<PlayedDataEntry, Integer> playedPlatformCountColumn = new TableColumn<>("Count");
     TableColumn<PlayedDataEntry, Double> playedPlatformPercentColumn = new TableColumn<>("Percent");
     TableColumn<PlayedDataEntry, Double> playedPlatformRatingColumn = new TableColumn<>("Average Rating");
-    static TableView<PlayedDataEntry> playedPlatformTable = new TableView<>();
+    TableView<PlayedDataEntry> playedPlatformTable = new TableView<>();
 
     //Genre
     TableColumn<PlayedDataEntry, String> playedGenreTitleColumn = new TableColumn<>("Genre");
     TableColumn<PlayedDataEntry, Integer> playedGenreCountColumn = new TableColumn<>("Count");
     TableColumn<PlayedDataEntry, Double> playedGenrePercentColumn = new TableColumn<>("Percent");
     TableColumn<PlayedDataEntry, Double> playedGenreRatingColumn = new TableColumn<>("Average Rating");
-    static TableView<PlayedDataEntry> playedGenreTable = new TableView<>();
+    TableView<PlayedDataEntry> playedGenreTable = new TableView<>();
 
     //Release Year
     TableColumn<PlayedDataEntry, Integer> playedReleaseYearTitleColumn = new TableColumn<>("Release Year");
     TableColumn<PlayedDataEntry, Integer> playedReleaseYearCountColumn = new TableColumn<>("Count");
     TableColumn<PlayedDataEntry, Double> playedReleaseYearPercentColumn = new TableColumn<>("Percent");
     TableColumn<PlayedDataEntry, Double> playedReleaseYearRatingColumn = new TableColumn<>("Average Rating");
-    static TableView<PlayedDataEntry> playedReleaseYearTable = new TableView<>();
+    TableView<PlayedDataEntry> playedReleaseYearTable = new TableView<>();
 
     //Completion Year
     TableColumn<PlayedDataEntry, Integer> playedCompletionYearTitleColumn = new TableColumn<>("Completion Year");
     TableColumn<PlayedDataEntry, Integer> playedCompletionYearCountColumn = new TableColumn<>("Count");
     TableColumn<PlayedDataEntry, Double> playedCompletionYearPercentColumn = new TableColumn<>("Percent");
     TableColumn<PlayedDataEntry, Double> playedCompletionYearRatingColumn = new TableColumn<>("Average Rating");
-    static TableView<PlayedDataEntry> playedCompletionYearTable = new TableView<>();
+    TableView<PlayedDataEntry> playedCompletionYearTable = new TableView<>();
 
     //Rating
     TableColumn<PlayedDataEntry, Integer> playedRatingTitleColumn = new TableColumn<>("Rating");
     TableColumn<PlayedDataEntry, Integer> playedRatingCountColumn = new TableColumn<>("Count");
     TableColumn<PlayedDataEntry, Double> playedRatingPercentColumn = new TableColumn<>("Percent");
-    static TableView<PlayedDataEntry> playedRatingTable = new TableView<>();
+    TableView<PlayedDataEntry> playedRatingTable = new TableView<>();
 
     //100 Percent Status
     TableColumn<PlayedDataEntry, String> playedPercent100TitleColumn = new TableColumn<>("100% Status");
     TableColumn<PlayedDataEntry, Integer> playedPercent100CountColumn = new TableColumn<>("Count");
     TableColumn<PlayedDataEntry, Double> playedPercent100PercentColumn = new TableColumn<>("Percent");
     TableColumn<PlayedDataEntry, Double> playedPercent100RatingColumn = new TableColumn<>("Average Rating");
-    static TableView<PlayedDataEntry> playedPercent100Table = new TableView<>();
+    TableView<PlayedDataEntry> playedPercent100Table = new TableView<>();
 
     //Unplayed Games
     //Franchise
@@ -68,35 +68,35 @@ public class StatsScreen extends HBox {
     TableColumn<UnplayedDataEntry, Integer> unplayedFranchiseCountColumn = new TableColumn<>("Count");
     TableColumn<UnplayedDataEntry, Double> unplayedFranchisePercentColumn = new TableColumn<>("Percent");
     TableColumn<UnplayedDataEntry, Double> unplayedFranchiseHoursColumn = new TableColumn<>("Total Hours");
-    static TableView<UnplayedDataEntry> unplayedFranchiseTable = new TableView<>();
+    TableView<UnplayedDataEntry> unplayedFranchiseTable = new TableView<>();
 
     //Platform
     TableColumn<UnplayedDataEntry, String> unplayedPlatformTitleColumn = new TableColumn<>("Platform");
     TableColumn<UnplayedDataEntry, Integer> unplayedPlatformCountColumn = new TableColumn<>("Count");
     TableColumn<UnplayedDataEntry, Double> unplayedPlatformPercentColumn = new TableColumn<>("Percent");
     TableColumn<UnplayedDataEntry, Double> unplayedPlatformHoursColumn = new TableColumn<>("Total Hours");
-    static TableView<UnplayedDataEntry> unplayedPlatformTable = new TableView<>();
+    TableView<UnplayedDataEntry> unplayedPlatformTable = new TableView<>();
 
     //Genre
     TableColumn<UnplayedDataEntry, String> unplayedGenreTitleColumn = new TableColumn<>("Genre");
     TableColumn<UnplayedDataEntry, Integer> unplayedGenreCountColumn = new TableColumn<>("Count");
     TableColumn<UnplayedDataEntry, Double> unplayedGenrePercentColumn = new TableColumn<>("Percent");
     TableColumn<UnplayedDataEntry, Double> unplayedGenreHoursColumn = new TableColumn<>("Total Hours");
-    static TableView<UnplayedDataEntry> unplayedGenreTable = new TableView<>();
+    TableView<UnplayedDataEntry> unplayedGenreTable = new TableView<>();
 
     //Release Year
     TableColumn<UnplayedDataEntry, Integer> unplayedReleaseYearTitleColumn = new TableColumn<>("Release Year");
     TableColumn<UnplayedDataEntry, Integer> unplayedReleaseYearCountColumn = new TableColumn<>("Count");
     TableColumn<UnplayedDataEntry, Double> unplayedReleaseYearPercentColumn = new TableColumn<>("Percent");
     TableColumn<UnplayedDataEntry, Double> unplayedReleaseYearHoursColumn = new TableColumn<>("Total Hours");
-    static TableView<UnplayedDataEntry> unplayedReleaseYearTable = new TableView<>();
+    TableView<UnplayedDataEntry> unplayedReleaseYearTable = new TableView<>();
 
     //Deck Status
     TableColumn<UnplayedDataEntry, String> unplayedDeckTitleColumn = new TableColumn<>("Deck Status");
     TableColumn<UnplayedDataEntry, Integer> unplayedDeckCountColumn = new TableColumn<>("Count");
     TableColumn<UnplayedDataEntry, Double> unplayedDeckPercentColumn = new TableColumn<>("Percent");
     TableColumn<UnplayedDataEntry, Double> unplayedDeckHoursColumn = new TableColumn<>("Total Hours");
-    static TableView<UnplayedDataEntry> unplayedDeckTable = new TableView<>();
+    TableView<UnplayedDataEntry> unplayedDeckTable = new TableView<>();
 
     Label playedLabel = new Label("Played Games");
 
@@ -205,21 +205,6 @@ public class StatsScreen extends HBox {
         unplayedReleaseYearTable.setPrefHeight(99999999);
         unplayedDeckTable.setPrefHeight(99999999);
 
-        //For some reason it keeps adding columns every time the window is opened so this is a quick fix to just delete the columns first
-        playedFranchiseTable.getColumns().clear();
-        playedPlatformTable.getColumns().clear();
-        playedGenreTable.getColumns().clear();
-        playedReleaseYearTable.getColumns().clear();
-        playedCompletionYearTable.getColumns().clear();
-        playedRatingTable.getColumns().clear();
-        playedPercent100Table.getColumns().clear();
-        unplayedFranchiseTable.getColumns().clear();
-        unplayedPlatformTable.getColumns().clear();
-        unplayedGenreTable.getColumns().clear();
-        unplayedReleaseYearTable.getColumns().clear();
-        unplayedDeckTable.getColumns().clear();
-
-
         playedFranchiseTable.getColumns().addAll(playedFranchiseTitleColumn, playedFranchiseCountColumn,
                 playedFranchisePercentColumn, playedFranchiseRatingColumn);
         playedPlatformTable.getColumns().addAll(playedPlatformTitleColumn, playedPlatformCountColumn,
@@ -323,7 +308,7 @@ public class StatsScreen extends HBox {
         setPadding(new Insets(5));
 
         updateStats();
-        StatsScreen.preventColumnReorderingAndResizingForAll();
+        preventColumnReorderingAndResizingForAll();
         formatDoubleColumns();
     }
 
@@ -356,7 +341,7 @@ public class StatsScreen extends HBox {
         }
     }
 
-    public static void preventColumnReorderingAndResizingForAll() {
+    public void preventColumnReorderingAndResizingForAll() {
         TableMethods.preventColumnReordering(playedFranchiseTable);
         TableMethods.preventColumnReordering(playedPlatformTable);
         TableMethods.preventColumnReordering(playedGenreTable);

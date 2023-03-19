@@ -22,7 +22,7 @@ public class UnplayedEditWindow extends AddEditGame {
 
     public UnplayedEditWindow(UnplayedGame game, Stage stage) {
         super();
-        mainLabel.setText("Edit Data Values for " + game.getTitle());
+        mainLabel.setText("Edit Values for " + game.getTitle());
         mainHBox.getChildren().addAll(statusVBox, titleVBox, franchiseVBox,
                 platformVBox, genreVBox, hoursVBox, deckVBox, releaseVBox);
         doneButton.setText("Save Changes and Close Window");

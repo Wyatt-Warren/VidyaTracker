@@ -8,6 +8,10 @@ public class PlayedAddWindow extends PlayedAddEditWindow {
     public PlayedAddWindow(Stage stage) {
         super(stage);
 
+        //GUI
+        mainLabel.setText("Add New Played Game");
+        doneButton.setText("Create New Played Game");
+
         //Select items in each ChoiceBox
         statusBox.getSelectionModel().selectFirst();
         shortBox.getSelectionModel().selectLast();

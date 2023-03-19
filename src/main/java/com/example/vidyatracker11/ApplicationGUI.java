@@ -57,7 +57,6 @@ public class ApplicationGUI extends Application {
 
     //Random Menu
     public static MenuItem chooseRandomGameMenuItem = new MenuItem("Choose a Random Game to Play");
-    public static MenuItem chooseRandomWishlistGameMenuItem = new MenuItem("Choose a Random Game to Buy");
     public static MenuItem generateRandomListMenuItem = new MenuItem("Generate a Random List of Games Based on Filters");
     public static MenuItem chooseRandomFromList = new MenuItem("Choose a Random Game From the Small List");
     public static Menu randomMenu = new Menu("Random");
@@ -110,7 +109,7 @@ public class ApplicationGUI extends Application {
     public static Image icon = new Image(                                                               //Icon for each window
             Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/icon.png")));
     public static boolean changeMade = false;                                                           //Used to determine whether it is necessary to save the file upon closing the window
-    public static boolean playedOpen = true;                                                            //Used to determine what certain menu items will do regarding which list to regard
+    public static boolean playedOpen = true;                                                            //Used to determine which list is open
     public static Path currentFilePathOut = Path.of("List.json").toAbsolutePath();                  //Default saving path
     public static HashMap<String, String> colorMap = new HashMap<>();                                   //Hashmap containing colors for tableview cells
 
@@ -131,6 +130,11 @@ public class ApplicationGUI extends Application {
         colorMap.put("Wishlist", "-fx-background-color: #993745;");
         colorMap.put("Yes", "-fx-background-color: #4a8c32;");
         colorMap.put("No", "-fx-background-color: #993737;");
+
+        //FileChooser
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
+        fileChooser.setInitialFileName("List");
 
         //GUI
         topBoxPlayed.setAlignment(Pos.CENTER_LEFT);
@@ -350,36 +354,40 @@ public class ApplicationGUI extends Application {
                 removeGameMenuItem, collectGameMenuItem, separatorMenuItem3,
                 editGenreListMenuItem, editPlatformListMenuItem, separatorMenuItem4,
                 statsMenuItem, collectionsMenuItem, achievementsMenuItem);
-        randomMenu.getItems().addAll(chooseRandomGameMenuItem, chooseRandomWishlistGameMenuItem, generateRandomListMenuItem);
+        randomMenu.getItems().addAll(chooseRandomGameMenuItem, generateRandomListMenuItem);
 
-        //Reset all lists.
         newFileMenuItem.setOnAction(e -> {
+            //Reset all lists.
+            //Local variables
             Stage stage = new Stage();
+            Label label = new Label("Are you sure?");
+            Label label1 = new Label("Unsaved data will be lost.");
+            Button yesButton = new Button("Yes");
+            Button noButton = new Button("No");
+            HBox hbox = new HBox(yesButton, noButton);
+            VBox vbox = new VBox(label, label1, hbox);
+            Scene scene = new Scene(vbox);
+
+            //GUI
             stage.getIcons().add(icon);
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Create New File");
-            Label label = new Label("Are you sure?");
-            Label label1 = new Label("Unsaved data will be lost.");
+            stage.setScene(scene);
             label.setStyle("-fx-font-weight: bold;-fx-font-size: 16;");
-            Button yesButton = new Button("Yes");
-            Button noButton = new Button("No");
             yesButton.setStyle("-fx-font-size: 16;");
             noButton.setStyle("-fx-font-size: 16;");
             yesButton.setPrefWidth(80);
             noButton.setPrefWidth(80);
-            HBox hbox = new HBox(yesButton, noButton);
             hbox.setAlignment(Pos.CENTER);
             hbox.setSpacing(30);
-            VBox vbox = new VBox(label, label1, hbox);
+            vbox.setPadding(new Insets(10));
             vbox.setSpacing(20);
             vbox.setAlignment(Pos.TOP_CENTER);
-            vbox.setPadding(new Insets(10));
-            Scene scene = new Scene(vbox);
             scene.getStylesheets().add(styleSheet);
-            stage.setScene(scene);
-            stage.show();
+
             yesButton.setOnAction(e1 -> {
+                //Clear all lists
                 GameLists.playedList.clear();
                 GameLists.unplayedList.clear();
                 GameLists.genreList.clear();
@@ -387,34 +395,40 @@ public class ApplicationGUI extends Application {
                 GameLists.platformList.clear();
                 GameLists.platformList.add("PC");
                 GameLists.collectionList.clear();
+
+                //Reset GUI
                 playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
                 unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
                 statusCountBoxPlayed.updateData();
                 statusCountBoxUnplayed.updateData();
+
+                //Reset current file
                 currentFilePathOut = Path.of("List.json").toAbsolutePath();
                 primaryStage.setTitle("Vidya Tracker - " + currentFilePathOut.getFileName().toString());
+
                 stage.close();
             });
+
+            //Close the window without resetting the lists
             noButton.setOnAction(e1 -> stage.close());
+
+            stage.show();
         });
 
-        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
-        fileChooser.setInitialFileName("List");
-        //Load a file using filechooser
         openFileMenuItem.setOnAction(e -> {
             try {
+                //Open a new file with fileChooser
                 currentFilePathOut = fileChooser.showOpenDialog(primaryStage).toPath();
                 openFile(currentFilePathOut);
                 primaryStage.setTitle("Vidya Tracker - " + currentFilePathOut.getFileName().toString());
             }catch (NullPointerException ignored){
-                //Who cares.
+                //The user closed the fileChooser window
             }
          });
 
-        //Saves to the default "List.json" file
         saveFileMenuItem.setOnAction(e -> {
             try {
+                //Saves to the default "List.json" file
                 File fileOut = new File(currentFilePathOut.toString());
                 saveFile(fileOut);
             } catch (NullPointerException | FileNotFoundException e1) {
@@ -422,387 +436,465 @@ public class ApplicationGUI extends Application {
             }
         });
 
-        //Saves to a file chosen by the user.
         saveAsFileMenuItem.setOnAction(e -> {
             try {
+                //Saves to a file chosen by the user.
                 currentFilePathOut = fileChooser.showSaveDialog(primaryStage).toPath();
                 saveFile(currentFilePathOut.toFile());
                 primaryStage.setTitle("Vidya Tracker - " + currentFilePathOut.getFileName().toString());
-            } catch (NullPointerException | FileNotFoundException ignored) {}
+            } catch (NullPointerException | FileNotFoundException ignored) {
+                //The user closed the fileChooser window
+            }
         });
 
-        //Closes the application, asks the user if they want to save.
         exitMenuItem.setOnAction(e -> {
+            //Closes the application, prompts the user if they want to save.
+
             if (changeMade) {
+                //If the user has made any changes that should be saved
+                //Don't close the window
                 e.consume();
+
+                //Local Variables
                 Stage stage = new Stage();
-                stage.getIcons().add(icon);
-                stage.setTitle("Save File");
-                stage.setResizable(false);
-                stage.initModality(Modality.APPLICATION_MODAL);
+                Label label = new Label("Save file?");
                 Button saveButton = new Button("Save");
                 Button saveAsButton = new Button("Save As");
                 Button dontButton = new Button("Don't Save");
                 Button cancelButton = new Button("Cancel");
-                Label label = new Label("Save file?");
                 HBox hbox = new HBox(saveButton, saveAsButton, dontButton, cancelButton);
                 VBox vbox = new VBox(label, hbox);
+                Scene scene = new Scene(vbox);
+
+                //GUI
+                stage.getIcons().add(icon);
+                stage.setTitle("Save File");
+                stage.setResizable(false);
+                stage.initModality(Modality.APPLICATION_MODAL);
                 label.setStyle("-fx-font-size: 24;");
                 hbox.setAlignment(Pos.CENTER);
                 hbox.setSpacing(5);
                 vbox.setAlignment(Pos.CENTER);
                 vbox.setSpacing(10);
+                vbox.setPadding(new Insets(5));
+                scene.getStylesheets().add(styleSheet);
 
                 saveButton.setOnAction(e1 -> {
+                    //Save to the current file and close
                     saveFileMenuItem.fire();
                     primaryStage.close();
                     stage.close();
                 });
 
                 saveAsButton.setOnAction(e1 -> {
+                    //Let the user choose a file to save to and close
                     saveAsFileMenuItem.fire();
                     primaryStage.close();
                     stage.close();
                 });
 
                 dontButton.setOnAction(e1 -> {
+                    //Close the window without saving
                     primaryStage.close();
                     stage.close();
                 });
 
+                //Return to the main window
                 cancelButton.setOnAction(e1 -> stage.close());
 
-                Scene scene = new Scene(vbox);
-                scene.getStylesheets().add(styleSheet);
                 stage.setScene(scene);
                 stage.show();
             } else {
+                //If the user has not made any changes, the program doesn't need to save
                 primaryStage.close();
             }
         });
 
-        //Creates a new game for either the played or unplayed list
         addNewGameMenuItem.setOnAction(e -> {
-            if (playedOpen) { //Played Game
-                Stage stage = new Stage();
-                stage.getIcons().add(icon);
-                stage.setResizable(false);
+            //Creates a new game for either the played or unplayed list
+            //Local Variables
+            Stage stage = new Stage();
+
+            if (playedOpen) {
+                //Played Game
+                //Local Variables
                 PlayedAddWindow playedAddWindow = new PlayedAddWindow(stage);
                 Scene scene = new Scene(playedAddWindow);
-                scene.getStylesheets().add(styleSheet);
+
+                //GUI
+                stage.getIcons().add(icon);
+                stage.setResizable(false);
                 stage.setScene(scene);
                 stage.setTitle("Add New Played Game");
                 stage.initModality(Modality.APPLICATION_MODAL);
-                stage.show();
+                scene.getStylesheets().add(styleSheet);
+
                 scene.setOnKeyPressed(e1 -> {
                     if (e1.getCode() == KeyCode.ESCAPE) {
+                        //If escape is pressed, close the window
                         stage.close();
                     } else if (e1.getCode() == KeyCode.ENTER) {
+                        //If enter is pressed, save the new game
                             playedAddWindow.saveAndQuit(stage);
                     }
                 });
 
-            } else { //Unplayed Game
-                Stage stage = new Stage();
-                stage.getIcons().add(icon);
-                stage.setResizable(false);
+                stage.show();
+            } else {
+                //Unplayed Game
+                //Local variables
                 UnplayedAddWindow unplayedAddWindow = new UnplayedAddWindow(stage);
                 Scene scene = new Scene(unplayedAddWindow);
-                scene.getStylesheets().add(styleSheet);
+
+                //GUI
+                stage.getIcons().add(icon);
+                stage.setResizable(false);
                 stage.setScene(scene);
                 stage.setTitle("Add New Played Game");
                 stage.initModality(Modality.APPLICATION_MODAL);
-                stage.show();
+                scene.getStylesheets().add(styleSheet);
+
                 scene.setOnKeyPressed(e1 -> {
                     if (e1.getCode() == KeyCode.ESCAPE) {
+                        //If escape is pressed, close the window
                         stage.close();
                     } else if (e1.getCode() == KeyCode.ENTER) {
+                        //If enter is pressed, save the new game
                             unplayedAddWindow.saveAndQuit(stage);
                     }
                 });
-                statusCountBoxUnplayed.updateData();
+
+                stage.show();
             }
         });
 
-        //Opens the edit window for the selected game.
         editGameMenuItem.setOnAction(e -> {
-            if(playedOpen){//played game
-                if(playedGamesTable.getSelectionModel().getSelectedIndex()!=-1)
+
+            //Opens the edit window for the selected game.
+            if(playedOpen && playedGamesTable.getSelectionModel().getSelectedIndex()!=-1){
+                //PlayedGames table is open, and an item is selected
                     playedGamesTable.editGame(playedGamesTable.getSelectionModel().getSelectedItem());
-            }else{//unplayed game
-                if(unplayedGamesTable.getSelectionModel().getSelectedIndex()!=-1)
+            }else if(unplayedGamesTable.getSelectionModel().getSelectedIndex()!=-1)
+                //UnplayedGames table is open, and an item is selected
                     unplayedGamesTable.editGame(unplayedGamesTable.getSelectionModel().getSelectedItem());
-            }
         });
 
-        //Moves the selected game from the currently open list to the other.
         moveGameMenuItem.setOnAction(e -> {
-            if (playedOpen) { //Played game -> unplayed game
-                int gameInt = playedGamesTable.getSelectionModel().getSelectedIndex();
+            //Moves the selected game from the currently open list to the other.
 
-                if (gameInt != -1) {
-                    PlayedGame game = playedGamesTable.getSelectionModel().getSelectedItem();
-                    Stage stage = new Stage();
-                    stage.getIcons().add(icon);
-                    stage.setResizable(false);
-                    stage.initModality(Modality.APPLICATION_MODAL);
-                    stage.setTitle("Move Played Game");
-                    Label label = new Label("Move " + game.getTitle());
-                    Label label1 = new Label("Are you sure?");
-                    label.setStyle("-fx-font-weight: bold;-fx-font-size: 16;");
-                    Button yesButton = new Button("Yes");
-                    Button noButton = new Button("No");
-                    yesButton.setStyle("-fx-font-size: 16;");
-                    noButton.setStyle("-fx-font-size: 16;");
-                    yesButton.setPrefWidth(80);
-                    noButton.setPrefWidth(80);
-                    HBox hbox = new HBox(yesButton, noButton);
-                    hbox.setAlignment(Pos.CENTER);
-                    hbox.setSpacing(30);
-                    VBox vbox = new VBox(label, label1, hbox);
-                    vbox.setSpacing(20);
-                    vbox.setAlignment(Pos.TOP_CENTER);
-                    vbox.setPadding(new Insets(10));
-                    Scene scene = new Scene(vbox);
-                    scene.getStylesheets().add(styleSheet);
-                    stage.setScene(scene);
-                    stage.show();
+            if (playedOpen && playedGamesTable.getSelectionModel().getSelectedIndex() != -1) {
+                //PlayedGame -> UnplayedGame
+                //PlayedGames table is open and a game is selected
+                //Local variables
+                PlayedGame game = playedGamesTable.getSelectionModel().getSelectedItem();   //Game to be moved
+                Stage stage = new Stage();
+                Label label = new Label("Move " + game.getTitle());
+                Label label1 = new Label("Are you sure?");
+                Button yesButton = new Button("Yes");
+                Button noButton = new Button("No");
+                HBox hbox = new HBox(yesButton, noButton);
+                VBox vbox = new VBox(label, label1, hbox);
+                Scene scene = new Scene(vbox);
 
-                    yesButton.setOnAction(e1 -> {
-                        UnplayedGame newGame = new UnplayedGame(game.getTitle(), "Backlog", game.getPlatform(),
-                                game.getGenre(), game.getReleaseYear(), game.getReleaseMonth(), game.getReleaseDay());
-                        newGame.setFranchise(game.getFranchise());
-                        GameLists.unplayedList.add(newGame);
+                //GUI
+                stage.getIcons().add(icon);
+                stage.setResizable(false);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setTitle("Move Played Game");
+                stage.setScene(scene);
+                label.setStyle("-fx-font-weight: bold;-fx-font-size: 16;");
+                yesButton.setStyle("-fx-font-size: 16;");
+                yesButton.setPrefWidth(80);
+                noButton.setStyle("-fx-font-size: 16;");
+                noButton.setPrefWidth(80);
+                hbox.setAlignment(Pos.CENTER);
+                hbox.setSpacing(30);
+                vbox.setSpacing(20);
+                vbox.setAlignment(Pos.TOP_CENTER);
+                vbox.setPadding(new Insets(10));
+                scene.getStylesheets().add(styleSheet);
 
-                        for(GameCollection collection : GameLists.collectionList){
-                            if(collection.getGames().contains(game)) {
-                                collection.getGames().add(collection.getGames().indexOf(game), newGame);
-                                collection.getGames().remove(game);
-                            }
+                yesButton.setOnAction(e1 -> {
+                    //Create an equivalent UnplayedGame and remove the current PlayedGame
+                    //Local variables
+                    UnplayedGame newGame = new UnplayedGame(game.getTitle(), "Backlog", game.getPlatform(),     //New UnplayedGame
+                            game.getGenre(), game.getReleaseYear(), game.getReleaseMonth(), game.getReleaseDay());
+
+                    newGame.setFranchise(game.getFranchise());
+                    GameLists.unplayedList.add(newGame);
+
+                    for(GameCollection collection : GameLists.collectionList)
+                        //Replace game in each collection with newGame
+                        if(collection.getGames().contains(game)) {
+                            //If collection contains the game, add newGame and remove game
+                            collection.getGames().add(collection.getGames().indexOf(game), newGame);
+                            collection.getGames().remove(game);
                         }
 
-                        GameLists.playedList.remove(game);
-                        playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
-                        unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
-                        stage.close();
-                        changeMade = true;
-                    });
+                    //Remove game and update both tables
+                    GameLists.playedList.remove(game);
+                    playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
+                    unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
 
-                    noButton.setOnAction(e1 -> stage.close());
-                }
+                    stage.close();
+                    changeMade = true;
+                });
 
-            } else { //Unplayed Game -> Played Game
-                int gameInt = unplayedGamesTable.getSelectionModel().getSelectedIndex();
+                //Close window
+                noButton.setOnAction(e1 -> stage.close());
 
-                if (gameInt != -1) {
-                    UnplayedGame game = unplayedGamesTable.getSelectionModel().getSelectedItem();
-                    Stage stage = new Stage();
-                    stage.getIcons().add(icon);
-                    stage.setResizable(false);
-                    stage.initModality(Modality.APPLICATION_MODAL);
-                    stage.setTitle("Move Unplayed Game");
-                    Label label = new Label("Move " + game.getTitle());
-                    Label label1 = new Label("Are you sure?");
-                    label.setStyle("-fx-font-weight: bold;-fx-font-size: 16;");
-                    Button yesButton = new Button("Yes");
-                    Button noButton = new Button("No");
-                    yesButton.setStyle("-fx-font-size: 16;");
-                    noButton.setStyle("-fx-font-size: 16;");
-                    yesButton.setPrefWidth(80);
-                    noButton.setPrefWidth(80);
-                    HBox hbox = new HBox(yesButton, noButton);
-                    hbox.setAlignment(Pos.CENTER);
-                    hbox.setSpacing(30);
-                    VBox vbox = new VBox(label, label1, hbox);
-                    vbox.setSpacing(20);
-                    vbox.setAlignment(Pos.TOP_CENTER);
-                    vbox.setPadding(new Insets(10));
-                    Scene scene = new Scene(vbox);
-                    scene.getStylesheets().add(styleSheet);
-                    stage.setScene(scene);
-                    stage.show();
+                stage.show();
+            } else if (unplayedGamesTable.getSelectionModel().getSelectedIndex() != -1) {
+                //Unplayed Game -> Played Game
+                //UnplayedGames table is open and an Item is selected
+                //Local variables
+                UnplayedGame game = unplayedGamesTable.getSelectionModel().getSelectedItem();   //Game to be moved
+                Stage stage = new Stage();
+                Label label = new Label("Move " + game.getTitle());
+                Label label1 = new Label("Are you sure?");
+                Button yesButton = new Button("Yes");
+                Button noButton = new Button("No");
+                HBox hbox = new HBox(yesButton, noButton);
+                VBox vbox = new VBox(label, label1, hbox);
+                Scene scene = new Scene(vbox);
 
-                    yesButton.setOnAction(e1 -> {
-                        PlayedGame newGame = new PlayedGame(game.getTitle(), "Playing", game.getPlatform(),
-                                game.getGenre(), game.getReleaseYear(), game.getReleaseMonth(), game.getReleaseDay());
-                        newGame.setFranchise(game.getFranchise());
-                        GameLists.playedList.add(newGame);
+                //GUI
+                stage.getIcons().add(icon);
+                stage.setResizable(false);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setTitle("Move Unplayed Game");
+                stage.setScene(scene);
+                label.setStyle("-fx-font-weight: bold;-fx-font-size: 16;");
+                yesButton.setStyle("-fx-font-size: 16;");
+                yesButton.setPrefWidth(80);
+                noButton.setStyle("-fx-font-size: 16;");
+                noButton.setPrefWidth(80);
+                hbox.setAlignment(Pos.CENTER);
+                hbox.setSpacing(30);
+                vbox.setSpacing(20);
+                vbox.setAlignment(Pos.TOP_CENTER);
+                vbox.setPadding(new Insets(10));
+                scene.getStylesheets().add(styleSheet);
 
-                        for(GameCollection collection : GameLists.collectionList){
-                            if(collection.getGames().contains(game)) {
-                                collection.getGames().add(collection.getGames().indexOf(game), newGame);
-                                collection.getGames().remove(game);
-                            }
+                yesButton.setOnAction(e1 -> {
+                    //Create an equivalent PlayedGame and remove the current UnplayedGame
+                    //Local variables
+                    PlayedGame newGame = new PlayedGame(game.getTitle(), "Playing", game.getPlatform(),         //New PlayedGame
+                            game.getGenre(), game.getReleaseYear(), game.getReleaseMonth(), game.getReleaseDay());
+
+                    newGame.setFranchise(game.getFranchise());
+                    GameLists.playedList.add(newGame);
+
+                    for(GameCollection collection : GameLists.collectionList)
+                        //Replace game in each collection with newGame
+                        if(collection.getGames().contains(game)) {
+                            //If collection contains the game, add newGame and remove game
+                            collection.getGames().add(collection.getGames().indexOf(game), newGame);
+                            collection.getGames().remove(game);
                         }
 
-                        GameLists.unplayedList.remove(game);
-                        playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
-                        unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
-                        stage.close();
-                        changeMade = true;
-                    });
 
-                    noButton.setOnAction(e1 -> stage.close());
-                }
+                    //Remove game and update both tables
+                    GameLists.unplayedList.remove(game);
+                    playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
+                    unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
+
+                    stage.close();
+                    changeMade = true;
+                });
+
+                //Close window
+                noButton.setOnAction(e1 -> stage.close());
+
+                stage.show();
             }
         });
 
-        //Removed selected game from the list.
         removeGameMenuItem.setOnAction(e -> {
-            if (playedOpen) { //Removed played game
-                int gameInt = playedGamesTable.getSelectionModel().getSelectedIndex();
+            //Removed selected game from the list.
 
-                if (gameInt != -1) {
-                    PlayedGame game = playedGamesTable.getSelectionModel().getSelectedItem();
-                    Stage stage = new Stage();
-                    stage.getIcons().add(icon);
-                    stage.setResizable(false);
-                    stage.initModality(Modality.APPLICATION_MODAL);
-                    stage.setTitle("Remove Played Game");
-                    Label label = new Label("Remove " + game.getTitle());
-                    Label label1 = new Label("Are you sure?");
-                    label.setStyle("-fx-font-weight: bold;-fx-font-size: 16;");
-                    Button yesButton = new Button("Yes");
-                    Button noButton = new Button("No");
-                    yesButton.setStyle("-fx-font-size: 16;");
-                    noButton.setStyle("-fx-font-size: 16;");
-                    yesButton.setPrefWidth(80);
-                    noButton.setPrefWidth(80);
-                    HBox hbox = new HBox(yesButton, noButton);
-                    hbox.setAlignment(Pos.CENTER);
-                    hbox.setSpacing(30);
-                    VBox vbox = new VBox(label, label1, hbox);
-                    vbox.setSpacing(20);
-                    vbox.setAlignment(Pos.TOP_CENTER);
-                    vbox.setPadding(new Insets(10));
-                    Scene scene = new Scene(vbox);
-                    scene.getStylesheets().add(styleSheet);
-                    stage.setScene(scene);
-                    stage.show();
+            if (playedOpen && playedGamesTable.getSelectionModel().getSelectedIndex() != -1) {
+                //PlayedGames table is open and a game is selected
+                //Local variables
+                PlayedGame game = playedGamesTable.getSelectionModel().getSelectedItem();   //Selected game
+                Stage stage = new Stage();
+                Label label = new Label("Remove " + game.getTitle());
+                Label label1 = new Label("Are you sure?");
+                Button yesButton = new Button("Yes");
+                Button noButton = new Button("No");
+                HBox hbox = new HBox(yesButton, noButton);
+                VBox vbox = new VBox(label, label1, hbox);
+                Scene scene = new Scene(vbox);
 
-                    yesButton.setOnAction(e1 -> {
-                        GameLists.playedList.remove(game);
+                //GUI
+                stage.getIcons().add(icon);
+                stage.setResizable(false);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setTitle("Remove Played Game");
+                stage.setScene(scene);
+                label.setStyle("-fx-font-weight: bold;-fx-font-size: 16;");
+                yesButton.setStyle("-fx-font-size: 16;");
+                yesButton.setPrefWidth(80);
+                noButton.setStyle("-fx-font-size: 16;");
+                noButton.setPrefWidth(80);
+                hbox.setAlignment(Pos.CENTER);
+                hbox.setSpacing(30);
+                vbox.setSpacing(20);
+                vbox.setAlignment(Pos.TOP_CENTER);
+                vbox.setPadding(new Insets(10));
+                scene.getStylesheets().add(styleSheet);
 
-                        //Apparently this is fine even if the collection doesn't have the game.
-                        for(GameCollection collection : GameLists.collectionList)
-                            collection.getGames().remove(game);
+                yesButton.setOnAction(e1 -> {
+                    //Remove game
+                    GameLists.playedList.remove(game);
 
-                        statusCountBoxPlayed.updateData();
-                        playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
-                        stage.close();
-                        changeMade = true;
-                    });
+                    for(GameCollection collection : GameLists.collectionList)
+                        //Remove game from each collection
+                        collection.getGames().remove(game);
 
-                    noButton.setOnAction(e1 -> stage.close());
-                }
-            } else { //Remove unplayed game
-                int gameInt = unplayedGamesTable.getSelectionModel().getSelectedIndex();
+                    statusCountBoxPlayed.updateData();
+                    playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
+                    stage.close();
+                    changeMade = true;
+                });
 
-                if (gameInt != -1) {
-                    UnplayedGame game = unplayedGamesTable.getSelectionModel().getSelectedItem();
-                    Stage stage = new Stage();
-                    stage.getIcons().add(icon);
-                    stage.setResizable(false);
-                    stage.initModality(Modality.APPLICATION_MODAL);
-                    stage.setTitle("Remove Unplayed Game");
-                    Label label = new Label("Remove " + game.getTitle());
-                    Label label1 = new Label("Are you sure?");
-                    label.setStyle("-fx-font-weight: bold;-fx-font-size: 16;");
-                    Button yesButton = new Button("Yes");
-                    Button noButton = new Button("No");
-                    yesButton.setStyle("-fx-font-size: 16;");
-                    noButton.setStyle("-fx-font-size: 16;");
-                    yesButton.setPrefWidth(80);
-                    noButton.setPrefWidth(80);
-                    HBox hbox = new HBox(yesButton, noButton);
-                    hbox.setAlignment(Pos.CENTER);
-                    hbox.setSpacing(30);
-                    VBox vbox = new VBox(label, label1, hbox);
-                    vbox.setSpacing(20);
-                    vbox.setAlignment(Pos.TOP_CENTER);
-                    vbox.setPadding(new Insets(10));
-                    Scene scene = new Scene(vbox);
-                    scene.getStylesheets().add(styleSheet);
-                    stage.setScene(scene);
-                    stage.show();
+                //Close window
+                noButton.setOnAction(e1 -> stage.close());
 
-                    yesButton.setOnAction(e1 -> {
-                        GameLists.unplayedList.remove(game);
+                stage.show();
+            } else if (unplayedGamesTable.getSelectionModel().getSelectedIndex() != -1) {
+                //UnplayedGames table is open and a game is selected
+                //Local variables
+                UnplayedGame game = unplayedGamesTable.getSelectionModel().getSelectedItem();   //Selected game
+                Stage stage = new Stage();
+                Label label = new Label("Remove " + game.getTitle());
+                Label label1 = new Label("Are you sure?");
+                Button yesButton = new Button("Yes");
+                Button noButton = new Button("No");
+                HBox hbox = new HBox(yesButton, noButton);
+                VBox vbox = new VBox(label, label1, hbox);
+                Scene scene = new Scene(vbox);
 
-                        //Apparently this is fine even if the collection doesn't have the game.
-                        for(GameCollection collection : GameLists.collectionList)
-                            collection.getGames().remove(game);
+                //GUI
+                stage.getIcons().add(icon);
+                stage.setResizable(false);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setTitle("Remove Unplayed Game");
+                stage.setScene(scene);
+                label.setStyle("-fx-font-weight: bold;-fx-font-size: 16;");
+                yesButton.setStyle("-fx-font-size: 16;");
+                yesButton.setPrefWidth(80);
+                noButton.setStyle("-fx-font-size: 16;");
+                noButton.setPrefWidth(80);
+                hbox.setAlignment(Pos.CENTER);
+                hbox.setSpacing(30);
+                vbox.setSpacing(20);
+                vbox.setAlignment(Pos.TOP_CENTER);
+                vbox.setPadding(new Insets(10));
+                scene.getStylesheets().add(styleSheet);
 
-                        statusCountBoxUnplayed.updateData();
-                        unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
-                        stage.close();
-                        changeMade = true;
-                    });
+                yesButton.setOnAction(e1 -> {
+                    //Remove game
+                    GameLists.unplayedList.remove(game);
 
-                    noButton.setOnAction(e1 -> stage.close());
-                }
+                    for(GameCollection collection : GameLists.collectionList)
+                        //Remove game from each collection
+                        collection.getGames().remove(game);
+
+                    statusCountBoxUnplayed.updateData();
+                    unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
+                    stage.close();
+                    changeMade = true;
+                });
+
+                //Close window
+                noButton.setOnAction(e1 -> stage.close());
+
+                stage.show();
             }
         });
 
         collectGameMenuItem.setOnAction(e -> {
+            //Add a game to a collection
+
             if(GameLists.collectionList.isEmpty()) {
+                //There are no collections
+                //Local variables
                 Stage stage = new Stage();
+                Label label = new Label("No Collections");
+                Scene scene = new Scene(label);
+
+                //GUI
                 stage.getIcons().add(icon);
                 stage.setResizable(false);
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.setTitle("No Collections");
-                Label label = new Label("No Collections");
-                label.setAlignment(Pos.CENTER);
-                VBox vbox = new VBox(label);
-                label.setStyle("-fx-font-size: 24;");
-                vbox.setAlignment(Pos.CENTER);
-                Scene scene = new Scene(vbox);
-                scene.getStylesheets().add(styleSheet);
                 stage.setScene(scene);
+                label.setAlignment(Pos.CENTER);
+                label.setStyle("-fx-font-size: 24;");
+                label.setPadding(new Insets(5));
+                scene.getStylesheets().add(styleSheet);
+
                 stage.show();
             }else {
-                Game game;
-                int gameInt;
-                if (playedOpen) { //Removed played game
+                //There are collections
+                //Local variables
+                Game game;      //Selected game
+                int gameInt;    //Selected game's index
+
+                if (playedOpen) {
+                    //PlayedGame
+                    //Set game index
                     gameInt = playedGamesTable.getSelectionModel().getSelectedIndex();
 
                     if (gameInt != -1) {
+                        //Game is selected
                         game = playedGamesTable.getSelectionModel().getSelectedItem();
                     } else {
+                        //There is no game selected
                         game = null;
                     }
 
-                } else { //Remove unplayed game
+                } else {
+                    //UnplayedGame
+                    //Set game index
                     gameInt = unplayedGamesTable.getSelectionModel().getSelectedIndex();
 
                     if (gameInt != -1) {
+                        //Game is selected
                         game = unplayedGamesTable.getSelectionModel().getSelectedItem();
                     } else {
+                        //There is no game selected
                         game = null;
                     }
                 }
+
                 if (gameInt != -1) {
+                    //Game is selected
+                    //Local variables
                     Stage stage = new Stage();
+                    Label label = new Label("Add " + game.getTitle() + " to Collection");
+                    Label label1 = new Label("Choose Collection");
+                    ChoiceBox<GameCollection> collectionChoiceBox = new ChoiceBox<>(GameLists.collectionList);
+                    Button addButton = new Button("Add Game");
+                    VBox vbox = new VBox(label, label1, collectionChoiceBox, addButton);
+                    Scene scene = new Scene(vbox);
+
+                    //GUI
                     stage.getIcons().add(icon);
                     stage.setResizable(false);
                     stage.initModality(Modality.APPLICATION_MODAL);
                     stage.setTitle("Select Collection");
-                    Label label = new Label("Add " + game.getTitle() + " to Collection");
-                    Label label1 = new Label("Choose Collection");
+                    stage.setScene(scene);
                     label.setStyle("-fx-font-weight: bold;-fx-font-size: 16;");
-                    ChoiceBox<GameCollection> collectionChoiceBox = new ChoiceBox<>(GameLists.collectionList);
                     collectionChoiceBox.getSelectionModel().selectFirst();
-                    Button addButton = new Button("Add Game");
-                    VBox vbox = new VBox(label, label1, collectionChoiceBox, addButton);
                     vbox.setSpacing(20);
                     vbox.setAlignment(Pos.TOP_CENTER);
                     vbox.setPadding(new Insets(10));
-                    Scene scene = new Scene(vbox);
                     scene.getStylesheets().add(styleSheet);
-                    stage.setScene(scene);
-                    stage.show();
 
                     addButton.setOnAction(e1 -> {
+                        //Add game to collection
                         collectionChoiceBox.getSelectionModel().getSelectedItem().getGames().add(game);
                         stage.close();
                         changeMade = true;
@@ -810,267 +902,281 @@ public class ApplicationGUI extends Application {
 
                     scene.setOnKeyPressed(e1 -> {
                         if (e1.getCode() == KeyCode.ESCAPE) {
+                            //If escape is pressed, close window
                             stage.close();
                         } else if (e1.getCode() == KeyCode.ENTER) {
+                            //If enter is pressed, add the game
                             addButton.fire();
                         }
                     });
+
+                    stage.show();
                 }
             }
         });
 
-        //Opens a window for the user to edit the genre list.
         editGenreListMenuItem.setOnAction(e -> {
+            //Open a window for the user to edit the genre list.
+            //Local variables
             Stage stage = new Stage();
+            EditGenreList window = new EditGenreList();
+            Scene scene = new Scene(window);
+
+            //GUI
             stage.getIcons().add(icon);
             stage.setTitle("Edit Genre List");
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
-            EditGenreList window = new EditGenreList();
-            Scene scene = new Scene(window);
-            scene.getStylesheets().add(styleSheet);
             stage.setScene(scene);
-            stage.show();
+            scene.getStylesheets().add(styleSheet);
 
             scene.setOnKeyPressed(e1 -> {
-                if (e1.getCode() == KeyCode.ESCAPE) {
+                if (e1.getCode() == KeyCode.ESCAPE)
+                    //If escape is pressed, close the window
                     stage.close();
-                } else if (e1.getCode() == KeyCode.ENTER) {
-                    if (window.addItemField.isFocused()) {
-                        window.addItemButton.fire();
-                    }
-                }
+                else if (e1.getCode() == KeyCode.ENTER && window.addItemField.isFocused())
+                    window.addItemButton.fire();
+
             });
+
+            stage.show();
         });
 
-        //Opens a window for the user to edit the platform list.
         editPlatformListMenuItem.setOnAction(e -> {
+            //Open a window for the user to edit the platform list.
+            //Local variables
             Stage stage = new Stage();
+            EditPlatformList window = new EditPlatformList();
+            Scene scene = new Scene(window);
+
+            //GUI
             stage.getIcons().add(icon);
             stage.setTitle("Edit Platform List");
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
-            EditPlatformList window = new EditPlatformList();
-            Scene scene = new Scene(window);
-            scene.getStylesheets().add(styleSheet);
             stage.setScene(scene);
-            stage.show();
+            scene.getStylesheets().add(styleSheet);
+
             scene.setOnKeyPressed(e1 -> {
-                if (e1.getCode() == KeyCode.ESCAPE) {
+                if (e1.getCode() == KeyCode.ESCAPE)
                     stage.close();
-                } else if (e1.getCode() == KeyCode.ENTER) {
-                    if (window.addItemField.isFocused()) {
-                        window.addItemButton.fire();
-                    }
-                }
+                else if (e1.getCode() == KeyCode.ENTER && window.addItemField.isFocused())
+                    //If enter is pressed while addItemField is focused, add the inputted platform
+                    window.addItemButton.fire();
             });
+
+            stage.show();
         });
 
-        //Open the stats view
         statsMenuItem.setOnAction(e -> {
+            //Open the stats view
+            //Local variables
             Stage stage = new Stage();
+            StatsScreen statsScreen = new StatsScreen();
+            Scene scene = new Scene(statsScreen, 1000, 800);
+
+            //GUI
             stage.getIcons().add(icon);
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Stats");
-            StatsScreen statsScreen = new StatsScreen();
-            Scene scene = new Scene(statsScreen, 1000, 800);
             scene.getStylesheets().add(styleSheet);
             stage.setScene(scene);
+
             stage.show();
-            stage.setWidth(stage.getWidth() + 10);
         });
 
-        //Open the collection view
         collectionsMenuItem.setOnAction(e -> {
+            //Open the collection view
+            //Local variables
             Stage stage = new Stage();
+            CollectionsWindow collectionsWindow = new CollectionsWindow(stage);
+            Scene scene = new Scene(collectionsWindow);
+
+            //GUI
             stage.getIcons().add(icon);
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Collections");
-            CollectionsWindow collectionsWindow = new CollectionsWindow(stage);
-            Scene scene = new Scene(collectionsWindow);
-            scene.getStylesheets().add(styleSheet);
             stage.setScene(scene);
+            scene.getStylesheets().add(styleSheet);
+
             stage.show();
         });
 
         achievementsMenuItem.setOnAction(e -> {
+            //Open the achievements window
+            //Local variables
             Stage stage = new Stage();
+            AchievementWindow achievementWindow = new AchievementWindow();
+            ScrollPane scrollPane = new ScrollPane(achievementWindow);
+            Scene scene = new Scene(scrollPane);
+
+            //GUI
             stage.getIcons().add(icon);
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Achievements");
-            AchievementWindow achievementWindow = new AchievementWindow();
-            ScrollPane scrollPane = new ScrollPane(achievementWindow);
-
+            stage.setHeight(900);
+            stage.setScene(scene);
             scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
             scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-
-            Scene scene = new Scene(scrollPane);
-            stage.setHeight(900);
-
             scene.getStylesheets().add(styleSheet);
-            stage.setScene(scene);
+
             stage.show();
             for(AchievementBox<?> achievementBox : achievementWindow.achievementBoxes)
+                //Iterate through each achievement to adjust the size
                 if(achievementBox.isBig())
+                    //Main achievement
                     achievementBox.labelBox.setMinWidth(564-achievementBox.titleLabel.getBoundsInParent().getWidth());
                 else
+                    //Other achievements
                     achievementBox.labelBox.setMinWidth(500-achievementBox.titleLabel.getBoundsInParent().getWidth());
         });
 
-        //Chooses a random game from the unplayed list with the status "Backlog", or "Subbacklog"
         chooseRandomGameMenuItem.setOnAction(e -> {
-            ArrayList<String> gameList = new ArrayList<>();
+            //Chooses a random game from the unplayed list with the status "Backlog", or "Subbacklog"
+            //Local variables
+            ArrayList<String> gameList = new ArrayList<>(); //List of games to choose from
 
-            for (int i = 0; i < GameLists.unplayedList.size(); i++) {
+            for (int i = 0; i < GameLists.unplayedList.size(); i++)
+                //Iterate through each game
                 if (!(GameLists.unplayedList.get(i)).getStatus().equals("Wishlist"))
+                    //If game is not from wishlist, add it to gameList
                     gameList.add((GameLists.unplayedList.get(i)).getTitle());
-            }
 
             if (gameList.size() > 0) {
-                Stage stage = new Stage();
+                //If there are any games to choose from
+                //Local variables
                 Random rand = new Random();
+                Stage stage = new Stage();
+                Label label = new Label("");
+                Button button = new Button("Close");
+                VBox vbox = new VBox(label, button);
+                Scene scene = new Scene(vbox);
+
+                //GUI
                 stage.getIcons().add(icon);
                 stage.setTitle("Random Game");
                 stage.setResizable(false);
                 stage.initModality(Modality.APPLICATION_MODAL);
-                Label label = new Label("");
+                stage.setScene(scene);
                 label.setStyle("-fx-font-size: 16;");
-                Button button = new Button("Close");
+                label.setText(gameList.get(rand.nextInt(gameList.size())));
                 button.setOnAction(e1 -> stage.close());
-                VBox vbox = new VBox(label, button);
                 vbox.setSpacing(10);
                 vbox.setAlignment(Pos.CENTER);
                 vbox.setPadding(new Insets(5));
-                label.setText(gameList.get(rand.nextInt(gameList.size())));
-                Scene scene = new Scene(vbox);
                 scene.getStylesheets().add(styleSheet);
-                stage.setScene(scene);
-                stage.show();
+
                 scene.setOnKeyPressed(e1 -> {
                     if (e1.getCode() == KeyCode.ESCAPE || e1.getCode() == KeyCode.ENTER) {
+                        //If enter or escape are pressed, exit the window
                         stage.close();
                     }
                 });
-            }
-        });
 
-        //Chooses a random game from the unplayed list with the status "Wishlist."
-        chooseRandomWishlistGameMenuItem.setOnAction(e -> {
-            ArrayList<String> gameList = new ArrayList<>();
-
-            for (int i = 0; i < GameLists.unplayedList.size(); i++) {
-                if ((GameLists.unplayedList.get(i)).getStatus().equals("Wishlist"))
-                    gameList.add((GameLists.unplayedList.get(i)).getTitle());
-            }
-
-            if (gameList.size() > 0) {
-                Stage stage = new Stage();
-                Random rand = new Random();
-                stage.getIcons().add(icon);
-                stage.setTitle("Random Game");
-                stage.setResizable(false);
-                stage.initModality(Modality.APPLICATION_MODAL);
-                Label label = new Label("");
-                label.setStyle("-fx-font-size: 16;");
-                Button button = new Button("Close");
-                button.setOnAction(e1 -> stage.close());
-                VBox vbox = new VBox(label, button);
-                vbox.setSpacing(10);
-                vbox.setAlignment(Pos.CENTER);
-                vbox.setPadding(new Insets(5));
-                label.setText(gameList.get(rand.nextInt(gameList.size())));
-                Scene scene = new Scene(vbox);
-                scene.getStylesheets().add(styleSheet);
-                stage.setScene(scene);
                 stage.show();
-                scene.setOnKeyPressed(e1 -> {
-                    if (e1.getCode() == KeyCode.ESCAPE || e1.getCode() == KeyCode.ENTER) {
-                        stage.close();
-                    }
-                });
             }
         });
 
-        //Chooses a random game from the temporary list.
         chooseRandomFromList.setOnAction(e -> {
+            //Chooses a random game from the temporary list.
+
             if (unplayedTempList.getTitles().size() > 0) {
-                Stage stage = new Stage();
+                //There are games
+                //Local variables
                 Random rand = new Random();
+                Stage stage = new Stage();
+                Label label = new Label("");
+                Button button = new Button("Close");
+                VBox vbox = new VBox(label, button);
+                Scene scene = new Scene(vbox);
+
+                //GUI
                 stage.getIcons().add(icon);
                 stage.setTitle("Random Game");
                 stage.setResizable(false);
                 stage.initModality(Modality.APPLICATION_MODAL);
-                Label label = new Label("");
+                stage.setScene(scene);
                 label.setStyle("-fx-font-size: 16;");
-                Button button = new Button("Close");
+                label.setText(unplayedTempList.getTitles().get(rand.nextInt(unplayedTempList.getTitles().size())));
                 button.setOnAction(e1 -> stage.close());
-                VBox vbox = new VBox(label, button);
                 vbox.setSpacing(10);
                 vbox.setAlignment(Pos.CENTER);
                 vbox.setPadding(new Insets(5));
-                label.setText(unplayedTempList.getTitles().get(rand.nextInt(unplayedTempList.getTitles().size())));
-                Scene scene = new Scene(vbox);
                 scene.getStylesheets().add(styleSheet);
-                stage.setScene(scene);
-                stage.show();
+
                 scene.setOnKeyPressed(e1 -> {
                     if (e1.getCode() == KeyCode.ESCAPE || e1.getCode() == KeyCode.ENTER) {
+                        //If escape or ender are pressed, close the window
                         stage.close();
                     }
                 });
+
+                stage.show();
             }
         });
 
-        //Generates a random list of unplayed games based on filters provided by the user.
         generateRandomListMenuItem.setOnAction(e -> {
+            //Generates a random list of unplayed games based on filters provided by the user.
+            //Local variables
             Stage stage = new Stage();
+            RandomListGenerator window = new RandomListGenerator();
+            Scene scene = new Scene(window, 1600, 500);
+
+            //GUI
             stage.getIcons().add(icon);
             stage.setTitle("Random Game List");
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
-            RandomListGenerator window = new RandomListGenerator();
-            Scene scene = new Scene(window, 1600, 500);
+            stage.setScene(scene);
             scene.getStylesheets().add(styleSheet);
+
             scene.setOnKeyPressed(e1 -> {
                 if (e1.getCode() == KeyCode.ESCAPE) {
+                    //If escape is pressed, close the window
                     stage.close();
                 } else if (e1.getCode() == KeyCode.ENTER) {
+                    //If enter is pressed, generate a list
                     window.generateButton.fire();
                 }
             });
-            stage.setScene(scene);
+
             stage.show();
         });
 
-        //Switches the current window from the played list to the unplayed list.
         switchFromPlayed.setOnAction(e -> {
+            //Switch the current window from the played list to the unplayed list.
+            //Set scene to unplayed
             primarySceneVBox.getChildren().clear();
             primarySceneVBox.getChildren().addAll(menuBar, unplayedWindow);
+
+            //Set randomMenu items accordingly
             randomMenu.getItems().clear();
-            randomMenu.getItems().addAll(chooseRandomGameMenuItem, chooseRandomWishlistGameMenuItem,
-                    chooseRandomFromList, generateRandomListMenuItem);
+            randomMenu.getItems().addAll(chooseRandomGameMenuItem, chooseRandomFromList, generateRandomListMenuItem);
             playedOpen = false;
         });
 
-        //Switches the current window from the unplayed list to the played list.
         switchFromUnplayed.setOnAction(e -> {
+            //Switches the current window from the unplayed list to the played list.
+            //Set scene to played
             primarySceneVBox.getChildren().clear();
             primarySceneVBox.getChildren().addAll(menuBar, playedWindow);
+
+            //Set randomMenu items accordingly
             randomMenu.getItems().clear();
-            randomMenu.getItems().addAll(chooseRandomGameMenuItem, chooseRandomWishlistGameMenuItem,
-                    generateRandomListMenuItem);
+            randomMenu.getItems().addAll(chooseRandomGameMenuItem, generateRandomListMenuItem);
             playedOpen = true;
         });
 
-        //Consume the close request and fire the exit button so that the program will ask the user if they want to save their list.
         primaryStage.setOnCloseRequest(e -> {
+            //Consume the close request and fire the exit button so that the program will ask the user if they want to save their list.
             e.consume();
             exitMenuItem.fire();
         });
 
+        //Set ctrl combos
         openFileMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O,
                 KeyCombination.CONTROL_DOWN));
         saveFileMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S,
@@ -1092,41 +1198,57 @@ public class ApplicationGUI extends Application {
 
         //open the default "List.json" file
         openFile(currentFilePathOut);
+
         primaryStage.setScene(primaryScene);
         primaryStage.show();
     }
 
     //Saves the current data to a given file object.
     public void saveFile(File fileOut) throws FileNotFoundException {
+        //Local variables
+        JSONObject file = new JSONObject();             //JSONObject containing data
+        JSONArray platformListArray = new JSONArray();  //List of all platforms
+        JSONArray genreListArray = new JSONArray();     //List of all genres
+        JSONArray playedGameArray = new JSONArray();    //List of all PlayedGames
+        JSONArray unplayedGameArray = new JSONArray();  //List of all UnplayedGames
+        JSONArray collectionArray = new JSONArray();    //List of all Collections
+        PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(fileOut), StandardCharsets.UTF_8));
         Stage stage = new Stage();
+        Label label = new Label("Saving...");
+        VBox vbox = new VBox(label);
+        Scene scene = new Scene(vbox, 200, 100);
+        Button button = new Button("Close");
+
+        //GUI
         stage.getIcons().add(icon);
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Saving...");
-        Label label = new Label("Saving...");
         label.setAlignment(Pos.CENTER);
-        VBox vbox = new VBox(label);
         label.setStyle("-fx-font-size: 24;");
         vbox.setAlignment(Pos.CENTER);
-        Scene scene = new Scene(vbox, 200, 100);
         scene.getStylesheets().add(styleSheet);
         stage.setScene(scene);
+
+        //Show this loading stage before saving
         stage.show();
-        JSONObject file = new JSONObject();
-        JSONArray platformListArray = new JSONArray();
 
         for (int i = 0; i < GameLists.platformList.size(); i++)
+            //Add each platform to the platform list
             platformListArray.put(GameLists.platformList.get(i));
-        JSONArray genreListArray = new JSONArray();
 
-        for (int j = 0; j < GameLists.genreList.size(); j++)
-            genreListArray.put(GameLists.genreList.get(j));
-        JSONArray playedGameArray = new JSONArray();
+        for (int i = 0; i < GameLists.genreList.size(); i++)
+            //Add each genre to the genre list
+            genreListArray.put(GameLists.genreList.get(i));
 
-        for (int k = 0; k < GameLists.playedList.size(); k++) {
-            JSONObject newGame = new JSONObject();
-            PlayedGame game = GameLists.playedList.get(k);
+        for (int i = 0; i < GameLists.playedList.size(); i++) {
+            //Add each played game to the PlayedGame list
+            //Local variables
+            JSONObject newGame = new JSONObject();          //The game data to save
+            PlayedGame game = GameLists.playedList.get(i);  //The game to save
+
             try {
+                //Put each piece of data in newGame
                 newGame.put("S", game.getStatus());
                 newGame.put("T", game.getTitle());
                 newGame.put("P", game.getPlatform());
@@ -1141,18 +1263,22 @@ public class ApplicationGUI extends Application {
                 newGame.put("CM", game.getCompletionMonth());
                 newGame.put("CD", game.getCompletionDay());
                 newGame.put("1", game.getPercent100());
+
+                //Put newGame into the total array
                 playedGameArray.put(newGame);
             } catch (JSONException e1) {
                 e1.printStackTrace();
             }
         }
 
-        JSONArray unplayedGameArray = new JSONArray();
+        for (int i = 0; i < GameLists.unplayedList.size(); i++) {
+            //Add each played game to the UnplayedGame list
+            //Local variables
+            JSONObject newGame = new JSONObject();              //The game data to save
+            UnplayedGame game = GameLists.unplayedList.get(i);  //The game to save
 
-        for (int m = 0; m < GameLists.unplayedList.size(); m++) {
-            JSONObject newGame = new JSONObject();
-            UnplayedGame game = GameLists.unplayedList.get(m);
             try {
+                //Put each piece of data in newGame
                 newGame.put("S", game.getStatus());
                 newGame.put("T", game.getTitle());
                 newGame.put("P", game.getPlatform());
@@ -1163,32 +1289,44 @@ public class ApplicationGUI extends Application {
                 newGame.put("F", game.getFranchise());
                 newGame.put("H", game.getHours());
                 newGame.put("D", game.getDeckCompatible());
+
+                //Put newGame into the total array
                 unplayedGameArray.put(newGame);
             } catch (JSONException e1) {
                 e1.printStackTrace();
             }
         }
 
-        JSONArray collectionArray = new JSONArray();
+        for (int i = 0; i < GameLists.collectionList.size(); i++){
+            //Add each collection to the collection list
+            //Local varaibles
+            JSONObject newCollection = new JSONObject();                    //The collection data to save
+            GameCollection collection = GameLists.collectionList.get(i);    //The collection to save
+            JSONArray games = new JSONArray();                              //List of each game ID
 
-        for (int n = 0; n < GameLists.collectionList.size(); n++){
-            JSONObject newCollection = new JSONObject();
-            GameCollection collection = GameLists.collectionList.get(n);
-            JSONArray games = new JSONArray();
             try {
+                //Put the collection title
                 newCollection.put("CT", collection.getTitle());
-                for(int o = 0; o < collection.getGames().size(); o++){
-                    Game game = collection.getGames().get(o);
-                    String gameID = "";
+
+                for(int j = 0; j < collection.getGames().size(); j++){
+                    //Add each game from the collection to games
+                    //Local variables
+                    Game game = collection.getGames().get(j);   //The game to save
+                    String gameID = "";                         //The gameID to write
+
                     if(game instanceof PlayedGame){
+                        //If game is a PlayedGame, start its ID with p and get its index from playedList
                         gameID = "p" + GameLists.playedList.indexOf(game);
                     }else if(game instanceof UnplayedGame){
+                        //If game is an UnplayedGame, start its ID with u and get its index from unplayedList
                         gameID = "u" + GameLists.unplayedList.indexOf(game);
-                    }else{
-                        System.out.println("?????????????");
                     }
+
+                    //Put the game in the array
                     games.put(gameID);
                 }
+
+                //Put the collection in the collection list
                 newCollection.put("CG", games);
                 collectionArray.put(newCollection);
             } catch (JSONException e1) {
@@ -1196,46 +1334,62 @@ public class ApplicationGUI extends Application {
             }
         }
 
+        //Put each list in the JSONObject
         file.put("PL", platformListArray);
         file.put("GL", genreListArray);
         file.put("P", playedGameArray);
         file.put("U", unplayedGameArray);
         file.put("C", collectionArray);
-        PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(fileOut), StandardCharsets.UTF_8));
+
+        //Write the JSONObject to the file and close the PrintWriter
         pw.write(file.toString());
         pw.flush();
         pw.close();
-        changeMade = false;
+
+        //Change window to finished after saving
         label.setText("File Saved.");
-        Button button = new Button("Close");
         vbox.getChildren().add(button);
+
+        changeMade = false;
         button.setOnAction(e1 -> stage.close());
     }
 
     //Opens a file from the given file path
     public void openFile(Path filePath) {
         try {
-            String jsonString = Files.readString(filePath);
-            JSONObject file = new JSONObject(jsonString);
+            //Local variables
+            String jsonString = Files.readString(filePath);             //String to parse
+            JSONObject file = new JSONObject(jsonString);               //String as a JSONObject
+            JSONArray platformList = file.getJSONArray("PL");       //List of platforms in the file
+            JSONArray genreList = file.getJSONArray("GL");          //List  of genres in the file
+            JSONArray playedGameList = file.getJSONArray("P");      //list of PlayedGames in the file
+            JSONArray unplayedGameList = file.getJSONArray("U");    //List of UnplayedGames in the file
+            JSONArray collectionArray = file.getJSONArray("C");     //List of collections in the file
 
-            JSONArray platformList = file.getJSONArray("PL");
+            //Reset all lists before setting new data
             GameLists.platformList = FXCollections.observableArrayList();
+            GameLists.genreList = FXCollections.observableArrayList();
+            GameLists.playedList = FXCollections.observableArrayList();
+            GameLists.unplayedList = FXCollections.observableArrayList();
+            GameLists.collectionList = FXCollections.observableArrayList();
+
             for (int i = 0; i < platformList.length(); i++)
+                //Add each platform
                 GameLists.platformList.add((String) platformList.get(i));
 
-            JSONArray genreList = file.getJSONArray("GL");
-            GameLists.genreList = FXCollections.observableArrayList();
-            for (int j = 0; j < genreList.length(); j++)
-                GameLists.genreList.add((String) genreList.get(j));
+            for (int i = 0; i < genreList.length(); i++)
+                //Add each genre
+                GameLists.genreList.add((String) genreList.get(i));
 
-            JSONArray playedGameList = file.getJSONArray("P");
-            GameLists.playedList = FXCollections.observableArrayList();
-            for (int k = 0; k < playedGameList.length(); k++) {
-                Object obj = playedGameList.get(k);
-                JSONObject newObj = (JSONObject) obj;
-                PlayedGame newGame = new PlayedGame((String) newObj.get("T"), (String) newObj.get("S"),
+            for (int i = 0; i < playedGameList.length(); i++) {
+                //Add each PlayedGame
+                //Local variables
+                JSONObject newObj = (JSONObject) playedGameList.get(i);                                 //Game data from the JSON file
+                PlayedGame newGame = new PlayedGame((String) newObj.get("T"), (String) newObj.get("S"), //New game to add to the list
                         (String) newObj.get("P"), (String) newObj.get("G"), (int) newObj.get("RY"),
                         (int) newObj.get("RM"), (int) newObj.get("RD"));
+
+                //Add data to game
                 newGame.setCompletionYear((int) newObj.get("CY"));
                 newGame.setCompletionMonth((int) newObj.get("CM"));
                 newGame.setCompletionDay((int) newObj.get("CD"));
@@ -1243,47 +1397,61 @@ public class ApplicationGUI extends Application {
                 newGame.setRating((int) newObj.get("R"));
                 newGame.setPercent100((String) newObj.get("1"));
                 newGame.setFranchise((String) newObj.get("F"));
+
+                //Add game to list
                 GameLists.playedList.add(newGame);
             }
 
-            JSONArray unplayedGameList = file.getJSONArray("U");
-            GameLists.unplayedList = FXCollections.observableArrayList();
-            for (int m = 0; m < unplayedGameList.length(); m++) {
-                Object obj = unplayedGameList.get(m);
-                JSONObject newObj = (JSONObject) obj;
-                UnplayedGame newGame = new UnplayedGame((String) newObj.get("T"), (String) newObj.get("S"),
+            for (int i = 0; i < unplayedGameList.length(); i++) {
+                //Add each PlayedGame
+                //Local variables
+                JSONObject newObj = (JSONObject) unplayedGameList.get(i);                                   //Game data from the JSON file
+                UnplayedGame newGame = new UnplayedGame((String) newObj.get("T"), (String) newObj.get("S"), //New game to add to the list
                         (String) newObj.get("P"), (String) newObj.get("G"), (int) newObj.get("RY"),
                         (int) newObj.get("RM"), (int) newObj.get("RD"));
+
+                //Add data to game,
                 newGame.setFranchise((String) newObj.get("F"));
+                newGame.setDeckCompatible((String) newObj.get("D"));
+
                 try {
+                    //If hours value looks like a decimal
                     newGame.setHours(((BigDecimal) newObj.get("H")).doubleValue());
                 } catch (ClassCastException e2) {
+                    //If hours value looks like an int
                     newGame.setHours((int) newObj.get("H"));
                 }
 
-                newGame.setDeckCompatible((String) newObj.get("D"));
+                //Add game to list
                 GameLists.unplayedList.add(newGame);
             }
 
-            JSONArray collectionArray = file.getJSONArray("C");
-            GameLists.collectionList = FXCollections.observableArrayList();
-            for(int n = 0; n < collectionArray.length(); n++){
-                Object obj = collectionArray.get(n);
-                JSONObject newObj = (JSONObject) obj;
-                GameCollection newCollection = new GameCollection((String) newObj.get("CT"));
-                JSONArray collectionGameArray = newObj.getJSONArray("CG");
-                for(int o = 0; o < collectionGameArray.length(); o++){
-                    String gameID = (String) collectionGameArray.get(o);
-                    int gameIndex = Integer.parseInt(gameID.substring(1));
-                    if(gameID.charAt(0)=='p'){
+            for(int i = 0; i < collectionArray.length(); i++){
+                //Add each collection
+                //Local variables
+                JSONObject newObj = (JSONObject) collectionArray.get(i);                        //Collection data from the JSON file
+                GameCollection newCollection = new GameCollection((String) newObj.get("CT"));   //New collection to add to the list
+                JSONArray collectionGameArray = newObj.getJSONArray("CG");                  //Array of games for the new collection
+
+                for(int j = 0; j < collectionGameArray.length(); j++){
+                    //Add each game from collectionGameArray to newCollection
+                    //Local variables
+                    String gameID = (String) collectionGameArray.get(j);            //ID of game
+                    int gameIndex = Integer.parseInt(gameID.substring(1));  //index of game
+
+                    if(gameID.charAt(0)=='p')
+                        //If game is a playedGame, add it to played list
                         newCollection.getGames().add(GameLists.playedList.get(gameIndex));
-                    }else if(gameID.charAt(0)=='u'){
+                    else if(gameID.charAt(0)=='u')
+                        //If game is an unplayedGame, add it to unplayed list
                         newCollection.getGames().add(GameLists.unplayedList.get(gameIndex));
-                    }
                 }
+
+                //Add collection to list
                 GameLists.collectionList.add(newCollection);
             }
 
+            //Update GUI
             playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
             unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
             statusCountBoxPlayed.updateData();
@@ -1293,15 +1461,5 @@ public class ApplicationGUI extends Application {
         } catch (NullPointerException | IOException e1) {
             e1.printStackTrace();
         }
-    }
-    public static boolean isLeapYear(int year){
-        if(year % 4 == 0)
-            //but not 100,
-            if(year % 100 == 0) {
-                //but yes 400
-                return year % 400 == 0;
-            }else
-                return true;
-        return false;
     }
 }

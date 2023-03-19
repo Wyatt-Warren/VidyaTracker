@@ -47,7 +47,6 @@ public abstract class PlayedAddEditWindow extends AddEditGame{
     public PlayedAddEditWindow(Stage stage){
         super();
         //GUI
-        mainLabel.setText("Add New Played Game");
         shortVBox.setAlignment(Pos.CENTER);
         ratingVBox.setAlignment(Pos.CENTER);
         completionYearHBox.setAlignment(Pos.CENTER);
@@ -59,7 +58,6 @@ public abstract class PlayedAddEditWindow extends AddEditGame{
                 franchiseVBox, ratingVBox, platformVBox,
                 genreVBox, releaseVBox, completionVBox,
                 percentVBox);
-        doneButton.setText("Create New Played Game");
 
         getChildren().addAll(mainLabel, mainHBox, doneButton);
         statusBox.getItems().addAll("Playing", "Completed", "On Hold");

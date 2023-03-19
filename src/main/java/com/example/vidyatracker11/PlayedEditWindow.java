@@ -10,6 +10,10 @@ public class PlayedEditWindow extends PlayedAddEditWindow {
         super(stage);
         this.game = game;
 
+        //GUI
+        mainLabel.setText("Edit Values for " + game.getTitle());
+        doneButton.setText("Save Changes and Close Window");
+
         statusBox.getSelectionModel().select(game.getStatus());
         if (game.getIsItShort().equals("Yes") || game.getIsItShort().equals("No")) {
             shortBox.getSelectionModel().select(game.getIsItShort());

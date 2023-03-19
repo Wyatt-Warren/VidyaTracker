@@ -1,15 +1,14 @@
 package com.example.vidyatracker11;
 
+//Used to store items in tables in StatsScreen
 public class DataEntry {
-    protected String name;
+    //Fields
+    protected String name;      //Name of data
+    protected int intName;      //Name if data is an int
+    protected int count;        //Count of data
+    protected Double percent;   //Percentage of data in its list
 
-    protected int intName;
-
-    protected int count;
-
-    protected Double percent;
-
-    //Count getter
+    //count getter
     public int getCount() {
         return count;
     }
@@ -39,10 +38,12 @@ public class DataEntry {
         this.percent = percent;
     }
 
+    //intName getter
     public int getIntName() {
         return intName;
     }
 
+    //intName setter
     public void setIntName(int intName) {
         this.intName = intName;
     }
