@@ -30,4 +30,5 @@ VidyaTracker is a desktop application that uses Java 11. The purpose of Vidya Tr
   - UnplayedTempList
 
 ## Features
-- "Are you sure?" window on  every remove button
+- "Are you sure?" window on every remove button
+- move deck status to the far right
