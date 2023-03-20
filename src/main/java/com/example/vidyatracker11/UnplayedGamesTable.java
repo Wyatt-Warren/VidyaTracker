@@ -63,13 +63,7 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
                     setStyle("");
                 } else {
                     setText(item);
-                    if (getItem().equals("Backlog")) {
-                        setStyle("-fx-background-color: #545454;");
-                    } else if (getItem().equals("SubBacklog")) {
-                        setStyle("-fx-background-color: #666666;");
-                    } else {
-                        setStyle("-fx-background-color: #993745;");
-                    }
+                    setStyle(ApplicationGUI.colorMap.get(item));
                 }
             }
         });
@@ -107,16 +101,7 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
                     setStyle("");
                 } else {
                     setText(item);
-                    if (getItem().equals("Yes")) {
-                        setStyle("-fx-background-color: #4a8c32;");
-                    } else if (getItem().equals("No")) {
-                        setStyle("-fx-background-color: #993737;");
-                    } else if (getItem().equals("Maybe")) {
-                        setStyle("-fx-background-color: #aa9120;");
-                    } else {
-                        setStyle("");
-                        setText("");
-                    }
+                    setStyle(ApplicationGUI.colorMap.get(item));
                 }
             }
         });

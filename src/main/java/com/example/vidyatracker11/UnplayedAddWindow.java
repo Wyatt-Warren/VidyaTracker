@@ -43,7 +43,7 @@ public class UnplayedAddWindow extends AddEditGame {
         platformBox.getSelectionModel().selectFirst();
 
         //Hours
-        hoursBox.setTextFormatter(new TextFormatter<>(doubleFilter));
+        hoursBox.setTextFormatter(new TextFormatter<>(ApplicationGUI.doubleFilter));
 
         //Deck Status
         deckBox.getItems().addAll("Yes", "No", "Maybe", "Blank");

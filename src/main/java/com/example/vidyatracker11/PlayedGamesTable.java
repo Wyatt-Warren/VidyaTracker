@@ -80,13 +80,7 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                     setStyle("");
                 } else {
                     setText(item);
-                    if ((getItem()).equals("Playing")) {
-                        setStyle("-fx-background-color: #4a8c32;");
-                    } else if ((getItem()).equals("Completed")) {
-                        setStyle("-fx-background-color: #225089;");
-                    } else {
-                        setStyle("-fx-background-color: #aa5825;");
-                    }
+                    setStyle(ApplicationGUI.colorMap.get(item));
                 }
             }
         });
@@ -99,13 +93,7 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                     setStyle("");
                 } else {
                     setText(item);
-                    if ((getItem()).equals("Yes")) {
-                        setStyle("-fx-background-color: #4a8c32;");
-                    } else if ((getItem()).equals("No")) {
-                        setStyle("-fx-background-color: #993737;");
-                    } else {
-                        setStyle("");
-                    }
+                    setStyle(ApplicationGUI.colorMap.get(item));
                 }
             }
         });
@@ -132,13 +120,7 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                     setStyle("");
                 } else {
                     setText(item);
-                    if ((getItem()).equals("Yes")) {
-                        setStyle("-fx-background-color: #4a8c32;");
-                    } else if ((getItem()).equals("No")) {
-                        setStyle("-fx-background-color: #993737;");
-                    } else {
-                        setStyle("");
-                    }
+                    setStyle(ApplicationGUI.colorMap.get(item));
                 }
             }
         });
@@ -154,9 +136,9 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                     if (item == 0)
                         setText("");
                     if ((getItem()) == PlayedGamesTable.localDate.getYear()) {
-                        setStyle("-fx-background-color: #4a8c32;");
+                        setStyle(ApplicationGUI.colorMap.get("CURRENTYEAR"));
                     } else if ((getItem()) == PlayedGamesTable.localDate.getYear() - 1) {
-                        setStyle("-fx-background-color: #aa9120;");
+                        setStyle(ApplicationGUI.colorMap.get("LASTYEAR"));
                     } else {
                         setStyle("");
                     }
@@ -175,9 +157,9 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                     if (item == 0)
                         setText("");
                     if ((getItem()) == PlayedGamesTable.localDate.getYear()) {
-                        setStyle("-fx-background-color: #4a8c32;");
+                        setStyle(ApplicationGUI.colorMap.get("CURRENTYEAR"));
                     } else if ((getItem()) == PlayedGamesTable.localDate.getYear() - 1) {
-                        setStyle("-fx-background-color: #aa9120;");
+                        setStyle(ApplicationGUI.colorMap.get("LASTYEAR"));
                     } else {
                         setStyle("");
                     }

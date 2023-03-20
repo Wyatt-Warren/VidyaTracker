@@ -6,8 +6,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import java.util.function.UnaryOperator;
-
 //Superclass containing for PlayedEditWindow, UnplayedEditWindow, PlayedAddWindow, and UnplayedAddWindow
 public class AddEditGame extends VBox{
     //GUI
@@ -57,14 +55,6 @@ public class AddEditGame extends VBox{
     VBox releaseVBox = new VBox(releaseLabel, releaseYearHBox, releaseMonthHBox, releaseDayHBox);
 
     //Fields
-    UnaryOperator<TextFormatter.Change> integerFilter = change -> {                                 //Filters if text is not a valid integer
-        String input = change.getControlNewText();
-        return input.matches("\\d{0,9}") ? change : null;
-    };
-    UnaryOperator<TextFormatter.Change> doubleFilter = change -> {                                  //Filters if text is not a valid double
-        String input = change.getControlNewText();
-        return input.matches("\\d*\\.\\d*")||input.matches("\\d{0,9}") ? change : null;
-    };
 
     public AddEditGame(){
         //GUI
@@ -91,7 +81,7 @@ public class AddEditGame extends VBox{
         genreBox.getSelectionModel().selectFirst();
 
         //Only allow integers for releaseYearBox
-        releaseYearBox.setTextFormatter(new TextFormatter<>(integerFilter));
+        releaseYearBox.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
 
         //Update releaseDayBox if value is changed
         releaseYearBox.textProperty().addListener(e ->

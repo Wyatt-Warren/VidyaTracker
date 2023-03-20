@@ -70,7 +70,7 @@ public abstract class PlayedAddEditWindow extends AddEditGame{
         ratingBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
         //Only allow integers for completionYearBox
-        completionYearBox.setTextFormatter(new TextFormatter<>(integerFilter));
+        completionYearBox.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
 
         //Update completionYearBox if value is changed
         completionYearBox.textProperty().addListener(e ->

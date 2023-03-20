@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.UnaryOperator;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -112,6 +113,14 @@ public class ApplicationGUI extends Application {
     public static boolean playedOpen = true;                                                            //Used to determine which list is open
     public static Path currentFilePathOut = Path.of("List.json").toAbsolutePath();                  //Default saving path
     public static HashMap<String, String> colorMap = new HashMap<>();                                   //Hashmap containing colors for tableview cells
+    public static UnaryOperator<TextFormatter.Change> integerFilter = change -> {                                 //Filters if text is not a valid integer
+        String input = change.getControlNewText();
+        return input.matches("\\d{0,9}") ? change : null;
+    };
+    public static UnaryOperator<TextFormatter.Change> doubleFilter = change -> {                                  //Filters if text is not a valid double
+        String input = change.getControlNewText();
+        return input.matches("\\d*\\.\\d*")||input.matches("\\d{0,9}") ? change : null;
+    };
 
     //Main method
     public static void main(String[] args) {
@@ -130,6 +139,9 @@ public class ApplicationGUI extends Application {
         colorMap.put("Wishlist", "-fx-background-color: #993745;");
         colorMap.put("Yes", "-fx-background-color: #4a8c32;");
         colorMap.put("No", "-fx-background-color: #993737;");
+        colorMap.put("Maybe", "-fx-background-color: #aa9120;");
+        colorMap.put("CURRENTYEAR", "-fx-background-color: #4a8c32;");
+        colorMap.put("LASTYEAR", "-fx-background-color: #aa9120;");
 
         //FileChooser
         fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));

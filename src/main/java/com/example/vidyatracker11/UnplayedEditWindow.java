@@ -47,7 +47,7 @@ public class UnplayedEditWindow extends AddEditGame {
 
         //Hours
         hoursBox.setText("" + game.getHours());
-        hoursBox.setTextFormatter(new TextFormatter<>(doubleFilter));
+        hoursBox.setTextFormatter(new TextFormatter<>(ApplicationGUI.doubleFilter));
 
         //Release Date
         releaseYearBox.setText("" + game.getReleaseYear());

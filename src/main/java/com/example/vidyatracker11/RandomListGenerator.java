@@ -3,7 +3,6 @@ package com.example.vidyatracker11;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
-import java.util.function.UnaryOperator;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -76,8 +75,6 @@ public class RandomListGenerator extends VBox {
     ListView<String> deckView = new ListView<>();
     VBox deckVBox = new VBox(deckLabel, deckBox, deckButtonBox, deckView);
 
-
-
     //Years
     Label yearsMinLabel = new Label("Years Minimum:");
     TextField yearsMinField = new TextField();
@@ -91,15 +88,6 @@ public class RandomListGenerator extends VBox {
             hoursMaxVBox, deckVBox, yearsMinVBox, yearsMaxVBox);
     Button generateButton = new Button("Generate List");
     ListView<String> generatedList = new ListView<>();
-
-    UnaryOperator<TextFormatter.Change> integerFilter = change -> {
-        String input = change.getControlNewText();
-        return input.matches("\\d{0,9}") ? change : null;
-    };
-    UnaryOperator<TextFormatter.Change> doubleFilter = change -> {
-        String input = change.getControlNewText();
-        return input.matches("\\d*\\.\\d*")||input.matches("\\d{0,9}") ? change : null;
-    };
 
     public RandomListGenerator() {
         getChildren().addAll(mainLabel, mainHBox, generateButton, generatedList);
@@ -124,17 +112,17 @@ public class RandomListGenerator extends VBox {
 
         setPadding(new Insets(5.0));
         setSpacing(5.0);
-        lengthField.setTextFormatter(new TextFormatter<>(integerFilter));
+        lengthField.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
 
         statusBox.getItems().addAll("Backlog", "SubBacklog", "Wishlist");
         platformBox.getItems().addAll(GameLists.platformList);
         genreBox.getItems().addAll(GameLists.genreList);
 
-        hoursMinField.setTextFormatter(new TextFormatter<>(doubleFilter));
-        hoursMaxField.setTextFormatter(new TextFormatter<>(doubleFilter));
+        hoursMinField.setTextFormatter(new TextFormatter<>(ApplicationGUI.doubleFilter));
+        hoursMaxField.setTextFormatter(new TextFormatter<>(ApplicationGUI.doubleFilter));
 
-        yearsMinField.setTextFormatter(new TextFormatter<>(integerFilter));
-        yearsMaxField.setTextFormatter(new TextFormatter<>(integerFilter));
+        yearsMinField.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
+        yearsMaxField.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
 
         deckBox.getItems().addAll("Yes", "No", "Maybe", "Blank");
         ObservableList<Integer> yearList = FXCollections.observableArrayList();
