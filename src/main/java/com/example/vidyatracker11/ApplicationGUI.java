@@ -1258,7 +1258,7 @@ public class ApplicationGUI extends Application {
                 newGame.put("RD", game.getReleaseDay());
                 newGame.put("F", game.getFranchise());
                 newGame.put("R", game.getRating());
-                newGame.put("SS", game.getIsItShort());
+                newGame.put("SS", game.getShortStatus());
                 newGame.put("CY", game.getCompletionYear());
                 newGame.put("CM", game.getCompletionMonth());
                 newGame.put("CD", game.getCompletionDay());
@@ -1393,7 +1393,7 @@ public class ApplicationGUI extends Application {
                 newGame.setCompletionYear((int) newObj.get("CY"));
                 newGame.setCompletionMonth((int) newObj.get("CM"));
                 newGame.setCompletionDay((int) newObj.get("CD"));
-                newGame.setIsItShort((String) newObj.get("SS"));
+                newGame.setShortStatus((String) newObj.get("SS"));
                 newGame.setRating((int) newObj.get("R"));
                 newGame.setPercent100((String) newObj.get("1"));
                 newGame.setFranchise((String) newObj.get("F"));

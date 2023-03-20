@@ -117,7 +117,7 @@ public class AchievementWindow extends VBox {
 
         for(PlayedGame game : GameLists.playedList){
             //Check each game for each achievement.
-            if(!game.getIsItShort().equals("Yes") && game.getStatus().equals("Completed")){
+            if(!game.getShortStatus().equals("Yes") && game.getStatus().equals("Completed")){
                 //Non-short games
                 //All completed, non-short games should be added to totalAchievement
                 totalAchievement.getItems().add(game);
@@ -167,7 +167,7 @@ public class AchievementWindow extends VBox {
                     //Games with 100% completion
                     completionistAchievement.getItems().add(game);
 
-            }else if(game.getIsItShort().equals("Yes") && game.getStatus().equals("Completed")){
+            }else if(game.getShortStatus().equals("Yes") && game.getStatus().equals("Completed")){
                 //Short games
                 shortGamesAchievement.getItems().add(game);
             }

@@ -2,75 +2,84 @@ package com.example.vidyatracker11;
 
 //A played game stored in the played game list.
 public class PlayedGame extends Game {
+    //Fields
+    private int rating;                 //Rating of game
+    private String shortStatus = "";    //Short status of game
+    private int completionYear = 0;     //Completion year of game
+    private int completionMonth = 0;    //Completion month of game
+    private int completionDay = 0;      //Completion day of  game
+    private String percent100 = "";     //100% status of game
 
-    private int rating;
-    private String isItShort = "";
-    private int completionYear = 0;
-    private int completionMonth = 0;
-    private int completionDay = 0;
-    private String percent100 = "";
-
-    //Constructor
     public PlayedGame(String title, String status, String platform,
                       String genre, int releaseYear, int releaseMonth,
                       int releaseDay) {
         super(title, status, platform, genre, releaseYear, releaseMonth, releaseDay);
+
         if (!status.equals("Playing") && !status.equals("Completed") && !status.equals("On Hold"))
-            throw new IllegalArgumentException();
-        if (getReleaseYear() < 0)
-            throw new IllegalArgumentException();
-        if (getReleaseMonth() < 0 || getReleaseMonth() > 12)
-            throw new IllegalArgumentException();
-        if (getReleaseDay() < 0 || getReleaseDay() > 31)
+            //Throw an error if status is not playing, completed, or on hold
             throw new IllegalArgumentException();
     }
 
     //Status setter
     public void setStatus(String status) {
         if (!status.equals("Playing") && !status.equals("Completed") && !status.equals("On Hold"))
+            //Throw an error if status is not playing, completed, or on hold
             throw new IllegalArgumentException();
+
         this.status = status;
     }
 
     //Rating setter
     public void setRating(int rating) {
-        if (0 > rating || rating >= 11)
+        if (0 > rating || rating > 10)
+            //Throw an error if rating is not between 0 and 10
             throw new IllegalArgumentException();
+
         this.rating = rating;
     }
 
     //Short status setter
-    public void setIsItShort(String isItShort) {
-        if (!isItShort.equals("") && !isItShort.equals("Yes") && !isItShort.equals("No"))
+    public void setShortStatus(String shortStatus) {
+        if (!shortStatus.equals("") && !shortStatus.equals("Yes") && !shortStatus.equals("No"))
+            //Throw an error if Short status is not blank, yes, or no
             throw new IllegalArgumentException();
-        this.isItShort = isItShort;
+
+        this.shortStatus = shortStatus;
     }
 
     //Completion Year setter
     public void setCompletionYear(int completionYear) {
         if (completionYear < 0)
+            //Throw an error if completion year is negative
             throw new IllegalArgumentException();
+
         this.completionYear = completionYear;
     }
 
     //Completion month setter
     public void setCompletionMonth(int completionMonth) {
         if (completionMonth < 0 || completionMonth > 12)
+            //Throw an error if completion month is not between 0 and 12
             throw new IllegalArgumentException();
+
         this.completionMonth = completionMonth;
     }
 
     //Completion day setter
     public void setCompletionDay(int completionDay) {
         if (completionDay < 0 || completionDay > 31)
+            //Throw an error if completion day is not between 0 and 31
             throw new IllegalArgumentException();
+
         this.completionDay = completionDay;
     }
 
     //100 percent status setter
     public void setPercent100(String percent100) {
         if (!percent100.equals("") && !percent100.equals("Yes") && !percent100.equals("No"))
+            //Throw an error if 100% status is not blank, yes, or no
             throw new IllegalArgumentException();
+
         this.percent100 = percent100;
     }
 
@@ -80,8 +89,8 @@ public class PlayedGame extends Game {
     }
 
     //Short status getter
-    public String getIsItShort() {
-        return this.isItShort;
+    public String getShortStatus() {
+        return this.shortStatus;
     }
 
     //Completion year getter

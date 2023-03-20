@@ -21,7 +21,7 @@ public class GameLists {
             //Iterate for each PlayedGame
             if (playedGame.getStatus().equals("Completed") &&
                     playedGame.getCompletionYear() == year &&
-                    !playedGame.getIsItShort().equals("Yes"))
+                    !playedGame.getShortStatus().equals("Yes"))
                 //If game is completed, not short, and completed in the given year, increment total
                 total++;
         }
@@ -38,7 +38,7 @@ public class GameLists {
             //Iterate for each PlayedGame
             if (playedGame.getStatus().equals("Completed") &&
                     playedGame.getCompletionYear() == year &&
-                    playedGame.getIsItShort().equals("Yes"))
+                    playedGame.getShortStatus().equals("Yes"))
                 //If game is completed, short, and completed in the given year, increment total
                 total++;
         }
@@ -59,7 +59,7 @@ public class GameLists {
         for (PlayedGame playedGame: playedList) {
             //Iterate for each PlayedGame
             if (playedGame.getStatus().equals(status) &&
-                    !playedGame.getIsItShort().equals("Yes"))
+                    !playedGame.getShortStatus().equals("Yes"))
                 //If game has the given status and is not short, increment total
                 total++;
         }
@@ -75,7 +75,7 @@ public class GameLists {
         for (PlayedGame playedGame: playedList) {
             //Iterate for each PlayedGame
             if (playedGame.getStatus().equals(status) &&
-                    playedGame.getIsItShort().equals("Yes"))
+                    playedGame.getShortStatus().equals("Yes"))
                 //If game has the given status and is short, increment total
                 total++;
         }

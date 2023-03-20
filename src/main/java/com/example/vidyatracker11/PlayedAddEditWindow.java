@@ -79,7 +79,6 @@ public abstract class PlayedAddEditWindow extends AddEditGame{
         //Set completion month values
         completionMonthBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
 
-
         completionMonthBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
             //Set day count when month is changed
             setDayCount((int) newNum, completionDayBox, completionYearBox);

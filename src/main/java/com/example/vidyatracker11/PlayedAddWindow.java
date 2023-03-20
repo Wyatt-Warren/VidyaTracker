@@ -41,10 +41,10 @@ public class PlayedAddWindow extends PlayedAddEditWindow {
         //Set short status
         if ((shortBox.getSelectionModel().getSelectedItem()).equals("Blank"))
             //If Blank is selected, set short to a blank string
-            newGame.setIsItShort("");
+            newGame.setShortStatus("");
         else
             //Something other than Blank is selected
-            newGame.setIsItShort(shortBox.getSelectionModel().getSelectedItem());
+            newGame.setShortStatus(shortBox.getSelectionModel().getSelectedItem());
 
 
         //Set Franchise

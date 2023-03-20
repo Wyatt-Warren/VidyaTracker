@@ -2,10 +2,10 @@ package com.example.vidyatracker11;
 
 //Used to store PlayedGames in tables in StatsScreen
 public class PlayedDataEntry extends DataEntry{
-
-    private int totalRating = 0;
-    private int ratingCount = 0;
-    private Double averageRating;
+    //Fields
+    private int totalRating = 0;    //Total rating field
+    private int ratingCount = 0;    //Rating count field
+    private Double averageRating;   //Average rating field
 
     //averageRating getter
     public Double getAverageRating() {

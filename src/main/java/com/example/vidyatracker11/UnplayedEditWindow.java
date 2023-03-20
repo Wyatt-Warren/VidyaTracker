@@ -24,7 +24,7 @@ public class UnplayedEditWindow extends AddEditGame {
         super();
         mainLabel.setText("Edit Values for " + game.getTitle());
         mainHBox.getChildren().addAll(statusVBox, titleVBox, franchiseVBox,
-                platformVBox, genreVBox, hoursVBox, deckVBox, releaseVBox);
+                platformVBox, genreVBox, hoursVBox, releaseVBox, deckVBox);
         doneButton.setText("Save Changes and Close Window");
         getChildren().addAll(mainLabel, mainHBox, doneButton);
 
@@ -49,6 +49,11 @@ public class UnplayedEditWindow extends AddEditGame {
         hoursBox.setText("" + game.getHours());
         hoursBox.setTextFormatter(new TextFormatter<>(doubleFilter));
 
+        //Release Date
+        releaseYearBox.setText("" + game.getReleaseYear());
+        releaseMonthBox.getSelectionModel().select(game.getReleaseMonth());
+        releaseDayBox.getSelectionModel().select(game.getReleaseDay());
+
         //Deck Status
         deckBox.getItems().addAll("Yes", "No", "Maybe", "Blank");
         if (game.getDeckCompatible().equals("Yes") || game.getDeckCompatible().equals("No") || game.getDeckCompatible().equals("Maybe")) {
@@ -56,11 +61,6 @@ public class UnplayedEditWindow extends AddEditGame {
         } else {
             deckBox.getSelectionModel().selectLast();
         }
-
-        //Release Date
-        releaseYearBox.setText("" + game.getReleaseYear());
-        releaseMonthBox.getSelectionModel().select(game.getReleaseMonth());
-        releaseDayBox.getSelectionModel().select(game.getReleaseDay());
 
         doneButton.setOnAction(e -> {
             try{
@@ -95,18 +95,18 @@ public class UnplayedEditWindow extends AddEditGame {
             game.setHours(Double.parseDouble(hoursBox.getText()));
         }
 
-        //Set Deck Status
-        if (deckBox.getSelectionModel().getSelectedItem().equals("Blank")) {
-            game.setDeckCompatible("");
-        } else {
-            game.setDeckCompatible(deckBox.getSelectionModel().getSelectedItem());
-        }
-
         //Set Release Date
         if (releaseYearBox.getText().equals("")) {
             game.setReleaseYear(0);
         } else {
             game.setReleaseYear(Integer.parseInt(releaseYearBox.getText()));
+        }
+
+        //Set Deck Status
+        if (deckBox.getSelectionModel().getSelectedItem().equals("Blank")) {
+            game.setDeckCompatible("");
+        } else {
+            game.setDeckCompatible(deckBox.getSelectionModel().getSelectedItem());
         }
         game.setReleaseMonth(releaseMonthBox.getValue());
         game.setReleaseDay(releaseDayBox.getValue());

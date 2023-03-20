@@ -21,7 +21,7 @@ import javafx.stage.Stage;
 public class PlayedGamesTable extends TableView<PlayedGame> {
     TableColumn<PlayedGame, String> statusColumn = new TableColumn<>("Status");
 
-    TableColumn<PlayedGame, String> shortColumn = new TableColumn<>("Short?");
+    TableColumn<PlayedGame, String> shortColumn = new TableColumn<>("Short");
 
     TableColumn<PlayedGame, String> titleColumn = new TableColumn<>("Title");
 
@@ -55,7 +55,7 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
 
     public PlayedGamesTable() {
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
-        shortColumn.setCellValueFactory(new PropertyValueFactory<>("isItShort"));
+        shortColumn.setCellValueFactory(new PropertyValueFactory<>("shortStatus"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         franchiseColumn.setCellValueFactory(new PropertyValueFactory<>("franchise"));
         ratingColumn.setCellValueFactory(new PropertyValueFactory<>("rating"));
@@ -239,7 +239,7 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                 break;
             case 1: //Short
                 filterByAny(playedGame ->
-                        playedGame.getIsItShort().equals(finalFilterToken));
+                        playedGame.getShortStatus().equals(finalFilterToken));
                 break;
             case 2: //Franchise
                 filterByAny(playedGame ->

@@ -25,7 +25,7 @@ public class UnplayedAddWindow extends AddEditGame {
         super();
         mainLabel.setText("Add New Unplayed Game");
         mainHBox.getChildren().addAll(statusVBox, titleVBox, franchiseVBox,
-                platformVBox, genreVBox, hoursVBox, deckVBox, releaseVBox);
+                platformVBox, genreVBox, hoursVBox, releaseVBox, deckVBox);
         doneButton.setText("Create New Unplayed Game");
         getChildren().addAll(mainLabel, mainHBox, doneButton);
 

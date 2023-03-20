@@ -34,7 +34,7 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
 
     ObservableList<TableColumn<UnplayedGame, ?>> columnList = FXCollections.observableArrayList(
             statusColumn, titleColumn, franchiseColumn, platformColumn, genreColumn, hoursColumn,
-            deckColumn, releaseYearColumn);
+            releaseYearColumn, deckColumn);
 
     SortedList<UnplayedGame> sortedList = new SortedList<>(GameLists.unplayedList);
 
@@ -47,8 +47,8 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
         platformColumn.setCellValueFactory(new PropertyValueFactory<>("platform"));
         genreColumn.setCellValueFactory(new PropertyValueFactory<>("genre"));
         hoursColumn.setCellValueFactory(new PropertyValueFactory<>("hours"));
-        deckColumn.setCellValueFactory(new PropertyValueFactory<>("deckCompatible"));
         releaseYearColumn.setCellValueFactory(new PropertyValueFactory<>("releaseYear"));
+        deckColumn.setCellValueFactory(new PropertyValueFactory<>("deckCompatible"));
         getColumns().addAll(columnList);
         TableMethods.preventColumnSorting(this);
         setPrefSize(900, 99999);
@@ -86,6 +86,19 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
                 }
             }
         });
+        releaseYearColumn.setCellFactory(e -> new TableCell<>() {
+            public void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText("" + item);
+                    if (item == 0)
+                        setText("");
+                }
+            }
+        });
         deckColumn.setCellFactory(e -> new TableCell<>() {
             public void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -104,19 +117,6 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
                         setStyle("");
                         setText("");
                     }
-                }
-            }
-        });
-        releaseYearColumn.setCellFactory(e -> new TableCell<>() {
-            public void updateItem(Integer item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText(null);
-                    setStyle("");
-                } else {
-                    setText("" + item);
-                    if (item == 0)
-                        setText("");
                 }
             }
         });
