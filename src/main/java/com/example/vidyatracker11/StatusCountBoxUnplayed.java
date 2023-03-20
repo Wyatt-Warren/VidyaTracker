@@ -77,13 +77,13 @@ public class StatusCountBoxUnplayed extends GridPane {
 
     //Sets the labels' texts accordingly.
     public void updateData() {
-        backlogCountLabel.setText("" + GameLists.getBacklogCount());
-        subBacklogCountLabel.setText("" + GameLists.getSubBacklogCount());
-        wishlistCountLabel.setText("" + GameLists.getWishlistCount());
+        backlogCountLabel.setText("" + GameLists.getUnplayedStatusCount("Backlog"));
+        subBacklogCountLabel.setText("" + GameLists.getUnplayedStatusCount("SubBacklog"));
+        wishlistCountLabel.setText("" + GameLists.getUnplayedStatusCount("Wishlist"));
         totalCountLabel.setText("" + GameLists.unplayedList.size());
-        backlogHoursLabel.setText(String.format("%.2f", GameLists.getBacklogHours()));
-        subBacklogHoursLabel.setText(String.format("%.2f", GameLists.getSubBacklogHours()));
-        wishlistHoursLabel.setText(String.format("%.2f", GameLists.getWishlistHours()));
+        backlogHoursLabel.setText(String.format("%.2f", GameLists.getStatusHours("Backlog")));
+        subBacklogHoursLabel.setText(String.format("%.2f", GameLists.getStatusHours("SubBacklog")));
+        wishlistHoursLabel.setText(String.format("%.2f", GameLists.getStatusHours("Wishlist")));
         totalHoursLabel.setText(String.format("%.2f", GameLists.getTotalHours()));
     }
 }

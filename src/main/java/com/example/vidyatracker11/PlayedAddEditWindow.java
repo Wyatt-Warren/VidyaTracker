@@ -58,20 +58,36 @@ public abstract class PlayedAddEditWindow extends AddEditGame{
                 franchiseVBox, ratingVBox, platformVBox,
                 genreVBox, releaseVBox, completionVBox,
                 percentVBox);
-
         getChildren().addAll(mainLabel, mainHBox, doneButton);
+
+        //Set status values
         statusBox.getItems().addAll("Playing", "Completed", "On Hold");
+
+        //Set short values
         shortBox.getItems().addAll("Yes", "No", "Blank");
+
+        //Set ratings
         ratingBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+        //Only allow integers for completionYearBox
         completionYearBox.setTextFormatter(new TextFormatter<>(integerFilter));
+
+        //Update completionYearBox if value is changed
         completionYearBox.textProperty().addListener(e ->
                 setDayCount(completionMonthBox.getSelectionModel().getSelectedItem(), completionDayBox, completionYearBox));
+
+        //Set completion month values
         completionMonthBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+
+
         completionMonthBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
             //Set day count when month is changed
             setDayCount((int) newNum, completionDayBox, completionYearBox);
         });
+
+        //Set 100% values
         percentBox.getItems().addAll("Yes", "No", "Blank");
+
         doneButton.setOnAction(e -> {
             //Save new game
             try{
@@ -83,5 +99,6 @@ public abstract class PlayedAddEditWindow extends AddEditGame{
 
     }
 
+    //Save game and close window
     public abstract void saveAndQuit(Stage stage);
 }

@@ -93,11 +93,11 @@ public class AddEditGame extends VBox{
         //Only allow integers for releaseYearBox
         releaseYearBox.setTextFormatter(new TextFormatter<>(integerFilter));
 
-        //Update releaseDayBox if a leap year is changed
+        //Update releaseDayBox if value is changed
         releaseYearBox.textProperty().addListener(e ->
                 setDayCount(releaseMonthBox.getSelectionModel().getSelectedItem(), releaseDayBox, releaseYearBox));
 
-        //Set releaseMonthValues
+        //Set release month
         releaseMonthBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
 
         releaseMonthBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {

@@ -13,23 +13,28 @@ import javafx.scene.layout.VBox;
 
 //Superclass for EditGenreList and EditPlatformList
 public abstract class EditGenPlatList extends VBox {
+    //GUI
     Label mainLabel = new Label();
-    Label warningLabel = new Label();
     TextField addItemField = new TextField();
     Button addItemButton = new Button();
+    Label warningLabel = new Label();
     ListView<String> listView = new ListView<>();
-    Button removeItemButton = new Button();
     Button renameItemButton = new Button();
+    Button removeItemButton = new Button();
     Button moveUpButton = new Button("Move Up");
     Button moveDownButton = new Button("Move Down");
     VBox buttonBox = new VBox(renameItemButton, removeItemButton, moveUpButton, moveDownButton);
     GridPane gridPane = new GridPane();
 
-    ObservableList<String> list;
-    String inListWarning = "";
+    //Fields
+    ObservableList<String> list;    //List of either genres or platforms
+    String inListWarning = "";      //Text that should display on warning
 
     public EditGenPlatList(){
+        //GUI
         mainLabel.setStyle("-fx-font-weight:bold;-fx-font-size:24;");
+        buttonBox.setAlignment(Pos.TOP_CENTER);
+        buttonBox.setSpacing(10);
         gridPane.add(addItemField, 0, 0);
         gridPane.add(addItemButton, 1, 0);
         gridPane.add(warningLabel, 1, 1);
@@ -37,19 +42,18 @@ public abstract class EditGenPlatList extends VBox {
         gridPane.add(buttonBox, 1, 2);
         gridPane.setHgap(5);
         gridPane.setVgap(5);
-        buttonBox.setAlignment(Pos.TOP_CENTER);
-        buttonBox.setSpacing(10);
-        GridPane.setValignment(removeItemButton, VPos.TOP);
         setAlignment(Pos.CENTER);
         setPadding(new Insets(5));
         setSpacing(5);
         getChildren().addAll(mainLabel, gridPane);
 
-        //Add the current string to the list.
         addItemButton.setOnAction(e -> {
-            if (list.contains(addItemField.getText())) {
+            //Add the current string to the list.
+            if (list.contains(addItemField.getText()))
+                //If the entered text is already in the list
                 warningLabel.setText(inListWarning);
-            } else if (!addItemField.getText().equals("")) {
+            else if (!addItemField.getText().equals("")) {
+                //If the text is not in the list and is not blank
                 list.add(addItemField.getText());
                 warningLabel.setText("");
                 addItemField.setText("");
@@ -57,63 +61,100 @@ public abstract class EditGenPlatList extends VBox {
             }
         });
 
-        //Remove selected item from the list
         removeItemButton.setOnAction(e -> {
-            int selectionInt = listView.getSelectionModel().getSelectedIndex();
+            //Remove selected item from the list
+            //Local variables
+            int selectionInt = listView.getSelectionModel().getSelectedIndex(); //Index of the selected item
 
             if(selectionInt != -1 && list.size() > 1){
-                String toRemove = listView.getSelectionModel().getSelectedItem();
+                //If an item is selected, and it is not the last item remaining
+                //Local variables
+                String toRemove = listView.getSelectionModel().getSelectedItem();   //Store item to be removed from games before it is removed from the list
+
                 list.remove(selectionInt);
+
+                //Remove genre/platform from each game in lists
                 removeGameItems(toRemove);
+
+                //Update tables
                 ApplicationGUI.playedGamesTable.sortAndFilter(ApplicationGUI.playedFilterTokenChoices.getSelectionModel().getSelectedItem());
                 ApplicationGUI.unplayedGamesTable.sortAndFilter(ApplicationGUI.unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
+
                 ApplicationGUI.changeMade = true;
             }
         });
 
-        //Replaces the selected item with the current string
         renameItemButton.setOnAction(e -> {
-            int selectionInt = listView.getSelectionModel().getSelectedIndex();
-            String newName = addItemField.getText();
-            String oldName = listView.getSelectionModel().getSelectedItem();
+            //Replace the selected item with the current string
+            int selectionInt = listView.getSelectionModel().getSelectedIndex(); //Selected index of the list
+            String newName = addItemField.getText();                            //Text entered by the user to rename the item to
+            String oldName = listView.getSelectionModel().getSelectedItem();    //Store item to be renamed before it is removed from the list
 
             if(list.contains(newName)){
+                //If the item is already in the list
                 warningLabel.setText(inListWarning);
             }else if(!newName.equals("") && selectionInt != -1){
-                warningLabel.setText("");
+                //If the item is selected and text is entered
+                //Replace item in the list
                 list.remove(selectionInt);
                 list.add(selectionInt, newName);
+
+                //Rename item in each game
                 renameGameItems(oldName, newName);
+
+                //Clear warning
+                warningLabel.setText("");
+
+                //Clear text
+                addItemField.setText("");
+
+                //Update tables
                 ApplicationGUI.playedGamesTable.sortAndFilter(ApplicationGUI.playedFilterTokenChoices.getSelectionModel().getSelectedItem());
                 ApplicationGUI.unplayedGamesTable.sortAndFilter(ApplicationGUI.unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
+
                 ApplicationGUI.changeMade = true;
-                addItemField.setText("");
             }
         });
 
-        //Moves the selected item up in the list by one position.
         moveUpButton.setOnAction(e -> {
-            int selectionIndex = listView.getSelectionModel().getSelectedIndex();
+            //Moves the selected item up in the list by one position.
+            //Local variables
+            int selectionIndex = listView.getSelectionModel().getSelectedIndex();   //Index of the selected item
+
             if (selectionIndex > 0) {
+                //If an item is selected, and it is not on the top of the list
+                //Remove the selected item and place it up by one
                 list.add(selectionIndex - 1, list.remove(selectionIndex));
+
+                //Select the new item
                 listView.getSelectionModel().select(selectionIndex - 1);
+
                 ApplicationGUI.changeMade = true;
             }
         });
 
-        //Moves the selected item down in the list by one position.
         moveDownButton.setOnAction(e -> {
-            int selectionIndex = listView.getSelectionModel().getSelectedIndex();
+            //Moves the selected item down in the list by one position.
+            //Local variables
+            int selectionIndex = listView.getSelectionModel().getSelectedIndex();   //Index of the selected item
+
             if (selectionIndex > -1 && selectionIndex < list.size() - 1) {
+                //If an item is selected, and it is not on the bottom of the list
+                //Remove the selected item and place it down by one
                 list.add(selectionIndex + 1, list.remove(selectionIndex));
+
+                //Select the new item
                 listView.getSelectionModel().select(selectionIndex + 1);
+
                 ApplicationGUI.changeMade = true;
             }
         });
     }
 
+    //Remove the item from each game
     public abstract void removeGameItems(String toRemove);
 
+    //Rename the item in each game
     public abstract void renameGameItems(String oldName, String newName);
 
 }

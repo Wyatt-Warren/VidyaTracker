@@ -7,6 +7,10 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+
 //Box on the main played game window that shows stats relating to statuses.
 public class StatusCountBoxPlayed extends GridPane {
     Label statusLabel = new Label("Status");
@@ -48,6 +52,9 @@ public class StatusCountBoxPlayed extends GridPane {
     Label totalThisYearCountLabel = new Label();
 
     Label totalLastYearCountLabel = new Label();
+    private static final Date date = new Date();
+    private static final ZoneId timeZone = ZoneId.systemDefault();
+    private static final LocalDate localDate = date.toInstant().atZone(timeZone).toLocalDate();
 
     public StatusCountBoxPlayed() {
         add(statusLabel, 0, 0);
@@ -96,16 +103,16 @@ public class StatusCountBoxPlayed extends GridPane {
 
     //Sets labels' texts accordingly
     public void updateData() {
-        playingCountLabel.setText("" + GameLists.getPlayingCount());
-        completedCountLabel.setText("" + GameLists.getCompletedCount());
-        shortCompletedCountLabel.setText("" + GameLists.getShortCompletedCount());
-        holdCountLabel.setText("" + GameLists.getHoldCount());
+        playingCountLabel.setText("" + GameLists.getPlayedStatusCount("Playing"));
+        completedCountLabel.setText("" + GameLists.getPlayedStatusCount("Completed"));
+        shortCompletedCountLabel.setText("" + GameLists.getPlayedStatusShortCount("Completed"));
+        holdCountLabel.setText("" + GameLists.getPlayedStatusCount("On Hold"));
         totalCountLabel.setText("" + GameLists.playedList.size());
-        completedThisYearCountLabel.setText("" + GameLists.getCompletedThisYearCount());
-        completedLastYearCountLabel.setText("" + GameLists.getCompletedLastYearCount());
-        shortCompletedThisYearCountLabel.setText("" + GameLists.getShortCompletedThisYearCount());
-        shortCompletedLastYearCountLabel.setText("" + GameLists.getShortCompletedLastYearCount());
-        totalThisYearCountLabel.setText("" + GameLists.getTotalThisYearCount());
-        totalLastYearCountLabel.setText("" + GameLists.getTotalLastYearCount());
+        completedThisYearCountLabel.setText("" + GameLists.getCompletedYearCount(localDate.getYear()));
+        completedLastYearCountLabel.setText("" + GameLists.getCompletedYearCount(localDate.getYear()-1));
+        shortCompletedThisYearCountLabel.setText("" + GameLists.getShortCompletedYearCount(localDate.getYear()));
+        shortCompletedLastYearCountLabel.setText("" + GameLists.getCompletedYearCount(localDate.getYear()-1));
+        totalThisYearCountLabel.setText("" + GameLists.getTotalYearCount(localDate.getYear()));
+        totalLastYearCountLabel.setText("" + GameLists.getCompletedYearCount(localDate.getYear()-1));
     }
 }

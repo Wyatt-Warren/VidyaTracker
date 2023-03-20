@@ -1,194 +1,120 @@
 package com.example.vidyatracker11;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-//Class that stores each list: played games list, unplayed games list, platform list, genre list.
+//Class that stores each list: played games list, unplayed games list, platform list, genre list, collections list.
 public class GameLists {
-    public static ObservableList<PlayedGame> playedList = FXCollections.observableArrayList();
+    //Fields
+    public static ObservableList<PlayedGame> playedList = FXCollections.observableArrayList();          //List of all PlayedGames
+    public static ObservableList<UnplayedGame> unplayedList = FXCollections.observableArrayList();      //List of all UnplayedGames
+    public static ObservableList<String> platformList = FXCollections.observableArrayList("PC");    //List of all platforms
+    public static ObservableList<String> genreList = FXCollections.observableArrayList("Action");   //List of all genres
+    public static ObservableList<GameCollection> collectionList = FXCollections.observableArrayList();  //List of all collections
 
-    public static ObservableList<UnplayedGame> unplayedList = FXCollections.observableArrayList();
+    //Returns the amount of non-short games completed in the given year.
+    public static int getCompletedYearCount(int year) {
+        //Local variables
+        int total = 0;  //Count of applicable games
 
-    public static ObservableList<String> platformList = FXCollections.observableArrayList("PC");
-
-    public static ObservableList<String> genreList = FXCollections.observableArrayList("Action");
-
-    public static ObservableList<GameCollection> collectionList = FXCollections.observableArrayList();
-
-    private static final Date date = new Date();
-
-    private static final ZoneId timeZone = ZoneId.systemDefault();
-
-    private static final LocalDate localDate = date.toInstant().atZone(timeZone).toLocalDate();
-
-    //returns the amount of non-short games completed in the current year.
-    public static int getCompletedThisYearCount() {
-        int total = 0;
         for (PlayedGame playedGame: playedList) {
-            if (playedGame.getStatus().equals("Completed") && playedGame
-                    .getCompletionYear() == localDate.getYear() &&
+            //Iterate for each PlayedGame
+            if (playedGame.getStatus().equals("Completed") &&
+                    playedGame.getCompletionYear() == year &&
                     !playedGame.getIsItShort().equals("Yes"))
+                //If game is completed, not short, and completed in the given year, increment total
                 total++;
         }
+
         return total;
     }
 
-    //Returns the amount of non-short games completed last year.
-    public static int getCompletedLastYearCount() {
-        int total = 0;
-        for (PlayedGame playedGame: playedList) {
-            if (playedGame.getStatus().equals("Completed") && playedGame
-                    .getCompletionYear() == localDate.getYear() - 1 &&
-                    !playedGame.getIsItShort().equals("Yes"))
-                total++;
-        }
-        return total;
-    }
+    //Returns the amount of short games completed in the given year.
+    public static int getShortCompletedYearCount(int year) {
+        //Local variables
+        int total = 0;  //Count of applicable games
 
-    //Returns the amount of short games completed this year.
-    public static int getShortCompletedThisYearCount() {
-        int total = 0;
         for (PlayedGame playedGame: playedList) {
-            if (playedGame.getStatus().equals("Completed") && playedGame
-                    .getCompletionYear() == localDate.getYear() && playedGame
-                    .getIsItShort().equals("Yes"))
+            //Iterate for each PlayedGame
+            if (playedGame.getStatus().equals("Completed") &&
+                    playedGame.getCompletionYear() == year &&
+                    playedGame.getIsItShort().equals("Yes"))
+                //If game is completed, short, and completed in the given year, increment total
                 total++;
         }
-        return total;
-    }
 
-    //Returns the amount of short games completed last year.
-    public static int getShortCompletedLastYearCount() {
-        int total = 0;
-        for (PlayedGame playedGame: playedList) {
-            if (playedGame.getStatus().equals("Completed") && playedGame
-                    .getCompletionYear() == localDate.getYear() - 1 && playedGame
-                    .getIsItShort().equals("Yes"))
-                total++;
-        }
         return total;
     }
 
     //Returns the number of games completed this year, regardless of short status.
-    public static int getTotalThisYearCount() {
-        return getCompletedThisYearCount() + getShortCompletedThisYearCount();
+    public static int getTotalYearCount(int year) {
+        return getCompletedYearCount(year) + getShortCompletedYearCount(year);
     }
 
-    //Returns the number of games completed last year, regardless of short status.
-    public static int getTotalLastYearCount() {
-        return getCompletedLastYearCount() + getShortCompletedLastYearCount();
-    }
+    //Returns the number of PlayedGames with the given status and not short.
+    public static int getPlayedStatusCount(String status) {
+        //Local variables
+        int total = 0;  //Count of applicable games
 
-    //Returns the number of games with the status "Playing"
-    public static int getPlayingCount() {
-        int total = 0;
         for (PlayedGame playedGame: playedList) {
-            if (playedGame.getStatus().equals("Playing"))
-                total++;
-        }
-        return total;
-    }
-
-    //Returns the number of games with the status "Completed" and not short.
-    public static int getCompletedCount() {
-        int total = 0;
-        for (PlayedGame playedGame: playedList) {
-            if (playedGame.getStatus().equals("Completed") &&
+            //Iterate for each PlayedGame
+            if (playedGame.getStatus().equals(status) &&
                     !playedGame.getIsItShort().equals("Yes"))
+                //If game has the given status and is not short, increment total
                 total++;
         }
+
         return total;
     }
 
-    //Returns the number of games with the status "Completed" that are short.
-    public static int getShortCompletedCount() {
-        int total = 0;
+    //Returns the number of PlayedGames with the given status that are short.
+    public static int getPlayedStatusShortCount(String status) {
+        //Local variables
+        int total = 0;  //Count of applicable games
+
         for (PlayedGame playedGame: playedList) {
-            if (playedGame.getStatus().equals("Completed") && playedGame
-                    .getIsItShort().equals("Yes"))
+            //Iterate for each PlayedGame
+            if (playedGame.getStatus().equals(status) &&
+                    playedGame.getIsItShort().equals("Yes"))
+                //If game has the given status and is short, increment total
                 total++;
         }
+
         return total;
     }
 
-    //Returns the number of games with the status "On Hold"
-    public static int getHoldCount() {
-        int total = 0;
-        for (PlayedGame playedGame: playedList) {
-            if (playedGame.getStatus().equals("On Hold"))
-                total++;
-        }
-        return total;
-    }
+    //Returns the number of UnplayedGames with the given status
+    public static int getUnplayedStatusCount(String status) {
+        //Local variables
+        int total = 0;  //Count of applicable games
 
-    //Returns the number of games with the status "Backlog"
-    public static int getBacklogCount() {
-        int total = 0;
         for (UnplayedGame unplayedGame: unplayedList) {
-            if (unplayedGame.getStatus().equals("Backlog"))
+            //Iterate for each UnplayedGame
+            if (unplayedGame.getStatus().equals(status))
+                //If game has the given status, increment total
                 total++;
         }
+
         return total;
     }
 
-    //Returns the number of games with the status "SubBacklog"
-    public static int getSubBacklogCount() {
-        int total = 0;
-        for (UnplayedGame unplayedGame: unplayedList) {
-            if (unplayedGame.getStatus().equals("SubBacklog"))
-                total++;
-        }
-        return total;
-    }
+    //Returns the total hours of all games with the given status
+    public static double getStatusHours(String status) {
+        //Local variables
+        double total = 0.0; //Count of total hours
 
-    //Returns the nuber of games with the status "Wishlist"
-    public static int getWishlistCount() {
-        int total = 0;
         for (UnplayedGame unplayedGame: unplayedList) {
-            if (unplayedGame.getStatus().equals("Wishlist"))
-                total++;
-        }
-        return total;
-    }
-
-    //Returns the hours of all games in "Backlog" added together.
-    public static double getBacklogHours() {
-        double total = 0.0;
-        for (UnplayedGame unplayedGame: unplayedList) {
-            if (unplayedGame.getStatus().equals("Backlog"))
+            //Iterate for each UnplayedGame
+            if (unplayedGame.getStatus().equals(status))
+                //If game has the given status, increment total
                 total += unplayedGame.getHours();
         }
-        return total;
-    }
 
-    //Returns the hours of all games in "SubBacklog" added together.
-    public static double getSubBacklogHours() {
-        double total = 0.0;
-        for (UnplayedGame unplayedGame: unplayedList) {
-            if (unplayedGame.getStatus().equals("SubBacklog"))
-                total += unplayedGame.getHours();
-        }
-        return total;
-    }
-
-    //Returns the hours of all games in "Wishlist" added together.
-    public static double getWishlistHours() {
-        double total = 0.0;
-        for (UnplayedGame unplayedGame: unplayedList) {
-            if (unplayedGame.getStatus().equals("Wishlist"))
-                total += unplayedGame.getHours();
-        }
         return total;
     }
 
     //Returns the hours of all unplayed games added together.
     public static double getTotalHours() {
-        double total = 0.0;
-        for (UnplayedGame unplayedGame: unplayedList)
-            total += unplayedGame.getHours();
-        return total;
+        return getStatusHours("Backlog") + getStatusHours("SubBacklog") + getStatusHours("Wishlist");
     }
 }

@@ -78,29 +78,41 @@ public class AchievementBox<T> extends HBox {
 
         showListButton.setOnAction(e -> {
             //Shows a window containing a list of all applicable games
+            //Local variables
             Stage stage = new Stage();
+            ListView<T> listView = new ListView<>(items);
+            Scene scene = new Scene(listView);
+
+            //GUI
             stage.getIcons().add(ApplicationGUI.icon);
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Items");
-            ListView<T> listView = new ListView<>(items);
-            Scene scene = new Scene(listView);
-            scene.getStylesheets().add(ApplicationGUI.styleSheet);
             stage.setScene(scene);
+            scene.getStylesheets().add(ApplicationGUI.styleSheet);
+
             stage.show();
         });
 
         badge.setOnMouseClicked(e -> {
             //Shows a view of each rank's icon as well as the minimum number of required items
-            //GUI
+            //Local variables
             Stage stage = new Stage();
+            VBox box = new VBox();
+            ScrollPane scrollPane = new ScrollPane(box);
+            Scene scene = new Scene(scrollPane);
+
+            //GUI
             stage.getIcons().add(ApplicationGUI.icon);
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Ranks");
-            VBox box = new VBox();
-            ScrollPane scrollPane = new ScrollPane(box);
             scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            scene.getStylesheets().add(ApplicationGUI.styleSheet);
+            box.setPadding(new Insets(5));
+            box.setSpacing(10);
+            box.setAlignment(Pos.CENTER);
+            stage.setScene(scene);
 
             if(big){
                 //Changes for big achievement
@@ -110,16 +122,10 @@ public class AchievementBox<T> extends HBox {
 
             for(int i = 0; i < ranks.length; i++) {
                 //Creating a HBox for each rank
-                //GUI
-                Label label = new Label(i + ":\t" + ranks[i]);
+                //Local variables
                 ImageView badgeImage;
-
-                if(i<=rank)
-                    //If the current HBox is the current rank of the achievement or below
-                    label.setStyle("-fx-font-size: 18;-fx-font-weight: bold;-fx-text-fill: #00ffff;");
-                else
-                    //Current HBox rank is not achieved
-                    label.setStyle("-fx-font-size: 18;-fx-font-weight: bold;");
+                Label label = new Label(i + ":\t" + ranks[i]);
+                HBox rankBox;
 
                 if(big) {
                     //Rank image for big achievement
@@ -128,20 +134,21 @@ public class AchievementBox<T> extends HBox {
                     //Rank image for other achievements
                     badgeImage = new ImageView(new Image(Objects.requireNonNull(ApplicationGUI.class.getResourceAsStream("/Rank" + i + ".png"))));
 
+
                 //GUI
-                HBox rankBox = new HBox(badgeImage, label);
+                rankBox = new HBox(badgeImage, label);
                 rankBox.setSpacing(20);
                 rankBox.setAlignment(Pos.CENTER_LEFT);
                 box.getChildren().add(rankBox);
+
+                if(i<=rank)
+                    //If the current HBox is the current rank of the achievement or below
+                    label.setStyle("-fx-font-size: 18;-fx-font-weight: bold;-fx-text-fill: #00ffff;");
+                else
+                    //Current HBox rank is not achieved
+                    label.setStyle("-fx-font-size: 18;-fx-font-weight: bold;");
             }
 
-            //GUI
-            Scene scene = new Scene(scrollPane);
-            scene.getStylesheets().add(ApplicationGUI.styleSheet);
-            box.setPadding(new Insets(5));
-            box.setSpacing(10);
-            box.setAlignment(Pos.CENTER);
-            stage.setScene(scene);
             stage.show();
         });
     }

@@ -1,6 +1,6 @@
 package com.example.vidyatracker11;
 
-//Used by tableviews in the stats screen
+//Used to store PlayedGames in tables in StatsScreen
 public class PlayedDataEntry extends DataEntry{
 
     private int totalRating = 0;
