@@ -2,13 +2,13 @@ package com.example.vidyatracker11;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.function.Predicate;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -19,41 +19,103 @@ import javafx.stage.Stage;
 
 //Tableview on the main window that displays played games
 public class PlayedGamesTable extends TableView<PlayedGame> {
+    //Columns
     TableColumn<PlayedGame, String> statusColumn = new TableColumn<>("Status");
-
     TableColumn<PlayedGame, String> shortColumn = new TableColumn<>("Short");
-
     TableColumn<PlayedGame, String> titleColumn = new TableColumn<>("Title");
-
     TableColumn<PlayedGame, String> franchiseColumn = new TableColumn<>("Franchise");
-
     TableColumn<PlayedGame, Integer> ratingColumn = new TableColumn<>("Rating");
-
     TableColumn<PlayedGame, String> platformColumn = new TableColumn<>("Platform");
-
     TableColumn<PlayedGame, String> genreColumn = new TableColumn<>("Genre");
-
     TableColumn<PlayedGame, Integer> releaseYearColumn = new TableColumn<>("Release Year");
-
     TableColumn<PlayedGame, Integer> completionYearColumn = new TableColumn<>("Completion Year");
-
     TableColumn<PlayedGame, String> percent100Column = new TableColumn<>("100%");
-
-    SortedList<PlayedGame> sortedList = new SortedList<>(GameLists.playedList);
-
-    FilteredList<PlayedGame> filteredList = new FilteredList<>(sortedList);
-
     ObservableList<TableColumn<PlayedGame, ?>> columnList = FXCollections.observableArrayList(
             statusColumn, shortColumn, titleColumn, franchiseColumn, ratingColumn, platformColumn,
             genreColumn, releaseYearColumn, completionYearColumn, percent100Column);
 
+    //Comparators
+    private static final Comparator<Game> statusComparator = new Comparator<>() {                   //Sort by status
+        //Local variables
+        final ObservableList<String> statuses = FXCollections.observableArrayList(  //List of possible statuses
+                "Playing", "Completed", "On Hold",
+                "Backlog", "SubBacklog", "Wishlist");
+        @Override
+        public int compare(Game o1, Game o2) {
+            //Return a value according to position in statuses list
+            return statuses.indexOf(o1.getStatus()) - statuses.indexOf(o2.getStatus());
+        }
+    };
+    private static final Comparator<Game> shortStatusComparator = new Comparator<>() {              //Sort by short status
+        //Local variables
+        final ObservableList<String> statuses = FXCollections.observableArrayList(  //List of possible statuses
+                "Yes", "No", "");
+        @Override
+        public int compare(Game o1, Game o2) {
+            //Return a value according to position in statuses list
+            //Local variables
+            PlayedGame p1 = (PlayedGame) o1;    //Cast o1 to PlayedGame
+            PlayedGame p2 = (PlayedGame) o2;    //Cast o2 to PlayedGame
+
+            return statuses.indexOf(p1.getShortStatus()) - statuses.indexOf(p2.getShortStatus());
+        }
+    };
+    private static final Comparator<Game> ratingComparator = (o1, o2) -> {                          //Sort by rating
+        //Return rating of o1 - rating of o2
+        //Local variables
+        PlayedGame p1 = (PlayedGame) o1;    //Cast o1 to PlayedGame
+        PlayedGame p2 = (PlayedGame) o2;    //Cast o2 to PlayedGame
+
+        return p2.getRating() - p1.getRating();
+    };
+    private static final Comparator<Game> platformComparator =                                      //Sort by platform
+            Comparator.comparingInt(o -> GameLists.platformList.indexOf(o.getPlatform()));
+    private static final Comparator<Game> genreComparator =                                         //Sort by genre
+            Comparator.comparingInt(o -> GameLists.genreList.indexOf(o.getGenre()));
+    private static final Comparator<Game> releaseDateComparator = (o1, o2) -> {                     //Sort by release date
+        //Local variables
+        String sortBy1 = String.format("%04d%02d%02d", o1.getReleaseYear(), //String to sort with for o1
+                o1.getReleaseMonth(), o1.getReleaseDay());
+        String sortBy2= String.format("%04d%02d%02d", o2.getReleaseYear(),  //String to sort with for o2
+                o2.getReleaseMonth(), o2.getReleaseDay());
+
+        return sortBy1.compareTo(sortBy2);
+
+    };
+    private static final Comparator<Game> completionDateComparator = (o1, o2) -> {            //Sort by completion date
+        //Local variables
+        PlayedGame p1 = (PlayedGame) o1;                                        //Cast o1 to PlayedGame
+        PlayedGame p2 = (PlayedGame) o2;                                        //Cast o2 to PlayedGame
+        String sortBy1 = String.format("%04d%02d%02d", p1.getCompletionYear(),  //String to sort with for o1
+                p1.getCompletionMonth(), p1.getCompletionDay());
+        String sortBy2= String.format("%04d%02d%02d", p2.getCompletionYear(),   //String to sort with for o2
+                p2.getCompletionMonth(), p2.getCompletionDay());
+
+        return sortBy1.compareTo(sortBy2);
+    };
+    private static final Comparator<Game> percentComparator = new Comparator<>() {            //Sort by 100% status
+        //Local variables
+        final ObservableList<String> statuses = FXCollections.observableArrayList(  //List of possible statuses
+                "Yes", "No", "");
+        @Override
+        public int compare(Game o1, Game o2) {
+            //Return a value according to position in statuses list
+            //Local variables
+            PlayedGame p1 = (PlayedGame) o1;    //Cast o1 to PlayedGame
+            PlayedGame p2 = (PlayedGame) o2;    //Cast o2 to PlayedGame
+
+            return statuses.indexOf(p1.getPercent100()) - statuses.indexOf(p2.getPercent100());
+        }
+    };
+
+    //Fields
     private static final Date date = new Date();
-
     private static final ZoneId timeZone = ZoneId.systemDefault();
-
-    private static final LocalDate localDate = date.toInstant().atZone(timeZone).toLocalDate();
+    private static final LocalDate localDate = date.toInstant().atZone(timeZone).toLocalDate(); //Used to get current year
+    FilteredList<PlayedGame> filteredList = new FilteredList<>(GameLists.playedList);           //List of items in the table
 
     public PlayedGamesTable() {
+        //ValueFactory for each column
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         shortColumn.setCellValueFactory(new PropertyValueFactory<>("shortStatus"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -65,81 +127,117 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
         completionYearColumn.setCellValueFactory(new PropertyValueFactory<>("completionYear"));
         percent100Column.setCellValueFactory(new PropertyValueFactory<>("percent100"));
 
+        setPrefSize(900, 99999);
         getColumns().addAll(columnList);
+        setItems(filteredList);
         TableMethods.preventColumnSorting(this);
         TableMethods.preventColumnResizing(this);
-        setPrefSize(900, 99999);
         TableMethods.preventColumnReordering(this);
-        setItems(filteredList);
 
         statusColumn.setCellFactory(e -> new TableCell<>() {
+            //Status column cell factory
             public void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
+
                 if (item == null || empty) {
+                    //Cells where there is no game object
                     setText(null);
                     setStyle("");
                 } else {
+                    //Set text
                     setText(item);
+
+                    //Set color
                     setStyle(ApplicationGUI.colorMap.get(item));
                 }
             }
         });
 
         shortColumn.setCellFactory(e -> new TableCell<>() {
+            //Short status column cell factory
             public void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
+
                 if (item == null || empty) {
+                    //Cells where there is no game object
                     setText(null);
                     setStyle("");
                 } else {
+                    //Set text
                     setText(item);
+
+                    //Set color
                     setStyle(ApplicationGUI.colorMap.get(item));
                 }
             }
         });
 
         ratingColumn.setCellFactory(e -> new TableCell<>() {
+            //Rating column cell factory
             public void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
+
                 if (item == null || empty) {
+                    //Cells where there is no game object
                     setText(null);
                     setStyle("");
                 } else {
-                    setText("" + item);
+
                     if (item == 0)
+                        //0 means no rating
                         setText("");
+                    else
+                        //Set text
+                        setText("" + item);
                 }
             }
         });
 
         percent100Column.setCellFactory(e -> new TableCell<>() {
+            //100% status column cell factory
             public void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
+
                 if (item == null || empty) {
+                    //Cells where there is no game object
                     setText(null);
                     setStyle("");
                 } else {
+                    //Set text
                     setText(item);
+
+                    //Set color
                     setStyle(ApplicationGUI.colorMap.get(item));
                 }
             }
         });
 
         releaseYearColumn.setCellFactory(e -> new TableCell<>() {
+            //Release year column cell factory
             public void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
+
                 if (item == null || empty) {
+                    //Cells where there is no game object
                     setText(null);
                     setStyle("");
                 } else {
-                    setText("" + item);
+
                     if (item == 0)
+                        //0 means no year
                         setText("");
+                    else
+                        //Set text
+                        setText("" + item);
+
                     if ((getItem()) == PlayedGamesTable.localDate.getYear()) {
+                        //Current year color
                         setStyle(ApplicationGUI.colorMap.get("CURRENTYEAR"));
                     } else if ((getItem()) == PlayedGamesTable.localDate.getYear() - 1) {
+                        //Last year color
                         setStyle(ApplicationGUI.colorMap.get("LASTYEAR"));
                     } else {
+                        //Any other year color
                         setStyle("");
                     }
                 }
@@ -147,54 +245,80 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
         });
 
         completionYearColumn.setCellFactory(e -> new TableCell<>() {
+            //Release year column cell factory
             public void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
+
                 if (item == null || empty) {
+                    //Cells where there is no game object
                     setText(null);
                     setStyle("");
                 } else {
-                    setText("" + item);
+
                     if (item == 0)
+                        //0 means no year
                         setText("");
+                    else
+                        //Set text
+                        setText("" + item);
+
                     if ((getItem()) == PlayedGamesTable.localDate.getYear()) {
+                        //Current year color
                         setStyle(ApplicationGUI.colorMap.get("CURRENTYEAR"));
                     } else if ((getItem()) == PlayedGamesTable.localDate.getYear() - 1) {
+                        //Last year color
                         setStyle(ApplicationGUI.colorMap.get("LASTYEAR"));
                     } else {
+                        //Any other year color
                         setStyle("");
                     }
                 }
             }
         });
-        setRowFactory(tv -> {
-            TableRow<PlayedGame> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (! row.isEmpty() && event.getButton()== MouseButton.PRIMARY
-                        && event.getClickCount() == 2) {
 
+        setRowFactory(tv -> {
+            //Row factory
+            //Local variables
+            TableRow<PlayedGame> row = new TableRow<>();    //The row
+
+            row.setOnMouseClicked(event -> {
+                //Mouse is clicked
+
+                if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY
+                        && event.getClickCount() == 2)
+                    //Mouse double-clicks a non-empty row
+                    //Open edit game window
                     editGame(row.getItem());
-                }
             });
+
+            //Set right click menu
             row.setContextMenu(ApplicationGUI.rowContextMenu);
+
             return row;
         });
     }
 
+    //Open a window for editing a game
     public void editGame(PlayedGame game){
+        //Local variables
         Stage stage = new Stage();
-        stage.getIcons().add(ApplicationGUI.icon);
-        stage.setResizable(false);
         PlayedEditWindow window = new PlayedEditWindow(game, stage);
         Scene scene = new Scene(window);
-        scene.getStylesheets().add(ApplicationGUI.styleSheet);
+
+        //GUI
+        stage.getIcons().add(ApplicationGUI.icon);
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.setTitle("Edit Game Data");
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.show();
+        scene.getStylesheets().add(ApplicationGUI.styleSheet);
+
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ESCAPE) {
+                //If escape is pressed, close window
                 stage.close();
             }else if(e.getCode() == KeyCode.ENTER){
+                //If enter is pressed, save and close window
                 try{
                     window.saveAndQuit(stage);
                 }catch (NumberFormatException e1){
@@ -202,10 +326,12 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                 }
             }
         });
+
+        stage.show();
     }
 
     //Calls sort methods based on the selected sort and filter options
-    //When an item is selected it tries to do sortAndFilter before setting the new value, so we just pass the variable
+    //When an item is selected, it tries to do sortAndFilter before setting the new value, so we just pass the variable
     //NewValue from the listener so it will use the right one. That's why filterToken is a parameter
     public void sortAndFilter(String filterToken) {
         try {
@@ -275,194 +401,78 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
         }
         switch (ApplicationGUI.playedSortChoices.getSelectionModel().getSelectedIndex()) { //Sort next
             case 0://Status
-                sortByStatus();
+                sortByAny(statusComparator);
                 break;
             case 1: //Title
-                setItems(new FilteredList<>(normalSort(filteredList)));
+                setItems(new FilteredList<>(basicSort(filteredList)));
                 break;
             case 2: //Rating
-                sortByRating();
+                sortByAny(ratingComparator);
                 break;
             case 3: //Platform
-                sortByPlatform();
+                sortByAny(platformComparator);
                 break;
             case 4: //Genre
-                sortByGenre();
+                sortByAny(genreComparator);
                 break;
             case 5: //Release Date
-                sortByDate(true);
+                sortByAny(releaseDateComparator);
                 break;
             case 6: //Completion Date
-                sortByDate(false);
+                sortByAny(completionDateComparator);
                 break;
         }
         TableMethods.updateColumnWidth(columnList);
         refresh();
     }
 
-    //Sorts by franchise, within the same franchise, sorts by release date
-    public static ObservableList<PlayedGame> normalSort(ObservableList<PlayedGame> givenList) {
-        ObservableList<PlayedGame> newList = FXCollections.observableArrayList();
+    //Sort's by title, but franchises are grouped and sorted by release date
+    public static ObservableList<PlayedGame> basicSort(ObservableList<PlayedGame> oldList){
+        ObservableList<PlayedGame> newList = FXCollections.observableArrayList(oldList);
+        //Sort by release date first
+        newList.sort(releaseDateComparator);
 
-        for (PlayedGame playedGame : givenList) {
-            boolean placed = false;
+        //Sort by title/franchise
+        newList.sort((o1, o2) -> {
+            //Local variables
+            String sortBy1; //First item sort name
+            String sortBy2; //Second item sort name
 
-            for (int j = 0; j < newList.size(); j++) {
-                String oldSortingName;
-                if(playedGame.getFranchise().equals(""))
-                    oldSortingName = playedGame.getTitle().toLowerCase();
-                else
-                    oldSortingName = playedGame.getFranchise().toLowerCase();
+            if(o1.getFranchise().equals(""))
+                //Get title if no franchise
+                sortBy1 = o1.getTitle().toLowerCase();
+            else
+                //Get franchise if present
+                sortBy1 = o1.getFranchise().toLowerCase();
 
-                String newSortingName;
-                if(newList.get(j).getFranchise().equals(""))
-                    newSortingName = newList.get(j).getTitle().toLowerCase();
-                else
-                    newSortingName = newList.get(j).getFranchise().toLowerCase();
+            if(o2.getFranchise().equals(""))
+                //Get title if no franchise
+                sortBy2 = o2.getTitle().toLowerCase();
+            else
+                //Get franchise if present
+                sortBy2 = o2.getFranchise().toLowerCase();
 
-                if (oldSortingName.startsWith("the "))
-                    oldSortingName = oldSortingName.replace("the ", "");
-                if (newSortingName.startsWith("the "))
-                    newSortingName = newSortingName.replace("the ", "");
+            if (sortBy1.startsWith("the "))
+                //remove the
+                sortBy1 = sortBy1.replace("the ", "");
 
-                String oldListsDate = String.format("%04d%02d%02d", playedGame.getReleaseYear(),
-                        playedGame.getReleaseMonth(), playedGame.getReleaseDay());
-                String newListsDate = String.format("%04d%02d%02d", newList.get(j).getReleaseYear(),
-                        newList.get(j).getReleaseMonth(), newList.get(j).getReleaseDay());
-                String givenListFranchiseDate =  oldSortingName + oldListsDate;
-                String newListsFranchiseDate = newSortingName + newListsDate;
-                int comparedFranchiseNum = givenListFranchiseDate.compareTo(newListsFranchiseDate);
-                if (comparedFranchiseNum < 0) {
-                    newList.add(j, playedGame);
-                    placed = true;
-                    break;
-                }
-            }
+            if (sortBy2.startsWith("the "))
+                //remove the
+                sortBy2 = sortBy2.replace("the ", "");
 
-            if (!placed)
-                newList.add(playedGame);
-        }
+            return sortBy1.compareTo(sortBy2);
+        });
+
         return newList;
     }
 
-    //Sorts by status first, in the order P, C, O, and then does normal sort.
-    public void sortByStatus() {
-        ObservableList<PlayedGame> newList = FXCollections.observableArrayList();
-        String[] statuses = { "Playing", "Completed", "On Hold" };
-        for (String status : statuses) {
-            ObservableList<PlayedGame> givenStatusList = FXCollections.observableArrayList();
-            for (PlayedGame playedGame : filteredList) {
-                if (playedGame.getStatus().equals(status))
-                    givenStatusList.add(playedGame);
-            }
-            newList.addAll(normalSort(givenStatusList));
-        }
-        filteredList = new FilteredList<>(newList);
-        setItems(filteredList);
-    }
+    //Sorts by basicSort and then by a given comparator
+    public void sortByAny(Comparator<Game> comparator){
+        //Local variables
+        ObservableList<PlayedGame> newList = FXCollections.observableArrayList(basicSort(filteredList));   //List to be sorted by the end, first sorted by basicSort
 
-    //Sorts by rating and then normal sort
-    public void sortByRating() {
-        ObservableList<PlayedGame> newList = FXCollections.observableArrayList();
-        ObservableList<PlayedGame> totalList = FXCollections.observableArrayList(filteredList);
-        for (int i = 10; i > 0; i--) {
-            ObservableList<PlayedGame> givenRatingList = FXCollections.observableArrayList();
-            for (PlayedGame playedGame : totalList) {
-                if (playedGame.getRating() == i)
-                    givenRatingList.add(playedGame);
-            }
-            totalList.removeAll(givenRatingList);
-            newList.addAll(normalSort(givenRatingList));
-        }
-        newList.addAll(normalSort(totalList));
-        filteredList = new FilteredList<>(newList);
-        setItems(filteredList);
-    }
-
-    //Sorts by platform and then normal sort
-    public void sortByPlatform() {
-        ObservableList<PlayedGame> newList = FXCollections.observableArrayList();
-        ObservableList<PlayedGame> totalList = FXCollections.observableArrayList(filteredList);
-        ObservableList<String> platList = GameLists.platformList;
-        for (String s : platList) {
-            ObservableList<PlayedGame> givenPlatformList = FXCollections.observableArrayList();
-            for (PlayedGame playedGame : totalList) {
-                if (playedGame.getPlatform().equals(s))
-                    givenPlatformList.add(playedGame);
-            }
-            totalList.removeAll(givenPlatformList);
-            newList.addAll(normalSort(givenPlatformList));
-        }
-        newList.addAll(normalSort(totalList));
-        filteredList = new FilteredList<>(newList);
-        setItems(filteredList);
-    }
-
-    //Sorts by genre and then normal sort
-    public void sortByGenre() {
-        ObservableList<PlayedGame> newList = FXCollections.observableArrayList();
-        ObservableList<PlayedGame> totalList = FXCollections.observableArrayList(filteredList);
-        ObservableList<String> genreList = GameLists.genreList;
-        for (String s : genreList) {
-            ObservableList<PlayedGame> givenGenreList = FXCollections.observableArrayList();
-            for (PlayedGame playedGame : totalList) {
-                if (playedGame.getGenre().equals(s))
-                    givenGenreList.add(playedGame);
-            }
-            totalList.removeAll(givenGenreList);
-            newList.addAll(normalSort(givenGenreList));
-        }
-        newList.addAll(normalSort(totalList));
-        filteredList = new FilteredList<>(newList);
-        setItems(filteredList);
-    }
-
-    //Sorts by date and then franchise. Normal sort would be overkill since sorting by date within a franchise
-    //doesn't make sense if it's already sorted by date
-    public void sortByDate(boolean release) {
-        ObservableList<PlayedGame> newList = FXCollections.observableArrayList();
-        ObservableList<PlayedGame> totalList = FXCollections.observableArrayList(filteredList);
-        for (PlayedGame playedGame : totalList) {
-            boolean placed = false;
-            for (int j = 0; j < newList.size(); j++) {
-                String oldFranchise;
-                if(playedGame.getFranchise().equals(""))
-                    oldFranchise = playedGame.getTitle().toLowerCase();
-                else
-                    oldFranchise = playedGame.getFranchise().toLowerCase();
-
-                String newFranchise;
-                if(newList.get(j).getFranchise().equals(""))
-                    newFranchise = newList.get(j).getTitle().toLowerCase();
-                else
-                    newFranchise = newList.get(j).getFranchise().toLowerCase();
-
-                String givenListsDate, newListsDate;
-                if (release) {
-                    givenListsDate = String.format("%04d%02d%02d", playedGame.getReleaseYear(),
-                            playedGame.getReleaseMonth(), playedGame.getReleaseDay());
-                    newListsDate = String.format("%04d%02d%02d", newList.get(j).getReleaseYear(),
-                            newList.get(j).getReleaseMonth(), newList.get(j).getReleaseDay());
-                } else {
-                    givenListsDate = String.format("%04d%02d%02d", playedGame.getCompletionYear(),
-                            playedGame.getCompletionMonth(), playedGame.getCompletionDay());
-                    newListsDate = String.format("%04d%02d%02d", newList.get(j).getCompletionYear(),
-                            newList.get(j).getCompletionMonth(), newList.get(j).getCompletionDay());
-                }
-                String gameListFranchiseDate = "" + givenListsDate + oldFranchise;
-                String newListsFranchiseDate = "" + newListsDate + newFranchise;
-                int comparedFranchiseNum = gameListFranchiseDate.compareTo(newListsFranchiseDate);
-                if (comparedFranchiseNum < 0) {
-                    newList.add(j, playedGame);
-                    placed = true;
-                    break;
-                }
-            }
-            if (!placed)
-                newList.add(playedGame);
-        }
-        filteredList = new FilteredList<>(newList);
-        setItems(filteredList);
+        newList.sort(comparator);
+        setItems(newList);
     }
 
     //Filters the list based on a predicate
