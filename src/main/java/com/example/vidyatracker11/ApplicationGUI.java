@@ -164,10 +164,10 @@ public class ApplicationGUI extends Application {
         primaryStage.getIcons().add(icon);
 
         //Populate ChoiceBoxes
-        playedSortChoices.getItems().addAll("Status", "Title", "Rating", "Platform", "Genre", "Release Date", "Completion Date");
+        playedSortChoices.getItems().addAll("Status", "Short", "Title", "Rating", "Platform", "Genre", "Release Date", "Completion Date", "100%");
         playedFilterChoices.getItems().addAll("Status", "Short", "Franchise", "Rating", "Platform",
                 "Genre", "Release Year", "Completion Year", "100%", "No Filter");
-        unplayedSortChoices.getItems().addAll("Status", "Title", "Platform", "Genre", "Hours", "Release Date");
+        unplayedSortChoices.getItems().addAll("Status", "Title", "Platform", "Genre", "Hours", "Release Date", "Deck Status");
         unplayedFilterChoices.getItems().addAll("Status", "Franchise", "Platform", "Genre", "Deck Status",
                 "Release Year", "No Filter");
 

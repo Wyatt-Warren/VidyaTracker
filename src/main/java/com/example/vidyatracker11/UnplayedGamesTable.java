@@ -15,29 +15,21 @@ import javafx.scene.input.MouseButton;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+//Tableview on the main window that displays unplayed games
 public class UnplayedGamesTable extends TableView<UnplayedGame> {
+    //Columns
     TableColumn<UnplayedGame, String> statusColumn = new TableColumn<>("Status");
-
     TableColumn<UnplayedGame, String> titleColumn = new TableColumn<>("Title");
-
     TableColumn<UnplayedGame, String> franchiseColumn = new TableColumn<>("Franchise");
-
     TableColumn<UnplayedGame, String> platformColumn = new TableColumn<>("Platform");
-
     TableColumn<UnplayedGame, String> genreColumn = new TableColumn<>("Genre");
-
     TableColumn<UnplayedGame, Double> hoursColumn = new TableColumn<>("Predicted Hours");
-
     TableColumn<UnplayedGame, String> deckColumn = new TableColumn<>("Deck Status");
-
     TableColumn<UnplayedGame, Integer> releaseYearColumn = new TableColumn<>("Release Year");
-
     ObservableList<TableColumn<UnplayedGame, ?>> columnList = FXCollections.observableArrayList(
             statusColumn, titleColumn, franchiseColumn, platformColumn, genreColumn, hoursColumn,
             releaseYearColumn, deckColumn);
-
     SortedList<UnplayedGame> sortedList = new SortedList<>(GameLists.unplayedList);
-
     FilteredList<UnplayedGame> filteredList = new FilteredList<>(sortedList);
 
     public UnplayedGamesTable() {

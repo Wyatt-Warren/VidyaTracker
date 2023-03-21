@@ -330,98 +330,122 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
         stage.show();
     }
 
-    //Calls sort methods based on the selected sort and filter options
-    //When an item is selected, it tries to do sortAndFilter before setting the new value, so we just pass the variable
-    //NewValue from the listener so it will use the right one. That's why filterToken is a parameter
+    //Sorts and filters based on what items are selected in the ChoiceBoxes
     public void sortAndFilter(String filterToken) {
         try {
-            if (filterToken.equals("Blank")) filterToken = "";
+            if (filterToken.equals("Blank"))
+                //If "Blank" is selected, the actual value is a blank string
+                filterToken = "";
         }catch (NullPointerException ignored){
-          //lol
+            //Sometimes the method is called when the value is null
+            //It doesn't matter what filterToken is if it's null though
         }
-        final String finalFilterToken = filterToken;
-        switch (ApplicationGUI.playedFilterChoices.getSelectionModel().getSelectedIndex()) { //Filter first
-            case 0: //Status
+        //Local variables
+        final String finalFilterToken = filterToken;    //Predicates need a value that is final or effectively final
+
+        switch (ApplicationGUI.playedFilterChoices.getSelectionModel().getSelectedIndex()) {
+            //Switch for filter selection
+            case 0:
+                //Status
                 filterByAny(playedGame ->
                         playedGame.getStatus().equals(finalFilterToken));
                 break;
-            case 1: //Short
+            case 1:
+                //Short
                 filterByAny(playedGame ->
                         playedGame.getShortStatus().equals(finalFilterToken));
                 break;
-            case 2: //Franchise
+            case 2:
+                //Franchise
                 filterByAny(playedGame ->
                         playedGame.getFranchise().equals(finalFilterToken));
                 break;
-            case 3: //Rating
+            case 3:
+                //Rating
                 try{
-                    filterByAny(playedGame -> {
-                        int intToken = Integer.parseInt(finalFilterToken);
-                        return playedGame.getRating() == intToken;
-                    });
+                    filterByAny(playedGame -> playedGame.getRating() == Integer.parseInt(finalFilterToken));
                 }catch (NumberFormatException ignored){
-                    //lol
+                    //This shouldn't happen
                 }
                 break;
-            case 4: //Platform
+            case 4:
+                //Platform
                 filterByAny(playedGame ->
                         playedGame.getPlatform().equals(finalFilterToken));
                 break;
-            case 5: //Genre
+            case 5:
+                //Genre
                 filterByAny(playedGame ->
                         playedGame.getGenre().equals(finalFilterToken));
                 break;
-            case 6: //Release Year
+            case 6:
+                //Release Year
                 try{
-                    filterByAny(playedGame -> {
-                        int intToken = Integer.parseInt(finalFilterToken);
-                        return playedGame.getReleaseYear()==intToken;
-                    });
+                    filterByAny(playedGame -> playedGame.getReleaseYear() ==
+                            Integer.parseInt(finalFilterToken));
                 }catch (NumberFormatException ignored){
-                    //lol
+                    //This shouldn't happen
                 }
                 break;
-            case 7: //Completion Year
+            case 7:
+                //Completion Year
                 try{
-                    filterByAny(playedGame -> {
-                        int intToken = Integer.parseInt(finalFilterToken);
-                        return playedGame.getCompletionYear()==intToken;
-                    });
+                    filterByAny(playedGame -> playedGame.getCompletionYear() ==
+                            Integer.parseInt(finalFilterToken));
                 }catch (NumberFormatException ignored){
-                    //lol
+                    //This shouldn't happen
                 }
                 break;
-            case 8: //100%
+            case 8:
+                //100%
                 filterByAny(playedGame ->
                         playedGame.getPercent100().equals(finalFilterToken));
                 break;
-            case 9: //Don't filter
+            case 9:
+                //Don't filter
                 unFilter();
                 break;
         }
-        switch (ApplicationGUI.playedSortChoices.getSelectionModel().getSelectedIndex()) { //Sort next
-            case 0://Status
+        switch (ApplicationGUI.playedSortChoices.getSelectionModel().getSelectedIndex()) {
+            //Switch for sort selection
+            case 0:
+                //Status
                 sortByAny(statusComparator);
                 break;
-            case 1: //Title
+            case 1:
+                //Short
+                sortByAny(shortStatusComparator);
+                break;
+            case 2:
+                //Title
                 setItems(new FilteredList<>(basicSort(filteredList)));
                 break;
-            case 2: //Rating
+            case 3:
+                //Rating
                 sortByAny(ratingComparator);
                 break;
-            case 3: //Platform
+            case 4:
+                //Platform
                 sortByAny(platformComparator);
                 break;
-            case 4: //Genre
+            case 5:
+                //Genre
                 sortByAny(genreComparator);
                 break;
-            case 5: //Release Date
+            case 6:
+                //Release Date
                 sortByAny(releaseDateComparator);
                 break;
-            case 6: //Completion Date
+            case 7:
+                //Completion Date
                 sortByAny(completionDateComparator);
                 break;
+            case 8:
+                //100%
+                sortByAny(percentComparator);
+                break;
         }
+
         TableMethods.updateColumnWidth(columnList);
         refresh();
     }
