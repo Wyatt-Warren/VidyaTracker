@@ -1,11 +1,8 @@
 package com.example.vidyatracker11;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -19,6 +16,7 @@ import javafx.scene.layout.VBox;
 
 //Window used to generate a random list based on filters.
 public class RandomListGenerator extends VBox {
+    //GUI
     Label mainLabel = new Label("Generate List Based on Filters");
 
     //Length
@@ -90,10 +88,8 @@ public class RandomListGenerator extends VBox {
     ListView<String> generatedList = new ListView<>();
 
     public RandomListGenerator() {
-        getChildren().addAll(mainLabel, mainHBox, generateButton, generatedList);
+        //GUI
         mainLabel.setStyle("-fx-font-size: 24;-fx-font-weight: bold;");
-        setFillWidth(false);
-        mainHBox.setSpacing(5.0);
         statusButtonBox.setAlignment(Pos.CENTER);
         platformButtonBox.setAlignment(Pos.CENTER);
         genreButtonBox.setAlignment(Pos.CENTER);
@@ -108,83 +104,124 @@ public class RandomListGenerator extends VBox {
         deckVBox.setAlignment(Pos.TOP_CENTER);
         yearsMinVBox.setAlignment(Pos.TOP_CENTER);
         yearsMaxVBox.setAlignment(Pos.TOP_CENTER);
+        mainHBox.setSpacing(5.0);
         setAlignment(Pos.CENTER);
-
+        getChildren().addAll(mainLabel, mainHBox, generateButton, generatedList);
+        setFillWidth(false);
         setPadding(new Insets(5.0));
         setSpacing(5.0);
+
+        //Only allow integers for lengthField
         lengthField.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
 
+        //Set status values
         statusBox.getItems().addAll("Backlog", "SubBacklog", "Wishlist");
+
+        //Set platform values
         platformBox.getItems().addAll(GameLists.platformList);
+
+        //Set genre values
         genreBox.getItems().addAll(GameLists.genreList);
 
+        //Only allow doubles for hoursMinField and hoursMaxField
         hoursMinField.setTextFormatter(new TextFormatter<>(ApplicationGUI.doubleFilter));
         hoursMaxField.setTextFormatter(new TextFormatter<>(ApplicationGUI.doubleFilter));
 
+        //Only allow integers for yearsMinField and yearsMaxField
         yearsMinField.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
         yearsMaxField.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
 
+        //Set deck values
         deckBox.getItems().addAll("Yes", "No", "Maybe", "Blank");
-        ObservableList<Integer> yearList = FXCollections.observableArrayList();
-        for (int i = 0; i < GameLists.unplayedList.size(); i++) {
-            if (!yearList.contains(GameLists.unplayedList.get(i).getReleaseYear()))
-                yearList.add(GameLists.unplayedList.get(i).getReleaseYear());
-        }
-        Collections.sort(yearList);
 
         statusAddButton.setOnAction(e -> {
             if (!statusView.getItems().contains(statusBox.getSelectionModel().getSelectedItem()) &&
                     statusBox.getSelectionModel().getSelectedItem() != null)
+                //When statusAddButton is pressed, If an item is selected, and it is not already in statusView, add it to statusView
                 statusView.getItems().add(statusBox.getSelectionModel().getSelectedItem());
         });
+
+        //Remove selected item from statusView
         statusRemoveButton.setOnAction(e -> statusView.getItems().remove(statusView.getSelectionModel().getSelectedItem()));
 
         platformAddButton.setOnAction(e -> {
             if (!platformView.getItems().contains(platformBox.getSelectionModel().getSelectedItem()) &&
                     platformBox.getSelectionModel().getSelectedItem() != null)
+                //When platformAddButton is pressed, If an item is selected, and it is not already in platformView, add it to platformView
                 platformView.getItems().add(platformBox.getSelectionModel().getSelectedItem());
         });
+
+        //Remove selected item from platformView
         platformRemoveButton.setOnAction(e -> platformView.getItems().remove(platformView.getSelectionModel().getSelectedItem()));
 
         genreAddButton.setOnAction(e -> {
             if (!genreView.getItems().contains(genreBox.getSelectionModel().getSelectedItem()) &&
                     genreBox.getSelectionModel().getSelectedItem() != null)
+                //When genreAddButton is pressed, If an item is selected, and it is not already in genreView, add it to genreView
                 genreView.getItems().add(genreBox.getSelectionModel().getSelectedItem());
         });
+
+        //Remove selected item from genreView
         genreRemoveButton.setOnAction(e -> genreView.getItems().remove(genreView.getSelectionModel().getSelectedItem()));
 
         deckAddButton.setOnAction(e -> {
             if (!deckView.getItems().contains(deckBox.getSelectionModel().getSelectedItem()) &&
                     deckBox.getSelectionModel().getSelectedItem() != null)
+                //When deckAddButton is pressed, If an item is selected, and it is not already in deckView, add it to deckView
                 deckView.getItems().add(deckBox.getSelectionModel().getSelectedItem());
         });
+
+        //Remove selected item from deckView
         deckRemoveButton.setOnAction(e -> deckView.getItems().remove(deckView.getSelectionModel().getSelectedItem()));
 
         generateButton.setOnAction(e -> {
+            //Generate a random list of items based on selected filters
             if (!lengthField.getText().equals("")) {
-                generatedList.getItems().clear();
+                //There must be a number in lengthField
+                //Local variables
                 Random rand = new Random();
-                ArrayList<UnplayedGame> potentialList = new ArrayList<>();
-                for (int i = 0; i < GameLists.unplayedList.size(); i++) {
-                    UnplayedGame newGame = GameLists.unplayedList.get(i);
-                    if (newGame.getDeckCompatible().equals(""))
-                        newGame.setDeckCompatible("Blank");
-                    if ((statusView.getItems().isEmpty() || statusView.getItems().contains(newGame.getStatus())) &&
-                            (titleField.getText().equals("") || newGame.getTitle().toLowerCase().contains(titleField.getText().toLowerCase())) &&
-                            (platformView.getItems().isEmpty() || platformView.getItems().contains(newGame.getPlatform())) &&
-                            (genreView.getItems().isEmpty() || genreView.getItems().contains(newGame.getGenre())) &&
-                            (hoursMinField.getText().equals("") || newGame.getHours() >= Double.parseDouble(hoursMinField.getText())) &&
-                            (hoursMaxField.getText().equals("") || newGame.getHours() <= Double.parseDouble(hoursMaxField.getText())) &&
-                            (deckView.getItems().isEmpty() || deckView.getItems().contains(newGame.getDeckCompatible())) &&
-                            (yearsMinField.getText().equals("") || newGame.getReleaseYear() >= Integer.parseInt(yearsMinField.getText())) &&
-                            (yearsMaxField.getText().equals("") || newGame.getReleaseYear() <= Integer.parseInt(yearsMaxField.getText())))
-                        potentialList.add(newGame);
+                ArrayList<UnplayedGame> potentialList = new ArrayList<>();  //List of items that fit the requirements selected
+
+                //Clear the existing list to generate a new one
+                generatedList.getItems().clear();
+
+                for (UnplayedGame game : GameLists.unplayedList) {
+                    //Iterate for every UnplayedGame
+
+                    if ((statusView.getItems().isEmpty() || statusView.getItems().contains(game.getStatus())) &&
+                            //Status is selected and game matches
+                            (titleField.getText().equals("") || game.getTitle().toLowerCase().contains(titleField.getText().toLowerCase())) &&
+                            //Title is selected and game matches
+                            (platformView.getItems().isEmpty() || platformView.getItems().contains(game.getPlatform())) &&
+                            //platform is selected and game matches
+                            (genreView.getItems().isEmpty() || genreView.getItems().contains(game.getGenre())) &&
+                            //genre is selected and game matches
+                            (hoursMinField.getText().equals("") || game.getHours() >= Double.parseDouble(hoursMinField.getText())) &&
+                            //hours is entered and game is greater or equal
+                            (hoursMaxField.getText().equals("") || game.getHours() <= Double.parseDouble(hoursMaxField.getText())) &&
+                            //hours is entered and game is less than or equal
+                            (deckView.getItems().isEmpty() || deckView.getItems().contains(game.getDeckCompatible())) &&
+                            //deck status is selected and game matches
+                            (yearsMinField.getText().equals("") || game.getReleaseYear() >= Integer.parseInt(yearsMinField.getText())) &&
+                            //release year is entered and game is greater or equal
+                            (yearsMaxField.getText().equals("") || game.getReleaseYear() <= Integer.parseInt(yearsMaxField.getText())))
+                            //release year is entered and game is less than or equal
+
+                        //Add valid game to potentialList
+                        potentialList.add(game);
                 }
+
                 if (!potentialList.isEmpty()) {
-                    int gameNum = Integer.parseInt(lengthField.getText());
+                    //If there are items that are compatible with filters
+                    //Local variables
+                    int gameNum = Integer.parseInt(lengthField.getText());  //Amount of games in the list
+
                     if (gameNum > potentialList.size())
+                        //If there are less possible games than what was entered, only generate as many as possible
                         gameNum = potentialList.size();
-                    for (int j = 0; j < gameNum; j++)
+
+                    for (int i = 0; i < gameNum; i++)
+                        //Add gameNum amount of games to the final list
                         generatedList.getItems().add(potentialList.remove(rand.nextInt(potentialList.size())).getTitle());
                 }
             }

@@ -91,7 +91,7 @@ public class AchievementWindow extends VBox {
         //Sort achievement lists
         for(AchievementBox<PlayedGame> achievementBox : gameCountAchievementBoxes)
             //Sort all achievements' list
-            achievementBox.setItems(PlayedGamesTable.basicSort(achievementBox.getItems()));
+            achievementBox.setItems(PlayedGamesTable.basicSort(achievementBox.getItems(), true));
         sortFranchises();
 
         for(AchievementBox<?> achievementBox : achievementBoxes)

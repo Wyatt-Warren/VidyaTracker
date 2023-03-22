@@ -34,80 +34,6 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
             statusColumn, shortColumn, titleColumn, franchiseColumn, ratingColumn, platformColumn,
             genreColumn, releaseYearColumn, completionYearColumn, percent100Column);
 
-    //Comparators
-    private static final Comparator<Game> statusComparator = new Comparator<>() {                   //Sort by status
-        //Local variables
-        final ObservableList<String> statuses = FXCollections.observableArrayList(  //List of possible statuses
-                "Playing", "Completed", "On Hold",
-                "Backlog", "SubBacklog", "Wishlist");
-        @Override
-        public int compare(Game o1, Game o2) {
-            //Return a value according to position in statuses list
-            return statuses.indexOf(o1.getStatus()) - statuses.indexOf(o2.getStatus());
-        }
-    };
-    private static final Comparator<Game> shortStatusComparator = new Comparator<>() {              //Sort by short status
-        //Local variables
-        final ObservableList<String> statuses = FXCollections.observableArrayList(  //List of possible statuses
-                "Yes", "No", "");
-        @Override
-        public int compare(Game o1, Game o2) {
-            //Return a value according to position in statuses list
-            //Local variables
-            PlayedGame p1 = (PlayedGame) o1;    //Cast o1 to PlayedGame
-            PlayedGame p2 = (PlayedGame) o2;    //Cast o2 to PlayedGame
-
-            return statuses.indexOf(p1.getShortStatus()) - statuses.indexOf(p2.getShortStatus());
-        }
-    };
-    private static final Comparator<Game> ratingComparator = (o1, o2) -> {                          //Sort by rating
-        //Return rating of o1 - rating of o2
-        //Local variables
-        PlayedGame p1 = (PlayedGame) o1;    //Cast o1 to PlayedGame
-        PlayedGame p2 = (PlayedGame) o2;    //Cast o2 to PlayedGame
-
-        return p2.getRating() - p1.getRating();
-    };
-    private static final Comparator<Game> platformComparator =                                      //Sort by platform
-            Comparator.comparingInt(o -> GameLists.platformList.indexOf(o.getPlatform()));
-    private static final Comparator<Game> genreComparator =                                         //Sort by genre
-            Comparator.comparingInt(o -> GameLists.genreList.indexOf(o.getGenre()));
-    private static final Comparator<Game> releaseDateComparator = (o1, o2) -> {                     //Sort by release date
-        //Local variables
-        String sortBy1 = String.format("%04d%02d%02d", o1.getReleaseYear(), //String to sort with for o1
-                o1.getReleaseMonth(), o1.getReleaseDay());
-        String sortBy2= String.format("%04d%02d%02d", o2.getReleaseYear(),  //String to sort with for o2
-                o2.getReleaseMonth(), o2.getReleaseDay());
-
-        return sortBy1.compareTo(sortBy2);
-
-    };
-    private static final Comparator<Game> completionDateComparator = (o1, o2) -> {            //Sort by completion date
-        //Local variables
-        PlayedGame p1 = (PlayedGame) o1;                                        //Cast o1 to PlayedGame
-        PlayedGame p2 = (PlayedGame) o2;                                        //Cast o2 to PlayedGame
-        String sortBy1 = String.format("%04d%02d%02d", p1.getCompletionYear(),  //String to sort with for o1
-                p1.getCompletionMonth(), p1.getCompletionDay());
-        String sortBy2= String.format("%04d%02d%02d", p2.getCompletionYear(),   //String to sort with for o2
-                p2.getCompletionMonth(), p2.getCompletionDay());
-
-        return sortBy1.compareTo(sortBy2);
-    };
-    private static final Comparator<Game> percentComparator = new Comparator<>() {            //Sort by 100% status
-        //Local variables
-        final ObservableList<String> statuses = FXCollections.observableArrayList(  //List of possible statuses
-                "Yes", "No", "");
-        @Override
-        public int compare(Game o1, Game o2) {
-            //Return a value according to position in statuses list
-            //Local variables
-            PlayedGame p1 = (PlayedGame) o1;    //Cast o1 to PlayedGame
-            PlayedGame p2 = (PlayedGame) o2;    //Cast o2 to PlayedGame
-
-            return statuses.indexOf(p1.getPercent100()) - statuses.indexOf(p2.getPercent100());
-        }
-    };
-
     //Fields
     private static final Date date = new Date();
     private static final ZoneId timeZone = ZoneId.systemDefault();
@@ -410,39 +336,43 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
             //Switch for sort selection
             case 0:
                 //Status
-                sortByAny(statusComparator);
+                sortByAny(TableMethods.statusComparator);
                 break;
             case 1:
                 //Short
-                sortByAny(shortStatusComparator);
+                sortByAny(TableMethods.shortStatusComparator);
                 break;
             case 2:
                 //Title
-                setItems(new FilteredList<>(basicSort(filteredList)));
+                setItems(new FilteredList<>(basicSort(filteredList, true)));
                 break;
             case 3:
-                //Rating
-                sortByAny(ratingComparator);
+                //Title
+                setItems(new FilteredList<>(basicSort(filteredList, false)));
                 break;
             case 4:
-                //Platform
-                sortByAny(platformComparator);
+                //Rating
+                sortByAny(TableMethods.ratingComparator);
                 break;
             case 5:
-                //Genre
-                sortByAny(genreComparator);
+                //Platform
+                sortByAny(TableMethods.platformComparator);
                 break;
             case 6:
-                //Release Date
-                sortByAny(releaseDateComparator);
+                //Genre
+                sortByAny(TableMethods.genreComparator);
                 break;
             case 7:
-                //Completion Date
-                sortByAny(completionDateComparator);
+                //Release Date
+                sortByAny(TableMethods.releaseDateComparator);
                 break;
             case 8:
+                //Completion Date
+                sortByAny(TableMethods.completionDateComparator);
+                break;
+            case 9:
                 //100%
-                sortByAny(percentComparator);
+                sortByAny(TableMethods.percentComparator);
                 break;
         }
 
@@ -451,10 +381,10 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
     }
 
     //Sort's by title, but franchises are grouped and sorted by release date
-    public static ObservableList<PlayedGame> basicSort(ObservableList<PlayedGame> oldList){
+    public static ObservableList<PlayedGame> basicSort(ObservableList<PlayedGame> oldList, boolean title){
         ObservableList<PlayedGame> newList = FXCollections.observableArrayList(oldList);
         //Sort by release date first
-        newList.sort(releaseDateComparator);
+        newList.sort(TableMethods.releaseDateComparator);
 
         //Sort by title/franchise
         newList.sort((o1, o2) -> {
@@ -462,14 +392,14 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
             String sortBy1; //First item sort name
             String sortBy2; //Second item sort name
 
-            if(o1.getFranchise().equals(""))
+            if(o1.getFranchise().equals("") && title)
                 //Get title if no franchise
                 sortBy1 = o1.getTitle().toLowerCase();
             else
                 //Get franchise if present
                 sortBy1 = o1.getFranchise().toLowerCase();
 
-            if(o2.getFranchise().equals(""))
+            if(o2.getFranchise().equals("") && title)
                 //Get title if no franchise
                 sortBy2 = o2.getTitle().toLowerCase();
             else
@@ -493,7 +423,7 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
     //Sorts by basicSort and then by a given comparator
     public void sortByAny(Comparator<Game> comparator){
         //Local variables
-        ObservableList<PlayedGame> newList = FXCollections.observableArrayList(basicSort(filteredList));   //List to be sorted by the end, first sorted by basicSort
+        ObservableList<PlayedGame> newList = FXCollections.observableArrayList(basicSort(filteredList, true));   //List to be sorted by the end, first sorted by basicSort
 
         newList.sort(comparator);
         setItems(newList);
