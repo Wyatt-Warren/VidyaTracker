@@ -5,44 +5,31 @@ import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 
 //Box on the main unplayed game window that shows stats relating to statuses.
 public class StatusCountBoxUnplayed extends GridPane {
+    //GUI
     Label statusLabel = new Label("Status");
-
     Label countLabel = new Label("Count");
-
-    Label HLTBLabel = new Label("HLTB Hours");
-
+    Label hoursLabel = new Label("Predicted Hours");
     Label backlogLabel = new Label("Backlog");
-
     Label backlogCountLabel = new Label();
-
     Label backlogHoursLabel = new Label();
-
     Label subBacklogLabel = new Label("SubBacklog");
-
     Label subBacklogCountLabel = new Label();
-
     Label subBacklogHoursLabel = new Label();
-
     Label wishlistLabel = new Label("Wishlist");
-
     Label wishlistCountLabel = new Label();
-
     Label wishlistHoursLabel = new Label();
-
     Label totalLabel = new Label("Total");
-
     Label totalCountLabel = new Label();
-
     Label totalHoursLabel = new Label();
 
     public StatusCountBoxUnplayed() {
+        //GUI
         add(statusLabel, 0, 0);
         add(countLabel, 1, 0);
-        add(HLTBLabel, 2, 0);
+        add(hoursLabel, 2, 0);
         add(backlogLabel, 0, 1);
         add(subBacklogLabel, 0, 2);
         add(wishlistLabel, 0, 3);
@@ -55,35 +42,49 @@ public class StatusCountBoxUnplayed extends GridPane {
         add(subBacklogHoursLabel, 2, 2);
         add(wishlistHoursLabel, 2, 3);
         add(totalHoursLabel, 2, 4);
-        updateData();
         setPadding(new Insets(5));
+
         for (Node n : getChildren()) {
-            if (n instanceof Control) {
-                Control control = (Control)n;
-                control.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                control.setStyle("-fx-border-color: white;" +
-                                "-fx-border-width: .2; " +
-                                "-fx-alignment: center;");
-            }
-            if (n instanceof Pane) {
-                Pane pane = (Pane)n;
-                pane.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                pane.setStyle("-fx-border-color: white;" +
-                        "-fx-border-width: .2; " +
-                        "-fx-alignment: center;");
-            }
+            //Updating style for each item in GridPane
+            //Local variables
+            Control control = (Control) n;  //Cast the item to control
+
+            //GUI
+            control.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+            control.setPadding(new Insets(5));
+            control.setStyle("-fx-border-color: white;" +
+                            "-fx-border-width: .2; " +
+                            "-fx-alignment: center;");
+
         }
+
+        updateData();
     }
 
     //Sets the labels' texts accordingly.
     public void updateData() {
+        //Count of games with status Backlog
         backlogCountLabel.setText("" + GameLists.getUnplayedStatusCount("Backlog"));
+
+        //Count of games with status SubBacklog
         subBacklogCountLabel.setText("" + GameLists.getUnplayedStatusCount("SubBacklog"));
+
+        //Count of games with status Wishlist
         wishlistCountLabel.setText("" + GameLists.getUnplayedStatusCount("Wishlist"));
+
+        //Count of games
         totalCountLabel.setText("" + GameLists.unplayedList.size());
+
+        //Total hours of games with status Backlog
         backlogHoursLabel.setText(String.format("%.2f", GameLists.getStatusHours("Backlog")));
+
+        //Total hours of games with status SubBacklog
         subBacklogHoursLabel.setText(String.format("%.2f", GameLists.getStatusHours("SubBacklog")));
+
+        //Total hours of games with status Wishlist
         wishlistHoursLabel.setText(String.format("%.2f", GameLists.getStatusHours("Wishlist")));
+
+        //Total hours of all games
         totalHoursLabel.setText(String.format("%.2f", GameLists.getTotalHours()));
     }
 }
