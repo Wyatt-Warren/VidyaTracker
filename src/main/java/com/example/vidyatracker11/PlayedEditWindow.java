@@ -18,7 +18,7 @@ public class PlayedEditWindow extends PlayedAddEditWindow {
         //Set status value
         statusBox.getSelectionModel().select(game.getStatus());
 
-        if (game.getShortStatus().equals("Yes") || game.getShortStatus().equals("No"))
+        if (!game.getShortStatus().equals(""))
             //If short value is yes or no, select yes or no
             shortBox.getSelectionModel().select(game.getShortStatus());
         else
@@ -50,7 +50,7 @@ public class PlayedEditWindow extends PlayedAddEditWindow {
         completionYearBox.setText("" + game.getCompletionYear());
         completionDayBox.getSelectionModel().select(game.getCompletionDay());
 
-        if (game.getPercent100().equals("Yes") || game.getPercent100().equals("No"))
+        if (!game.getPercent100().equals(""))
             //If 100% value is yes or no, select yes or no
             percentBox.getSelectionModel().select(game.getPercent100());
         else

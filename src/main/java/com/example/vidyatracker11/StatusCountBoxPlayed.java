@@ -66,6 +66,7 @@ public class StatusCountBoxPlayed extends GridPane {
         add(new Label(), 2, 4);
         add(new Label(), 3, 4);
         setPadding(new Insets(5));
+        setMaxWidth(300);
 
         for (Node n : getChildren()) {
             //Updating style for each item in GridPane
@@ -73,7 +74,7 @@ public class StatusCountBoxPlayed extends GridPane {
             Control control = (Control) n;  //Cast the item to control
 
             //GUI
-            control.setPadding(new Insets(2));
+            control.setPadding(new Insets(3));
             control.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
             control.setStyle("-fx-border-color: white;" +
                     "-fx-border-width: .2; " +

@@ -179,9 +179,47 @@ public class CollectionsWindow extends VBox {
 
             if(selected != null){
                 //An item is selected
-                collectionChoices.getSelectionModel().getSelectedItem().getGames().remove(selected);
-                ApplicationGUI.changeMade = true;
-                setLabels(collectionChoices.getSelectionModel().getSelectedItem());
+                //Local variables
+                Stage stage = new Stage();
+                Label label = new Label("Remove " + selected + "?");
+                Button yesButton = new Button("Yes");
+                Button noButton = new Button("No");
+                HBox hbox = new HBox(yesButton, noButton);
+                VBox vbox = new VBox(label, hbox);
+                Scene scene = new Scene(vbox);
+
+                //GUI
+                stage.getIcons().add(ApplicationGUI.icon);
+                stage.setResizable(false);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setTitle("Create New File");
+                stage.setScene(scene);
+                label.setStyle("-fx-font-weight: bold;-fx-font-size: 16;");
+                yesButton.setStyle("-fx-font-size: 16;");
+                noButton.setStyle("-fx-font-size: 16;");
+                yesButton.setPrefWidth(80);
+                noButton.setPrefWidth(80);
+                hbox.setAlignment(Pos.CENTER);
+                hbox.setSpacing(30);
+                vbox.setPadding(new Insets(10));
+                vbox.setSpacing(20);
+                vbox.setAlignment(Pos.TOP_CENTER);
+                scene.getStylesheets().add(ApplicationGUI.styleSheet);
+
+                yesButton.setOnAction(e1 -> {
+                    //Remove selected item
+                    collectionChoices.getSelectionModel().getSelectedItem().getGames().remove(selected);
+
+                    //Update labels
+                    setLabels(collectionChoices.getSelectionModel().getSelectedItem());
+
+                    ApplicationGUI.changeMade = true;
+                });
+
+                //Close the window without removing the item
+                noButton.setOnAction(e1 -> stage.close());
+
+                stage.show();
             }
         });
 

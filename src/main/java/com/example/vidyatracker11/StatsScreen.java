@@ -480,7 +480,7 @@ public class StatsScreen extends HBox {
         return dataList;
     }
 
-    //Sets the data in the played game franchise table or genre table.
+    //Sets the data in the played game franchise table.
     public ObservableList<PlayedDataEntry> setPlayedFranchiseData() {
         //Local variables
         ObservableList<PlayedDataEntry> dataList = FXCollections.observableArrayList(); //List to be returned
@@ -540,6 +540,7 @@ public class StatsScreen extends HBox {
 
                 map.put(game.getFranchise(), newData);
 
+                //Add franchise to dataList, keep dataList sorted
                 if (dataList.isEmpty())
                     //If the list of franchises is empty, just add it
                     dataList.add(newData);
@@ -569,222 +570,403 @@ public class StatsScreen extends HBox {
         return dataList;
     }
 
-    //Sets the data in the played game franchise table or genre table.
+    //Sets the data in the unplayed game franchise table.
     public ObservableList<UnplayedDataEntry> setUnplayedFranchiseData() {
-        ObservableList<UnplayedDataEntry> dataList = FXCollections.observableArrayList();
-        HashMap<String, UnplayedDataEntry> map = new HashMap<>();
+        //Local variables
+        ObservableList<UnplayedDataEntry> dataList = FXCollections.observableArrayList();   //List to be returned
+        HashMap<String, UnplayedDataEntry> map = new HashMap<>();                           //Map of every franchise
+
         for(UnplayedGame game : GameLists.unplayedList){
+            //Iterate for each game
+
             if(map.containsKey(game.getFranchise())){
-                UnplayedDataEntry data = map.get(game.getFranchise());
+                //If the current game's franchise is already in the map, not the first occurrence
+                //Local variables
+                UnplayedDataEntry data = map.get(game.getFranchise());//Data entry for the franchise of the current game
+
+                //Increment the count of the franchise by one
                 data.setCount(data.getCount()+1);
+
+                //Add to the total hours
                 data.setTotalHours(data.getTotalHours()+game.getHours());
+
+                //Set percent of games with the current franchise out of the total
                 data.setPercent(data.getCount()*1.0 / GameLists.unplayedList.size() * 100);
 
             }else if(!game.getFranchise().equals("")){
-                UnplayedDataEntry newData = new UnplayedDataEntry();
+                //If the current game's franchise is not in the map
+                //Local variables
+                UnplayedDataEntry newData = new UnplayedDataEntry();    //New data entry for the current franchise
+
+                //Set the name of the franchise
                 newData.setName(game.getFranchise());
+
+                //Count should start at 1
                 newData.setCount(1);
+
+                //Total hours should be hours of the first game
                 newData.setTotalHours(game.getHours());
+
+                //Set initial percent
                 newData.setPercent(1.0 / GameLists.unplayedList.size() * 100);
+
+                //Add franchise to map
                 map.put(game.getFranchise(), newData);
-                if (dataList.isEmpty()){
+
+                //Add franchise to dataList, keep dataList sorted
+                if (dataList.isEmpty())
+                    //If the list of franchises is empty, just add it
                     dataList.add(newData);
-                }else {
-                    boolean placed = false;
-                    for (int i = 0; i < dataList.size(); i++) {
+                else {
+                    //There are items in the list of franchises
+                    //Local variables
+                    boolean placed = false; //Flag if the current item is placed
+
+                    for (int i = 0; i < dataList.size(); i++)
+                        //Iterate for each item in the list of franchises
+
                         if(dataList.get(i).getName().toLowerCase().compareTo(newData.getName().toLowerCase()) > 0){
+                            //Compare the value of the current franchise with one from the franchise list
                             dataList.add(i, newData);
                             placed = true;
                             break;
                         }
-                    }
-                    if(!placed){
+
+
+                    if(!placed)
+                        //If it was never placed in the loop, put it at the end
                         dataList.add(newData);
-                    }
+
                 }
             }
         }
+
         return dataList;
     }
 
     //Sets the data in the played game platform table or genre table.
     public ObservableList<PlayedDataEntry> setPlayedPlatGenData(ObservableList<String> list, boolean platform) {
-        ObservableList<PlayedDataEntry> dataList = FXCollections.observableArrayList();
-        HashMap<String, PlayedDataEntry> map = new HashMap<>();
+        //Local variables
+        ObservableList<PlayedDataEntry> dataList = FXCollections.observableArrayList(); //List to be returned
+        HashMap<String, PlayedDataEntry> map = new HashMap<>();                         //Map of every platform/genre
 
-        //Populate the map with platforms or genres
         for(String genPlat : list){
-            PlayedDataEntry newData = new PlayedDataEntry();
+            //Populate the map with platforms or genres
+            //Local variables
+            PlayedDataEntry newData = new PlayedDataEntry();    //New data for the current genre or platform
+
+            //Set item's name
             newData.setName(genPlat);
+
+            //Count starts at 0
             newData.setCount(0);
+
+            //Percent should start at 0
             newData.setPercent(0.0);
+
+            //Add item to the map
             map.put(genPlat, newData);
+
+            //Add item to the list
             dataList.add(newData);
         }
 
-        //Accumulate data for each platform or genre
         for(PlayedGame game : GameLists.playedList){
-            PlayedDataEntry data;
-            if(platform){
+            //Accumulate data for each platform or genre
+            //Local variable
+            PlayedDataEntry data;   //Data for the platform/genre corresponding to the current game
+
+            if(platform)
+                //Setting platform data
                 data = map.get(game.getPlatform());
-            }else{
+            else
+                //Setting genre data
                 data = map.get(game.getGenre());
-            }
+
+            //Increment count
             data.setCount(data.getCount()+1);
+
             if(game.getRating()!=0){
+                //If there is a rating for the current game
+                //Increment the rating count
                 data.setRatingCount(data.getRatingCount()+1);
+
+                //Add game's rating to the total
                 data.setTotalRating(data.getTotalRating()+game.getRating());
-                data.setAverageRating(data.getTotalRating()*1.0 / data.getRatingCount());
+
+                //Update the average rating
+                data.setAverageRating(data.getTotalRating() * 1.0 / data.getRatingCount());
             }
+
+            //Update the percent
             data.setPercent(data.getCount()*1.0 / GameLists.playedList.size() * 100);
         }
+
         return dataList;
     }
 
     //Sets the data for the unplayed game platform table or genre table.
     public ObservableList<UnplayedDataEntry> setUnplayedPlatGenData(ObservableList<String> list, boolean platform) {
-        ObservableList<UnplayedDataEntry> dataList = FXCollections.observableArrayList();
-        HashMap<String, UnplayedDataEntry> map = new HashMap<>();
+        //Local variables
+        ObservableList<UnplayedDataEntry> dataList = FXCollections.observableArrayList();   //List to be returned
+        HashMap<String, UnplayedDataEntry> map = new HashMap<>();                           //Map of every platform/genre
 
-        //Populate the map with platforms or genres
         for(String genPlat : list){
-            UnplayedDataEntry newData = new UnplayedDataEntry();
+            //Populate the map with platforms or genres
+            //Local variables
+            UnplayedDataEntry newData = new UnplayedDataEntry();    //New data for the current genre or platform
+
+            //Set item's name
             newData.setName(genPlat);
+
+            //Count starts at 0
             newData.setCount(0);
+
+            //Percent should start at 0
             newData.setPercent(0.0);
+
+            //Add item to the map
             map.put(genPlat, newData);
+
+            //Add item to the list
             dataList.add(newData);
         }
 
-        //Accumulate data for each platform or genre
         for(UnplayedGame game : GameLists.unplayedList){
-            UnplayedDataEntry data;
-            if(platform){
+            //Accumulate data for each platform or genre
+            //Local variables
+            UnplayedDataEntry data; //Data for the platform/genre corresponding to the current game
+
+            if(platform)
+                //Setting platform data
                 data = map.get(game.getPlatform());
-            }else{
+            else
+                //Setting genre data
                 data = map.get(game.getGenre());
-            }
+
+            //Increment count
             data.setCount(data.getCount()+1);
+
+            //Add to total hours
             data.setTotalHours(data.getTotalHours() + game.getHours());
+
+            //Update the percent
             data.setPercent(data.getCount()*1.0 / GameLists.unplayedList.size() * 100);
         }
+
         return dataList;
     }
 
     //Sets data in the played release year table or completion year table.
     public ObservableList<PlayedDataEntry> setPlayedYearData(boolean release) {
-        ObservableList<PlayedDataEntry> dataList = FXCollections.observableArrayList();
-        HashMap<Integer, PlayedDataEntry> map = new HashMap<>();
+        //Local variables
+        ObservableList<PlayedDataEntry> dataList = FXCollections.observableArrayList(); //List to be returned
+        HashMap<Integer, PlayedDataEntry> map = new HashMap<>();                        //Map of every year
 
         for(PlayedGame game : GameLists.playedList){
-            int year;
-            if(release){
+            //Iterate for each game
+            //Local variables
+            int year;   //Year of the current game
+
+            if(release)
+                //Release year is selected
                 year  = game.getReleaseYear();
-            }else{
+            else
+                //Completion year is selected
                 year = game.getCompletionYear();
-            }
+
 
             if(map.containsKey(year)){
-                PlayedDataEntry data = map.get(year);
+                //If the current game's year is already in the map, not the first occurrence
+                //Local variables
+                PlayedDataEntry data = map.get(year);   //data entry for the current year
+
+                //increment count
                 data.setCount(data.getCount()+1);
+
                 if(game.getRating()!=0){
-                    data.setRatingCount(data.getRatingCount()+1);
-                    data.setTotalRating(data.getTotalRating()+game.getRating());
-                    data.setAverageRating(data.getTotalRating()*1.0 / data.getRatingCount());
+                    //Game has a rating
+                    //Increment rating count
+                    data.setRatingCount(data.getRatingCount() + 1);
+
+                    //Add to the total rating
+                    data.setTotalRating(data.getTotalRating() + game.getRating());
+
+                    //Update the average rating
+                    data.setAverageRating(data.getTotalRating() * 1.0 / data.getRatingCount());
                 }
+
+                //Update the percent
                 data.setPercent(data.getCount()*1.0 / GameLists.playedList.size() * 100);
 
             }else{
-                PlayedDataEntry newData = new PlayedDataEntry();
+                //Current game's year is not in the map
+                //Local variables
+                PlayedDataEntry newData = new PlayedDataEntry();    //New data entry for the game's year
+
+                //Set name to year
                 newData.setIntName(year);
+
+                //Count starts at 1
                 newData.setCount(1);
+
+                //Set percent
                 newData.setPercent(1.0 / GameLists.playedList.size() * 100);
+
                 if(game.getRating()!=0){
+                    //Game has a rating
+                    //Total rating starts at the rating of the current game
                     newData.setTotalRating(game.getRating());
+
+                    //Rating count starts at 1
                     newData.setRatingCount(1);
+
+                    //average rating starts at the rating of the current game
                     newData.setAverageRating(game.getRating()*1.0);
                 }
+
+                //Add game to map
                 map.put(year, newData);
-                if (dataList.isEmpty()){
+
+                //Add year to dataList, keep dataList sorted
+                if (dataList.isEmpty())
+                    //If the dataList is empty, just add it
                     dataList.add(newData);
-                }else {
-                    boolean placed = false;
-                    for (int i = 0; i < dataList.size(); i++) {
+                else {
+                    //There are items in the list of years
+                    //Local variables
+                    boolean placed = false; //Flag if the current item is placed
+
+                    for (int i = 0; i < dataList.size(); i++)
+                        //Iterate for each item in the list of years
+
                         if(dataList.get(i).getIntName() > year){
+                            //Compare the value of the current year with one from the year list
                             dataList.add(i, newData);
                             placed = true;
                             break;
                         }
-                    }
-                    if(!placed){
+
+                    if(!placed)
+                        //If the year was not placed, put it at the end of the list
                         dataList.add(newData);
-                    }
+
                 }
             }
         }
+
         return dataList;
     }
 
     //Sets the data for the unplayed release year table.
     public ObservableList<UnplayedDataEntry> setUnplayedYearData() {
-        ObservableList<UnplayedDataEntry> dataList = FXCollections.observableArrayList();
-        HashMap<Integer, UnplayedDataEntry> map = new HashMap<>();
+        //Local variables
+        ObservableList<UnplayedDataEntry> dataList = FXCollections.observableArrayList();   //List to be returned
+        HashMap<Integer, UnplayedDataEntry> map = new HashMap<>();                          //Map of every year
 
         for(UnplayedGame game : GameLists.unplayedList){
-            int year = game.getReleaseYear();
+            //Iterate for each game
+            //Local variables
+            int year = game.getReleaseYear();   //Release year of the current game
 
             if(map.containsKey(year)){
-                UnplayedDataEntry data = map.get(year);
-                data.setCount(data.getCount()+1);
-                data.setTotalHours(data.getTotalHours() + game.getHours());
-                data.setPercent(data.getCount()*1.0 / GameLists.unplayedList.size() * 100);
+                //If the current game's year is already in the map, not the first occurrence
+                //Local variables
+                UnplayedDataEntry data = map.get(year); //data entry for the current year
 
+                //Increment count
+                data.setCount(data.getCount()+1);
+
+                //Add to total hours
+                data.setTotalHours(data.getTotalHours() + game.getHours());
+
+                //Update the percent
+                data.setPercent(data.getCount()*1.0 / GameLists.unplayedList.size() * 100);
             }else{
-                UnplayedDataEntry newData = new UnplayedDataEntry();
+                //Current game's year is not in the map
+                //Local variables
+                UnplayedDataEntry newData = new UnplayedDataEntry();    //New data entry for the game's year
+
+                //Set name to year
                 newData.setIntName(year);
+
+                //Count starts at 1
                 newData.setCount(1);
+
+                //Set percent
                 newData.setPercent(1.0 / GameLists.unplayedList.size() * 100);
+
+                //Total hours starts at the hours of the current game
                 newData.setTotalHours(game.getHours());
+
+                //Add game to map
                 map.put(year, newData);
-                if (dataList.isEmpty()){
+
+                if (dataList.isEmpty())
+                    //If the dataList is empty, just add it
                     dataList.add(newData);
-                }else {
-                    boolean placed = false;
-                    for (int i = 0; i < dataList.size(); i++) {
+                else {
+                    //There are items in the list of years
+                    //Local variables
+                    boolean placed = false; //Flag if the current item is placed
+
+                    for (int i = 0; i < dataList.size(); i++)
+                        //Iterate for each item in the list of years
+
                         if(dataList.get(i).getIntName() > year){
+                            //Compare the value of the current year with one from the year list
                             dataList.add(i, newData);
                             placed = true;
                             break;
                         }
-                    }
-                    if(!placed){
+
+                    if(!placed)
+                        //If the year was not placed, put it at the end of the list
                         dataList.add(newData);
-                    }
+
                 }
             }
         }
+
         return dataList;
     }
 
     //Sets the data for the played rating table
     public ObservableList<PlayedDataEntry> setPlayedRatingData() {
-        ObservableList<PlayedDataEntry> dataList = FXCollections.observableArrayList();
-        HashMap<Integer, PlayedDataEntry> map = new HashMap<>();
+        //Local variables
+        ObservableList<PlayedDataEntry> dataList = FXCollections.observableArrayList(); //List to be returned
+        HashMap<Integer, PlayedDataEntry> map = new HashMap<>();                        //Map of each rating value
 
-        //Populate map with ratings 0-10
         for(int i = 0; i <=  10; i++){
-            PlayedDataEntry newData = new PlayedDataEntry();
+            //Populate map with ratings 0-10
+            //Local variables
+            PlayedDataEntry newData = new PlayedDataEntry();    //Data entry for the current rating
+
+            //Set rating name to the rating
             newData.setIntName(i);
+
+            //Count starts at 0
             newData.setCount(0);
+
+            //Percent starts at 0
             newData.setPercent(0.0);
+
+            //Add to map
             map.put(i, newData);
+
+            //Add to list
             dataList.add(newData);
         }
 
-        //Accumulate data for each rating
         for(PlayedGame game : GameLists.playedList){
-            PlayedDataEntry data = map.get(game.getRating());
+            //Accumulate data for each rating
+            //Local variables
+            PlayedDataEntry data = map.get(game.getRating());   //data entry of the current game's rating
+
+            //increment count
             data.setCount(data.getCount()+1);
+
+            //update percent
             data.setPercent(data.getCount() * 1.0 / GameLists.playedList.size() * 100);
         }
 
@@ -793,33 +975,57 @@ public class StatsScreen extends HBox {
 
     //Sets the data for the played percent100 table
     public ObservableList<PlayedDataEntry> setPlayedPercentData() {
-        String[] statuses = {"", "Yes", "No"};
-        ObservableList<PlayedDataEntry> dataList = FXCollections.observableArrayList();
-        HashMap<String, PlayedDataEntry> map = new HashMap<>();
+        //Local variables
+        String[] statuses = {"", "Yes", "No"};                                              //List of statuses
+        ObservableList<PlayedDataEntry> dataList = FXCollections.observableArrayList();     //List to be returned
+        HashMap<String, PlayedDataEntry> map = new HashMap<>();                             //Map of each status
 
-        //Populate map with each status
         for(String s : statuses){
-            PlayedDataEntry newData = new PlayedDataEntry();
-            if(s.equals("")){
+            //Populate map with each status
+            //Local variables
+            PlayedDataEntry newData = new PlayedDataEntry();    //Data entry for the current status
+
+            if(s.equals(""))
+                //If the status is a blank string, set the name to Blank
                 newData.setName("Blank");
-            }else {
+            else
+                //Set the name to the status
                 newData.setName(s);
-            }
+
+            //Count starts at 0
             newData.setCount(0);
+
+            //Percent starts at 0
             newData.setPercent(0.0);
+
+            //Add data to map
             map.put(s, newData);
+
+            //Add data to list
             dataList.add(newData);
         }
 
-        //Accumulate data for each status
         for(PlayedGame game : GameLists.playedList){
-            PlayedDataEntry data = map.get(game.getPercent100());
+            //Accumulate data for each status
+            //Local variables
+            PlayedDataEntry data = map.get(game.getPercent100());   //Data entry for the current game's percent status
+
+            //increment the count
             data.setCount(data.getCount()+1);
+
             if(game.getRating()!=0){
+                //Game has a rating
+                //Increment the rating count
                 data.setRatingCount(data.getRatingCount() + 1);
+
+                //Add to the total rating
                 data.setTotalRating(data.getTotalRating() + game.getRating());
-                data.setAverageRating(data.getTotalRating()*1.0 / data.getRatingCount());
+
+                //Update the average rating
+                data.setAverageRating(data.getTotalRating() * 1.0 / data.getRatingCount());
             }
+
+            //Update the percent
             data.setPercent(data.getCount() * 1.0 / GameLists.playedList.size() * 100);
         }
 
@@ -828,29 +1034,48 @@ public class StatsScreen extends HBox {
 
     //Sets the data for the unplayed deck status table
     public ObservableList<UnplayedDataEntry> setUnplayedDeckData() {
-        ObservableList<String> deckList = FXCollections.observableArrayList("", "Yes", "No", "Maybe");
-        ObservableList<UnplayedDataEntry> dataList = FXCollections.observableArrayList();
-        HashMap<String, UnplayedDataEntry> map = new HashMap<>();
+        //Local variables
+        String[] deckList = {"", "Yes", "No", "Maybe"};                                     //List of statuses
+        ObservableList<UnplayedDataEntry> dataList = FXCollections.observableArrayList();   //List to be returned
+        HashMap<String, UnplayedDataEntry> map = new HashMap<>();                           //Map of each status
 
-        //Populate map with each status
         for(String s : deckList){
-            UnplayedDataEntry newData = new UnplayedDataEntry();
-            if(s.equals("")){
+            //Populate map with each status
+            //Local variables
+            UnplayedDataEntry newData = new UnplayedDataEntry();    //Data entry for the current status
+
+            if(s.equals(""))
+                //If the status is a blank string, set the name to Blank
                 newData.setName("Blank");
-            }else {
+            else
+                //Set the name to the status
                 newData.setName(s);
-            }
+
+            //Count starts at 0
             newData.setCount(0);
+
+            //Percent starts at 0
             newData.setPercent(0.0);
+
+            //Add data to map
             map.put(s, newData);
+
+            //Add data to list
             dataList.add(newData);
         }
 
-        //Accumulate data for each status
         for(UnplayedGame game : GameLists.unplayedList){
-            UnplayedDataEntry data = map.get(game.getDeckCompatible());
+            //Accumulate data for each status
+            //Local variables
+            UnplayedDataEntry data = map.get(game.getDeckCompatible()); //Data entry for the current game's deck status
+
+            //Increment count
             data.setCount(data.getCount()+1);
+
+            //Add to the total hours
             data.setTotalHours(data.getTotalHours() + game.getHours());
+
+            //Update percent
             data.setPercent(data.getCount() * 1.0 / GameLists.unplayedList.size() * 100);
         }
 

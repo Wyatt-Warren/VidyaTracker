@@ -88,7 +88,7 @@ public abstract class PlayedAddEditWindow extends AddEditGame{
         percentBox.getItems().addAll("Yes", "No", "Blank");
 
         doneButton.setOnAction(e -> {
-            //Save new game
+            //Save game
             try{
                 saveAndQuit(stage);
             }catch (NumberFormatException e1){

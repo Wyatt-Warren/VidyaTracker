@@ -119,7 +119,7 @@ public class ApplicationGUI extends Application {
     };
     public static UnaryOperator<TextFormatter.Change> doubleFilter = change -> {                                  //Filters if text is not a valid double
         String input = change.getControlNewText();
-        return input.matches("\\d*\\.\\d*")||input.matches("\\d{0,9}") ? change : null;
+        return input.matches("\\d*\\.\\d*")||input.matches("\\d*") ? change : null;
     };
 
     //Main method
@@ -133,15 +133,15 @@ public class ApplicationGUI extends Application {
         colorMap.put("", "");
         colorMap.put("Playing", "-fx-background-color: #4a8c32;");
         colorMap.put("Completed", "-fx-background-color: #225089;");
-        colorMap.put("On Hold", "-fx-background-color: #aa5825;");
+        colorMap.put("On Hold", "-fx-background-color: #328c63;");
         colorMap.put("Backlog", "-fx-background-color: #545454;");
         colorMap.put("SubBacklog", "-fx-background-color: #666666;");
         colorMap.put("Wishlist", "-fx-background-color: #993745;");
         colorMap.put("Yes", "-fx-background-color: #4a8c32;");
         colorMap.put("No", "-fx-background-color: #993737;");
-        colorMap.put("Maybe", "-fx-background-color: #aa9120;");
+        colorMap.put("Maybe", "-fx-background-color: #b59a24;");
         colorMap.put("CURRENTYEAR", "-fx-background-color: #4a8c32;");
-        colorMap.put("LASTYEAR", "-fx-background-color: #aa9120;");
+        colorMap.put("LASTYEAR", "-fx-background-color: #b59a24;");
 
         //FileChooser
         fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
@@ -152,11 +152,13 @@ public class ApplicationGUI extends Application {
         topBoxPlayed.setAlignment(Pos.CENTER_LEFT);
         topBoxPlayed.setSpacing(10);
         playedChoiceHBox.setSpacing(5);
+        playedChoiceHBox.setPadding(new Insets(2));
         playedGamesVBox.setSpacing(5);
         playedWindow.setSpacing(5);
         topBoxUnplayed.setAlignment(Pos.CENTER_LEFT);
         topBoxUnplayed.setSpacing(10);
         unplayedChoiceHBox.setSpacing(5);
+        unplayedChoiceHBox.setPadding(new Insets(2));
         unplayedGamesVBox.setSpacing(5);
         unplayedWindow.setSpacing(5);
         primaryScene.getStylesheets().add(styleSheet);

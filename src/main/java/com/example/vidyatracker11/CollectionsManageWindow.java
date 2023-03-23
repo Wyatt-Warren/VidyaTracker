@@ -4,9 +4,13 @@ import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 //GUI for managing collections
 public class CollectionsManageWindow extends VBox {
@@ -46,7 +50,7 @@ public class CollectionsManageWindow extends VBox {
         setPadding(new Insets(5));
         setSpacing(5);
 
-        addCollectionButton.setOnAction(e1 -> {
+        addCollectionButton.setOnAction(e -> {
             //Create a new collection with a given title
 
             if(!collectionTextField.getText().equals("")) {
@@ -57,22 +61,57 @@ public class CollectionsManageWindow extends VBox {
             }
         });
 
-        removeButton.setOnAction(e1 -> {
+        removeButton.setOnAction(e -> {
             //Removes the selected collection from the list
 
             if(collectionListView.getSelectionModel().getSelectedIndex() != -1){
                 //A collection is selected
+                //Local variables
+                Stage stage = new Stage();
+                Label label = new Label("Remove " + collectionListView.getSelectionModel().getSelectedItem() + "?");
+                Button yesButton = new Button("Yes");
+                Button noButton = new Button("No");
+                HBox hbox = new HBox(yesButton, noButton);
+                VBox vbox = new VBox(label, hbox);
+                Scene scene = new Scene(vbox);
 
-                if(collectionChoices.getSelectionModel().isSelected(collectionListView.getSelectionModel().getSelectedIndex()))
-                    //The collection selected in collectionChoices is removed
-                    selectedRemoved = true;
+                //GUI
+                stage.getIcons().add(ApplicationGUI.icon);
+                stage.setResizable(false);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setTitle("Create New File");
+                stage.setScene(scene);
+                label.setStyle("-fx-font-weight: bold;-fx-font-size: 16;");
+                yesButton.setStyle("-fx-font-size: 16;");
+                noButton.setStyle("-fx-font-size: 16;");
+                yesButton.setPrefWidth(80);
+                noButton.setPrefWidth(80);
+                hbox.setAlignment(Pos.CENTER);
+                hbox.setSpacing(30);
+                vbox.setPadding(new Insets(10));
+                vbox.setSpacing(20);
+                vbox.setAlignment(Pos.TOP_CENTER);
+                scene.getStylesheets().add(ApplicationGUI.styleSheet);
 
-                GameLists.collectionList.remove(collectionListView.getSelectionModel().getSelectedItem());
-                ApplicationGUI.changeMade = true;
+                yesButton.setOnAction(e1 -> {
+                    //Remove selected item
+                    GameLists.collectionList.remove(collectionListView.getSelectionModel().getSelectedItem());
+
+                    if(collectionChoices.getSelectionModel().isSelected(collectionListView.getSelectionModel().getSelectedIndex()))
+                        //The collection selected in collectionChoices is removed
+                        selectedRemoved = true;
+
+                    ApplicationGUI.changeMade = true;
+                });
+
+                //Close the window without removing the item
+                noButton.setOnAction(e1 -> stage.close());
+
+                stage.show();
             }
         });
 
-        renameButton.setOnAction(e1 -> {
+        renameButton.setOnAction(e -> {
             //Replaces the selected Collection's title with the current string
             //Local variables
             int selectionInt = collectionListView.getSelectionModel().getSelectedIndex();   //Selected collection
@@ -91,7 +130,7 @@ public class CollectionsManageWindow extends VBox {
             }
         });
 
-        moveUpButton.setOnAction(e1 -> {
+        moveUpButton.setOnAction(e -> {
             //Moves the selected item up in the list by one position
             //Local variables
             int selectionIndex = collectionListView.getSelectionModel().getSelectedIndex(); //Index for the selected collection
@@ -104,7 +143,7 @@ public class CollectionsManageWindow extends VBox {
             }
         });
 
-        moveDownButton.setOnAction(e1 -> {
+        moveDownButton.setOnAction(e -> {
             //Moves the selected item down in the list by one position
             int selectionIndex = collectionListView.getSelectionModel().getSelectedIndex(); //Index for the selected collection
 

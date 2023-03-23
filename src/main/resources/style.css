@@ -14,7 +14,6 @@
 
 .table-view * {
     -fx-background-color: #444444;
-    -fx-text-background-color: #ffffff;
     -fx-border-color: white;
     -fx-border-width: 0.1
  }
@@ -129,28 +128,20 @@
 
 .cell * {
     -fx-background-color: #444444;
-    -fx-text-fill: #ffffff;
-    -fx-text-background-color: #ffffff;
     -fx-border-color: white;
     -fx-border-width: .1
 }
 
 .cell:hover * {
     -fx-background-color: #484848;
-    -fx-text-fill: #ffffff;
-    -fx-text-background-color: #ffffff;
 }
 
 .cell:focused * {
     -fx-background-color: #494949;
-    -fx-text-fill: #ffffff;
-    -fx-text-background-color: #ffffff;
 }
 
 .table-view:focused .cell:focused * {
     -fx-background-color: #545454;
-    -fx-text-fill: #ffffff;
-    -fx-text-background-color: #ffffff;
 }
 
 .list-view {

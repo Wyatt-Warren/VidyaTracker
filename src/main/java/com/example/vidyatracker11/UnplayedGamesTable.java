@@ -174,7 +174,7 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
             }else if(e.getCode() == KeyCode.ENTER){
                 //If enter is pressed, save and close window
                 try {
-                    window.saveAndQuit(game, stage);
+                    window.saveAndQuit(stage);
                 } catch (NumberFormatException e1) {
                     e1.printStackTrace();
                 }

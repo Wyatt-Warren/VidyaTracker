@@ -2,8 +2,8 @@ package com.example.vidyatracker11;
 
 //Used by tableviews in the stats screen
 public class UnplayedDataEntry extends DataEntry{
-
-    private Double totalHours = 0.0;
+    //Fields
+    private Double totalHours = 0.0;    //Total hours field
 
     //Total hours getter
     public Double getTotalHours() {

@@ -21,6 +21,7 @@ public class TableMethods {
             return statuses.indexOf(o1.getStatus()) - statuses.indexOf(o2.getStatus());
         }
     };
+
     public static final Comparator<Game> shortStatusComparator = new Comparator<>() {              //Sort by short status
         //Local variables
         final ObservableList<String> statuses = FXCollections.observableArrayList(  //List of possible statuses
@@ -35,6 +36,7 @@ public class TableMethods {
             return statuses.indexOf(p1.getShortStatus()) - statuses.indexOf(p2.getShortStatus());
         }
     };
+
     public static final Comparator<Game> ratingComparator = (o1, o2) -> {                          //Sort by rating
         //Return rating of o1 - rating of o2
         //Local variables
@@ -43,10 +45,13 @@ public class TableMethods {
 
         return p2.getRating() - p1.getRating();
     };
+
     public static final Comparator<Game> platformComparator =                                      //Sort by platform
             Comparator.comparingInt(o -> GameLists.platformList.indexOf(o.getPlatform()));
+
     public static final Comparator<Game> genreComparator =                                         //Sort by genre
             Comparator.comparingInt(o -> GameLists.genreList.indexOf(o.getGenre()));
+
     public static final Comparator<Game> releaseDateComparator = (o1, o2) -> {                     //Sort by release date
         //Local variables
         String sortBy1 = String.format("%04d%02d%02d", o1.getReleaseYear(), //String to sort with for o1
@@ -55,8 +60,8 @@ public class TableMethods {
                 o2.getReleaseMonth(), o2.getReleaseDay());
 
         return sortBy1.compareTo(sortBy2);
-
     };
+
     public static final Comparator<Game> completionDateComparator = (o1, o2) -> {            //Sort by completion date
         //Local variables
         PlayedGame p1 = (PlayedGame) o1;                                        //Cast o1 to PlayedGame
@@ -68,6 +73,7 @@ public class TableMethods {
 
         return sortBy1.compareTo(sortBy2);
     };
+
     public static final Comparator<Game> percentComparator = new Comparator<>() {           //Sort by 100% status
         //Local variables
         final ObservableList<String> statuses = FXCollections.observableArrayList(  //List of possible statuses
@@ -82,6 +88,7 @@ public class TableMethods {
             return statuses.indexOf(p1.getPercent100()) - statuses.indexOf(p2.getPercent100());
         }
     };
+
     public static final Comparator<Game> hoursComparator = (o1, o2) -> {                    //Sort by hours
         //Return a value according to position in statuses list
         //Local variables
@@ -90,6 +97,7 @@ public class TableMethods {
 
         return Double.compare(p1.getHours(), p2.getHours());
     };
+
     public static final Comparator<Game> deckStatusComparator = new Comparator<>() {        //Sort by Deck status
         //Local variables
         final ObservableList<String> statuses = FXCollections.observableArrayList(  //List of possible statuses
@@ -105,40 +113,56 @@ public class TableMethods {
         }
     };
 
-    //Prevents the user reordering columns
+    //Prevents the user from reordering columns
     public static <T> void preventColumnReordering(TableView<T> tableView) {
         for(TableColumn<?, ?> column : tableView.getColumns())
             column.setReorderable(false);
     }
 
+    //Prevents the user from sorting columns
     public static <T> void preventColumnSorting(TableView<T> tableView){
         for(TableColumn<?, ?> column : tableView.getColumns())
             column.setSortable(false);
     }
 
+    //Prevents the user from resizing columns
     public static <T> void preventColumnResizing(TableView<T> tableView){
         for(TableColumn<?, ?> column : tableView.getColumns())
             column.setResizable(false);
     }
 
-    //Sends data from each cell to a text object and gets the width of that object. Whatever the greatest value is,
-    // the width should be sightly more
+    //Sends data from each cell to a text object and gets the width of that object.
+    //Whatever the greatest value is, the width should be sightly more
     public static <T> void updateColumnWidth(ObservableList<TableColumn<T, ?>> columnList) {
         for (TableColumn<T, ?> tableColumn : columnList) {
-            Text text = new Text(tableColumn.getText());
-            double width = text.getLayoutBounds().getWidth() + 20;
+            //Iterate for each tableColumn
+            //Local variables
+            Text text = new Text(tableColumn.getText());            //Text object containing the widest string, starts with the title
+            double width = text.getLayoutBounds().getWidth() + 20;  //The current widest string
+
             for (int j = 0; j < tableColumn.getTableView().getItems().size(); j++) {
-                if (tableColumn.getCellData(j) instanceof Double) {
+                //Loop for each item in the column
+                //Local variables
+                double newWidth;    //Width of the current item
+
+                if (tableColumn.getCellData(j) instanceof Double)
+                    //Table contains double data
                     text = new Text(String.format("%.2f", (Double) tableColumn.getCellData(j)));
-                } else if (tableColumn.getCellData(j) instanceof Integer) {
+                else if (tableColumn.getCellData(j) instanceof Integer)
+                    //Table contains integer data
                     text = new Text(Integer.toString((Integer) tableColumn.getCellData(j)));
-                } else {
+                else
+                    //Table contains string data
                     text = new Text((String) tableColumn.getCellData(j));
-                }
-                double newWidth = text.getLayoutBounds().getWidth() + 20;
+
+                //Set newWidth
+                newWidth = text.getLayoutBounds().getWidth() + 20;
+
                 if (newWidth > width)
+                    //if the new width is greater, set width
                     width = newWidth;
             }
+
             tableColumn.setPrefWidth(width);
         }
     }

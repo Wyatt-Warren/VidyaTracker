@@ -22,7 +22,7 @@ public class PlayedAddWindow extends PlayedAddEditWindow {
     }
 
     //Closes the window and creates a new game with the inputted data
-    public void saveAndQuit(Stage stage) throws NumberFormatException{
+    public void saveAndQuit(Stage stage){
         //Local variables
         int releaseYear;    //Text entered in the releaseYearBox
 
@@ -45,7 +45,6 @@ public class PlayedAddWindow extends PlayedAddEditWindow {
         else
             //Something other than Blank is selected
             newGame.setShortStatus(shortBox.getSelectionModel().getSelectedItem());
-
 
         //Set Franchise
         newGame.setFranchise(franchiseBox.getText());

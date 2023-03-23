@@ -4,12 +4,16 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 //Superclass for EditGenreList and EditPlatformList
 public abstract class EditGenPlatList extends VBox {
@@ -70,17 +74,51 @@ public abstract class EditGenPlatList extends VBox {
                 //If an item is selected, and it is not the last item remaining
                 //Local variables
                 String toRemove = listView.getSelectionModel().getSelectedItem();   //Store item to be removed from games before it is removed from the list
+                Stage stage = new Stage();
+                Label label = new Label("Remove " + toRemove + "?");
+                Button yesButton = new Button("Yes");
+                Button noButton = new Button("No");
+                HBox hbox = new HBox(yesButton, noButton);
+                VBox vbox = new VBox(label, hbox);
+                Scene scene = new Scene(vbox);
 
-                list.remove(selectionInt);
+                //GUI
+                stage.getIcons().add(ApplicationGUI.icon);
+                stage.setResizable(false);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setTitle("Create New File");
+                stage.setScene(scene);
+                label.setStyle("-fx-font-weight: bold;-fx-font-size: 16;");
+                yesButton.setStyle("-fx-font-size: 16;");
+                noButton.setStyle("-fx-font-size: 16;");
+                yesButton.setPrefWidth(80);
+                noButton.setPrefWidth(80);
+                hbox.setAlignment(Pos.CENTER);
+                hbox.setSpacing(30);
+                vbox.setPadding(new Insets(10));
+                vbox.setSpacing(20);
+                vbox.setAlignment(Pos.TOP_CENTER);
+                scene.getStylesheets().add(ApplicationGUI.styleSheet);
 
-                //Remove genre/platform from each game in lists
-                removeGameItems(toRemove);
+                yesButton.setOnAction(e1 -> {
+                    //Remove item from list
+                    list.remove(selectionInt);
 
-                //Update tables
-                ApplicationGUI.playedGamesTable.sortAndFilter(ApplicationGUI.playedFilterTokenChoices.getSelectionModel().getSelectedItem());
-                ApplicationGUI.unplayedGamesTable.sortAndFilter(ApplicationGUI.unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
+                    //Remove genre/platform from each game in lists
+                    removeGameItems(toRemove);
 
-                ApplicationGUI.changeMade = true;
+                    //Update tables
+                    ApplicationGUI.playedGamesTable.sortAndFilter(ApplicationGUI.playedFilterTokenChoices.getSelectionModel().getSelectedItem());
+                    ApplicationGUI.unplayedGamesTable.sortAndFilter(ApplicationGUI.unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
+
+                    ApplicationGUI.changeMade = true;
+                    stage.close();
+                });
+
+                //Close the window without removing the item
+                noButton.setOnAction(e1 -> stage.close());
+
+                stage.show();
             }
         });
 
@@ -122,7 +160,8 @@ public abstract class EditGenPlatList extends VBox {
             int selectionIndex = listView.getSelectionModel().getSelectedIndex();   //Index of the selected item
 
             if (selectionIndex > 0) {
-                //If an item is selected, and it is not on the top of the list
+                //If an item is selected, adn it is not on the top of the list
+
                 //Remove the selected item and place it up by one
                 list.add(selectionIndex - 1, list.remove(selectionIndex));
 

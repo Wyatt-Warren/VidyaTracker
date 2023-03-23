@@ -43,6 +43,7 @@ public class StatusCountBoxUnplayed extends GridPane {
         add(wishlistHoursLabel, 2, 3);
         add(totalHoursLabel, 2, 4);
         setPadding(new Insets(5));
+        setMaxWidth(300);
 
         for (Node n : getChildren()) {
             //Updating style for each item in GridPane
@@ -51,7 +52,7 @@ public class StatusCountBoxUnplayed extends GridPane {
 
             //GUI
             control.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-            control.setPadding(new Insets(5));
+            control.setPadding(new Insets(3));
             control.setStyle("-fx-border-color: white;" +
                             "-fx-border-width: .2; " +
                             "-fx-alignment: center;");
