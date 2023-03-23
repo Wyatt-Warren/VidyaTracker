@@ -1,5 +1,6 @@
 package com.example.vidyatracker11;
 
+import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.function.Predicate;
 
@@ -81,9 +82,11 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
                     if (item == 0)
                         //0 means no rating
                         setText("");
-                    else
+                    else {
                         //Set text
-                        setText("" + item);
+                        DecimalFormat decimalFormat = new DecimalFormat("0.##");
+                        setText(decimalFormat.format(item));
+                    }
                 }
             }
         });

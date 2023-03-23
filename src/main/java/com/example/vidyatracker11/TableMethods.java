@@ -129,7 +129,7 @@ public class TableMethods {
             double width = text.getLayoutBounds().getWidth() + 20;
             for (int j = 0; j < tableColumn.getTableView().getItems().size(); j++) {
                 if (tableColumn.getCellData(j) instanceof Double) {
-                    text = new Text(Double.toString((Double) tableColumn.getCellData(j)));
+                    text = new Text(String.format("%.2f", (Double) tableColumn.getCellData(j)));
                 } else if (tableColumn.getCellData(j) instanceof Integer) {
                     text = new Text(Integer.toString((Integer) tableColumn.getCellData(j)));
                 } else {

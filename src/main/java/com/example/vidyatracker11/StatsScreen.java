@@ -1,5 +1,6 @@
 package com.example.vidyatracker11;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 import javafx.collections.FXCollections;
@@ -10,10 +11,19 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 //Window showing many tableviews of stats relating the game lists
 public class StatsScreen extends HBox {
+    //GUI
     //Played Games
+    //Short Status
+    TableColumn<PlayedDataEntry, String> playedShortTitleColumn = new TableColumn<>("Short Status");
+    TableColumn<PlayedDataEntry, Integer> playedShortCountColumn = new TableColumn<>("Count");
+    TableColumn<PlayedDataEntry, Double> playedShortPercentColumn = new TableColumn<>("Percent");
+    TableColumn<PlayedDataEntry, Double> playedShortRatingColumn = new TableColumn<>("Average Rating");
+    TableView<PlayedDataEntry> playedShortTable = new TableView<>();
+
     //Franchise
     TableColumn<PlayedDataEntry, String> playedFranchiseTitleColumn = new TableColumn<>("Franchise");
     TableColumn<PlayedDataEntry, Integer> playedFranchiseCountColumn = new TableColumn<>("Count");
@@ -98,29 +108,27 @@ public class StatsScreen extends HBox {
     TableColumn<UnplayedDataEntry, Double> unplayedDeckHoursColumn = new TableColumn<>("Total Hours");
     TableView<UnplayedDataEntry> unplayedDeckTable = new TableView<>();
 
+    //Other
     Label playedLabel = new Label("Played Games");
-
     Label unplayedLabel = new Label("Unplayed Games");
-
     ChoiceBox<String> playedChoices = new ChoiceBox<>();
-
     ChoiceBox<String> unplayedChoices = new ChoiceBox<>();
-
     VBox playedBox = new VBox(playedLabel, playedChoices, playedFranchiseTable);
-
     VBox unplayedBox = new VBox(unplayedLabel, unplayedChoices, unplayedFranchiseTable);
 
+    //Lists
     ObservableList<TableColumn<PlayedDataEntry, ?>> playedColumnList = FXCollections.observableArrayList(
-            playedFranchiseTitleColumn, playedFranchiseCountColumn, playedFranchisePercentColumn,
-            playedFranchiseRatingColumn, playedPlatformTitleColumn, playedPlatformCountColumn,
-            playedPlatformPercentColumn, playedPlatformRatingColumn, playedGenreTitleColumn,
-            playedGenreCountColumn, playedGenrePercentColumn, playedGenreRatingColumn,
-            playedReleaseYearTitleColumn, playedReleaseYearCountColumn, playedReleaseYearPercentColumn,
-            playedReleaseYearRatingColumn, playedCompletionYearTitleColumn, playedCompletionYearCountColumn,
-            playedCompletionYearPercentColumn, playedCompletionYearRatingColumn, playedRatingTitleColumn,
-            playedRatingCountColumn, playedRatingPercentColumn, playedPercent100TitleColumn,
-            playedPercent100CountColumn, playedPercent100PercentColumn, playedPercent100RatingColumn);
-
+            playedShortTitleColumn, playedShortCountColumn, playedShortPercentColumn,
+            playedShortRatingColumn, playedFranchiseTitleColumn, playedFranchiseCountColumn,
+            playedFranchisePercentColumn, playedFranchiseRatingColumn, playedPlatformTitleColumn,
+            playedPlatformCountColumn, playedPlatformPercentColumn, playedPlatformRatingColumn,
+            playedGenreTitleColumn, playedGenreCountColumn, playedGenrePercentColumn,
+            playedGenreRatingColumn, playedReleaseYearTitleColumn, playedReleaseYearCountColumn,
+            playedReleaseYearPercentColumn, playedReleaseYearRatingColumn, playedCompletionYearTitleColumn,
+            playedCompletionYearCountColumn, playedCompletionYearPercentColumn, playedCompletionYearRatingColumn,
+            playedRatingTitleColumn, playedRatingCountColumn, playedRatingPercentColumn,
+            playedPercent100TitleColumn, playedPercent100CountColumn, playedPercent100PercentColumn,
+            playedPercent100RatingColumn);
     ObservableList<TableColumn<UnplayedDataEntry, ?>> unplayedColumnList = FXCollections.observableArrayList(
             unplayedFranchiseTitleColumn, unplayedFranchiseCountColumn, unplayedFranchisePercentColumn,
             unplayedFranchiseHoursColumn, unplayedPlatformTitleColumn, unplayedPlatformCountColumn,
@@ -130,81 +138,102 @@ public class StatsScreen extends HBox {
             unplayedReleaseYearHoursColumn, unplayedDeckTitleColumn, unplayedDeckCountColumn,
             unplayedDeckPercentColumn, unplayedDeckHoursColumn);
 
+    //Columns with double data type
     ObservableList<TableColumn<PlayedDataEntry, Double>> playedDoubleColumnList = FXCollections.observableArrayList(
-            playedFranchisePercentColumn, playedFranchiseRatingColumn, playedPlatformPercentColumn,
-            playedPlatformRatingColumn, playedGenrePercentColumn, playedGenreRatingColumn,
-            playedReleaseYearPercentColumn, playedReleaseYearRatingColumn, playedCompletionYearPercentColumn,
-            playedCompletionYearRatingColumn, playedRatingPercentColumn, playedPercent100PercentColumn,
-            playedPercent100RatingColumn);
-
+            playedShortPercentColumn, playedShortRatingColumn, playedFranchisePercentColumn,
+            playedFranchiseRatingColumn, playedPlatformPercentColumn, playedPlatformRatingColumn,
+            playedGenrePercentColumn, playedGenreRatingColumn, playedReleaseYearPercentColumn,
+            playedReleaseYearRatingColumn, playedCompletionYearPercentColumn, playedCompletionYearRatingColumn,
+            playedRatingPercentColumn, playedPercent100PercentColumn, playedPercent100RatingColumn);
     ObservableList<TableColumn<UnplayedDataEntry, Double>> unplayedDoubleColumnList = FXCollections.observableArrayList(
             unplayedFranchisePercentColumn, unplayedFranchiseHoursColumn, unplayedPlatformPercentColumn,
             unplayedPlatformHoursColumn, unplayedGenrePercentColumn, unplayedGenreHoursColumn,
             unplayedReleaseYearPercentColumn, unplayedReleaseYearHoursColumn, unplayedDeckPercentColumn,
             unplayedDeckHoursColumn);
 
-    public StatsScreen() {
-        playedFranchiseTitleColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        playedPlatformTitleColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        playedGenreTitleColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        playedReleaseYearTitleColumn.setCellValueFactory(new PropertyValueFactory<>("intName"));
-        playedCompletionYearTitleColumn.setCellValueFactory(new PropertyValueFactory<>("intName"));
-        playedRatingTitleColumn.setCellValueFactory(new PropertyValueFactory<>("intName"));
-        playedPercent100TitleColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        unplayedFranchiseTitleColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        unplayedPlatformTitleColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        unplayedGenreTitleColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        unplayedReleaseYearTitleColumn.setCellValueFactory(new PropertyValueFactory<>("intName"));
-        unplayedDeckTitleColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        playedFranchiseCountColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
-        playedPlatformCountColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
-        playedGenreCountColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
-        playedReleaseYearCountColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
-        playedCompletionYearCountColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
-        playedRatingCountColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
-        playedPercent100CountColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
-        unplayedFranchiseCountColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
-        unplayedPlatformCountColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
-        unplayedGenreCountColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
-        unplayedReleaseYearCountColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
-        unplayedDeckCountColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
-        playedFranchisePercentColumn.setCellValueFactory(new PropertyValueFactory<>("percent"));
-        playedPlatformPercentColumn.setCellValueFactory(new PropertyValueFactory<>("percent"));
-        playedGenrePercentColumn.setCellValueFactory(new PropertyValueFactory<>("percent"));
-        playedReleaseYearPercentColumn.setCellValueFactory(new PropertyValueFactory<>("percent"));
-        playedCompletionYearPercentColumn.setCellValueFactory(new PropertyValueFactory<>("percent"));
-        playedRatingPercentColumn.setCellValueFactory(new PropertyValueFactory<>("percent"));
-        playedPercent100PercentColumn.setCellValueFactory(new PropertyValueFactory<>("percent"));
-        unplayedFranchisePercentColumn.setCellValueFactory(new PropertyValueFactory<>("percent"));
-        unplayedPlatformPercentColumn.setCellValueFactory(new PropertyValueFactory<>("percent"));
-        unplayedGenrePercentColumn.setCellValueFactory(new PropertyValueFactory<>("percent"));
-        unplayedReleaseYearPercentColumn.setCellValueFactory(new PropertyValueFactory<>("percent"));
-        unplayedDeckPercentColumn.setCellValueFactory(new PropertyValueFactory<>("percent"));
-        playedFranchiseRatingColumn.setCellValueFactory(new PropertyValueFactory<>("averageRating"));
-        playedPlatformRatingColumn.setCellValueFactory(new PropertyValueFactory<>("averageRating"));
-        playedGenreRatingColumn.setCellValueFactory(new PropertyValueFactory<>("averageRating"));
-        playedReleaseYearRatingColumn.setCellValueFactory(new PropertyValueFactory<>("averageRating"));
-        playedCompletionYearRatingColumn.setCellValueFactory(new PropertyValueFactory<>("averageRating"));
-        playedPercent100RatingColumn.setCellValueFactory(new PropertyValueFactory<>("averageRating"));
-        unplayedFranchiseHoursColumn.setCellValueFactory(new PropertyValueFactory<>("totalHours"));
-        unplayedPlatformHoursColumn.setCellValueFactory(new PropertyValueFactory<>("totalHours"));
-        unplayedGenreHoursColumn.setCellValueFactory(new PropertyValueFactory<>("totalHours"));
-        unplayedReleaseYearHoursColumn.setCellValueFactory(new PropertyValueFactory<>("totalHours"));
-        unplayedDeckHoursColumn.setCellValueFactory(new PropertyValueFactory<>("totalHours"));
+    //Columns used to set value factory
+    ObservableList<TableColumn<?, String>> nameColumns = FXCollections.observableArrayList(
+            playedShortTitleColumn, playedFranchiseTitleColumn, playedPlatformTitleColumn,
+            playedGenreTitleColumn, playedPercent100TitleColumn, unplayedFranchiseTitleColumn,
+            unplayedPlatformTitleColumn, unplayedGenreTitleColumn, unplayedDeckTitleColumn);
+    ObservableList<TableColumn<?, Integer>> intNameColumns = FXCollections.observableArrayList(
+            playedReleaseYearTitleColumn, playedCompletionYearTitleColumn, playedRatingTitleColumn,
+            unplayedReleaseYearTitleColumn
+    );
+    ObservableList<TableColumn<?, Integer>> countColumns = FXCollections.observableArrayList(
+            playedShortCountColumn, playedFranchiseCountColumn, playedPlatformCountColumn,
+            playedGenreCountColumn, playedReleaseYearCountColumn, playedCompletionYearCountColumn,
+            playedRatingCountColumn, playedPercent100CountColumn, unplayedFranchiseCountColumn,
+            unplayedPlatformCountColumn, unplayedGenreCountColumn, unplayedReleaseYearCountColumn,
+            unplayedDeckCountColumn
+    );
+    ObservableList<TableColumn<?, Double>> percentColumns = FXCollections.observableArrayList(
+            playedShortPercentColumn, playedFranchisePercentColumn, playedPlatformPercentColumn,
+            playedGenrePercentColumn, playedReleaseYearPercentColumn, playedCompletionYearPercentColumn,
+            playedRatingPercentColumn, playedPercent100PercentColumn, unplayedFranchisePercentColumn,
+            unplayedPlatformPercentColumn, unplayedGenrePercentColumn, unplayedReleaseYearPercentColumn,
+            unplayedDeckPercentColumn
+    );
+    ObservableList<TableColumn<?, Double>> ratingColumns = FXCollections.observableArrayList(
+            playedShortRatingColumn, playedFranchiseRatingColumn, playedPlatformRatingColumn,
+            playedGenreRatingColumn, playedReleaseYearRatingColumn, playedCompletionYearRatingColumn,
+            playedPercent100RatingColumn
+    );
+    ObservableList<TableColumn<?, Double>> hoursColumns = FXCollections.observableArrayList(
+            unplayedFranchiseHoursColumn, unplayedPlatformHoursColumn, unplayedGenreHoursColumn,
+            unplayedReleaseYearHoursColumn, unplayedDeckHoursColumn
+    );
 
-        playedFranchiseTable.setPrefHeight(99999999);
-        playedPlatformTable.setPrefHeight(99999999);
-        playedGenreTable.setPrefHeight(99999999);
-        playedReleaseYearTable.setPrefHeight(99999999);
-        playedCompletionYearTable.setPrefHeight(99999999);
-        playedRatingTable.setPrefHeight(99999999);
-        playedPercent100Table.setPrefHeight(99999999);
-        unplayedFranchiseTable.setPrefHeight(99999999);
-        unplayedPlatformTable.setPrefHeight(99999999);
-        unplayedGenreTable.setPrefHeight(99999999);
-        unplayedReleaseYearTable.setPrefHeight(99999999);
-        unplayedDeckTable.setPrefHeight(99999999);
+    public StatsScreen(Stage parentStage) {
 
+        //GUI
+        playedShortTable.setMinHeight(600);
+        playedFranchiseTable.setMinHeight(600);
+        playedPlatformTable.setMinHeight(600);
+        playedGenreTable.setMinHeight(600);
+        playedReleaseYearTable.setMinHeight(600);
+        playedCompletionYearTable.setMinHeight(600);
+        playedRatingTable.setMinHeight(600);
+        playedPercent100Table.setMinHeight(600);
+        unplayedFranchiseTable.setMinHeight(600);
+        unplayedPlatformTable.setMinHeight(600);
+        unplayedGenreTable.setMinHeight(600);
+        unplayedReleaseYearTable.setMinHeight(600);
+        unplayedDeckTable.setMinHeight(600);
+        playedLabel.setStyle("-fx-font-size: 16;-fx-font-weight: bold;");
+        playedChoices.getSelectionModel().selectFirst();
+        playedChoices.getItems().addAll("Short Status", "Franchise", "Rating", "Platform", "Genre", "Release Year", "Completion Year", "100% Status");
+        playedBox.setAlignment(Pos.CENTER);
+        playedBox.setSpacing(5);
+        playedBox.setMaxHeight(Double.MAX_VALUE);
+        unplayedLabel.setStyle("-fx-font-size: 16;-fx-font-weight: bold;");
+        unplayedChoices.getSelectionModel().selectFirst();
+        unplayedChoices.getItems().addAll("Franchise", "Platform", "Genre", "Release Year", "Deck Status");
+        unplayedBox.setAlignment(Pos.CENTER);
+        unplayedBox.setSpacing(5);
+        unplayedBox.setMaxHeight(Double.MAX_VALUE);
+        setAlignment(Pos.CENTER);
+        setSpacing(20);
+        setPadding(new Insets(5));
+        getChildren().addAll(playedBox, unplayedBox);
+
+        //Set value factories
+        for(TableColumn<?, String> column : nameColumns)
+            column.setCellValueFactory(new PropertyValueFactory<>("name"));
+        for(TableColumn<?, Integer> column : intNameColumns)
+            column.setCellValueFactory(new PropertyValueFactory<>("intName"));
+        for(TableColumn<?, Integer> column : countColumns)
+            column.setCellValueFactory(new PropertyValueFactory<>("count"));
+        for(TableColumn<?, Double> column : percentColumns)
+            column.setCellValueFactory(new PropertyValueFactory<>("percent"));
+        for(TableColumn<?, Double> column : ratingColumns)
+            column.setCellValueFactory(new PropertyValueFactory<>("averageRating"));
+        for(TableColumn<?, Double> column : hoursColumns)
+            column.setCellValueFactory(new PropertyValueFactory<>("totalHours"));
+
+        //Add columns to tables
+        playedShortTable.getColumns().addAll(playedShortTitleColumn, playedShortCountColumn,
+                playedShortPercentColumn, playedShortRatingColumn);
         playedFranchiseTable.getColumns().addAll(playedFranchiseTitleColumn, playedFranchiseCountColumn,
                 playedFranchisePercentColumn, playedFranchiseRatingColumn);
         playedPlatformTable.getColumns().addAll(playedPlatformTitleColumn, playedPlatformCountColumn,
@@ -230,118 +259,143 @@ public class StatsScreen extends HBox {
         unplayedDeckTable.getColumns().addAll(unplayedDeckTitleColumn, unplayedDeckCountColumn,
                 unplayedDeckPercentColumn, unplayedDeckHoursColumn);
 
-        playedChoices.getItems().addAll("Franchise", "Platform", "Genre", "Release Year", "Completion Year", "Rating", "100% Status");
-        unplayedChoices.getItems().addAll("Franchise", "Platform", "Genre", "Release Year", "Deck Status");
-
         playedChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
             switch ((int) newNum){
-                case 0: //Franchise
+                //Switch for each selection of playedChoices
+                case 0:
+                    //Short Status
+                    playedBox.getChildren().remove(playedBox.getChildren().size()-1);
+                    playedBox.getChildren().add(playedShortTable);
+                    break;
+                case 1:
+                    //Franchise
                     playedBox.getChildren().remove(playedBox.getChildren().size()-1);
                     playedBox.getChildren().add(playedFranchiseTable);
                     break;
-                case 1: //Platform
-                    playedBox.getChildren().remove(playedBox.getChildren().size()-1);
-                    playedBox.getChildren().add(playedPlatformTable);
-                    break;
-                case 2: //Genre
-                    playedBox.getChildren().remove(playedBox.getChildren().size()-1);
-                    playedBox.getChildren().add(playedGenreTable);
-                    break;
-                case 3: //Release Year
-                    playedBox.getChildren().remove(playedBox.getChildren().size()-1);
-                    playedBox.getChildren().add(playedReleaseYearTable);
-                    break;
-                case 4: //Completion Year
-                    playedBox.getChildren().remove(playedBox.getChildren().size()-1);
-                    playedBox.getChildren().add(playedCompletionYearTable);
-                    break;
-                case 5: //Rating
+                case 2:
+                    //Rating
                     playedBox.getChildren().remove(playedBox.getChildren().size()-1);
                     playedBox.getChildren().add(playedRatingTable);
                     break;
-                case 6: //100% Status
+                case 3:
+                    //Platform
+                    playedBox.getChildren().remove(playedBox.getChildren().size()-1);
+                    playedBox.getChildren().add(playedPlatformTable);
+                    break;
+                case 4:
+                    //Genre
+                    playedBox.getChildren().remove(playedBox.getChildren().size()-1);
+                    playedBox.getChildren().add(playedGenreTable);
+                    break;
+                case 5:
+                    //Release Year
+                    playedBox.getChildren().remove(playedBox.getChildren().size()-1);
+                    playedBox.getChildren().add(playedReleaseYearTable);
+                    break;
+                case 6:
+                    //Completion Year
+                    playedBox.getChildren().remove(playedBox.getChildren().size()-1);
+                    playedBox.getChildren().add(playedCompletionYearTable);
+                    break;
+                case 7:
+                    //100% Status
                     playedBox.getChildren().remove(playedBox.getChildren().size()-1);
                     playedBox.getChildren().add(playedPercent100Table);
                     break;
             }
+
+            //Automatically reset size of window
+            parentStage.setScene(null);
+            parentStage.setScene(getScene());
         });
 
         unplayedChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
             switch ((int) newNum){
-                case 0: //Franchise
+                //Switch for each selection of unplayedChoices
+                case 0:
+                    //Franchise
                     unplayedBox.getChildren().remove(unplayedBox.getChildren().size()-1);
                     unplayedBox.getChildren().add(unplayedFranchiseTable);
                     break;
-                case 1: //Platform
+                case 1:
+                    //Platform
                     unplayedBox.getChildren().remove(unplayedBox.getChildren().size()-1);
                     unplayedBox.getChildren().add(unplayedPlatformTable);
                     break;
-                case 2: //Genre
+                case 2:
+                    //Genre
                     unplayedBox.getChildren().remove(unplayedBox.getChildren().size()-1);
                     unplayedBox.getChildren().add(unplayedGenreTable);
                     break;
-                case 3: //Release Year
+                case 3:
+                    //Release Year
                     unplayedBox.getChildren().remove(unplayedBox.getChildren().size()-1);
                     unplayedBox.getChildren().add(unplayedReleaseYearTable);
                     break;
-                case 4: //Completion Year
+                case 4:
+                    //Completion Year
                     unplayedBox.getChildren().remove(unplayedBox.getChildren().size()-1);
                     unplayedBox.getChildren().add(unplayedDeckTable);
                     break;
             }
+
+            //Automatically reset size of window
+            parentStage.setScene(null);
+            parentStage.setScene(getScene());
         });
 
         playedChoices.getSelectionModel().selectFirst();
         unplayedChoices.getSelectionModel().selectFirst();
-
-        playedBox.setAlignment(Pos.CENTER);
-        unplayedBox.setAlignment(Pos.CENTER);
-        setAlignment(Pos.CENTER);
-
-        playedBox.setSpacing(5);
-        unplayedBox.setSpacing(5);
-
-        playedLabel.setStyle("-fx-font-size: 16;-fx-font-weight: bold;");
-        unplayedLabel.setStyle("-fx-font-size: 16;-fx-font-weight: bold;");
-        getChildren().addAll(playedBox, unplayedBox);
-        setSpacing(20);
-        setPadding(new Insets(5));
 
         updateStats();
         preventColumnReorderingAndResizingForAll();
         formatDoubleColumns();
     }
 
+    //Sets text in double column to %.2f format
     public void formatDoubleColumns(){
         for(TableColumn<PlayedDataEntry, Double> column : playedDoubleColumnList){
+            //Iterate for all PlayedGame columns with double data
             column.setCellFactory(col -> new TableCell<>() {
                 @Override
                 public void updateItem(Double someDouble, boolean empty){
                     super.updateItem(someDouble, empty);
+
                     if (empty || someDouble == null){
+                        //Text is empty
                         setText(null);
                     }else{
-                        setText(String.format("%.2f", someDouble));
+                        //There is text
+                        DecimalFormat decimalFormat = new DecimalFormat("0.##");
+                        setText(decimalFormat.format(someDouble));
                     }
                 }
             });
         }
         for(TableColumn<UnplayedDataEntry, Double> column : unplayedDoubleColumnList){
+            //Iterate for all UnplayedGame columns with double data
             column.setCellFactory(col -> new TableCell<>() {
                 @Override
                 public void updateItem(Double someDouble, boolean empty){
                     super.updateItem(someDouble, empty);
+
                     if (empty || someDouble == null){
+                        //Text is empty
                         setText(null);
                     }else{
-                        setText(String.format("%.2f", someDouble));
+                        //There is text
+                        DecimalFormat decimalFormat = new DecimalFormat("0.##");
+                        setText(decimalFormat.format(someDouble));
                     }
                 }
             });
         }
     }
 
+    //Call methods to prevent reordering or resizing for all tableviews
     public void preventColumnReorderingAndResizingForAll() {
+        //Reordering
+        TableMethods.preventColumnReordering(playedShortTable);
         TableMethods.preventColumnReordering(playedFranchiseTable);
         TableMethods.preventColumnReordering(playedPlatformTable);
         TableMethods.preventColumnReordering(playedGenreTable);
@@ -355,6 +409,8 @@ public class StatsScreen extends HBox {
         TableMethods.preventColumnReordering(unplayedReleaseYearTable);
         TableMethods.preventColumnReordering(unplayedDeckTable);
 
+        //Resizing
+        TableMethods.preventColumnResizing(playedShortTable);
         TableMethods.preventColumnResizing(playedFranchiseTable);
         TableMethods.preventColumnResizing(playedPlatformTable);
         TableMethods.preventColumnResizing(playedGenreTable);
@@ -369,71 +425,171 @@ public class StatsScreen extends HBox {
         TableMethods.preventColumnResizing(unplayedDeckTable);
     }
 
-    //Refresh the data
+    //Set table data
     public void updateStats() {
-        if (GameLists.playedList.size() != 0) {
-            playedFranchiseTable.setItems(setPlayedFranchiseData());
-            playedPlatformTable.setItems(setPlayedPlatGenData(GameLists.platformList, true));
-            playedGenreTable.setItems(setPlayedPlatGenData(GameLists.genreList, false));
-            playedReleaseYearTable.setItems(setPlayedYearData(true));
-            playedCompletionYearTable.setItems(setPlayedYearData(false));
-            playedRatingTable.setItems(setPlayedRatingData());
-            playedPercent100Table.setItems(setPlayedPercentData());
-        }
-        if (GameLists.unplayedList.size() != 0) {
-            unplayedFranchiseTable.setItems(setUnplayedFranchiseData());
-            unplayedPlatformTable.setItems(setUnplayedPlatGenData(GameLists.platformList, true));
-            unplayedGenreTable.setItems(setUnplayedPlatGenData(GameLists.genreList, false));
-            unplayedReleaseYearTable.setItems(setUnplayedYearData());
-            unplayedDeckTable.setItems(setUnplayedDeckData());
-        }
+        //Set played game data
+        playedShortTable.setItems(setPlayedShortData());
+        playedFranchiseTable.setItems(setPlayedFranchiseData());
+        playedPlatformTable.setItems(setPlayedPlatGenData(GameLists.platformList, true));
+        playedGenreTable.setItems(setPlayedPlatGenData(GameLists.genreList, false));
+        playedReleaseYearTable.setItems(setPlayedYearData(true));
+        playedCompletionYearTable.setItems(setPlayedYearData(false));
+        playedRatingTable.setItems(setPlayedRatingData());
+        playedPercent100Table.setItems(setPlayedPercentData());
+
+        //Set unplayed game data
+        unplayedFranchiseTable.setItems(setUnplayedFranchiseData());
+        unplayedPlatformTable.setItems(setUnplayedPlatGenData(GameLists.platformList, true));
+        unplayedGenreTable.setItems(setUnplayedPlatGenData(GameLists.genreList, false));
+        unplayedReleaseYearTable.setItems(setUnplayedYearData());
+        unplayedDeckTable.setItems(setUnplayedDeckData());
+
         TableMethods.updateColumnWidth(playedColumnList);
         TableMethods.updateColumnWidth(unplayedColumnList);
     }
 
+    //Sets the data for the played short table
+    public ObservableList<PlayedDataEntry> setPlayedShortData() {
+        //Local variables
+        String[] statuses = {"", "Yes", "No"};                                          //Potential short statuses
+        ObservableList<PlayedDataEntry> dataList = FXCollections.observableArrayList(); //List to be returned
+        HashMap<String, PlayedDataEntry> map = new HashMap<>();                         //Map of each short status
+
+        for(String s : statuses){
+            //Populate map with each status
+            //Local variables
+            PlayedDataEntry newData = new PlayedDataEntry();    //Data entry for the current status
+
+            if(s.equals(""))
+                //If the status is a blank string, name it Blank
+                newData.setName("Blank");
+            else
+                //Otherwise, set it to the status
+                newData.setName(s);
+
+            //Count starts at 0
+            newData.setCount(0);
+
+            //Percent starts at 0
+            newData.setPercent(0.0);
+
+            map.put(s, newData);
+            dataList.add(newData);
+        }
+
+        for(PlayedGame game : GameLists.playedList){
+            //Accumulate data for each status
+            //Local variables
+            PlayedDataEntry data = map.get(game.getShortStatus());  //Data entry for the short status of the current game
+
+            //Increment the count of the short status by one
+            data.setCount(data.getCount()+1);
+
+            if(game.getRating()!=0){
+                //If there is a rating in the current game
+                //Increment count of the games with ratings in the current short status
+                data.setRatingCount(data.getRatingCount() + 1);
+
+                //Add to the total rating
+                data.setTotalRating(data.getTotalRating() + game.getRating());
+
+                //Update the average rating
+                data.setAverageRating(data.getTotalRating()*1.0 / data.getRatingCount());
+            }
+
+            //Set percent of games with the current short status out of the total
+            data.setPercent(data.getCount() * 1.0 / GameLists.playedList.size() * 100);
+        }
+
+        return dataList;
+    }
+
     //Sets the data in the played game franchise table or genre table.
     public ObservableList<PlayedDataEntry> setPlayedFranchiseData() {
-        ObservableList<PlayedDataEntry> dataList = FXCollections.observableArrayList();
-        HashMap<String, PlayedDataEntry> map = new HashMap<>();
+        //Local variables
+        ObservableList<PlayedDataEntry> dataList = FXCollections.observableArrayList(); //List to be returned
+        HashMap<String, PlayedDataEntry> map = new HashMap<>();                         //Map of each franchise
+
         for(PlayedGame game : GameLists.playedList){
+            //Iterate for each game
+
             if(map.containsKey(game.getFranchise())){
-                PlayedDataEntry data = map.get(game.getFranchise());
+                //If the current game's franchise is already in the map, not the first occurrence
+                //Local variables
+                PlayedDataEntry data = map.get(game.getFranchise());    //Data entry for the franchise of the current game
+
+                //Increment the count of the franchise by one
                 data.setCount(data.getCount()+1);
+
                 if(game.getRating()!=0){
-                    data.setRatingCount(data.getRatingCount()+1);
-                    data.setTotalRating(data.getTotalRating()+game.getRating());
-                    data.setAverageRating(data.getTotalRating()*1.0 / data.getRatingCount());
+                    //If there is a rating in the current game
+                    //Increment count of the games with ratings in the current franchise
+                    data.setRatingCount(data.getRatingCount() + 1);
+
+                    //Add to the total rating
+                    data.setTotalRating(data.getTotalRating() + game.getRating());
+
+                    //Update the average rating
+                    data.setAverageRating(data.getTotalRating() * 1.0 / data.getRatingCount());
                 }
-                data.setPercent(data.getCount()*1.0 / GameLists.playedList.size() * 100);
+
+                //Set percent of games with the current franchise out of the total
+                data.setPercent(data.getCount() * 1.0 / GameLists.playedList.size() * 100);
 
             }else if(!game.getFranchise().equals("")){
-                PlayedDataEntry newData = new PlayedDataEntry();
+                //If the current game's franchise is not in the map
+                //Local variables
+                PlayedDataEntry newData = new PlayedDataEntry();    //New data entry for the current franchise
+
+                //Set name to the current franchise
                 newData.setName(game.getFranchise());
+
+                //Since it is new, the count is only one
                 newData.setCount(1);
+
                 if(game.getRating()!=0){
+                    //If there is a rating in the current game
+                    //The rating count should start at 1
                     newData.setRatingCount(1);
+
+                    //The total rating count will just be the rating
                     newData.setTotalRating(game.getRating());
+
+                    //The average will just be the rating
                     newData.setAverageRating(newData.getTotalRating() * 1.0);
                 }
+
+                //Set the initial percent
                 newData.setPercent(1.0 / GameLists.playedList.size() * 100);
+
                 map.put(game.getFranchise(), newData);
-                if (dataList.isEmpty()){
+
+                if (dataList.isEmpty())
+                    //If the list of franchises is empty, just add it
                     dataList.add(newData);
-                }else {
-                    boolean placed = false;
-                    for (int i = 0; i < dataList.size(); i++) {
+                else {
+                    //There are items in the list of franchises
+                    //Local variables
+                    boolean placed = false; //Flag if the current item is placed
+
+                    for (int i = 0; i < dataList.size(); i++)
+                        //Iterate for each item in the list of franchises
+
                         if(dataList.get(i).getName().toLowerCase().compareTo(newData.getName().toLowerCase()) > 0){
+                            //Compare the value of the current franchise with one from the franchise list
                             dataList.add(i, newData);
                             placed = true;
                             break;
                         }
-                    }
-                    if(!placed){
+
+                    if(!placed)
+                        //If it was never placed in the loop, put it at the end
                         dataList.add(newData);
-                    }
+
                 }
             }
         }
+
         return dataList;
     }
 

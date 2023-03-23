@@ -986,8 +986,8 @@ public class ApplicationGUI extends Application {
             //Open the stats view
             //Local variables
             Stage stage = new Stage();
-            StatsScreen statsScreen = new StatsScreen();
-            Scene scene = new Scene(statsScreen, 1000, 800);
+            StatsScreen statsScreen = new StatsScreen(stage);
+            Scene scene = new Scene(statsScreen);
 
             //GUI
             stage.getIcons().add(icon);
