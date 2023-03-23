@@ -184,22 +184,16 @@ public class StatsScreen extends HBox {
             unplayedReleaseYearHoursColumn, unplayedDeckHoursColumn
     );
 
-    public StatsScreen(Stage parentStage) {
+    ObservableList<TableView<?>> tableViews = FXCollections.observableArrayList(
+            playedShortTable, playedFranchiseTable, playedPlatformTable,
+            playedGenreTable, playedReleaseYearTable, playedCompletionYearTable,
+            playedRatingTable, playedPercent100Table, unplayedFranchiseTable,
+            unplayedPlatformTable, unplayedGenreTable, unplayedReleaseYearTable,
+            unplayedDeckTable
+    );
 
+    public StatsScreen(Stage parentStage) {
         //GUI
-        playedShortTable.setMinHeight(600);
-        playedFranchiseTable.setMinHeight(600);
-        playedPlatformTable.setMinHeight(600);
-        playedGenreTable.setMinHeight(600);
-        playedReleaseYearTable.setMinHeight(600);
-        playedCompletionYearTable.setMinHeight(600);
-        playedRatingTable.setMinHeight(600);
-        playedPercent100Table.setMinHeight(600);
-        unplayedFranchiseTable.setMinHeight(600);
-        unplayedPlatformTable.setMinHeight(600);
-        unplayedGenreTable.setMinHeight(600);
-        unplayedReleaseYearTable.setMinHeight(600);
-        unplayedDeckTable.setMinHeight(600);
         playedLabel.setStyle("-fx-font-size: 16;-fx-font-weight: bold;");
         playedChoices.getSelectionModel().selectFirst();
         playedChoices.getItems().addAll("Short Status", "Franchise", "Rating", "Platform", "Genre", "Release Year", "Completion Year", "100% Status");
@@ -216,6 +210,10 @@ public class StatsScreen extends HBox {
         setSpacing(20);
         setPadding(new Insets(5));
         getChildren().addAll(playedBox, unplayedBox);
+
+        for(TableView<?> tableView : tableViews)
+            //Set every TableView's height to 600
+            tableView.setMinHeight(600);
 
         //Set value factories
         for(TableColumn<?, String> column : nameColumns)
@@ -395,34 +393,12 @@ public class StatsScreen extends HBox {
     //Call methods to prevent reordering or resizing for all tableviews
     public void preventColumnReorderingAndResizingForAll() {
         //Reordering
-        TableMethods.preventColumnReordering(playedShortTable);
-        TableMethods.preventColumnReordering(playedFranchiseTable);
-        TableMethods.preventColumnReordering(playedPlatformTable);
-        TableMethods.preventColumnReordering(playedGenreTable);
-        TableMethods.preventColumnReordering(playedReleaseYearTable);
-        TableMethods.preventColumnReordering(playedCompletionYearTable);
-        TableMethods.preventColumnReordering(playedRatingTable);
-        TableMethods.preventColumnReordering(playedPercent100Table);
-        TableMethods.preventColumnReordering(unplayedFranchiseTable);
-        TableMethods.preventColumnReordering(unplayedPlatformTable);
-        TableMethods.preventColumnReordering(unplayedGenreTable);
-        TableMethods.preventColumnReordering(unplayedReleaseYearTable);
-        TableMethods.preventColumnReordering(unplayedDeckTable);
+        for(TableView<?> tableView : tableViews)
+            TableMethods.preventColumnReordering(tableView);
 
         //Resizing
-        TableMethods.preventColumnResizing(playedShortTable);
-        TableMethods.preventColumnResizing(playedFranchiseTable);
-        TableMethods.preventColumnResizing(playedPlatformTable);
-        TableMethods.preventColumnResizing(playedGenreTable);
-        TableMethods.preventColumnResizing(playedReleaseYearTable);
-        TableMethods.preventColumnResizing(playedCompletionYearTable);
-        TableMethods.preventColumnResizing(playedRatingTable);
-        TableMethods.preventColumnResizing(playedPercent100Table);
-        TableMethods.preventColumnResizing(unplayedFranchiseTable);
-        TableMethods.preventColumnResizing(unplayedPlatformTable);
-        TableMethods.preventColumnResizing(unplayedGenreTable);
-        TableMethods.preventColumnResizing(unplayedReleaseYearTable);
-        TableMethods.preventColumnResizing(unplayedDeckTable);
+        for(TableView<?> tableView : tableViews)
+            TableMethods.preventColumnResizing(tableView);
     }
 
     //Set table data
