@@ -154,5 +154,9 @@ public class CollectionsManageWindow extends VBox {
                 ApplicationGUI.changeMade = true;
             }
         });
+
+        //Set textField text to the selected item.
+        collectionListView.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) ->
+                collectionTextField.setText(collectionListView.getItems().get((int) newNum).toString()));
     }
 }

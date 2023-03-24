@@ -3,7 +3,6 @@ package com.example.vidyatracker11;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -188,6 +187,10 @@ public abstract class EditGenPlatList extends VBox {
                 ApplicationGUI.changeMade = true;
             }
         });
+
+        //Set textField text to the selected item.
+        listView.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) ->
+                addItemField.setText(listView.getItems().get((int) newNum)));
     }
 
     //Remove the item from each game

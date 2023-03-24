@@ -22,10 +22,10 @@ public class AchievementWindow extends VBox {
             "Total", "Total games completed",
             new int[]{0,50,100,200,300,400,500,750,1000,1500,2000}, true);
     public AchievementBox<PlayedGame> newReleasesAchievement = new AchievementBox<>(
-            "New Releases", "Completed games from " + localDate.getYear(),
+            "New Releases", "Completed games that were released in " + localDate.getYear(),
             new int[]{0,1,2,3,4,5,6,8,10,15,20}, false);
     public AchievementBox<PlayedGame> lastYearReleasesAchievement = new AchievementBox<>(
-            "Last Year Releases", "Completed games from " + (localDate.getYear()-1),
+            "Last Year Releases", "Completed games that were released in " + (localDate.getYear()-1),
             new int[]{0,2,4,6,8,10,12,16,20,30,40}, false);
     public AchievementBox<PlayedGame> currentYearAchievement = new AchievementBox<>(
             "Current Year", "Games completed in " + localDate.getYear(),
