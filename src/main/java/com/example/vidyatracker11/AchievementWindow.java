@@ -41,7 +41,7 @@ public class AchievementWindow extends VBox {
             new int[]{0,25,50,100,150,200,250,375,500,750,1000}, false);
     public AchievementBox<PlayedGame> shortGamesAchievement = new AchievementBox<>(
             "Short Games", "Short games completed",
-            new int[]{0,25,50,100,150,200,250,375,500,750,1000}, false);
+            new int[]{0,50,100,200,300,400,500,750,1000,1500,2000}, false);
     public AchievementBox<String> bigFranchisesAchievement = new AchievementBox<>(
             "Big Franchises", "Franchises with 6 or more games completed",
             new int[]{0,2,4,6,8,10,15,20,30,40,50}, false);
