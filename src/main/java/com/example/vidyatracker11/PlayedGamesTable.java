@@ -156,16 +156,15 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                         //Set text
                         setText("" + item);
 
-                    if ((getItem()) == PlayedGamesTable.localDate.getYear()) {
+                    if ((getItem()) == localDate.getYear())
                         //Current year color
                         setStyle(ApplicationGUI.colorMap.get("CURRENTYEAR"));
-                    } else if ((getItem()) == PlayedGamesTable.localDate.getYear() - 1) {
+                    else if ((getItem()) == localDate.getYear() - 1)
                         //Last year color
                         setStyle(ApplicationGUI.colorMap.get("LASTYEAR"));
-                    } else {
+                    else
                         //Any other year color
                         setStyle("");
-                    }
                 }
             }
         });
@@ -188,10 +187,10 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                         //Set text
                         setText("" + item);
 
-                    if ((getItem()) == PlayedGamesTable.localDate.getYear()) {
+                    if ((getItem()) == localDate.getYear()) {
                         //Current year color
                         setStyle(ApplicationGUI.colorMap.get("CURRENTYEAR"));
-                    } else if ((getItem()) == PlayedGamesTable.localDate.getYear() - 1) {
+                    } else if ((getItem()) == localDate.getYear() - 1) {
                         //Last year color
                         setStyle(ApplicationGUI.colorMap.get("LASTYEAR"));
                     } else {

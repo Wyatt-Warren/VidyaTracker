@@ -26,7 +26,7 @@ public abstract class UnplayedAddEditWindow extends AddEditGame{
         hoursVBox.setAlignment(Pos.CENTER);
         deckVBox.setAlignment(Pos.CENTER);
         mainHBox.getChildren().addAll(statusVBox, titleVBox, franchiseVBox,
-                platformVBox, genreVBox, hoursVBox, releaseVBox, deckVBox);
+                platformVBox, genreVBox, releaseVBox, hoursVBox, deckVBox);
         getChildren().addAll(mainLabel, mainHBox, doneButton);
 
         //Set status values

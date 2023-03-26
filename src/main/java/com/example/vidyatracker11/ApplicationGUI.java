@@ -170,8 +170,8 @@ public class ApplicationGUI extends Application {
                 "Release Date", "Completion Date", "100%");
         playedFilterChoices.getItems().addAll("Status", "Short", "Franchise", "Rating", "Platform",
                 "Genre", "Release Year", "Completion Year", "100%", "No Filter");
-        unplayedSortChoices.getItems().addAll("Status", "Title", "Franchise", "Platform", "Genre", "Hours",
-                "Release Date", "Deck Status");
+        unplayedSortChoices.getItems().addAll("Status", "Title", "Franchise", "Platform", "Genre", "Release Date",
+                "Hours", "Deck Status");
         unplayedFilterChoices.getItems().addAll("Status", "Franchise", "Platform", "Genre", "Deck Status",
                 "Release Year", "No Filter");
 

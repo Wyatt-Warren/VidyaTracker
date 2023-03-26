@@ -66,19 +66,19 @@ public class UnplayedEditWindow extends UnplayedAddEditWindow {
         //Set Genre
         game.setGenre(genreBox.getSelectionModel().getSelectedItem());
 
-        if (hoursBox.getText().equals("") || hoursBox.getText().equals("."))
-            //If no value is entered, set hours to 0
-            game.setHours(0);
-        else
-            //A value is entered
-            game.setHours(Double.parseDouble(hoursBox.getText()));
-
         if (releaseYearBox.getText().equals(""))
             //If no value is entered, set year to 0
             game.setReleaseYear(0);
         else
             //A value is entered
             game.setReleaseYear(Integer.parseInt(releaseYearBox.getText()));
+
+        if (hoursBox.getText().equals("") || hoursBox.getText().equals("."))
+            //If no value is entered, set hours to 0
+            game.setHours(0);
+        else
+            //A value is entered
+            game.setHours(Double.parseDouble(hoursBox.getText()));
 
         if (deckBox.getSelectionModel().getSelectedItem().equals("Blank"))
             //If Blank is selected, set deck compatible to a blank string

@@ -1,7 +1,10 @@
 package com.example.vidyatracker11;
 
 import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.function.Predicate;
 
 import javafx.collections.FXCollections;
@@ -23,14 +26,17 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
     TableColumn<UnplayedGame, String> franchiseColumn = new TableColumn<>("Franchise");
     TableColumn<UnplayedGame, String> platformColumn = new TableColumn<>("Platform");
     TableColumn<UnplayedGame, String> genreColumn = new TableColumn<>("Genre");
+    TableColumn<UnplayedGame, Integer> releaseYearColumn = new TableColumn<>("Release Year");
     TableColumn<UnplayedGame, Double> hoursColumn = new TableColumn<>("Predicted Hours");
     TableColumn<UnplayedGame, String> deckColumn = new TableColumn<>("Deck Status");
-    TableColumn<UnplayedGame, Integer> releaseYearColumn = new TableColumn<>("Release Year");
     ObservableList<TableColumn<UnplayedGame, ?>> columnList = FXCollections.observableArrayList(
-            statusColumn, titleColumn, franchiseColumn, platformColumn, genreColumn, hoursColumn,
-            releaseYearColumn, deckColumn);
+            statusColumn, titleColumn, franchiseColumn, platformColumn,
+            genreColumn, releaseYearColumn, hoursColumn, deckColumn);
 
     //Fields
+    private static final Date date = new Date();
+    private static final ZoneId timeZone = ZoneId.systemDefault();
+    private static final LocalDate localDate = date.toInstant().atZone(timeZone).toLocalDate(); //Used to get current year
     FilteredList<UnplayedGame> filteredList = new FilteredList<>(GameLists.unplayedList);       //List of items in the table
 
     public UnplayedGamesTable() {
@@ -40,8 +46,8 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
         franchiseColumn.setCellValueFactory(new PropertyValueFactory<>("franchise"));
         platformColumn.setCellValueFactory(new PropertyValueFactory<>("platform"));
         genreColumn.setCellValueFactory(new PropertyValueFactory<>("genre"));
-        hoursColumn.setCellValueFactory(new PropertyValueFactory<>("hours"));
         releaseYearColumn.setCellValueFactory(new PropertyValueFactory<>("releaseYear"));
+        hoursColumn.setCellValueFactory(new PropertyValueFactory<>("hours"));
         deckColumn.setCellValueFactory(new PropertyValueFactory<>("deckCompatible"));
 
         setPrefSize(900, 99999);
@@ -69,6 +75,36 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
             }
         });
 
+        releaseYearColumn.setCellFactory(e -> new TableCell<>() {
+            public void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (item == null || empty) {
+                    //Cells where there is no game object
+                    setText(null);
+                    setStyle("");
+                } else {
+
+                    if (item == 0)
+                        //0 means no rating
+                        setText("");
+                    else
+                        //Set text
+                        setText("" + item);
+
+                    if ((getItem()) == localDate.getYear())
+                        //Current year color
+                        setStyle(ApplicationGUI.colorMap.get("CURRENTYEAR"));
+                    else if ((getItem()) == localDate.getYear() - 1)
+                        //Last year color
+                        setStyle(ApplicationGUI.colorMap.get("LASTYEAR"));
+                    else
+                        //Any other year color
+                        setStyle("");
+                }
+            }
+        });
+
         hoursColumn.setCellFactory(e -> new TableCell<>() {
             public void updateItem(Double item, boolean empty) {
                 super.updateItem(item, empty);
@@ -87,26 +123,6 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
                         DecimalFormat decimalFormat = new DecimalFormat("0.##");
                         setText(decimalFormat.format(item));
                     }
-                }
-            }
-        });
-
-        releaseYearColumn.setCellFactory(e -> new TableCell<>() {
-            public void updateItem(Integer item, boolean empty) {
-                super.updateItem(item, empty);
-
-                if (item == null || empty) {
-                    //Cells where there is no game object
-                    setText(null);
-                    setStyle("");
-                } else {
-
-                    if (item == 0)
-                        //0 means no rating
-                        setText("");
-                    else
-                        //Set text
-                        setText("" + item);
                 }
             }
         });
@@ -261,12 +277,12 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
                 sortByAny(TableMethods.genreComparator);
                 break;
             case 5:
-                //Hours
-                sortByAny(TableMethods.hoursComparator);
-                break;
-            case 6:
                 //Date
                 sortByAny(TableMethods.releaseDateComparator);
+                break;
+            case 6:
+                //Hours
+                sortByAny(TableMethods.hoursComparator);
                 break;
             case 7:
                 //Deck Status
