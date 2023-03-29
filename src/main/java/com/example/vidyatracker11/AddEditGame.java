@@ -119,7 +119,16 @@ public class AddEditGame extends VBox{
                 break;
             case 2:
                 //February
-                if(isLeapYear(Integer.parseInt(yearBox.getText())))
+                int year;
+
+                if(yearBox.getText().equals(""))
+                    //If year is blank, consider it to be 0
+                    year = 0;
+                else
+                    //Year is not blank
+                    year = Integer.parseInt(yearBox.getText());
+
+                if(isLeapYear(year))
                     //Leap year
                     dayCount = 29;
                 else
@@ -148,11 +157,11 @@ public class AddEditGame extends VBox{
         if(year % 4 == 0)
             //Year is divisible by four
 
-            if(year % 100 == 0) {
+            if(year % 100 == 0)
                 //If year is divisible by 100, only true if it's also divisible by 400
                 return year % 400 == 0;
 
-            }else
+            else
                 //Year is not divisible by 100
                 return true;
 
