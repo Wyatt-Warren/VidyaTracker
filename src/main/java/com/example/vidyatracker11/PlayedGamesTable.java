@@ -346,7 +346,7 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                 setItems(new FilteredList<>(basicSort(filteredList, true)));
                 break;
             case 3:
-                //Title
+                //Franchise
                 setItems(new FilteredList<>(basicSort(filteredList, false)));
                 break;
             case 4:

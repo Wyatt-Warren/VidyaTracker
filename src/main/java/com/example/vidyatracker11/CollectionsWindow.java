@@ -15,6 +15,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.util.Comparator;
 import java.util.Random;
 
 //GUI for individual collection view
@@ -35,6 +36,8 @@ public class CollectionsWindow extends VBox {
     Button moveUpButton = new Button("Move Selected Game Up");
     Button moveDownButton = new Button("Move Selected Game Down");
     Button chooseRandomGameButton = new Button("Choose a Random Unplayed Game");
+    Button sortButton = new Button("Sort List");
+    ChoiceBox<String> sortChoices = new ChoiceBox<>();
 
     //Text
     Label countTextLabel = new Label("Count:");
@@ -48,8 +51,9 @@ public class CollectionsWindow extends VBox {
     GridPane labelPane = new GridPane();
 
     //Boxes
+    HBox sortBox = new HBox(sortButton, sortChoices);
     VBox buttonBox = new VBox(removeButton, moveUpButton, moveDownButton,
-            chooseRandomGameButton, labelPane);
+            chooseRandomGameButton, sortBox, labelPane);
     HBox collectionBox = new HBox(tableView, buttonBox);
 
     //Fields
@@ -65,6 +69,10 @@ public class CollectionsWindow extends VBox {
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         tableView.getColumns().addAll(columnList);
+        sortChoices.getItems().addAll("Status", "Short", "Title", "Franchise", "Rating", "Platform", "Genre",
+                "Release Date", "Completion Date", "100%", "Hours", "Deck Status");
+        sortChoices.getSelectionModel().selectFirst();
+        sortBox.setSpacing(5);
         buttonBox.setSpacing(5);
         countTextLabel.setStyle("-fx-font-weight:bold;");
         hoursTextLabel.setStyle("-fx-font-weight:bold;");
@@ -293,10 +301,162 @@ public class CollectionsWindow extends VBox {
             }
         });
 
+        sortButton.setOnAction(e -> {
+            //Local variables
+            GameCollection collection = collectionChoices.getSelectionModel().getSelectedItem();            //Current collection
+            String sortBy = sortChoices.getSelectionModel().getSelectedItem();                              //Sorting Selection
+            ObservableList<Game> playedList = FXCollections.observableArrayList(collection.getGames());     //List of PlayedGames
+            ObservableList<Game> unplayedList = FXCollections.observableArrayList(collection.getGames());   //List of UnplayedGames
+            ObservableList<Game> newPlayedList;                                                             //List used to basicSort playedList
+            ObservableList<Game> newUnplayedList;                                                           //List used to basicSort unplayedList
+
+            //Remove non-applicable games from played/unplayed list
+            playedList.removeIf(game -> game instanceof UnplayedGame);
+            unplayedList.removeIf(game -> game instanceof PlayedGame);
+
+            //Sort each list
+            newPlayedList = FXCollections.observableArrayList(basicSort(playedList, true));
+            newUnplayedList = FXCollections.observableArrayList(basicSort(unplayedList, true));
+
+            //Set sorted playedList
+            playedList.clear();
+            playedList.addAll(newPlayedList);
+
+            //Set sorted unplayedList
+            unplayedList.clear();
+            unplayedList.addAll(newUnplayedList);
+
+            switch(sortBy){
+                //Switch for sort selection
+                case "Status":
+                    sortCollectionList(collection.getGames(), TableMethods.statusComparator);
+                    break;
+                case "Short":
+                    sortCollectionList(playedList, TableMethods.shortStatusComparator);
+
+                    collection.getGames().clear();
+                    collection.getGames().addAll(playedList);
+                    collection.getGames().addAll(unplayedList);
+                    break;
+                case "Title":
+                    //Local variables
+                    ObservableList<Game> newList =
+                            FXCollections.observableArrayList(basicSort(collection.getGames(), true));  //New list sorted with basicSort
+
+                    collection.getGames().clear();
+                    collection.getGames().addAll(newList);
+                    break;
+                case "Franchise":
+                    //Local variables
+                    ObservableList<Game> newList1 =
+                            FXCollections.observableArrayList(basicSort(collection.getGames(), false)); //New list sorted with basicSort
+
+                    collection.getGames().clear();
+                    collection.getGames().addAll(newList1);
+                    break;
+                case "Rating":
+                    sortCollectionList(playedList, TableMethods.ratingComparator);
+
+                    collection.getGames().clear();
+                    collection.getGames().addAll(playedList);
+                    collection.getGames().addAll(unplayedList);
+                    break;
+                case "Platform":
+                    sortCollectionList(collection.getGames(), TableMethods.platformComparator);
+                    break;
+                case "Genre":
+                    sortCollectionList(collection.getGames(), TableMethods.genreComparator);
+                    break;
+                case "Release Date":
+                    sortCollectionList(collection.getGames(), TableMethods.releaseDateComparator);
+                    break;
+                case "Completion Date":
+                    sortCollectionList(playedList, TableMethods.completionDateComparator);
+
+                    collection.getGames().clear();
+                    collection.getGames().addAll(playedList);
+                    collection.getGames().addAll(unplayedList);
+                    break;
+                case "100%":
+                    sortCollectionList(playedList, TableMethods.percentComparator);
+
+                    collection.getGames().clear();
+                    collection.getGames().addAll(playedList);
+                    collection.getGames().addAll(unplayedList);
+                    break;
+                case "Hours":
+                    sortCollectionList(unplayedList, TableMethods.hoursComparator);
+
+                    collection.getGames().clear();
+                    collection.getGames().addAll(unplayedList);
+                    collection.getGames().addAll(playedList);
+                    break;
+                case "Deck Status":
+                    sortCollectionList(unplayedList, TableMethods.deckStatusComparator);
+
+                    collection.getGames().clear();
+                    collection.getGames().addAll(unplayedList);
+                    collection.getGames().addAll(playedList);
+                    break;
+            }
+
+            ApplicationGUI.changeMade = true;
+        });
+
         TableMethods.preventColumnResizing(tableView);
         TableMethods.preventColumnSorting(tableView);
         TableMethods.preventColumnReordering(tableView);
         setData();
+    }
+
+    //Sorts a collection by a given comparator
+    public void sortCollectionList(ObservableList<Game> list, Comparator<Game> comparator){
+        //Local variables
+        ObservableList<Game> newList = FXCollections.observableArrayList(basicSort(list, true));
+
+        newList.sort(comparator);
+        list.clear();
+        list.addAll(newList);
+    }
+
+    //Sort's by title, but franchises are grouped and sorted by release date
+    public static ObservableList<Game> basicSort(ObservableList<Game> oldList, boolean title){
+        ObservableList<Game> newList = FXCollections.observableArrayList(oldList);
+        //Sort by release date first
+        newList.sort(TableMethods.releaseDateComparator);
+
+        //Sort by title/franchise
+        newList.sort((o1, o2) -> {
+            //Local variables
+            String sortBy1; //First item sort name
+            String sortBy2; //Second item sort name
+
+            if(o1.getFranchise().equals("") && title)
+                //Get title if no franchise
+                sortBy1 = o1.getTitle().toLowerCase();
+            else
+                //Get franchise if present
+                sortBy1 = o1.getFranchise().toLowerCase();
+
+            if(o2.getFranchise().equals("") && title)
+                //Get title if no franchise
+                sortBy2 = o2.getTitle().toLowerCase();
+            else
+                //Get franchise if present
+                sortBy2 = o2.getFranchise().toLowerCase();
+
+            if (sortBy1.startsWith("the "))
+                //remove the
+                sortBy1 = sortBy1.replace("the ", "");
+
+            if (sortBy2.startsWith("the "))
+                //remove the
+                sortBy2 = sortBy2.replace("the ", "");
+
+            return sortBy1.compareTo(sortBy2);
+        });
+
+        return newList;
     }
 
     //Sets data for CollectionsWindow
