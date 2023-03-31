@@ -307,24 +307,10 @@ public class CollectionsWindow extends VBox {
             String sortBy = sortChoices.getSelectionModel().getSelectedItem();                              //Sorting Selection
             ObservableList<Game> playedList = FXCollections.observableArrayList(collection.getGames());     //List of PlayedGames
             ObservableList<Game> unplayedList = FXCollections.observableArrayList(collection.getGames());   //List of UnplayedGames
-            ObservableList<Game> newPlayedList;                                                             //List used to basicSort playedList
-            ObservableList<Game> newUnplayedList;                                                           //List used to basicSort unplayedList
 
             //Remove non-applicable games from played/unplayed list
             playedList.removeIf(game -> game instanceof UnplayedGame);
             unplayedList.removeIf(game -> game instanceof PlayedGame);
-
-            //Sort each list
-            newPlayedList = FXCollections.observableArrayList(basicSort(playedList, true));
-            newUnplayedList = FXCollections.observableArrayList(basicSort(unplayedList, true));
-
-            //Set sorted playedList
-            playedList.clear();
-            playedList.addAll(newPlayedList);
-
-            //Set sorted unplayedList
-            unplayedList.clear();
-            unplayedList.addAll(newUnplayedList);
 
             switch(sortBy){
                 //Switch for sort selection
@@ -332,6 +318,30 @@ public class CollectionsWindow extends VBox {
                     sortCollectionList(collection.getGames(), TableMethods.statusComparator);
                     break;
                 case "Short":
+                    //Local variables
+                    ObservableList<Game> blankShortList = FXCollections.observableArrayList(playedList); //List of games with blank status, should be mixed with unplayedGames
+
+                    for(Game game : playedList){
+                        //Remove each game with a status from blankList
+                        //Local variables
+                        PlayedGame playedGame = (PlayedGame) game;  //Cast to PlayedGame
+
+                        if(playedGame.getShortStatus().equals("Yes") ||
+                                playedGame.getShortStatus().equals("No"))
+                            //If game has status Yes or No, remove it
+                            blankShortList.remove(game);
+                    }
+
+                    //Remove blankList from games to be sorted with comparator
+                    playedList.removeAll(blankShortList);
+
+                    //Add blankList to games to be appended after playedList
+                    unplayedList.addAll(blankShortList);
+
+                    //Sort new unplayedList
+                    unplayedList = basicSort(unplayedList, true);
+
+                    //Sort playedList
                     sortCollectionList(playedList, TableMethods.shortStatusComparator);
 
                     collection.getGames().clear();
@@ -355,6 +365,29 @@ public class CollectionsWindow extends VBox {
                     collection.getGames().addAll(newList1);
                     break;
                 case "Rating":
+                    //Local variables
+                    ObservableList<Game> blankRatingList = FXCollections.observableArrayList(playedList); //List of games with blank rating, should be mixed with unplayedGames
+
+                    for(Game game : playedList){
+                        //Remove each game with a rating from blankList
+                        //Local variables
+                        PlayedGame playedGame = (PlayedGame) game;  //Cast to PlayedGame
+
+                        if(playedGame.getRating() != 0)
+                            //If game has rating other than 0, remove it
+                            blankRatingList.remove(game);
+                    }
+
+                    //Remove blankList from games to be sorted with comparator
+                    playedList.removeAll(blankRatingList);
+
+                    //Add blankList to games to be appended after playedList
+                    unplayedList.addAll(blankRatingList);
+
+                    //Sort new unplayedList
+                    unplayedList = basicSort(unplayedList, true);
+
+                    //Sort playedList
                     sortCollectionList(playedList, TableMethods.ratingComparator);
 
                     collection.getGames().clear();
@@ -371,6 +404,29 @@ public class CollectionsWindow extends VBox {
                     sortCollectionList(collection.getGames(), TableMethods.releaseDateComparator);
                     break;
                 case "Completion Date":
+                    //Local variables
+                    ObservableList<Game> blankYearList = FXCollections.observableArrayList(playedList); //List of games with blank completion year, should be mixed with unplayedGames
+
+                    for(Game game : playedList){
+                        //Remove each game with a completion year from blankList
+                        //Local variables
+                        PlayedGame playedGame = (PlayedGame) game;  //Cast to PlayedGame
+
+                        if(playedGame.getCompletionYear() != 0)
+                            //If game has year other than 0, remove it
+                            blankYearList.remove(game);
+                    }
+
+                    //Remove blankList from games to be sorted with comparator
+                    playedList.removeAll(blankYearList);
+
+                    //Add blankList to games to be appended after playedList
+                    unplayedList.addAll(blankYearList);
+
+                    //Sort new unplayedList
+                    unplayedList = basicSort(unplayedList, true);
+
+                    //Sort playedList
                     sortCollectionList(playedList, TableMethods.completionDateComparator);
 
                     collection.getGames().clear();
@@ -378,6 +434,30 @@ public class CollectionsWindow extends VBox {
                     collection.getGames().addAll(unplayedList);
                     break;
                 case "100%":
+                    //Local variables
+                    ObservableList<Game> blankPercentList = FXCollections.observableArrayList(playedList); //List of games with blank status, should be mixed with unplayedGames
+
+                    for(Game game : playedList){
+                        //Remove each game with a status from blankList
+                        //Local variables
+                        PlayedGame playedGame = (PlayedGame) game;  //Cast to PlayedGame
+
+                        if(playedGame.getPercent100().equals("Yes") ||
+                                playedGame.getPercent100().equals("No"))
+                            //If game has status Yes or No, remove it
+                            blankPercentList.remove(game);
+                    }
+
+                    //Remove blankList from games to be sorted with comparator
+                    playedList.removeAll(blankPercentList);
+
+                    //Add blankList to games to be appended after playedList
+                    unplayedList.addAll(blankPercentList);
+
+                    //Sort new unplayedList
+                    unplayedList = basicSort(unplayedList, true);
+
+                    //Sort playedList
                     sortCollectionList(playedList, TableMethods.percentComparator);
 
                     collection.getGames().clear();
@@ -385,6 +465,29 @@ public class CollectionsWindow extends VBox {
                     collection.getGames().addAll(unplayedList);
                     break;
                 case "Hours":
+                    //Local variables
+                    ObservableList<Game> blankHoursList = FXCollections.observableArrayList(unplayedList); //List of games with blank hours, should be mixed with playedGames
+
+                    for(Game game : unplayedList){
+                        //Remove each game with hours from blankList
+                        //Local variables
+                        UnplayedGame unplayedGame = (UnplayedGame) game;  //Cast to UnplayedGame
+
+                        if(unplayedGame.getHours() != 0)
+                            //If game has hours other than 0, remove it
+                            blankHoursList.remove(game);
+                    }
+
+                    //Remove blankList from games to be sorted with comparator
+                    unplayedList.removeAll(blankHoursList);
+
+                    //Add blankList to games to be appended after unplayedList
+                    playedList.addAll(blankHoursList);
+
+                    //Sort new playedList
+                    playedList = basicSort(playedList, true);
+
+                    //Sort unplayedList
                     sortCollectionList(unplayedList, TableMethods.hoursComparator);
 
                     collection.getGames().clear();
@@ -392,6 +495,31 @@ public class CollectionsWindow extends VBox {
                     collection.getGames().addAll(playedList);
                     break;
                 case "Deck Status":
+                    //Local variables
+                    ObservableList<Game> blankDeckList = FXCollections.observableArrayList(unplayedList); //List of games with blank status, should be mixed with playedGames
+
+                    for(Game game : unplayedList){
+                        //Remove each game with a status from blankList
+                        //Local variables
+                        UnplayedGame unplayedGame = (UnplayedGame) game;  //Cast to UnplayedGame
+
+                        if(unplayedGame.getDeckCompatible().equals("Yes") ||
+                                unplayedGame.getDeckCompatible().equals("No") ||
+                                unplayedGame.getDeckCompatible().equals("Maybe"))
+                            //If game has status Yes, No, or Maybe, remove it
+                            blankDeckList.remove(game);
+                    }
+
+                    //Remove blankList from games to be sorted with comparator
+                    unplayedList.removeAll(blankDeckList);
+
+                    //Add blankList to games to be appended after unplayedList
+                    playedList.addAll(blankDeckList);
+
+                    //Sort new playedList
+                    playedList = basicSort(playedList, true);
+
+                    //Sort unplayedList
                     sortCollectionList(unplayedList, TableMethods.deckStatusComparator);
 
                     collection.getGames().clear();
