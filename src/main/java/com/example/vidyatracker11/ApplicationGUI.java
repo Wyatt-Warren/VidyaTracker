@@ -172,8 +172,8 @@ public class ApplicationGUI extends Application {
                 "Genre", "Release Year", "Completion Year", "100%", "No Filter");
         unplayedSortChoices.getItems().addAll("Status", "Title", "Franchise", "Platform", "Genre", "Release Date",
                 "Hours", "Deck Status");
-        unplayedFilterChoices.getItems().addAll("Status", "Franchise", "Platform", "Genre", "Deck Status",
-                "Release Year", "No Filter");
+        unplayedFilterChoices.getItems().addAll("Status", "Franchise", "Platform", "Genre", "Release Year",
+                "Deck Status", "No Filter");
 
         //Played ChoiceBox listeners
         playedSortChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) ->
@@ -319,10 +319,6 @@ public class ApplicationGUI extends Application {
                     unplayedFilterTokenChoices.getItems().addAll(GameLists.genreList);
                     break;
                 case 4:
-                    //Deck Status
-                    unplayedFilterTokenChoices.getItems().addAll("Yes", "No", "Maybe", "Blank");
-                    break;
-                case 5:
                     //Release Year
                     //Local variables
                     ObservableList<Integer> years = FXCollections.observableArrayList();    //List of all years
@@ -344,6 +340,10 @@ public class ApplicationGUI extends Application {
                         //Add each year to unplayedFilterTokenChoices
                         unplayedFilterTokenChoices.getItems().add(""+i);
 
+                    break;
+                case 5:
+                    //Deck Status
+                    unplayedFilterTokenChoices.getItems().addAll("Yes", "No", "Maybe", "Blank");
                     break;
                 case 6:
                     //No Filter

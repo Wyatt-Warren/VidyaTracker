@@ -236,11 +236,6 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
                         unplayedGame.getGenre().equals(finalFilterToken));
                 break;
             case 4:
-                //Deck Status
-                filterByAny(unplayedGame ->
-                        unplayedGame.getDeckCompatible().equals(finalFilterToken));
-                break;
-            case 5:
                 //Release Year
                 try{
                     filterByAny(playedGame -> playedGame.getReleaseYear() ==
@@ -248,6 +243,11 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
                 }catch (NumberFormatException ignored){
                     //This shouldn't happen
                 }
+                break;
+            case 5:
+                //Deck Status
+                filterByAny(unplayedGame ->
+                        unplayedGame.getDeckCompatible().equals(finalFilterToken));
                 break;
             case 6:
                 //Don't Filter
