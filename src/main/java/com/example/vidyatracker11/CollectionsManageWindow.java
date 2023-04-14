@@ -25,7 +25,9 @@ public class CollectionsManageWindow extends VBox {
     Button renameButton = new Button("Rename Selected Collection");
     Button moveUpButton = new Button("Move Up");
     Button moveDownButton = new Button("Move Down");
-    VBox buttonBox = new VBox(renameButton, removeButton, moveUpButton, moveDownButton);
+    Button duplicateButton = new Button("Duplicate Selected Collection");
+    VBox buttonBox = new VBox(renameButton, removeButton, duplicateButton,
+            moveUpButton, moveDownButton);
 
     GridPane gridPane = new GridPane();
 
@@ -102,6 +104,7 @@ public class CollectionsManageWindow extends VBox {
                         selectedRemoved = true;
 
                     ApplicationGUI.changeMade = true;
+                    stage.close();
                 });
 
                 //Close the window without removing the item
@@ -127,6 +130,30 @@ public class CollectionsManageWindow extends VBox {
                 //because the observable list doesn't change, only a value in an object within the observable list
                 collectionListView.setItems(FXCollections.observableArrayList());
                 collectionListView.setItems(GameLists.collectionList);
+            }
+        });
+
+        duplicateButton.setOnAction(e -> {
+            //Creates a new collection with an identical list
+            //Local variables
+            int selectionIndex = collectionListView.getSelectionModel().getSelectedIndex(); //Index for the selected collection
+
+            if(selectionIndex >= 0 && !collectionTextField.getText().equals("")){
+                //An item is selected
+                //Local variables
+                String selectedItemTitle = collectionListView.getSelectionModel().getSelectedItem().getTitle(); //Title of the selected collection
+                GameCollection gameCollection = new GameCollection(collectionTextField.getText());              //New game collection
+
+                if(collectionTextField.getText().equals(selectedItemTitle))
+                    //Set title if the user didn't change the title
+                    gameCollection.setTitle(selectedItemTitle + " - Copy");
+
+                //Add games from previous collection to the new one
+                gameCollection.getGames().addAll(collectionListView.getSelectionModel().getSelectedItem().getGames());
+
+                GameLists.collectionList.add(gameCollection);
+                ApplicationGUI.changeMade = true;
+                collectionTextField.setText("");
             }
         });
 
@@ -156,7 +183,10 @@ public class CollectionsManageWindow extends VBox {
         });
 
         //Set textField text to the selected item.
-        collectionListView.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) ->
-                collectionTextField.setText(collectionListView.getItems().get((int) newNum).toString()));
+        collectionListView.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
+            if((int) newNum >= 0)
+                //If an item is selected (When the list is empty, it will have nothing selected and cause an error)
+                collectionTextField.setText(collectionListView.getItems().get((int) newNum).toString());
+        });
     }
 }

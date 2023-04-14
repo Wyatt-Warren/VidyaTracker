@@ -222,6 +222,7 @@ public class CollectionsWindow extends VBox {
                     setLabels(collectionChoices.getSelectionModel().getSelectedItem());
 
                     ApplicationGUI.changeMade = true;
+                    stage.close();
                 });
 
                 //Close the window without removing the item
