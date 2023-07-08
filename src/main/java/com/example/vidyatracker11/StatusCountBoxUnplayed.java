@@ -21,9 +21,15 @@ public class StatusCountBoxUnplayed extends GridPane {
     Label wishlistLabel = new Label("Wishlist");
     Label wishlistCountLabel = new Label();
     Label wishlistHoursLabel = new Label();
+    Label ignoredLabel = new Label("Ignored");
+    Label ignoredCountLabel = new Label();
+    Label ignoredHoursLabel = new Label();
     Label totalLabel = new Label("Total");
     Label totalCountLabel = new Label();
     Label totalHoursLabel = new Label();
+    Label totalIgnoredLabel = new Label("Total with Ignored");
+    Label totalIgnoredCountLabel = new Label();
+    Label totalIgnoredHoursLabel = new Label();
 
     public StatusCountBoxUnplayed() {
         //GUI
@@ -33,15 +39,21 @@ public class StatusCountBoxUnplayed extends GridPane {
         add(backlogLabel, 0, 1);
         add(subBacklogLabel, 0, 2);
         add(wishlistLabel, 0, 3);
-        add(totalLabel, 0, 4);
+        add(ignoredLabel, 0, 4);
+        add(totalLabel, 0, 5);
+        add(totalIgnoredLabel, 0, 6);
         add(backlogCountLabel, 1, 1);
         add(subBacklogCountLabel, 1, 2);
         add(wishlistCountLabel, 1, 3);
-        add(totalCountLabel, 1, 4);
+        add(ignoredCountLabel, 1, 4);
+        add(totalCountLabel, 1, 5);
+        add(totalIgnoredCountLabel, 1, 6);
         add(backlogHoursLabel, 2, 1);
         add(subBacklogHoursLabel, 2, 2);
         add(wishlistHoursLabel, 2, 3);
-        add(totalHoursLabel, 2, 4);
+        add(ignoredHoursLabel, 2, 4);
+        add(totalHoursLabel, 2, 5);
+        add(totalIgnoredHoursLabel, 2, 6);
         setPadding(new Insets(5));
         setMaxWidth(300);
 
@@ -73,8 +85,14 @@ public class StatusCountBoxUnplayed extends GridPane {
         //Count of games with status Wishlist
         wishlistCountLabel.setText("" + GameLists.getUnplayedStatusCount("Wishlist"));
 
+        //Count of games with status Ignored
+        ignoredCountLabel.setText("" + GameLists.getUnplayedStatusCount("Ignored"));
+
         //Count of games
-        totalCountLabel.setText("" + GameLists.unplayedList.size());
+        totalCountLabel.setText("" + (GameLists.unplayedList.size() - GameLists.getUnplayedStatusCount("Ignored")));
+
+        //Count of games including Ignored
+        totalIgnoredCountLabel.setText("" + GameLists.unplayedList.size());
 
         //Total hours of games with status Backlog
         backlogHoursLabel.setText(String.format("%.2f", GameLists.getStatusHours("Backlog")));
@@ -85,7 +103,13 @@ public class StatusCountBoxUnplayed extends GridPane {
         //Total hours of games with status Wishlist
         wishlistHoursLabel.setText(String.format("%.2f", GameLists.getStatusHours("Wishlist")));
 
+        //Total hours of games with status Ignored
+        ignoredHoursLabel.setText(String.format("%.2f", GameLists.getStatusHours("Ignored")));
+
         //Total hours of all games
-        totalHoursLabel.setText(String.format("%.2f", GameLists.getTotalHours()));
+        totalHoursLabel.setText(String.format("%.2f", GameLists.getTotalHours() - GameLists.getStatusHours("Ignored")));
+
+        //Total hours of all games including Ignored
+        totalIgnoredHoursLabel.setText(String.format("%.2f", GameLists.getTotalHours()));
     }
 }

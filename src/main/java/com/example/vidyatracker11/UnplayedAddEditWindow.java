@@ -30,7 +30,7 @@ public abstract class UnplayedAddEditWindow extends AddEditGame{
         getChildren().addAll(mainLabel, mainHBox, doneButton);
 
         //Set status values
-        statusBox.getItems().addAll("Backlog", "SubBacklog", "Wishlist");
+        statusBox.getItems().addAll("Backlog", "SubBacklog", "Wishlist", "Ignored");
 
         //Only allow doubles for hoursBox
         hoursBox.setTextFormatter(new TextFormatter<>(ApplicationGUI.doubleFilter));

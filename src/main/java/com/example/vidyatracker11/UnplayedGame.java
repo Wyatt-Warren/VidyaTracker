@@ -11,7 +11,7 @@ public class UnplayedGame extends Game {
                         int releaseDay) {
         super(title, status, platform, genre, releaseYear, releaseMonth, releaseDay);
 
-        if (!status.equals("Backlog") && !status.equals("SubBacklog") && !status.equals("Wishlist"))
+        if (!status.equals("Backlog") && !status.equals("SubBacklog") && !status.equals("Wishlist") && !status.equals("Ignored"))
             //If status is not Backlog, SubBacklog, or Wishlist, throw an error
             throw new IllegalArgumentException();
     }
@@ -36,7 +36,7 @@ public class UnplayedGame extends Game {
 
     //Status setter
     public void setStatus(String status) {
-        if (!status.equals("Backlog") && !status.equals("SubBacklog") && !status.equals("Wishlist"))
+        if (!status.equals("Backlog") && !status.equals("SubBacklog") && !status.equals("Wishlist") && !status.equals("Ignored"))
             //If status is not Backlog, SubBacklog, or Wishlist, throw an error
             throw new IllegalArgumentException();
 

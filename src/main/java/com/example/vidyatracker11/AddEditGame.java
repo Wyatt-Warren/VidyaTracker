@@ -104,6 +104,7 @@ public class AddEditGame extends VBox{
     public void setDayCount(int month, ChoiceBox<Integer> dayBox, TextField yearBox) {
         //Local variables
         int dayCount = 0;
+        Integer selectedDay = dayBox.getSelectionModel().getSelectedItem();
 
         switch (month) {
             //Switch for each month
@@ -149,7 +150,11 @@ public class AddEditGame extends VBox{
         for (int i = 0; i <= dayCount; i++)
             //Add each day individually
             dayBox.getItems().add(i);
-        dayBox.getSelectionModel().select(0);
+
+        if(dayBox.getItems().contains(selectedDay))
+            dayBox.getSelectionModel().select(selectedDay);
+        else
+            dayBox.getSelectionModel().select(0);
     }
 
     //Returns true if the given year is a leap year

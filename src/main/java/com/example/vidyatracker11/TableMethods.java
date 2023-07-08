@@ -14,7 +14,8 @@ public class TableMethods {
         //Local variables
         final ObservableList<String> statuses = FXCollections.observableArrayList(  //List of possible statuses
                 "Playing", "Completed", "On Hold",
-                "Backlog", "SubBacklog", "Wishlist");
+                "Backlog", "SubBacklog", "Wishlist",
+                "Ignored");
         @Override
         public int compare(Game o1, Game o2) {
             //Return a value according to position in statuses list

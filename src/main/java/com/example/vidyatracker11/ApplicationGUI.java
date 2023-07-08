@@ -47,6 +47,7 @@ public class ApplicationGUI extends Application {
     public static MenuItem moveGameMenuItem = new MenuItem("Move Selected Game");
     public static MenuItem removeGameMenuItem = new MenuItem("Remove Selected Game");
     public static MenuItem collectGameMenuItem = new MenuItem("Add Selected Game to Collection");
+    public static MenuItem showGameCollectionsMenuItem = new MenuItem("Show Collections Containing Selected Game");
     public static SeparatorMenuItem separatorMenuItem3 = new SeparatorMenuItem();
     public static MenuItem editGenreListMenuItem = new MenuItem("Edit Genre List");
     public static MenuItem editPlatformListMenuItem = new MenuItem("Edit Platform List");
@@ -104,7 +105,8 @@ public class ApplicationGUI extends Application {
 
     //Other
     public static ContextMenu rowContextMenu = new ContextMenu(addNewGameMenuItem,                      //Right click menu for each TableView
-            editGameMenuItem, moveGameMenuItem, removeGameMenuItem, collectGameMenuItem);
+            editGameMenuItem, moveGameMenuItem, removeGameMenuItem,
+            collectGameMenuItem, showGameCollectionsMenuItem);
     public static FileChooser fileChooser = new FileChooser();                                          //FileChooser for opening files
     public static String styleSheet = "style.css";                                                      //Stylesheet for all GUI
     public static Image icon = new Image(                                                               //Icon for each window
@@ -137,6 +139,7 @@ public class ApplicationGUI extends Application {
         colorMap.put("Backlog", "-fx-background-color: #545454;");
         colorMap.put("SubBacklog", "-fx-background-color: #666666;");
         colorMap.put("Wishlist", "-fx-background-color: #993745;");
+        colorMap.put("Ignored", "-fx-background-color: #7c211b;");
         colorMap.put("Yes", "-fx-background-color: #4a8c32;");
         colorMap.put("No", "-fx-background-color: #993737;");
         colorMap.put("Maybe", "-fx-background-color: #b59a24;");
@@ -294,7 +297,7 @@ public class ApplicationGUI extends Application {
                 //Switch for each possible selection of unplayedFilterChoices
                 case 0:
                     //Status
-                    unplayedFilterTokenChoices.getItems().addAll("Backlog", "SubBacklog", "Wishlist");
+                    unplayedFilterTokenChoices.getItems().addAll("Backlog", "SubBacklog", "Wishlist", "Ignored");
                     break;
                 case 1:
                     //Franchise
@@ -367,9 +370,10 @@ public class ApplicationGUI extends Application {
         fileMenu.getItems().addAll(newFileMenuItem, openFileMenuItem, separatorMenuItem,
                 saveFileMenuItem, saveAsFileMenuItem, separatorMenuItem5, exitMenuItem);
         listMenu.getItems().addAll(addNewGameMenuItem, editGameMenuItem, moveGameMenuItem,
-                removeGameMenuItem, collectGameMenuItem, separatorMenuItem3,
-                editGenreListMenuItem, editPlatformListMenuItem, separatorMenuItem4,
-                statsMenuItem, collectionsMenuItem, achievementsMenuItem);
+                removeGameMenuItem, collectGameMenuItem, showGameCollectionsMenuItem,
+                separatorMenuItem3, editGenreListMenuItem, editPlatformListMenuItem,
+                separatorMenuItem4, statsMenuItem, collectionsMenuItem,
+                achievementsMenuItem);
         randomMenu.getItems().addAll(chooseRandomGameMenuItem, generateRandomListMenuItem);
 
         newFileMenuItem.setOnAction(e -> {
@@ -931,6 +935,76 @@ public class ApplicationGUI extends Application {
             }
         });
 
+        showGameCollectionsMenuItem.setOnAction(e -> {
+            //Open a window showing each collection the selected game is in.
+            //Local variables
+            Game game;      //Selected game
+            int gameInt;    //Selected game's index
+
+            if (playedOpen) {
+                //PlayedGame
+                //Set game index
+                gameInt = playedGamesTable.getSelectionModel().getSelectedIndex();
+
+                if (gameInt != -1) {
+                    //Game is selected
+                    game = playedGamesTable.getSelectionModel().getSelectedItem();
+                } else {
+                    //There is no game selected
+                    game = null;
+                }
+
+            } else {
+                //UnplayedGame
+                //Set game index
+                gameInt = unplayedGamesTable.getSelectionModel().getSelectedIndex();
+
+                if (gameInt != -1) {
+                    //Game is selected
+                    game = unplayedGamesTable.getSelectionModel().getSelectedItem();
+                } else {
+                    //There is no game selected
+                    game = null;
+                }
+            }
+
+            if (gameInt != -1) {
+                //Game is selected
+                //Local variables
+                Stage stage = new Stage();
+                Label label = new Label("Collections Containing " + game.getTitle());
+                ListView<GameCollection> collectionListView = new ListView<>();
+                VBox vbox = new VBox(label, collectionListView);
+                Scene scene = new Scene(vbox);
+
+                //GUI
+                stage.getIcons().add(icon);
+                stage.setResizable(false);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setTitle("Select Collection");
+                stage.setScene(scene);
+                label.setStyle("-fx-font-weight: bold;-fx-font-size: 16;");
+                vbox.setSpacing(20);
+                vbox.setAlignment(Pos.TOP_CENTER);
+                vbox.setPadding(new Insets(10));
+                scene.getStylesheets().add(styleSheet);
+
+                //Populate list of collections
+                for(GameCollection collection : GameLists.collectionList)
+                    if(collection.getGames().contains(game))
+                        collectionListView.getItems().add(collection);
+
+                scene.setOnKeyPressed(e1 -> {
+                    if (e1.getCode() == KeyCode.ESCAPE) {
+                        //If escape is pressed, close window
+                        stage.close();
+                    }
+                });
+
+                stage.show();
+            }
+        });
+
         editGenreListMenuItem.setOnAction(e -> {
             //Open a window for the user to edit the genre list.
             //Local variables
@@ -1211,6 +1285,8 @@ public class ApplicationGUI extends Application {
                 KeyCombination.CONTROL_DOWN));
         collectGameMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.C,
                 KeyCombination.CONTROL_DOWN));
+        showGameCollectionsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.C,
+                KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN));
 
         //open the default "List.json" file
         openFile(currentFilePathOut);

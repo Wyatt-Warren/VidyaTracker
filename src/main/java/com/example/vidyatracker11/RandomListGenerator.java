@@ -74,10 +74,10 @@ public class RandomListGenerator extends VBox {
     VBox deckVBox = new VBox(deckLabel, deckBox, deckButtonBox, deckView);
 
     //Years
-    Label yearsMinLabel = new Label("Years Minimum:");
+    Label yearsMinLabel = new Label("Minimum Year:");
     TextField yearsMinField = new TextField();
     VBox yearsMinVBox = new VBox(yearsMinLabel, yearsMinField);
-    Label yearsMaxLabel = new Label("Years Maximum:");
+    Label yearsMaxLabel = new Label("Maximum Year:");
     TextField yearsMaxField = new TextField();
     VBox yearsMaxVBox = new VBox(yearsMaxLabel, yearsMaxField);
 
@@ -115,7 +115,7 @@ public class RandomListGenerator extends VBox {
         lengthField.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
 
         //Set status values
-        statusBox.getItems().addAll("Backlog", "SubBacklog", "Wishlist");
+        statusBox.getItems().addAll("Backlog", "SubBacklog", "Wishlist", "Ignored");
 
         //Set platform values
         platformBox.getItems().addAll(GameLists.platformList);

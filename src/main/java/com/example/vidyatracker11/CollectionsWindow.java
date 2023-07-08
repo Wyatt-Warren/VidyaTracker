@@ -657,19 +657,23 @@ public class CollectionsWindow extends VBox {
             double hours = 0.0;
             for(Game game : collection.getGames())
                 //Iterate for each game in the collection
-                if(game instanceof UnplayedGame)
-                    //If the game is an unplayed game add it's hours to the total hours
+                if(game instanceof UnplayedGame && !game.status.equals("Ignored"))
+                    //If the game is an unplayed game that is not ignored, add it's hours to the total hours
                     hours += ((UnplayedGame) game).getHours();
             hoursLabel.setText(String.format("" + "%.2f", hours));
 
             //Get the percentage of completed games
             int totalComplete = 0;
+            int totalIgnored = 0;
             for(Game game : collection.getGames())
                 //Iterate for each game in the collection
                 if(game.getStatus().equals("Completed"))
                     //If the game is completed, increment totalComplete
                     totalComplete++;
-            double percent = totalComplete * 100.0 / collection.getGames().size();
+                else if(game.getStatus().equals("Ignored"))
+                    //If the game is ignored, don't count towards completion percentage
+                    totalIgnored++;
+            double percent = totalComplete * 100.0 / (collection.getGames().size() - totalIgnored);
             percentLabel.setText(String.format("%.2f%%", percent));
 
             //Get the percentage of 100% completed games
