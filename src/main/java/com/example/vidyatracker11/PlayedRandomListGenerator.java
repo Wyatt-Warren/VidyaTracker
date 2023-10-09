@@ -1,11 +1,14 @@
 package com.example.vidyatracker11;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class PlayedRandomListGenerator extends RandomListGenerator{
@@ -47,9 +50,9 @@ public class PlayedRandomListGenerator extends RandomListGenerator{
     public PlayedRandomListGenerator(){
         //GUI
         layer1HBox.getChildren().addAll(lengthVBox, statusVBox, shortVBox,
-                titleVBox, ratingVBox, platformVBox);
-        layer2HBox.getChildren().addAll(genreVBox, releaseYearVBox, completionYearVBox,
-                percent100VBox, collectionVBox);
+                titleVBox, franchiseVBox, ratingVBox);
+        layer2HBox.getChildren().addAll(platformVBox, genreVBox, releaseYearVBox,
+                completionYearVBox, percent100VBox, collectionVBox);
         shortButtonBox.setAlignment(Pos.CENTER);
         ratingButtonBox.setAlignment(Pos.CENTER);
         percent100ButtonBox.setAlignment(Pos.CENTER);
@@ -64,6 +67,17 @@ public class PlayedRandomListGenerator extends RandomListGenerator{
 
         //Set short values
         shortBox.getItems().addAll("Yes", "No", "Blank");
+
+        //Set franchise values
+        ObservableList<String> franchises = FXCollections.observableArrayList();    //List of all franchises
+        for(PlayedGame game : GameLists.playedList)
+            //Iterate for each PlayedGame
+            if( !game.getFranchise().equals("") && !franchises.contains(game.getFranchise()))
+                //Game has a franchise and it isn't already in the list
+                franchises.add(game.getFranchise());
+        //Sort franchise list
+        Collections.sort(franchises);
+        franchiseBox.getItems().addAll(franchises);
 
         //Set rating values
         ratingBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
@@ -125,6 +139,8 @@ public class PlayedRandomListGenerator extends RandomListGenerator{
                             //Short status is selected and game matches
                             (titleField.getText().equals("") || game.getTitle().toLowerCase().contains(titleField.getText().toLowerCase())) &&
                             //Title is selected and game matches
+                            (franchiseView.getItems().isEmpty() || franchiseView.getItems().contains(game.getFranchise())) &&
+                            //franchise is selected and game matches
                             (ratingView.getItems().isEmpty() || ratingView.getItems().contains(game.getRating())) &&
                             //Rating is selected and game matches
                             (platformView.getItems().isEmpty() || platformView.getItems().contains(game.getPlatform())) &&

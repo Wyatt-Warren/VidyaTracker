@@ -1,11 +1,14 @@
 package com.example.vidyatracker11;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class UnplayedRandomListGenerator extends RandomListGenerator{
@@ -29,15 +32,26 @@ public class UnplayedRandomListGenerator extends RandomListGenerator{
     public UnplayedRandomListGenerator(){
         //GUI
         layer1HBox.getChildren().addAll(lengthVBox, statusVBox, titleVBox,
-                platformVBox, genreVBox);
-        layer2HBox.getChildren().addAll(releaseYearVBox,
-                hoursVBox, deckVBox, collectionVBox);
+                franchiseVBox, platformVBox);
+        layer2HBox.getChildren().addAll(genreVBox, releaseYearVBox, hoursVBox,
+                deckVBox, collectionVBox);
         deckButtonBox.setAlignment(Pos.CENTER);
         hoursVBox.setAlignment(Pos.TOP_CENTER);
         deckVBox.setAlignment(Pos.TOP_CENTER);
         deckButtonBox.setSpacing(5.0);
         hoursVBox.setSpacing(5.0);
         deckVBox.setSpacing(5.0);
+
+        //Set franchise values
+        ObservableList<String> franchises = FXCollections.observableArrayList();    //List of all franchises
+        for(UnplayedGame game : GameLists.unplayedList)
+            //Iterate for each UnplayedGame
+            if( !game.getFranchise().equals("") && !franchises.contains(game.getFranchise()))
+                //Game has a franchise and it isn't already in the list
+                franchises.add(game.getFranchise());
+        //Sort franchise list
+        Collections.sort(franchises);
+        franchiseBox.getItems().addAll(franchises);
 
         //Only allow doubles for hoursMinField and hoursMaxField
         hoursMinField.setTextFormatter(new TextFormatter<>(ApplicationGUI.doubleFilter));
@@ -74,6 +88,8 @@ public class UnplayedRandomListGenerator extends RandomListGenerator{
                             //Status is selected and game matches
                             (titleField.getText().equals("") || game.getTitle().toLowerCase().contains(titleField.getText().toLowerCase())) &&
                             //Title is selected and game matches
+                            (franchiseView.getItems().isEmpty() || franchiseView.getItems().contains(game.getFranchise())) &&
+                            //franchise is selected and game matches
                             (platformView.getItems().isEmpty() || platformView.getItems().contains(game.getPlatform())) &&
                             //platform is selected and game matches
                             (genreView.getItems().isEmpty() || genreView.getItems().contains(game.getGenre())) &&

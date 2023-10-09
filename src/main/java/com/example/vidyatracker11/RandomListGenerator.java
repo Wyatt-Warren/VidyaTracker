@@ -1,5 +1,7 @@
 package com.example.vidyatracker11;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -10,6 +12,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
+import java.util.Collections;
 
 //Window used to generate a random list based on filters.
 public abstract class RandomListGenerator extends VBox {
@@ -34,6 +38,15 @@ public abstract class RandomListGenerator extends VBox {
     Label titleLabel = new Label("Title Contains:");
     TextField titleField = new TextField();
     VBox titleVBox = new VBox(titleLabel, titleField);
+
+    //Franchise
+    Label franchiseLabel = new Label("Possible Franchises:");
+    ChoiceBox<String> franchiseBox = new ChoiceBox<>();
+    Button franchiseAddButton = new Button("Add");
+    Button franchiseRemoveButton = new Button("Remove");
+    HBox franchiseButtonBox = new HBox(franchiseAddButton, franchiseRemoveButton);
+    ListView<String> franchiseView = new ListView<>();
+    VBox franchiseVBox = new VBox(franchiseLabel, franchiseBox, franchiseButtonBox, franchiseView);
 
     //Platform
     Label platformLabel = new Label("Possible Platforms:");
@@ -81,12 +94,14 @@ public abstract class RandomListGenerator extends VBox {
         //GUI
         mainLabel.setStyle("-fx-font-size: 24;-fx-font-weight: bold;");
         statusButtonBox.setAlignment(Pos.CENTER);
+        franchiseButtonBox.setAlignment(Pos.CENTER);
         platformButtonBox.setAlignment(Pos.CENTER);
         genreButtonBox.setAlignment(Pos.CENTER);
         collectionButtonBox.setAlignment(Pos.CENTER);
         lengthVBox.setAlignment(Pos.TOP_CENTER);
         statusVBox.setAlignment(Pos.TOP_CENTER);
         titleVBox.setAlignment(Pos.TOP_CENTER);
+        franchiseVBox.setAlignment(Pos.TOP_CENTER);
         platformVBox.setAlignment(Pos.TOP_CENTER);
         genreVBox.setAlignment(Pos.TOP_CENTER);
         releaseYearVBox.setAlignment(Pos.TOP_CENTER);
@@ -94,11 +109,13 @@ public abstract class RandomListGenerator extends VBox {
         layer1HBox.setAlignment(Pos.TOP_CENTER);
         layer2HBox.setAlignment(Pos.TOP_CENTER);
         statusButtonBox.setSpacing(5.0);
+        franchiseButtonBox.setSpacing(5.0);
         platformButtonBox.setSpacing(5.0);
         genreButtonBox.setSpacing(5.0);
         lengthVBox.setSpacing(5.0);
         statusVBox.setSpacing(5.0);
         titleVBox.setSpacing(5.0);
+        franchiseVBox.setSpacing(5.0);
         platformVBox.setSpacing(5.0);
         genreVBox.setSpacing(5.0);
         releaseYearVBox.setSpacing(5.0);
@@ -142,6 +159,16 @@ public abstract class RandomListGenerator extends VBox {
 
         //Remove selected item from statusView
         statusRemoveButton.setOnAction(e -> statusView.getItems().remove(statusView.getSelectionModel().getSelectedItem()));
+
+        franchiseAddButton.setOnAction(e -> {
+            if (!franchiseView.getItems().contains(franchiseBox.getSelectionModel().getSelectedItem()) &&
+                    franchiseBox.getSelectionModel().getSelectedItem() != null)
+                //When statusAddButton is pressed, If an item is selected, and it is not already in statusView, add it to statusView
+                franchiseView.getItems().add(franchiseBox.getSelectionModel().getSelectedItem());
+        });
+
+        //Remove selected item from statusView
+        franchiseRemoveButton.setOnAction(e -> franchiseView.getItems().remove(franchiseView.getSelectionModel().getSelectedItem()));
 
         platformAddButton.setOnAction(e -> {
             if (!platformView.getItems().contains(platformBox.getSelectionModel().getSelectedItem()) &&

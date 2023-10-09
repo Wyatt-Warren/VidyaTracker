@@ -65,8 +65,9 @@ public class ApplicationGUI extends Application {
 
     //Played Window
     public static StatusCountBoxPlayed statusCountBoxPlayed = new StatusCountBoxPlayed();
+    public static PlayedTempList playedTempList = new PlayedTempList();
     public static Button switchFromPlayed = new Button("Show Unplayed List");
-    public static HBox topBoxPlayed = new HBox(statusCountBoxPlayed, switchFromPlayed);
+    public static HBox topBoxPlayed = new HBox(statusCountBoxPlayed, playedTempList, switchFromPlayed);
     public static Label playedSortLabel = new Label("Sort by:");
     public static ChoiceBox<String> playedSortChoices = new ChoiceBox<>();
     public static Label playedFilterLabel = new Label("Filter by:");
@@ -388,7 +389,7 @@ public class ApplicationGUI extends Application {
                 separatorMenuItem3, editGenreListMenuItem, editPlatformListMenuItem,
                 separatorMenuItem4, statsMenuItem, collectionsMenuItem,
                 achievementsMenuItem);
-        randomMenu.getItems().addAll(chooseRandomGameMenuItem, generateRandomListMenuItem);
+        randomMenu.getItems().addAll(chooseRandomGameMenuItem, chooseRandomFromList, generateRandomListMenuItem);
 
         newFileMenuItem.setOnAction(e -> {
             //Reset all lists.
@@ -1197,39 +1198,76 @@ public class ApplicationGUI extends Application {
 
         chooseRandomFromList.setOnAction(e -> {
             //Chooses a random game from the temporary list.
+            if (playedOpen){
+                //playedTempList
+                if (playedTempList.getTitles().size() > 0) {
+                    //There are games
+                    //Local variables
+                    Random rand = new Random();
+                    Stage stage = new Stage();
+                    Label label = new Label("");
+                    Button button = new Button("Close");
+                    VBox vbox = new VBox(label, button);
+                    Scene scene = new Scene(vbox);
 
-            if (unplayedTempList.getTitles().size() > 0) {
-                //There are games
-                //Local variables
-                Random rand = new Random();
-                Stage stage = new Stage();
-                Label label = new Label("");
-                Button button = new Button("Close");
-                VBox vbox = new VBox(label, button);
-                Scene scene = new Scene(vbox);
+                    //GUI
+                    stage.getIcons().add(icon);
+                    stage.setTitle("Random Game");
+                    stage.setResizable(false);
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    stage.setScene(scene);
+                    label.setStyle("-fx-font-size: 16;");
+                    label.setText(playedTempList.getTitles().get(rand.nextInt(playedTempList.getTitles().size())));
+                    button.setOnAction(e1 -> stage.close());
+                    vbox.setSpacing(10);
+                    vbox.setAlignment(Pos.CENTER);
+                    vbox.setPadding(new Insets(5));
+                    scene.getStylesheets().add(styleSheet);
 
-                //GUI
-                stage.getIcons().add(icon);
-                stage.setTitle("Random Game");
-                stage.setResizable(false);
-                stage.initModality(Modality.APPLICATION_MODAL);
-                stage.setScene(scene);
-                label.setStyle("-fx-font-size: 16;");
-                label.setText(unplayedTempList.getTitles().get(rand.nextInt(unplayedTempList.getTitles().size())));
-                button.setOnAction(e1 -> stage.close());
-                vbox.setSpacing(10);
-                vbox.setAlignment(Pos.CENTER);
-                vbox.setPadding(new Insets(5));
-                scene.getStylesheets().add(styleSheet);
+                    scene.setOnKeyPressed(e1 -> {
+                        if (e1.getCode() == KeyCode.ESCAPE || e1.getCode() == KeyCode.ENTER) {
+                            //If escape or ender are pressed, close the window
+                            stage.close();
+                        }
+                    });
 
-                scene.setOnKeyPressed(e1 -> {
-                    if (e1.getCode() == KeyCode.ESCAPE || e1.getCode() == KeyCode.ENTER) {
-                        //If escape or ender are pressed, close the window
-                        stage.close();
-                    }
-                });
+                    stage.show();
+                }
+            }else {
+                //unplayedTempList
+                if (unplayedTempList.getTitles().size() > 0) {
+                    //There are games
+                    //Local variables
+                    Random rand = new Random();
+                    Stage stage = new Stage();
+                    Label label = new Label("");
+                    Button button = new Button("Close");
+                    VBox vbox = new VBox(label, button);
+                    Scene scene = new Scene(vbox);
 
-                stage.show();
+                    //GUI
+                    stage.getIcons().add(icon);
+                    stage.setTitle("Random Game");
+                    stage.setResizable(false);
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    stage.setScene(scene);
+                    label.setStyle("-fx-font-size: 16;");
+                    label.setText(unplayedTempList.getTitles().get(rand.nextInt(unplayedTempList.getTitles().size())));
+                    button.setOnAction(e1 -> stage.close());
+                    vbox.setSpacing(10);
+                    vbox.setAlignment(Pos.CENTER);
+                    vbox.setPadding(new Insets(5));
+                    scene.getStylesheets().add(styleSheet);
+
+                    scene.setOnKeyPressed(e1 -> {
+                        if (e1.getCode() == KeyCode.ESCAPE || e1.getCode() == KeyCode.ENTER) {
+                            //If escape or ender are pressed, close the window
+                            stage.close();
+                        }
+                    });
+
+                    stage.show();
+                }
             }
         });
 
@@ -1278,9 +1316,7 @@ public class ApplicationGUI extends Application {
             primarySceneVBox.getChildren().clear();
             primarySceneVBox.getChildren().addAll(menuBar, unplayedWindow);
 
-            //Set randomMenu items accordingly
-            randomMenu.getItems().clear();
-            randomMenu.getItems().addAll(chooseRandomGameMenuItem, chooseRandomFromList, generateRandomListMenuItem);
+            //Set chooseRandomGameMenuItem text accordingly
             chooseRandomGameMenuItem.setText("Choose a Random Game to Play");
             playedOpen = false;
         });
@@ -1291,9 +1327,7 @@ public class ApplicationGUI extends Application {
             primarySceneVBox.getChildren().clear();
             primarySceneVBox.getChildren().addAll(menuBar, playedWindow);
 
-            //Set randomMenu items accordingly
-            randomMenu.getItems().clear();
-            randomMenu.getItems().addAll(chooseRandomGameMenuItem, generateRandomListMenuItem);
+            //Set chooseRandomGameMenuItem text accordingly
             chooseRandomGameMenuItem.setText("Choose a Random Game to Replay");
             playedOpen = true;
         });
