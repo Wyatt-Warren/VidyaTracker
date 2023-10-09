@@ -18,6 +18,7 @@ public class CollectionsManageWindow extends VBox {
     Label label = new Label("Manage Collections");
     TextField collectionTextField = new TextField();
     Button addCollectionButton = new Button("Add Collection");
+    Label warningLabel = new Label("");
     ListView<GameCollection> collectionListView = new ListView<>();
 
     //Buttons
@@ -42,8 +43,9 @@ public class CollectionsManageWindow extends VBox {
         buttonBox.setSpacing(10);
         gridPane.add(collectionTextField, 0, 0);
         gridPane.add(addCollectionButton, 1, 0);
-        gridPane.add(collectionListView, 0, 1);
-        gridPane.add(buttonBox, 1, 1);
+        gridPane.add(warningLabel, 1, 1);
+        gridPane.add(collectionListView, 0, 2);
+        gridPane.add(buttonBox, 1, 2);
         gridPane.setHgap(5);
         gridPane.setVgap(5);
         GridPane.setValignment(removeButton, VPos.TOP);
@@ -55,8 +57,12 @@ public class CollectionsManageWindow extends VBox {
         addCollectionButton.setOnAction(e -> {
             //Create a new collection with a given title
 
-            if(!collectionTextField.getText().equals("")) {
+            if(GameLists.collectionTitleTaken(collectionTextField.getText())){
+                //Collection with inputted title already exists
+                warningLabel.setText("Collection title is taken");
+            }else if(!collectionTextField.getText().equals("")) {
                 //Text is entered
+                warningLabel.setText("");
                 GameLists.collectionList.add(new GameCollection(collectionTextField.getText()));
                 collectionTextField.setText("");
                 ApplicationGUI.changeMade = true;
@@ -122,14 +128,21 @@ public class CollectionsManageWindow extends VBox {
 
             if(!newName.equals("") && selectionInt != -1){
                 //Text is entered and a collection is selected
-                GameLists.collectionList.get(selectionInt).setTitle(newName);
-                ApplicationGUI.changeMade = true;
-                collectionTextField.setText("");
+                if(GameLists.collectionTitleTaken(newName, GameLists.collectionList.get(selectionInt))){
+                    //Collection with inputted title already exists
+                    warningLabel.setText("Collection title is taken");
+                }else {
+                    //No collection with inputted title
+                    warningLabel.setText("");
+                    GameLists.collectionList.get(selectionInt).setTitle(newName);
+                    ApplicationGUI.changeMade = true;
+                    collectionTextField.setText("");
 
-                //Solution to a problem where the listview doesn't update after renaming
-                //because the observable list doesn't change, only a value in an object within the observable list
-                collectionListView.setItems(FXCollections.observableArrayList());
-                collectionListView.setItems(GameLists.collectionList);
+                    //Solution to a problem where the listview doesn't update after renaming
+                    //because the observable list doesn't change, only a value in an object within the observable list
+                    collectionListView.setItems(FXCollections.observableArrayList());
+                    collectionListView.setItems(GameLists.collectionList);
+                }
             }
         });
 

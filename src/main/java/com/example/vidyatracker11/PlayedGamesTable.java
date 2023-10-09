@@ -327,6 +327,10 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                         playedGame.getPercent100().equals(finalFilterToken));
                 break;
             case 9:
+                //Collection
+                filterByAny(playedGame -> playedGame.isInCollection(finalFilterToken));
+                break;
+            case 10:
                 //Don't filter
                 unFilter();
                 break;

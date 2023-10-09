@@ -58,7 +58,7 @@ public class ApplicationGUI extends Application {
     public static Menu listMenu = new Menu("List");
 
     //Random Menu
-    public static MenuItem chooseRandomGameMenuItem = new MenuItem("Choose a Random Game to Play");
+    public static MenuItem chooseRandomGameMenuItem = new MenuItem("Choose a Random Game to Replay");
     public static MenuItem generateRandomListMenuItem = new MenuItem("Generate a Random List of Games Based on Filters");
     public static MenuItem chooseRandomFromList = new MenuItem("Choose a Random Game From the Small List");
     public static Menu randomMenu = new Menu("Random");
@@ -172,11 +172,11 @@ public class ApplicationGUI extends Application {
         playedSortChoices.getItems().addAll("Status", "Short", "Title", "Franchise", "Rating", "Platform", "Genre",
                 "Release Date", "Completion Date", "100%");
         playedFilterChoices.getItems().addAll("Status", "Short", "Franchise", "Rating", "Platform",
-                "Genre", "Release Year", "Completion Year", "100%", "No Filter");
+                "Genre", "Release Year", "Completion Year", "100%", "Collection", "No Filter");
         unplayedSortChoices.getItems().addAll("Status", "Title", "Franchise", "Platform", "Genre", "Release Date",
                 "Hours", "Deck Status");
         unplayedFilterChoices.getItems().addAll("Status", "Franchise", "Platform", "Genre", "Release Year",
-                "Deck Status", "No Filter");
+                "Deck Status", "Collection", "No Filter");
 
         //Played ChoiceBox listeners
         playedSortChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) ->
@@ -266,6 +266,13 @@ public class ApplicationGUI extends Application {
 
                     break;
                 case 9:
+                    //Collection
+                    for(GameCollection collection: GameLists.collectionList){
+                        //Add each collection title to playedFilterTokenChoices
+                        playedFilterTokenChoices.getItems().add(collection.getTitle());
+                    }
+                    break;
+                case 10:
                     //Don't filter
                     //Sort because since there is nothing to select, it won't fire the listener
                     playedGamesTable.sortAndFilter("");
@@ -349,6 +356,13 @@ public class ApplicationGUI extends Application {
                     unplayedFilterTokenChoices.getItems().addAll("Yes", "No", "Maybe", "Blank");
                     break;
                 case 6:
+                    //Collection
+                    for(GameCollection collection: GameLists.collectionList){
+                        //Add each collection title to playedFilterTokenChoices
+                        unplayedFilterTokenChoices.getItems().add(collection.getTitle());
+                    }
+                    break;
+                case 7:
                     //No Filter
                     //Sort because since there is nothing to select, it won't fire the listener
                     unplayedGamesTable.sortAndFilter("");
@@ -1129,11 +1143,22 @@ public class ApplicationGUI extends Application {
             //Local variables
             ArrayList<String> gameList = new ArrayList<>(); //List of games to choose from
 
-            for (int i = 0; i < GameLists.unplayedList.size(); i++)
-                //Iterate through each game
-                if (!(GameLists.unplayedList.get(i)).getStatus().equals("Wishlist"))
-                    //If game is not from wishlist, add it to gameList
-                    gameList.add((GameLists.unplayedList.get(i)).getTitle());
+            if(playedOpen){
+                //Played games
+                for (int i = 0; i < GameLists.playedList.size(); i++)
+                    //Iterate through each game
+                    if ((GameLists.playedList.get(i)).getStatus().equals("Completed"))
+                        //If game is not from wishlist, add it to gameList
+                        gameList.add((GameLists.playedList.get(i)).getTitle());
+            }else{
+                //Unplayed games
+                for (int i = 0; i < GameLists.unplayedList.size(); i++)
+                    //Iterate through each game
+                    if ((GameLists.unplayedList.get(i)).getStatus().equals("Backlog") ||
+                            (GameLists.unplayedList.get(i)).getStatus().equals("SubBacklog"))
+                        //If game is not from wishlist, add it to gameList
+                        gameList.add((GameLists.unplayedList.get(i)).getTitle());
+            }
 
             if (gameList.size() > 0) {
                 //If there are any games to choose from
@@ -1212,8 +1237,19 @@ public class ApplicationGUI extends Application {
             //Generates a random list of unplayed games based on filters provided by the user.
             //Local variables
             Stage stage = new Stage();
-            RandomListGenerator window = new RandomListGenerator();
-            Scene scene = new Scene(window, 1600, 500);
+            RandomListGenerator window;
+            Scene scene;
+
+            if(playedOpen){
+                //Played game list generator
+                window = new PlayedRandomListGenerator();
+                scene = new Scene(window, 1300, 750);
+            }else{
+                //Unplayed game list generator
+                window = new UnplayedRandomListGenerator();
+                scene = new Scene(window, 1000, 750);
+            }
+
 
             //GUI
             stage.getIcons().add(icon);
@@ -1245,6 +1281,7 @@ public class ApplicationGUI extends Application {
             //Set randomMenu items accordingly
             randomMenu.getItems().clear();
             randomMenu.getItems().addAll(chooseRandomGameMenuItem, chooseRandomFromList, generateRandomListMenuItem);
+            chooseRandomGameMenuItem.setText("Choose a Random Game to Play");
             playedOpen = false;
         });
 
@@ -1257,6 +1294,7 @@ public class ApplicationGUI extends Application {
             //Set randomMenu items accordingly
             randomMenu.getItems().clear();
             randomMenu.getItems().addAll(chooseRandomGameMenuItem, generateRandomListMenuItem);
+            chooseRandomGameMenuItem.setText("Choose a Random Game to Replay");
             playedOpen = true;
         });
 

@@ -1,8 +1,5 @@
 package com.example.vidyatracker11;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -15,7 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 //Window used to generate a random list based on filters.
-public class RandomListGenerator extends VBox {
+public abstract class RandomListGenerator extends VBox {
     //GUI
     Label mainLabel = new Label("Generate List Based on Filters");
 
@@ -56,34 +53,27 @@ public class RandomListGenerator extends VBox {
     ListView<String> genreView = new ListView<>();
     VBox genreVBox = new VBox(genreLabel, genreBox, genreButtonBox, genreView);
 
-    //Hours
-    Label hoursMinLabel = new Label("Hours Minimum:");
-    TextField hoursMinField = new TextField();
-    VBox hoursMinVBox = new VBox(hoursMinLabel, hoursMinField);
-    Label hoursMaxLabel = new Label("Hours Maximum:");
-    TextField hoursMaxField = new TextField();
-    VBox hoursMaxVBox = new VBox(hoursMaxLabel, hoursMaxField);
+    //Release Year
+    Label releaseYearMinLabel = new Label("Min Release Year:");
+    TextField releaseYearMinField = new TextField();
+    Label releaseYearMaxLabel = new Label("Max Release Year:");
+    TextField releaseYearMaxField = new TextField();
+    VBox releaseYearVBox = new VBox(releaseYearMinLabel, releaseYearMinField, releaseYearMaxLabel,
+            releaseYearMaxField);
 
-    //Deck
-    Label deckLabel = new Label("Possible Deck Statuses:");
-    ChoiceBox<String> deckBox = new ChoiceBox<>();
-    Button deckAddButton = new Button("Add");
-    Button deckRemoveButton = new Button("Remove");
-    HBox deckButtonBox = new HBox(deckAddButton, deckRemoveButton);
-    ListView<String> deckView = new ListView<>();
-    VBox deckVBox = new VBox(deckLabel, deckBox, deckButtonBox, deckView);
+    //Collection
+    Label collectionLabel = new Label("Possible Collections:");
+    ChoiceBox<GameCollection> collectionBox = new ChoiceBox<>();
+    Button collectionAddButton = new Button("Add");
+    Button collectionRemoveButton = new Button("Remove");
+    HBox collectionButtonBox = new HBox(collectionAddButton, collectionRemoveButton);
+    ListView<GameCollection> collectionView = new ListView<>();
+    VBox collectionVBox = new VBox(collectionLabel, collectionBox, collectionButtonBox,
+            collectionView);
 
-    //Years
-    Label yearsMinLabel = new Label("Minimum Year:");
-    TextField yearsMinField = new TextField();
-    VBox yearsMinVBox = new VBox(yearsMinLabel, yearsMinField);
-    Label yearsMaxLabel = new Label("Maximum Year:");
-    TextField yearsMaxField = new TextField();
-    VBox yearsMaxVBox = new VBox(yearsMaxLabel, yearsMaxField);
-
-    HBox mainHBox = new HBox(lengthVBox, statusVBox, titleVBox,
-            platformVBox, genreVBox, hoursMinVBox,
-            hoursMaxVBox, deckVBox, yearsMinVBox, yearsMaxVBox);
+    HBox layer1HBox = new HBox();
+    HBox layer2HBox = new HBox();
+    VBox filtersVBox = new VBox(layer1HBox, layer2HBox);
     Button generateButton = new Button("Generate List");
     ListView<String> generatedList = new ListView<>();
 
@@ -93,20 +83,33 @@ public class RandomListGenerator extends VBox {
         statusButtonBox.setAlignment(Pos.CENTER);
         platformButtonBox.setAlignment(Pos.CENTER);
         genreButtonBox.setAlignment(Pos.CENTER);
-        deckButtonBox.setAlignment(Pos.CENTER);
+        collectionButtonBox.setAlignment(Pos.CENTER);
         lengthVBox.setAlignment(Pos.TOP_CENTER);
         statusVBox.setAlignment(Pos.TOP_CENTER);
         titleVBox.setAlignment(Pos.TOP_CENTER);
         platformVBox.setAlignment(Pos.TOP_CENTER);
         genreVBox.setAlignment(Pos.TOP_CENTER);
-        hoursMinVBox.setAlignment(Pos.TOP_CENTER);
-        hoursMaxVBox.setAlignment(Pos.TOP_CENTER);
-        deckVBox.setAlignment(Pos.TOP_CENTER);
-        yearsMinVBox.setAlignment(Pos.TOP_CENTER);
-        yearsMaxVBox.setAlignment(Pos.TOP_CENTER);
-        mainHBox.setSpacing(5.0);
+        releaseYearVBox.setAlignment(Pos.TOP_CENTER);
+        collectionVBox.setAlignment(Pos.TOP_CENTER);
+        layer1HBox.setAlignment(Pos.TOP_CENTER);
+        layer2HBox.setAlignment(Pos.TOP_CENTER);
+        statusButtonBox.setSpacing(5.0);
+        platformButtonBox.setSpacing(5.0);
+        genreButtonBox.setSpacing(5.0);
+        lengthVBox.setSpacing(5.0);
+        statusVBox.setSpacing(5.0);
+        titleVBox.setSpacing(5.0);
+        platformVBox.setSpacing(5.0);
+        genreVBox.setSpacing(5.0);
+        releaseYearVBox.setSpacing(5.0);
+        collectionVBox.setSpacing(5.0);
+        layer1HBox.setSpacing(5.0);
+        layer2HBox.setSpacing(5.0);
+        filtersVBox.setSpacing(40.0);
+        layer1HBox.setMaxHeight(350);
+        layer2HBox.setMaxHeight(350);
         setAlignment(Pos.CENTER);
-        getChildren().addAll(mainLabel, mainHBox, generateButton, generatedList);
+        getChildren().addAll(mainLabel, filtersVBox, generateButton, generatedList);
         setFillWidth(false);
         setPadding(new Insets(5.0));
         setSpacing(5.0);
@@ -123,16 +126,12 @@ public class RandomListGenerator extends VBox {
         //Set genre values
         genreBox.getItems().addAll(GameLists.genreList);
 
-        //Only allow doubles for hoursMinField and hoursMaxField
-        hoursMinField.setTextFormatter(new TextFormatter<>(ApplicationGUI.doubleFilter));
-        hoursMaxField.setTextFormatter(new TextFormatter<>(ApplicationGUI.doubleFilter));
+        //Only allow integers for releaseYearMinField and releaseYearMaxField
+        releaseYearMinField.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
+        releaseYearMaxField.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
 
-        //Only allow integers for yearsMinField and yearsMaxField
-        yearsMinField.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
-        yearsMaxField.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
-
-        //Set deck values
-        deckBox.getItems().addAll("Yes", "No", "Maybe", "Blank");
+        //Set collection values
+        collectionBox.getItems().addAll(GameLists.collectionList);
 
         statusAddButton.setOnAction(e -> {
             if (!statusView.getItems().contains(statusBox.getSelectionModel().getSelectedItem()) &&
@@ -164,67 +163,26 @@ public class RandomListGenerator extends VBox {
         //Remove selected item from genreView
         genreRemoveButton.setOnAction(e -> genreView.getItems().remove(genreView.getSelectionModel().getSelectedItem()));
 
-        deckAddButton.setOnAction(e -> {
-            if (!deckView.getItems().contains(deckBox.getSelectionModel().getSelectedItem()) &&
-                    deckBox.getSelectionModel().getSelectedItem() != null)
-                //When deckAddButton is pressed, If an item is selected, and it is not already in deckView, add it to deckView
-                deckView.getItems().add(deckBox.getSelectionModel().getSelectedItem());
+        collectionAddButton.setOnAction(e -> {
+            if(!collectionView.getItems().contains(collectionBox.getSelectionModel().getSelectedItem()) &&
+                    collectionBox.getSelectionModel().getSelectedItem() != null)
+                //When collectionAddButton is pressed, If an item is selected, and it is not already in collectionView, add it to collectionView
+                collectionView.getItems().add(collectionBox.getSelectionModel().getSelectedItem());
         });
 
-        //Remove selected item from deckView
-        deckRemoveButton.setOnAction(e -> deckView.getItems().remove(deckView.getSelectionModel().getSelectedItem()));
+        //Remove selected item from collectionView
+        collectionRemoveButton.setOnAction(e -> collectionView.getItems().remove(collectionView.getSelectionModel().getSelectedItem()));
+    }
 
-        generateButton.setOnAction(e -> {
-            //Generate a random list of items based on selected filters
-            if (!lengthField.getText().equals("")) {
-                //There must be a number in lengthField
-                //Local variables
-                Random rand = new Random();
-                ArrayList<UnplayedGame> potentialList = new ArrayList<>();  //List of items that fit the requirements selected
+    //Returns true if given game is in any selected collection
+    public boolean gameInCollectionView(Game game){
+        for(GameCollection collection : collectionView.getItems())
+            //Check each collection for given game
+            if(collection.getGames().contains(game))
+                //Collection contains game
+                return true;
 
-                //Clear the existing list to generate a new one
-                generatedList.getItems().clear();
-
-                for (UnplayedGame game : GameLists.unplayedList) {
-                    //Iterate for every UnplayedGame
-
-                    if ((statusView.getItems().isEmpty() || statusView.getItems().contains(game.getStatus())) &&
-                            //Status is selected and game matches
-                            (titleField.getText().equals("") || game.getTitle().toLowerCase().contains(titleField.getText().toLowerCase())) &&
-                            //Title is selected and game matches
-                            (platformView.getItems().isEmpty() || platformView.getItems().contains(game.getPlatform())) &&
-                            //platform is selected and game matches
-                            (genreView.getItems().isEmpty() || genreView.getItems().contains(game.getGenre())) &&
-                            //genre is selected and game matches
-                            (hoursMinField.getText().equals("") || game.getHours() >= Double.parseDouble(hoursMinField.getText())) &&
-                            //hours is entered and game is greater or equal
-                            (hoursMaxField.getText().equals("") || game.getHours() <= Double.parseDouble(hoursMaxField.getText())) &&
-                            //hours is entered and game is less than or equal
-                            (deckView.getItems().isEmpty() || deckView.getItems().contains(game.getDeckCompatible())) &&
-                            //deck status is selected and game matches
-                            (yearsMinField.getText().equals("") || game.getReleaseYear() >= Integer.parseInt(yearsMinField.getText())) &&
-                            //release year is entered and game is greater or equal
-                            (yearsMaxField.getText().equals("") || game.getReleaseYear() <= Integer.parseInt(yearsMaxField.getText())))
-                            //release year is entered and game is less than or equal
-
-                        //Add valid game to potentialList
-                        potentialList.add(game);
-                }
-
-                if (!potentialList.isEmpty()) {
-                    //If there are items that are compatible with filters
-                    //Local variables
-                    int gameNum = Integer.parseInt(lengthField.getText());  //Amount of games in the list
-
-                    if (gameNum > potentialList.size())
-                        //If there are less possible games than what was entered, only generate as many as possible
-                        gameNum = potentialList.size();
-
-                    for (int i = 0; i < gameNum; i++)
-                        //Add gameNum amount of games to the final list
-                        generatedList.getItems().add(potentialList.remove(rand.nextInt(potentialList.size())).getTitle());
-                }
-            }
-        });
+        //Was not found
+        return false;
     }
 }

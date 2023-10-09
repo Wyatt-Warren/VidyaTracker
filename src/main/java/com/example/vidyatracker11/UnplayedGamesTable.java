@@ -250,6 +250,10 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
                         unplayedGame.getDeckCompatible().equals(finalFilterToken));
                 break;
             case 6:
+                //Collection
+                filterByAny(unplayedGame -> unplayedGame.isInCollection(finalFilterToken));
+                break;
+            case 7:
                 //Don't Filter
                 unFilter();
                 break;

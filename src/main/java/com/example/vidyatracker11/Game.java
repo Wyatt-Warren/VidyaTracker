@@ -143,6 +143,18 @@ public abstract class Game {
         return franchise;
     }
 
+    //Return true if game is in collection with given title
+    public boolean isInCollection(String title){
+        for(GameCollection collection: GameLists.collectionList)
+            //Iterate through each collection
+            if(collection.getTitle().equals(title) && collection.getGames().contains(this))
+                //If collection has the given title and contains this game
+                return true;
+
+        //Was not found
+        return false;
+    }
+
     @Override
     public String toString() {
         return title;

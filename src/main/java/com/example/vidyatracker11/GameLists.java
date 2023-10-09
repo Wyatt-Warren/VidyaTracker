@@ -3,6 +3,8 @@ package com.example.vidyatracker11;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.nio.charset.StandardCharsets;
+
 //Class that stores each list: played games list, unplayed games list, platform list, genre list, collections list.
 public class GameLists {
     //Fields
@@ -111,6 +113,30 @@ public class GameLists {
         }
 
         return total;
+    }
+
+    //Returns true if a collection with the given title exists
+    public static boolean collectionTitleTaken(String title){
+        for (GameCollection collection: collectionList)
+            //Check each collection for given title
+            if (collection.getTitle().equals(title))
+                //Collection has given title
+                return true;
+
+        //Was not found
+        return false;
+    }
+
+    //Returns true if a collection with the given title exists, excludes a collection from search
+    public static boolean collectionTitleTaken(String title, GameCollection excluded){
+        for (GameCollection collection: collectionList)
+            //Check each collection for given title
+            if (collection != excluded && collection.getTitle().equals(title))
+                //Collection has given title and is not the excluded collection
+                return true;
+
+        //Was not found
+        return false;
     }
 
     //Returns the hours of all unplayed games added together.
