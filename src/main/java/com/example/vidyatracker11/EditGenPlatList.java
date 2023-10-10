@@ -61,6 +61,7 @@ public abstract class EditGenPlatList extends VBox {
                 warningLabel.setText("");
                 addItemField.setText("");
                 ApplicationGUI.changeMade = true;
+                ApplicationGUI.setStageTitle();
             }
         });
 
@@ -111,6 +112,7 @@ public abstract class EditGenPlatList extends VBox {
                     ApplicationGUI.unplayedGamesTable.sortAndFilter(ApplicationGUI.unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
 
                     ApplicationGUI.changeMade = true;
+                    ApplicationGUI.setStageTitle();
                     stage.close();
                 });
 
@@ -150,6 +152,7 @@ public abstract class EditGenPlatList extends VBox {
                 ApplicationGUI.unplayedGamesTable.sortAndFilter(ApplicationGUI.unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
 
                 ApplicationGUI.changeMade = true;
+                ApplicationGUI.setStageTitle();
             }
         });
 
@@ -168,6 +171,7 @@ public abstract class EditGenPlatList extends VBox {
                 listView.getSelectionModel().select(selectionIndex - 1);
 
                 ApplicationGUI.changeMade = true;
+                ApplicationGUI.setStageTitle();
             }
         });
 
@@ -185,6 +189,7 @@ public abstract class EditGenPlatList extends VBox {
                 listView.getSelectionModel().select(selectionIndex + 1);
 
                 ApplicationGUI.changeMade = true;
+                ApplicationGUI.setStageTitle();
             }
         });
 

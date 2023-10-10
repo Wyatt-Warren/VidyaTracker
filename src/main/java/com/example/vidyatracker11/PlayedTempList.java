@@ -11,18 +11,18 @@ import javafx.scene.layout.VBox;
 
 public class PlayedTempList extends HBox {
     //GUI
-    ListView<String> listView = new ListView<>();
+    ListView<PlayedGame> listView = new ListView<>();
     Button addButton = new Button("Add Selected Game");
     Button removeButton = new Button("Remove Selected Game");
     Label countLabel = new Label("");
     VBox vbox = new VBox(5, addButton, removeButton, countLabel);
 
     //Fields
-    ObservableList<String> titles = FXCollections.observableArrayList();    //Title of each game in the list
+    ObservableList<PlayedGame> games = FXCollections.observableArrayList();    //Title of each game in the list
 
     public PlayedTempList() {
         //GUI
-        listView.setItems(titles);
+        listView.setItems(games);
         getChildren().addAll(listView, vbox);
         setPadding(new Insets(5));
         setSpacing(5);
@@ -32,8 +32,10 @@ public class PlayedTempList extends HBox {
             if (ApplicationGUI.playedGamesTable.getSelectionModel().getSelectedIndex() != -1) {
                 //If an item is selected
 
-                titles.add(ApplicationGUI.playedGamesTable.getSelectionModel().getSelectedItem().getTitle());
+                games.add(ApplicationGUI.playedGamesTable.getSelectionModel().getSelectedItem());
                 updateLabels();
+                ApplicationGUI.changeMade = true;
+                ApplicationGUI.setStageTitle();
             }
         });
 
@@ -45,28 +47,40 @@ public class PlayedTempList extends HBox {
             if (index != -1) {
                 //An item is selected
 
-                titles.remove(index);
+                games.remove(index);
                 updateLabels();
+                ApplicationGUI.changeMade = true;
+                ApplicationGUI.setStageTitle();
             }
         });
     }
 
     //Updates labels that show total count of items in the list and total hours.
     public void updateLabels() {
-        if (titles.isEmpty()) {
+        if (games.isEmpty()) {
             //There are no games in the list
             countLabel.setText("");
         } else {
             //Local variables
-            int count = titles.size();  //Length of the list
+            int count = games.size();  //Length of the list
 
             //Update labels
             countLabel.setText("Count: " + count);
         }
     }
 
-    //titles getter
-    public ObservableList<String> getTitles() {
-        return titles;
+    //listView getter
+    public ListView<PlayedGame> getListView() {
+        return listView;
+    }
+
+    //games getter
+    public ObservableList<PlayedGame> getGames() {
+        return games;
+    }
+
+    //games setter
+    public void setGames(ObservableList<PlayedGame> games) {
+        this.games = games;
     }
 }

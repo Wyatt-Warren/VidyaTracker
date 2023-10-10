@@ -222,6 +222,7 @@ public class CollectionsWindow extends VBox {
                     setLabels(collectionChoices.getSelectionModel().getSelectedItem());
 
                     ApplicationGUI.changeMade = true;
+                    ApplicationGUI.setStageTitle();
                     stage.close();
                 });
 
@@ -242,6 +243,7 @@ public class CollectionsWindow extends VBox {
                 tableView.getItems().add(selectedIndex - 1, tableView.getItems().remove(selectedIndex));
                 tableView.getSelectionModel().select(selectedIndex-1);
                 ApplicationGUI.changeMade = true;
+                ApplicationGUI.setStageTitle();
             }
         });
 
@@ -255,6 +257,7 @@ public class CollectionsWindow extends VBox {
                 tableView.getItems().add(selectedIndex + 1, tableView.getItems().remove(selectedIndex));
                 tableView.getSelectionModel().select(selectedIndex + 1);
                 ApplicationGUI.changeMade = true;
+                ApplicationGUI.setStageTitle();
             }
         });
 
@@ -530,6 +533,7 @@ public class CollectionsWindow extends VBox {
             }
 
             ApplicationGUI.changeMade = true;
+            ApplicationGUI.setStageTitle();
         });
 
         TableMethods.preventColumnResizing(tableView);

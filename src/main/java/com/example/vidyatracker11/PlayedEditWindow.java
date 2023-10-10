@@ -119,6 +119,7 @@ public class PlayedEditWindow extends PlayedAddEditWindow {
         ApplicationGUI.playedGamesTable.sortAndFilter(ApplicationGUI.playedFilterTokenChoices.getSelectionModel().getSelectedItem());
 
         ApplicationGUI.changeMade = true;
+        ApplicationGUI.setStageTitle();
         stage.close();
     }
 }

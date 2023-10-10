@@ -103,6 +103,7 @@ public class ApplicationGUI extends Application {
     public static MenuBar menuBar = new MenuBar(fileMenu, listMenu, randomMenu);
     public static VBox primarySceneVBox = new VBox(menuBar, playedWindow);
     public static Scene primaryScene = new Scene(primarySceneVBox, screenWidthMain, screenHeightMain);
+    public static Stage primaryStage;
 
     //Other
     public static ContextMenu rowContextMenu = new ContextMenu(addNewGameMenuItem,                      //Right click menu for each TableView
@@ -131,7 +132,9 @@ public class ApplicationGUI extends Application {
     }
 
     //Start method
-    public void start(Stage primaryStage) {
+    public void start(Stage stage1) {
+        primaryStage = stage1;
+
         //Populate colorMap
         colorMap.put("", "");
         colorMap.put("Playing", "-fx-background-color: #4a8c32;");
@@ -166,7 +169,7 @@ public class ApplicationGUI extends Application {
         unplayedGamesVBox.setSpacing(5);
         unplayedWindow.setSpacing(5);
         primaryScene.getStylesheets().add(styleSheet);
-        primaryStage.setTitle("Vidya Tracker - " + currentFilePathOut.getFileName().toString());
+        setStageTitle();
         primaryStage.getIcons().add(icon);
 
         //Populate ChoiceBoxes
@@ -439,7 +442,7 @@ public class ApplicationGUI extends Application {
 
                 //Reset current file
                 currentFilePathOut = Path.of("List.json").toAbsolutePath();
-                primaryStage.setTitle("Vidya Tracker - " + currentFilePathOut.getFileName().toString());
+                setStageTitle();
 
                 stage.close();
             });
@@ -455,7 +458,8 @@ public class ApplicationGUI extends Application {
                 //Open a new file with fileChooser
                 currentFilePathOut = fileChooser.showOpenDialog(primaryStage).toPath();
                 openFile(currentFilePathOut);
-                primaryStage.setTitle("Vidya Tracker - " + currentFilePathOut.getFileName().toString());
+                changeMade = false;
+                setStageTitle();
             }catch (NullPointerException ignored){
                 //The user closed the fileChooser window
             }
@@ -476,7 +480,7 @@ public class ApplicationGUI extends Application {
                 //Saves to a file chosen by the user.
                 currentFilePathOut = fileChooser.showSaveDialog(primaryStage).toPath();
                 saveFile(currentFilePathOut.toFile());
-                primaryStage.setTitle("Vidya Tracker - " + currentFilePathOut.getFileName().toString());
+                setStageTitle();
             } catch (NullPointerException | FileNotFoundException ignored) {
                 //The user closed the fileChooser window
             }
@@ -673,6 +677,7 @@ public class ApplicationGUI extends Application {
 
                     stage.close();
                     changeMade = true;
+                    setStageTitle();
                 });
 
                 //Close window
@@ -736,6 +741,7 @@ public class ApplicationGUI extends Application {
 
                     stage.close();
                     changeMade = true;
+                    setStageTitle();
                 });
 
                 //Close window
@@ -791,6 +797,7 @@ public class ApplicationGUI extends Application {
                     playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
                     stage.close();
                     changeMade = true;
+                    setStageTitle();
                 });
 
                 //Close window
@@ -840,6 +847,7 @@ public class ApplicationGUI extends Application {
                     unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
                     stage.close();
                     changeMade = true;
+                    setStageTitle();
                 });
 
                 //Close window
@@ -933,6 +941,7 @@ public class ApplicationGUI extends Application {
                         collectionChoiceBox.getSelectionModel().getSelectedItem().getGames().add(game);
                         stage.close();
                         changeMade = true;
+                        setStageTitle();
                     });
 
                     scene.setOnKeyPressed(e1 -> {
@@ -1200,7 +1209,7 @@ public class ApplicationGUI extends Application {
             //Chooses a random game from the temporary list.
             if (playedOpen){
                 //playedTempList
-                if (playedTempList.getTitles().size() > 0) {
+                if (playedTempList.getGames().size() > 0) {
                     //There are games
                     //Local variables
                     Random rand = new Random();
@@ -1217,7 +1226,7 @@ public class ApplicationGUI extends Application {
                     stage.initModality(Modality.APPLICATION_MODAL);
                     stage.setScene(scene);
                     label.setStyle("-fx-font-size: 16;");
-                    label.setText(playedTempList.getTitles().get(rand.nextInt(playedTempList.getTitles().size())));
+                    label.setText(playedTempList.getGames().get(rand.nextInt(playedTempList.getGames().size())).getTitle());
                     button.setOnAction(e1 -> stage.close());
                     vbox.setSpacing(10);
                     vbox.setAlignment(Pos.CENTER);
@@ -1235,7 +1244,7 @@ public class ApplicationGUI extends Application {
                 }
             }else {
                 //unplayedTempList
-                if (unplayedTempList.getTitles().size() > 0) {
+                if (unplayedTempList.getGames().size() > 0) {
                     //There are games
                     //Local variables
                     Random rand = new Random();
@@ -1252,7 +1261,7 @@ public class ApplicationGUI extends Application {
                     stage.initModality(Modality.APPLICATION_MODAL);
                     stage.setScene(scene);
                     label.setStyle("-fx-font-size: 16;");
-                    label.setText(unplayedTempList.getTitles().get(rand.nextInt(unplayedTempList.getTitles().size())));
+                    label.setText(unplayedTempList.getGames().get(rand.nextInt(unplayedTempList.getGames().size())).getTitle());
                     button.setOnAction(e1 -> stage.close());
                     vbox.setSpacing(10);
                     vbox.setAlignment(Pos.CENTER);
@@ -1367,8 +1376,15 @@ public class ApplicationGUI extends Application {
         primaryStage.show();
     }
 
+    public static void setStageTitle(){
+        if(changeMade)
+            primaryStage.setTitle("Vidya Tracker - *" + currentFilePathOut.getFileName().toString());
+        else
+            primaryStage.setTitle("Vidya Tracker - " + currentFilePathOut.getFileName().toString());
+    }
+
     //Saves the current data to a given file object.
-    public void saveFile(File fileOut) throws FileNotFoundException {
+    public static void saveFile(File fileOut) throws FileNotFoundException {
         //Local variables
         JSONObject file = new JSONObject();             //JSONObject containing data
         JSONArray platformListArray = new JSONArray();  //List of all platforms
@@ -1376,6 +1392,8 @@ public class ApplicationGUI extends Application {
         JSONArray playedGameArray = new JSONArray();    //List of all PlayedGames
         JSONArray unplayedGameArray = new JSONArray();  //List of all UnplayedGames
         JSONArray collectionArray = new JSONArray();    //List of all Collections
+        JSONArray playedTempArray = new JSONArray();    //List of games in playedTempList
+        JSONArray unplayedTempArray = new JSONArray();    //List of games in unplayedTempList
         PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(fileOut), StandardCharsets.UTF_8));
         Stage stage = new Stage();
         Label label = new Label("Saving...");
@@ -1463,7 +1481,7 @@ public class ApplicationGUI extends Application {
 
         for (int i = 0; i < GameLists.collectionList.size(); i++){
             //Add each collection to the collection list
-            //Local varaibles
+            //Local variables
             JSONObject newCollection = new JSONObject();                    //The collection data to save
             GameCollection collection = GameLists.collectionList.get(i);    //The collection to save
             JSONArray games = new JSONArray();                              //List of each game ID
@@ -1498,12 +1516,32 @@ public class ApplicationGUI extends Application {
             }
         }
 
+        for(int i = 0; i < playedTempList.getGames().size(); i++){
+            //Add each game to playedTempArray
+            //Local variables
+            PlayedGame game = playedTempList.getGames().get(i); //Game to save
+
+            //Put game in array
+            playedTempArray.put(GameLists.playedList.indexOf(game));
+        }
+
+        for(int i = 0; i < unplayedTempList.getGames().size(); i++){
+            //Add each game to unplayedTempArray
+            //Local variables
+            UnplayedGame game = unplayedTempList.getGames().get(i); //Game to save
+
+            //Put game in array
+            unplayedTempArray.put(GameLists.unplayedList.indexOf(game));
+        }
+
         //Put each list in the JSONObject
         file.put("PL", platformListArray);
         file.put("GL", genreListArray);
         file.put("P", playedGameArray);
         file.put("U", unplayedGameArray);
         file.put("C", collectionArray);
+        file.put("PT", playedTempArray);
+        file.put("UT", unplayedTempArray);
 
         //Write the JSONObject to the file and close the PrintWriter
         pw.write(file.toString());
@@ -1515,11 +1553,12 @@ public class ApplicationGUI extends Application {
         vbox.getChildren().add(button);
 
         changeMade = false;
+        setStageTitle();
         button.setOnAction(e1 -> stage.close());
     }
 
     //Opens a file from the given file path
-    public void openFile(Path filePath) {
+    public static void openFile(Path filePath) {
         try {
             //Local variables
             String jsonString = Files.readString(filePath);             //String to parse
@@ -1528,7 +1567,9 @@ public class ApplicationGUI extends Application {
             JSONArray genreList = file.getJSONArray("GL");          //List  of genres in the file
             JSONArray playedGameList = file.getJSONArray("P");      //list of PlayedGames in the file
             JSONArray unplayedGameList = file.getJSONArray("U");    //List of UnplayedGames in the file
-            JSONArray collectionArray = file.getJSONArray("C");     //List of collections in the file
+            JSONArray collectionList = file.getJSONArray("C");     //List of collections in the file
+            JSONArray playedTempArray = file.getJSONArray("PT");     //List of collections in the file
+            JSONArray unplayedTempArray = file.getJSONArray("UT");     //List of collections in the file
 
             //Reset all lists before setting new data
             GameLists.platformList = FXCollections.observableArrayList();
@@ -1536,6 +1577,8 @@ public class ApplicationGUI extends Application {
             GameLists.playedList = FXCollections.observableArrayList();
             GameLists.unplayedList = FXCollections.observableArrayList();
             GameLists.collectionList = FXCollections.observableArrayList();
+            ApplicationGUI.playedTempList.setGames(FXCollections.observableArrayList());
+            ApplicationGUI.unplayedTempList.setGames(FXCollections.observableArrayList());
 
             for (int i = 0; i < platformList.length(); i++)
                 //Add each platform
@@ -1590,10 +1633,10 @@ public class ApplicationGUI extends Application {
                 GameLists.unplayedList.add(newGame);
             }
 
-            for(int i = 0; i < collectionArray.length(); i++){
+            for(int i = 0; i < collectionList.length(); i++){
                 //Add each collection
                 //Local variables
-                JSONObject newObj = (JSONObject) collectionArray.get(i);                        //Collection data from the JSON file
+                JSONObject newObj = (JSONObject) collectionList.get(i);                        //Collection data from the JSON file
                 GameCollection newCollection = new GameCollection((String) newObj.get("CT"));   //New collection to add to the list
                 JSONArray collectionGameArray = newObj.getJSONArray("CG");                  //Array of games for the new collection
 
@@ -1615,11 +1658,35 @@ public class ApplicationGUI extends Application {
                 GameLists.collectionList.add(newCollection);
             }
 
+            for(int i = 0; i < playedTempArray.length(); i++){
+                //Add each item in playedTempArray
+                //Local variables
+                int gameID = (int) playedTempArray.get(i);    //Index of game
+
+                //Add game to list
+                playedTempList.getGames().add(GameLists.playedList.get(gameID));
+            }
+
+            for(int i = 0; i < unplayedTempArray.length(); i++){
+                //Add each item in playedTempArray
+                //Local variables
+                int gameID = (int) unplayedTempArray.get(i);    //ID of game
+
+                //Add game to list
+                unplayedTempList.getGames().add(GameLists.unplayedList.get(gameID));
+            }
+
             //Update GUI
             playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
             unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
             statusCountBoxPlayed.updateData();
             statusCountBoxUnplayed.updateData();
+            playedTempList.updateLabels();
+            unplayedTempList.updateLabels();
+
+            //Fixes an issue where listview doesn't show the items
+            playedTempList.getListView().setItems(playedTempList.getGames());
+            unplayedTempList.getListView().setItems(unplayedTempList.getGames());
         } catch (NoSuchFileException ignored) {
             //This is ok. It just means that the user doesn't currently have a list file.
         } catch (NullPointerException | IOException e1) {

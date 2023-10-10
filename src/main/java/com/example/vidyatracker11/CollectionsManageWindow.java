@@ -66,6 +66,7 @@ public class CollectionsManageWindow extends VBox {
                 GameLists.collectionList.add(new GameCollection(collectionTextField.getText()));
                 collectionTextField.setText("");
                 ApplicationGUI.changeMade = true;
+                ApplicationGUI.setStageTitle();
             }
         });
 
@@ -110,6 +111,7 @@ public class CollectionsManageWindow extends VBox {
                         selectedRemoved = true;
 
                     ApplicationGUI.changeMade = true;
+                    ApplicationGUI.setStageTitle();
                     stage.close();
                 });
 
@@ -136,6 +138,7 @@ public class CollectionsManageWindow extends VBox {
                     warningLabel.setText("");
                     GameLists.collectionList.get(selectionInt).setTitle(newName);
                     ApplicationGUI.changeMade = true;
+                    ApplicationGUI.setStageTitle();
                     collectionTextField.setText("");
 
                     //Solution to a problem where the listview doesn't update after renaming
@@ -166,6 +169,7 @@ public class CollectionsManageWindow extends VBox {
 
                 GameLists.collectionList.add(gameCollection);
                 ApplicationGUI.changeMade = true;
+                ApplicationGUI.setStageTitle();
                 collectionTextField.setText("");
             }
         });
@@ -180,6 +184,7 @@ public class CollectionsManageWindow extends VBox {
                 GameLists.collectionList.add(selectionIndex - 1, GameLists.collectionList.remove(selectionIndex));
                 collectionListView.getSelectionModel().select(selectionIndex - 1);
                 ApplicationGUI.changeMade = true;
+                ApplicationGUI.setStageTitle();
             }
         });
 
@@ -192,6 +197,7 @@ public class CollectionsManageWindow extends VBox {
                 GameLists.collectionList.add(selectionIndex + 1, GameLists.collectionList.remove(selectionIndex));
                 collectionListView.getSelectionModel().select(selectionIndex + 1);
                 ApplicationGUI.changeMade = true;
+                ApplicationGUI.setStageTitle();
             }
         });
 

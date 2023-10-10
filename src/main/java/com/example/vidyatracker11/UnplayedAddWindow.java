@@ -61,6 +61,7 @@ public class UnplayedAddWindow extends UnplayedAddEditWindow {
         ApplicationGUI.unplayedGamesTable.sortAndFilter(ApplicationGUI.unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
 
         ApplicationGUI.changeMade = true;
+        ApplicationGUI.setStageTitle();
         stage.close();
     }
 }

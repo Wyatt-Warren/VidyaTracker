@@ -12,7 +12,7 @@ import javafx.scene.layout.VBox;
 //Section on the main unplayed games window where the user can select games to add to a temporary list.
 public class UnplayedTempList extends HBox {
     //GUI
-    ListView<String> listView = new ListView<>();
+    ListView<UnplayedGame> listView = new ListView<>();
     Button addButton = new Button("Add Selected Game");
     Button removeButton = new Button("Remove Selected Game");
     Label countLabel = new Label("");
@@ -20,12 +20,11 @@ public class UnplayedTempList extends HBox {
     VBox vbox = new VBox(5, addButton, removeButton, countLabel, hoursLabel);
 
     //Fields
-    ObservableList<String> titles = FXCollections.observableArrayList();    //Title of each game in the list
-    ObservableList<Double> hours = FXCollections.observableArrayList();     //Hours of each game in the list
+    ObservableList<UnplayedGame> games = FXCollections.observableArrayList();    //Games in list
 
     public UnplayedTempList() {
         //GUI
-        listView.setItems(titles);
+        listView.setItems(games);
         getChildren().addAll(listView, vbox);
         setPadding(new Insets(5));
         setSpacing(5);
@@ -35,9 +34,10 @@ public class UnplayedTempList extends HBox {
             if (ApplicationGUI.unplayedGamesTable.getSelectionModel().getSelectedIndex() != -1) {
                 //If an item is selected
 
-                titles.add(ApplicationGUI.unplayedGamesTable.getSelectionModel().getSelectedItem().getTitle());
-                hours.add(ApplicationGUI.unplayedGamesTable.getSelectionModel().getSelectedItem().getHours());
+                games.add(ApplicationGUI.unplayedGamesTable.getSelectionModel().getSelectedItem());
                 updateLabels();
+                ApplicationGUI.changeMade = true;
+                ApplicationGUI.setStageTitle();
             }
         });
 
@@ -49,27 +49,28 @@ public class UnplayedTempList extends HBox {
             if (index != -1) {
                 //An item is selected
 
-                titles.remove(index);
-                hours.remove(index);
+                games.remove(index);
                 updateLabels();
+                ApplicationGUI.changeMade = true;
+                ApplicationGUI.setStageTitle();
             }
         });
     }
 
     //Updates labels that show total count of items in the list and total hours.
     public void updateLabels() {
-        if (titles.isEmpty()) {
+        if (games.isEmpty()) {
             //There are no games in the list
             countLabel.setText("");
             hoursLabel.setText("");
         } else {
             //Local variables
-            int count = titles.size();  //Length of the list
+            int count = games.size();  //Length of the list
             double hoursTotal = 0.0;    //Total hours of each game in the list
 
-            for (Double hour : hours)
+            for (UnplayedGame game : games)
                 //Add up all hours in the list
-                hoursTotal += hour;
+                hoursTotal += game.getHours();
 
             //Update labels
             countLabel.setText("Count: " + count);
@@ -77,8 +78,18 @@ public class UnplayedTempList extends HBox {
         }
     }
 
-    //titles getter
-    public ObservableList<String> getTitles() {
-        return titles;
+    //listView getter
+    public ListView<UnplayedGame> getListView() {
+        return listView;
+    }
+
+    //games getter
+    public ObservableList<UnplayedGame> getGames() {
+        return games;
+    }
+
+    //games setter
+    public void setGames(ObservableList<UnplayedGame> games) {
+        this.games = games;
     }
 }
