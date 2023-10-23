@@ -42,6 +42,9 @@ public class UnplayedRandomListGenerator extends RandomListGenerator{
         hoursVBox.setSpacing(5.0);
         deckVBox.setSpacing(5.0);
 
+        //Set status values
+        statusBox.getItems().addAll("Backlog", "SubBacklog", "Wishlist", "Ignored");
+
         //Set franchise values
         ObservableList<String> franchises = FXCollections.observableArrayList();    //List of all franchises
         for(UnplayedGame game : GameLists.unplayedList)

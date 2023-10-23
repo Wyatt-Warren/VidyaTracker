@@ -134,9 +134,6 @@ public abstract class RandomListGenerator extends VBox {
         //Only allow integers for lengthField
         lengthField.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
 
-        //Set status values
-        statusBox.getItems().addAll("Backlog", "SubBacklog", "Wishlist", "Ignored");
-
         //Set platform values
         platformBox.getItems().addAll(GameLists.platformList);
 

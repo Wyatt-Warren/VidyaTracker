@@ -65,6 +65,9 @@ public class PlayedRandomListGenerator extends RandomListGenerator{
         completionYearVBox.setSpacing(5.0);
         percent100VBox.setSpacing(5.0);
 
+        //Set status values
+        statusBox.getItems().addAll("Playing", "Completed", "On Hold");
+
         //Set short values
         shortBox.getItems().addAll("Yes", "No", "Blank");
 
