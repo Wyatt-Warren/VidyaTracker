@@ -442,6 +442,7 @@ public class ApplicationGUI extends Application {
 
                 //Reset current file
                 currentFilePathOut = Path.of("List.json").toAbsolutePath();
+                changeMade = true;
                 setStageTitle();
 
                 stage.close();
@@ -1688,7 +1689,8 @@ public class ApplicationGUI extends Application {
             playedTempList.getListView().setItems(playedTempList.getGames());
             unplayedTempList.getListView().setItems(unplayedTempList.getGames());
         } catch (NoSuchFileException ignored) {
-            //This is ok. It just means that the user doesn't currently have a list file.
+            changeMade = true;
+            setStageTitle();
         } catch (NullPointerException | IOException e1) {
             e1.printStackTrace();
         }
