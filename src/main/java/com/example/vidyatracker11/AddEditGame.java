@@ -6,6 +6,10 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+
 //Superclass containing for PlayedEditWindow, UnplayedEditWindow, PlayedAddWindow, and UnplayedAddWindow
 public class AddEditGame extends VBox{
     //GUI
@@ -52,9 +56,14 @@ public class AddEditGame extends VBox{
     Label releaseDayLabel = new Label("Day:");
     ChoiceBox<Integer> releaseDayBox = new ChoiceBox<>();
     HBox releaseDayHBox = new HBox(releaseDayLabel, releaseDayBox);
-    VBox releaseVBox = new VBox(releaseLabel, releaseYearHBox, releaseMonthHBox, releaseDayHBox);
+    Button releaseCurrentDateButton = new Button("Enter Current Date");
+    VBox releaseVBox = new VBox(releaseLabel, releaseYearHBox, releaseMonthHBox,
+            releaseDayHBox, releaseCurrentDateButton);
 
     //Fields
+    private static final Date date = new Date();
+    private static final ZoneId timeZone = ZoneId.systemDefault();
+    private static final LocalDate localDate = date.toInstant().atZone(timeZone).toLocalDate();                         //Used to get current date
 
     public AddEditGame(){
         //GUI
@@ -68,6 +77,7 @@ public class AddEditGame extends VBox{
         releaseMonthHBox.setAlignment(Pos.CENTER);
         releaseDayHBox.setAlignment(Pos.CENTER);
         releaseVBox.setAlignment(Pos.CENTER);
+        releaseVBox.setSpacing(5);
         mainHBox.setSpacing(5);
         setAlignment(Pos.CENTER);
         setPadding(new Insets(5));
@@ -98,6 +108,17 @@ public class AddEditGame extends VBox{
         //Select the first options of ChoiceBoxes
         releaseMonthBox.getSelectionModel().selectFirst();
         releaseDayBox.getSelectionModel().selectFirst();
+
+        releaseCurrentDateButton.setOnAction(e -> {
+            //Set year
+            releaseYearBox.setText("" + localDate.getYear());
+
+            //Set month
+            releaseMonthBox.getSelectionModel().select(localDate.getMonthValue());
+
+            //Set day
+            releaseDayBox.getSelectionModel().select(localDate.getDayOfMonth());
+        });
     }
 
     //Sets the days in releaseDayBox based on the month selected

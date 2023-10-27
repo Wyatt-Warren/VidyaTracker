@@ -1,13 +1,14 @@
 package com.example.vidyatracker11;
 
 import javafx.geometry.Pos;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 //Window for adding or editing played games
 public abstract class PlayedAddEditWindow extends AddEditGame{
@@ -36,13 +37,19 @@ public abstract class PlayedAddEditWindow extends AddEditGame{
     Label completionDayLabel = new Label("Day:");
     ChoiceBox<Integer> completionDayBox = new ChoiceBox<>();
     HBox completionDayHBox = new HBox(completionDayLabel, completionDayBox);
+    Button completionCurrentDateButton = new Button("Enter Current Date");
     VBox completionVBox = new VBox(completionLabel, completionYearHBox, completionMonthHBox,
-            completionDayHBox);
+            completionDayHBox, completionCurrentDateButton);
 
     //100Percent Status
     Label percentLabel = new Label("100% Status:");
     ChoiceBox<String> percentBox = new ChoiceBox<>();
     VBox percentVBox = new VBox(percentLabel, percentBox);
+
+    //Fields
+    private static final Date date = new Date();
+    private static final ZoneId timeZone = ZoneId.systemDefault();
+    private static final LocalDate localDate = date.toInstant().atZone(timeZone).toLocalDate();                         //Used to get current date
 
     public PlayedAddEditWindow(Stage stage){
         super();
@@ -53,6 +60,7 @@ public abstract class PlayedAddEditWindow extends AddEditGame{
         completionMonthHBox.setAlignment(Pos.CENTER);
         completionDayHBox.setAlignment(Pos.CENTER);
         completionVBox.setAlignment(Pos.CENTER);
+        completionVBox.setSpacing(5);
         percentVBox.setAlignment(Pos.CENTER);
         mainHBox.getChildren().addAll(statusVBox, shortVBox, titleVBox,
                 franchiseVBox, ratingVBox, platformVBox,
@@ -82,6 +90,17 @@ public abstract class PlayedAddEditWindow extends AddEditGame{
         completionMonthBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
             //Set day count when month is changed
             setDayCount((int) newNum, completionDayBox, completionYearBox);
+        });
+
+        completionCurrentDateButton.setOnAction(e -> {
+            //Set year
+            completionYearBox.setText("" + localDate.getYear());
+
+            //Set month
+            completionMonthBox.getSelectionModel().select(localDate.getMonthValue());
+
+            //Set day
+            completionDayBox.getSelectionModel().select(localDate.getDayOfMonth());
         });
 
         //Set 100% values
