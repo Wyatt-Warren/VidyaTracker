@@ -938,11 +938,65 @@ public class ApplicationGUI extends Application {
                     scene.getStylesheets().add(styleSheet);
 
                     addButton.setOnAction(e1 -> {
-                        //Add game to collection
-                        collectionChoiceBox.getSelectionModel().getSelectedItem().getGames().add(game);
-                        stage.close();
-                        changeMade = true;
-                        setStageTitle();
+                        //Local variables
+                        GameCollection collection = collectionChoiceBox.getSelectionModel().getSelectedItem();  //Selected collection
+
+                        if(collection.getGames().contains(game)){
+                            //If collection contains game, ask user whether they still want to add it.
+                            //Local variables
+                            Stage stage2 = new Stage();
+                            Label label2 = new Label(collection.getTitle() + " already contains " + game.getTitle() + ".");
+                            Label label3 = new Label("Add anyway?");
+                            Button yesButton = new Button("Yes");
+                            Button noButton = new Button("No");
+                            HBox buttonBox = new HBox(yesButton, noButton);
+                            VBox vbox1 = new VBox(label2, label3, buttonBox);
+                            Scene scene1 = new Scene(vbox1);
+
+                            //GUI
+                            stage2.getIcons().add(icon);
+                            stage2.setResizable(false);
+                            stage2.initModality(Modality.APPLICATION_MODAL);
+                            stage2.setTitle("Add Game?");
+                            stage2.setScene(scene1);
+                            label2.setStyle("-fx-font-weight: bold;-fx-font-size: 16;");
+                            buttonBox.setSpacing(5);
+                            buttonBox.setAlignment(Pos.TOP_CENTER);
+                            vbox1.setSpacing(20);
+                            vbox1.setAlignment(Pos.TOP_CENTER);
+                            vbox1.setPadding(new Insets(10));
+                            scene1.getStylesheets().add(styleSheet);
+
+                            yesButton.setOnAction(e2 -> {
+                                //Add game to collection
+                                collection.getGames().add(game);
+                                changeMade = true;
+                                setStageTitle();
+                                stage2.close();
+                                stage.close();
+                            });
+
+                            noButton.setOnAction(e3 -> stage2.close());
+
+                            scene1.setOnKeyPressed(e4 -> {
+                                if (e4.getCode() == KeyCode.ESCAPE) {
+                                    //If escape is pressed, close window
+                                    stage2.close();
+                                } else if (e4.getCode() == KeyCode.ENTER) {
+                                    //If enter is pressed, add the game
+                                    yesButton.fire();
+                                }
+                            });
+
+                            stage2.show();
+
+                        }else{
+                            //Add game to collection
+                            collection.getGames().add(game);
+                            changeMade = true;
+                            setStageTitle();
+                            stage.close();
+                        }
                     });
 
                     scene.setOnKeyPressed(e1 -> {
