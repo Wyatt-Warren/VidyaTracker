@@ -183,13 +183,13 @@ public class CollectionsWindow extends VBox {
         removeButton.setOnAction(e -> {
             //Remove a game from a collection
             //Local variables
-            Game selected = tableView.getSelectionModel().getSelectedItem();    //Currently selected game
+            int selectedIndex = tableView.getSelectionModel().getSelectedIndex();    //Currently selected game
 
-            if(selected != null){
+            if(selectedIndex != -1){
                 //An item is selected
                 //Local variables
                 Stage stage = new Stage();
-                Label label = new Label("Remove " + selected + "?");
+                Label label = new Label("Remove " + tableView.getItems().get(selectedIndex) + "?");
                 Button yesButton = new Button("Yes");
                 Button noButton = new Button("No");
                 HBox hbox = new HBox(yesButton, noButton);
@@ -216,7 +216,7 @@ public class CollectionsWindow extends VBox {
 
                 yesButton.setOnAction(e1 -> {
                     //Remove selected item
-                    collectionChoices.getSelectionModel().getSelectedItem().getGames().remove(selected);
+                    collectionChoices.getSelectionModel().getSelectedItem().getGames().remove(selectedIndex);
 
                     //Update labels
                     setLabels(collectionChoices.getSelectionModel().getSelectedItem());
