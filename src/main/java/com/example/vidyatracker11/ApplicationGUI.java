@@ -17,6 +17,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -158,12 +159,14 @@ public class ApplicationGUI extends Application {
         //GUI
         topBoxPlayed.setAlignment(Pos.CENTER_LEFT);
         topBoxPlayed.setSpacing(10);
+        HBox.setHgrow(topBoxPlayed, javafx.scene.layout.Priority.ALWAYS);
         playedChoiceHBox.setSpacing(5);
         playedChoiceHBox.setPadding(new Insets(2));
         playedGamesVBox.setSpacing(5);
         playedWindow.setSpacing(5);
         topBoxUnplayed.setAlignment(Pos.CENTER_LEFT);
         topBoxUnplayed.setSpacing(10);
+        HBox.setHgrow(topBoxUnplayed, javafx.scene.layout.Priority.ALWAYS);
         unplayedChoiceHBox.setSpacing(5);
         unplayedChoiceHBox.setPadding(new Insets(2));
         unplayedGamesVBox.setSpacing(5);
@@ -171,6 +174,32 @@ public class ApplicationGUI extends Application {
         primaryScene.getStylesheets().add(styleSheet);
         setStageTitle();
         primaryStage.getIcons().add(icon);
+
+        //Corner Image
+        try {
+            Image image = new Image("file:image.png");
+
+            ImageView imageViewPlayed = new ImageView(image);
+            ImageView imageViewUnplayed = new ImageView(image);
+            imageViewPlayed.setFitHeight(200);
+            imageViewUnplayed.setFitHeight(200);
+            imageViewPlayed.setPreserveRatio(true);
+            imageViewUnplayed.setPreserveRatio(true);
+
+            HBox imageViewPlayedBox = new HBox(imageViewPlayed);
+            HBox imageViewUnplayedBox = new HBox(imageViewUnplayed);
+            imageViewPlayedBox.setAlignment(Pos.CENTER);
+            imageViewUnplayedBox.setAlignment(Pos.CENTER);
+            HBox.setHgrow(imageViewPlayedBox, javafx.scene.layout.Priority.ALWAYS);
+            HBox.setHgrow(imageViewUnplayedBox, javafx.scene.layout.Priority.ALWAYS);
+            imageViewPlayedBox.setPadding(new Insets(5));
+            imageViewUnplayedBox.setPadding(new Insets(5));
+
+            topBoxPlayed.getChildren().add(imageViewPlayedBox);
+            topBoxUnplayed.getChildren().add(imageViewUnplayedBox);
+        }catch (IllegalArgumentException ignored){
+            //Only if the user has placed an image called image.png in the folder with the jar
+        }
 
         //Populate ChoiceBoxes
         playedSortChoices.getItems().addAll("Status", "Short", "Title", "Franchise", "Rating", "Platform", "Genre",
