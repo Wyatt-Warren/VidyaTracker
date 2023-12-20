@@ -26,6 +26,7 @@ public class CollectionsWindow extends VBox {
     ChoiceBox<GameCollection> collectionChoices = new ChoiceBox<>();
 
     //TableView
+    TableColumn<Game, Integer> indexColumn = new TableColumn<>("");
     TableColumn<Game, String> statusColumn = new TableColumn<>("Status");
     TableColumn<Game, String> titleColumn = new TableColumn<>("Title");
     TableColumn<Game, String> percent100Column = new TableColumn<>("100%");
@@ -36,8 +37,8 @@ public class CollectionsWindow extends VBox {
     Button moveUpButton = new Button("Move Selected Game Up");
     Button moveDownButton = new Button("Move Selected Game Down");
     Button chooseRandomGameButton = new Button("Choose a Random Unplayed Game");
-    Button sortButton = new Button("Sort List");
-    ChoiceBox<String> sortChoices = new ChoiceBox<>();
+    Button reorderButton = new Button("Reorder List");
+    ChoiceBox<String> reorderChoices = new ChoiceBox<>();
 
     //Text
     Label countTextLabel = new Label("Count:");
@@ -51,14 +52,14 @@ public class CollectionsWindow extends VBox {
     GridPane labelPane = new GridPane();
 
     //Boxes
-    HBox sortBox = new HBox(sortButton, sortChoices);
+    HBox reorderBox = new HBox(reorderButton, reorderChoices);
     VBox buttonBox = new VBox(removeButton, moveUpButton, moveDownButton,
-            chooseRandomGameButton, sortBox, labelPane);
+            chooseRandomGameButton, reorderBox, labelPane);
     HBox collectionBox = new HBox(tableView, buttonBox);
 
     //Fields
     ObservableList<TableColumn<Game, ?>> columnList = FXCollections.observableArrayList(    //List of each column in the tableview
-            statusColumn, titleColumn, percent100Column);
+            indexColumn, statusColumn, titleColumn, percent100Column);
     Stage parentStage;                                                                      //Stage that contains CollectionsWindow
 
     public CollectionsWindow(Stage parentStage){
@@ -66,13 +67,18 @@ public class CollectionsWindow extends VBox {
 
         //GUI
         mainLabel.setStyle("-fx-font-weight:bold;-fx-font-size:24;");
+        indexColumn.setCellValueFactory(cellData -> {
+            int rowIndex = cellData.getTableView().getItems().indexOf(cellData.getValue());
+            return javafx.beans.binding.Bindings.createObjectBinding(() -> rowIndex + 1);
+        });
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         tableView.getColumns().addAll(columnList);
-        sortChoices.getItems().addAll("Status", "Short", "Title", "Franchise", "Rating", "Platform", "Genre",
+        tableView.setMaxWidth(750);
+        reorderChoices.getItems().addAll("Status", "Short", "Title", "Franchise", "Rating", "Platform", "Genre",
                 "Release Date", "Completion Date", "100%", "Hours", "Deck Status");
-        sortChoices.getSelectionModel().selectFirst();
-        sortBox.setSpacing(5);
+        reorderChoices.getSelectionModel().selectFirst();
+        reorderBox.setSpacing(5);
         buttonBox.setSpacing(5);
         countTextLabel.setStyle("-fx-font-weight:bold;");
         hoursTextLabel.setStyle("-fx-font-weight:bold;");
@@ -305,10 +311,10 @@ public class CollectionsWindow extends VBox {
             }
         });
 
-        sortButton.setOnAction(e -> {
+        reorderButton.setOnAction(e -> {
             //Local variables
             GameCollection collection = collectionChoices.getSelectionModel().getSelectedItem();            //Current collection
-            String sortBy = sortChoices.getSelectionModel().getSelectedItem();                              //Sorting Selection
+            String sortBy = reorderChoices.getSelectionModel().getSelectedItem();                              //Sorting Selection
             ObservableList<Game> playedList = FXCollections.observableArrayList(collection.getGames());     //List of PlayedGames
             ObservableList<Game> unplayedList = FXCollections.observableArrayList(collection.getGames());   //List of UnplayedGames
 
