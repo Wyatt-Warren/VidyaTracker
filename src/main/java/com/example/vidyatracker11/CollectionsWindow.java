@@ -36,7 +36,9 @@ public class CollectionsWindow extends VBox {
     Button removeButton = new Button("Remove Selected Game");
     Button moveUpButton = new Button("Move Selected Game Up");
     Button moveDownButton = new Button("Move Selected Game Down");
-    Button chooseRandomGameButton = new Button("Choose a Random Unplayed Game");
+    Button chooseRandomGameButton = new Button("Choose a Random Game");
+    Button chooseRandomPlayedGameButton = new Button("Choose a Random Played Game");
+    Button chooseRandomUnplayedGameButton = new Button("Choose a Random Unplayed Game");
     Button reorderButton = new Button("Reorder List");
     ChoiceBox<String> reorderChoices = new ChoiceBox<>();
 
@@ -53,14 +55,22 @@ public class CollectionsWindow extends VBox {
 
     //Boxes
     HBox reorderBox = new HBox(reorderButton, reorderChoices);
-    VBox buttonBox = new VBox(removeButton, moveUpButton, moveDownButton,
-            chooseRandomGameButton, reorderBox, labelPane);
+    VBox editButtons = new VBox(removeButton, moveUpButton, moveDownButton,
+            reorderBox);
+    VBox randomButtons = new VBox(chooseRandomGameButton, chooseRandomPlayedGameButton,
+            chooseRandomUnplayedGameButton);
+    VBox buttonBox = new VBox(editButtons, randomButtons, labelPane);
     HBox collectionBox = new HBox(tableView, buttonBox);
 
     //Fields
     ObservableList<TableColumn<Game, ?>> columnList = FXCollections.observableArrayList(    //List of each column in the tableview
             indexColumn, statusColumn, titleColumn, percent100Column);
     Stage parentStage;                                                                      //Stage that contains CollectionsWindow
+    public enum RandomTypes {
+        PLAYED,
+        UNPLAYED,
+        ALL
+    }
 
     public CollectionsWindow(Stage parentStage){
         this.parentStage = parentStage;
@@ -79,7 +89,9 @@ public class CollectionsWindow extends VBox {
                 "Release Date", "Completion Date", "100%", "Hours", "Deck Status");
         reorderChoices.getSelectionModel().selectFirst();
         reorderBox.setSpacing(5);
-        buttonBox.setSpacing(5);
+        editButtons.setSpacing(5);
+        randomButtons.setSpacing(5);
+        buttonBox.setSpacing(15);
         countTextLabel.setStyle("-fx-font-weight:bold;");
         hoursTextLabel.setStyle("-fx-font-weight:bold;");
         percentTextLabel.setStyle("-fx-font-weight:bold;");
@@ -268,47 +280,18 @@ public class CollectionsWindow extends VBox {
         });
 
         chooseRandomGameButton.setOnAction(e -> {
+            //Randomly select a game from the collection list
+            chooseRandomGame(RandomTypes.ALL);
+        });
+
+        chooseRandomPlayedGameButton.setOnAction(e -> {
+            //Randomly select a played game from the collection list
+            chooseRandomGame(RandomTypes.PLAYED);
+        });
+
+        chooseRandomUnplayedGameButton.setOnAction(e -> {
             //Randomly select an unplayed game from the collection list
-            //Local variables
-            ObservableList<Game> gameList = FXCollections.observableArrayList(          //List of potential options
-                    collectionChoices.getSelectionModel().getSelectedItem().getGames());
-
-            //Remove PlayedGames from the list
-            gameList.removeIf(game -> game instanceof PlayedGame);
-
-            if (gameList.size() > 0) {
-                //There are more than zero games available
-                //Local variables
-                Stage stage = new Stage();
-                Label label = new Label("");
-                Button button = new Button("Close");
-                VBox vbox = new VBox(label, button);
-                Scene scene = new Scene(vbox);
-                Random rand = new Random();
-
-                //GUI
-                stage.getIcons().add(ApplicationGUI.icon);
-                stage.setTitle("Random Game");
-                stage.setResizable(false);
-                stage.initModality(Modality.APPLICATION_MODAL);
-                stage.setScene(scene);
-                label.setStyle("-fx-font-size: 16;");
-                label.setText(gameList.get(rand.nextInt(gameList.size())).getTitle());
-                button.setOnAction(e1 -> stage.close());
-                vbox.setSpacing(10);
-                vbox.setAlignment(Pos.CENTER);
-                vbox.setPadding(new Insets(5));
-                scene.getStylesheets().add(ApplicationGUI.styleSheet);
-
-                scene.setOnKeyPressed(e1 -> {
-                    if (e1.getCode() == KeyCode.ESCAPE || e1.getCode() == KeyCode.ENTER) {
-                        //Close window if Escape or Enter are pressed
-                        stage.close();
-                    }
-                });
-
-                stage.show();
-            }
+            chooseRandomGame(RandomTypes.UNPLAYED);
         });
 
         reorderButton.setOnAction(e -> {
@@ -749,4 +732,52 @@ public class CollectionsWindow extends VBox {
 
         label.setStyle(style);
     }
+
+    public void chooseRandomGame(RandomTypes type){
+        //Local variables
+        ObservableList<Game> gameList = FXCollections.observableArrayList(          //List of potential options
+                collectionChoices.getSelectionModel().getSelectedItem().getGames());
+
+        if(type == RandomTypes.UNPLAYED)
+            //Remove played games from list if only unplayed
+            gameList.removeIf(game -> game instanceof PlayedGame);
+        else if (type == RandomTypes.PLAYED)
+            //Remove unplayed games from list if only played
+            gameList.removeIf(game -> game instanceof UnplayedGame);
+
+        if (gameList.size() > 0) {
+            //There are more than zero games available
+            //Local variables
+            Stage stage = new Stage();
+            Label label = new Label("");
+            Button button = new Button("Close");
+            VBox vbox = new VBox(label, button);
+            Scene scene = new Scene(vbox);
+            Random rand = new Random();
+
+            //GUI
+            stage.getIcons().add(ApplicationGUI.icon);
+            stage.setTitle("Random Game");
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(scene);
+            label.setStyle("-fx-font-size: 16;");
+            label.setText(gameList.get(rand.nextInt(gameList.size())).getTitle());
+            button.setOnAction(e1 -> stage.close());
+            vbox.setSpacing(10);
+            vbox.setAlignment(Pos.CENTER);
+            vbox.setPadding(new Insets(5));
+            scene.getStylesheets().add(ApplicationGUI.styleSheet);
+
+            scene.setOnKeyPressed(e1 -> {
+                if (e1.getCode() == KeyCode.ESCAPE || e1.getCode() == KeyCode.ENTER) {
+                    //Close window if Escape or Enter are pressed
+                    stage.close();
+                }
+            });
+
+            stage.show();
+        }
+    }
+
 }
