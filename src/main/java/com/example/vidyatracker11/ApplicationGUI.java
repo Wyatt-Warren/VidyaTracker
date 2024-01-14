@@ -6,6 +6,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.function.UnaryOperator;
 
@@ -31,6 +33,10 @@ import org.json.JSONObject;
 
 //The main class
 public class ApplicationGUI extends Application {
+    //Date
+    private static final Date date = new Date();
+    private static final ZoneId timeZone = ZoneId.systemDefault();
+    public static final LocalDate localDate = date.toInstant().atZone(timeZone).toLocalDate();                         //Used to get current year
 
     //File Menu
     public static MenuItem newFileMenuItem = new MenuItem("New File");
@@ -53,6 +59,9 @@ public class ApplicationGUI extends Application {
     public static MenuItem editGenreListMenuItem = new MenuItem("Edit Genre List");
     public static MenuItem editPlatformListMenuItem = new MenuItem("Edit Platform List");
     public static SeparatorMenuItem separatorMenuItem4 = new SeparatorMenuItem();
+    public static MenuItem monthSummaryMenuItem = new MenuItem("Show Month Summary");
+    public static MenuItem yearSummaryMenuItem = new MenuItem("Show Year Summary");
+    public static SeparatorMenuItem separatorMenuItem6 =  new SeparatorMenuItem();
     public static MenuItem statsMenuItem = new MenuItem("Show Stats Window");
     public static MenuItem collectionsMenuItem = new MenuItem("Show Collections Window");
     public static MenuItem achievementsMenuItem = new MenuItem("Show Achievements Window");
@@ -419,7 +428,8 @@ public class ApplicationGUI extends Application {
         listMenu.getItems().addAll(addNewGameMenuItem, editGameMenuItem, moveGameMenuItem,
                 removeGameMenuItem, collectGameMenuItem, showGameCollectionsMenuItem,
                 separatorMenuItem3, editGenreListMenuItem, editPlatformListMenuItem,
-                separatorMenuItem4, statsMenuItem, collectionsMenuItem,
+                separatorMenuItem4, monthSummaryMenuItem, yearSummaryMenuItem,
+                separatorMenuItem6, statsMenuItem, collectionsMenuItem,
                 achievementsMenuItem);
         randomMenu.getItems().addAll(chooseRandomGameMenuItem, chooseRandomFromList, generateRandomListMenuItem);
 
@@ -1162,6 +1172,52 @@ public class ApplicationGUI extends Application {
                     //If enter is pressed while addItemField is focused, add the inputted platform
                     window.addItemButton.fire();
             });
+
+            stage.show();
+        });
+
+        monthSummaryMenuItem.setOnAction(e -> {
+            //Open month summary view
+            //Local variables
+            Stage stage = new Stage();
+            MonthSummary monthSummary;
+            Scene scene;
+            int currentYear = localDate.getYear();
+            int lastMonth = localDate.getMonthValue()-1;
+
+            if(lastMonth == 0) {
+                //Loop from january to previous year december
+                lastMonth = 12;
+                currentYear--;
+            }
+
+            //GUI
+            monthSummary = new MonthSummary(new SpecificMonth(lastMonth, currentYear), stage);
+            scene = new Scene(monthSummary);
+            stage.getIcons().add(icon);
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Month Summary");
+            scene.getStylesheets().add(styleSheet);
+            stage.setScene(scene);
+
+            stage.show();
+        });
+
+        yearSummaryMenuItem.setOnAction(e -> {
+            //Open year summary view
+            //Local variables
+            Stage stage = new Stage();
+            YearSummary yearSummary = new YearSummary(localDate.getYear()-1, stage);
+            Scene scene = new Scene(yearSummary);
+
+            //GUI
+            stage.getIcons().add(icon);
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Year Summary");
+            scene.getStylesheets().add(styleSheet);
+            stage.setScene(scene);
 
             stage.show();
         });

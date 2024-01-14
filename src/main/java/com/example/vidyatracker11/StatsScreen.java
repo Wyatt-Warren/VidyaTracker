@@ -392,13 +392,11 @@ public class StatsScreen extends HBox {
 
     //Call methods to prevent reordering or resizing for all tableviews
     public void preventColumnReorderingAndResizingForAll() {
-        //Reordering
-        for(TableView<?> tableView : tableViews)
+        for(TableView<?> tableView : tableViews) {
+            //Iterate through each tableview
             TableMethods.preventColumnReordering(tableView);
-
-        //Resizing
-        for(TableView<?> tableView : tableViews)
             TableMethods.preventColumnResizing(tableView);
+        }
     }
 
     //Set table data

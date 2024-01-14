@@ -6,10 +6,6 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-
 //Box on the main played game window that shows stats relating to statuses.
 public class StatusCountBoxPlayed extends GridPane {
     //GUI
@@ -33,11 +29,6 @@ public class StatusCountBoxPlayed extends GridPane {
     Label totalCountLabel = new Label();
     Label totalThisYearCountLabel = new Label();
     Label totalLastYearCountLabel = new Label();
-
-    //Fields
-    private static final Date date = new Date();
-    private static final ZoneId timeZone = ZoneId.systemDefault();
-    private static final LocalDate localDate = date.toInstant().atZone(timeZone).toLocalDate(); //Used to get current year
 
     public StatusCountBoxPlayed() {
         //GUI
@@ -102,21 +93,21 @@ public class StatusCountBoxPlayed extends GridPane {
         totalCountLabel.setText("" + GameLists.playedList.size());
 
         //Total count of games with status Completed, short status No, and release year as the current year
-        completedThisYearCountLabel.setText("" + GameLists.getCompletedYearCount(localDate.getYear()));
+        completedThisYearCountLabel.setText("" + GameLists.getCompletedYearCount(ApplicationGUI.localDate.getYear()));
 
         //Total count of games with status Completed, short status No, and release year as last year
-        completedLastYearCountLabel.setText("" + GameLists.getCompletedYearCount(localDate.getYear()-1));
+        completedLastYearCountLabel.setText("" + GameLists.getCompletedYearCount(ApplicationGUI.localDate.getYear()-1));
 
         //Total count of games with status Completed, short status Yes, and release year as the current year
-        shortCompletedThisYearCountLabel.setText("" + GameLists.getShortCompletedYearCount(localDate.getYear()));
+        shortCompletedThisYearCountLabel.setText("" + GameLists.getShortCompletedYearCount(ApplicationGUI.localDate.getYear()));
 
         //Total count of games with status Completed, short status Yes, and release year as last year
-        shortCompletedLastYearCountLabel.setText("" + GameLists.getShortCompletedYearCount(localDate.getYear()-1));
+        shortCompletedLastYearCountLabel.setText("" + GameLists.getShortCompletedYearCount(ApplicationGUI.localDate.getYear()-1));
 
         //Total count of games with status Completed and release year as the current year
-        totalThisYearCountLabel.setText("" + GameLists.getTotalYearCount(localDate.getYear()));
+        totalThisYearCountLabel.setText("" + GameLists.getTotalYearCount(ApplicationGUI.localDate.getYear()));
 
         //Total count of games with the status Completed and release year as the last year
-        totalLastYearCountLabel.setText("" + GameLists.getTotalYearCount(localDate.getYear()-1));
+        totalLastYearCountLabel.setText("" + GameLists.getTotalYearCount(ApplicationGUI.localDate.getYear()-1));
     }
 }

@@ -22,16 +22,16 @@ public class AchievementWindow extends VBox {
             "Total", "Total games completed",
             new int[]{0,50,100,200,300,400,500,750,1000,1500,2000}, true);
     public AchievementBox<PlayedGame> newReleasesAchievement = new AchievementBox<>(
-            "New Releases", "Completed games that were released in " + localDate.getYear(),
+            "New Releases", "Completed games that were released in " + ApplicationGUI.localDate.getYear(),
             new int[]{0,1,2,3,4,5,6,8,10,15,20}, false);
     public AchievementBox<PlayedGame> lastYearReleasesAchievement = new AchievementBox<>(
-            "Last Year Releases", "Completed games that were released in " + (localDate.getYear()-1),
+            "Last Year Releases", "Completed games that were released in " + (ApplicationGUI.localDate.getYear()-1),
             new int[]{0,2,4,6,8,10,12,16,20,30,40}, false);
     public AchievementBox<PlayedGame> currentYearAchievement = new AchievementBox<>(
-            "Current Year", "Games completed in " + localDate.getYear(),
+            "Current Year", "Games completed in " + ApplicationGUI.localDate.getYear(),
             new int[]{0,15,30,45,60,75,90,120,150,225,300}, false);
     public AchievementBox<PlayedGame> lastYearAchievement = new AchievementBox<>(
-            "Last Year", "Games completed in " + (localDate.getYear()-1),
+            "Last Year", "Games completed in " + (ApplicationGUI.localDate.getYear()-1),
             new int[]{0,15,30,45,60,75,90,120,150,225,300}, false);
     public AchievementBox<PlayedGame> newGamesAchievement = new AchievementBox<>(
             "New Games", "Games completed within the release year",
@@ -56,9 +56,7 @@ public class AchievementWindow extends VBox {
             new int[]{0,10,20,40,60,80,100,150,200,300,400}, false);
 
     //Fields
-    private static final Date date = new Date();
-    private static final ZoneId timeZone = ZoneId.systemDefault();
-    private static final LocalDate localDate = date.toInstant().atZone(timeZone).toLocalDate();                         //Used to get current year
+
     public ObservableList<AchievementBox<?>> achievementBoxes = FXCollections.observableArrayList(                      //List of all achievement boxes
             totalAchievement, newReleasesAchievement, lastYearReleasesAchievement,
             currentYearAchievement, lastYearAchievement, newGamesAchievement,
@@ -122,19 +120,19 @@ public class AchievementWindow extends VBox {
                 //All completed, non-short games should be added to totalAchievement
                 totalAchievement.getItems().add(game);
 
-                if(game.getReleaseYear()==localDate.getYear())
+                if(game.getReleaseYear()==ApplicationGUI.localDate.getYear())
                     //Games released in current year
                     newReleasesAchievement.getItems().add(game);
 
-                if(game.getReleaseYear()==localDate.getYear()-1)
+                if(game.getReleaseYear()==ApplicationGUI.localDate.getYear()-1)
                     //Games released last year
                     lastYearReleasesAchievement.getItems().add(game);
 
-                if(game.getCompletionYear()==localDate.getYear())
+                if(game.getCompletionYear()==ApplicationGUI.localDate.getYear())
                     //Games beat this year
                     currentYearAchievement.getItems().add(game);
 
-                if(game.getCompletionYear()==localDate.getYear()-1)
+                if(game.getCompletionYear()==ApplicationGUI.localDate.getYear()-1)
                     //Games beat last year
                     lastYearAchievement.getItems().add(game);
 

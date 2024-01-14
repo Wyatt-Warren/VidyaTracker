@@ -11,7 +11,7 @@ import java.time.ZoneId;
 import java.util.Date;
 
 //Superclass containing for PlayedEditWindow, UnplayedEditWindow, PlayedAddWindow, and UnplayedAddWindow
-public class AddEditGame extends VBox{
+public abstract class AddEditGame extends VBox{
     //GUI
     Label mainLabel = new Label();
     Button doneButton = new Button();
@@ -60,11 +60,6 @@ public class AddEditGame extends VBox{
     VBox releaseVBox = new VBox(releaseLabel, releaseYearHBox, releaseMonthHBox,
             releaseDayHBox, releaseCurrentDateButton);
 
-    //Fields
-    private static final Date date = new Date();
-    private static final ZoneId timeZone = ZoneId.systemDefault();
-    private static final LocalDate localDate = date.toInstant().atZone(timeZone).toLocalDate();                         //Used to get current date
-
     public AddEditGame(){
         //GUI
         mainLabel.setStyle("-fx-font-size: 24;-fx-font-weight: bold;");
@@ -111,13 +106,13 @@ public class AddEditGame extends VBox{
 
         releaseCurrentDateButton.setOnAction(e -> {
             //Set year
-            releaseYearBox.setText("" + localDate.getYear());
+            releaseYearBox.setText("" + ApplicationGUI.localDate.getYear());
 
             //Set month
-            releaseMonthBox.getSelectionModel().select(localDate.getMonthValue());
+            releaseMonthBox.getSelectionModel().select(ApplicationGUI.localDate.getMonthValue());
 
             //Set day
-            releaseDayBox.getSelectionModel().select(localDate.getDayOfMonth());
+            releaseDayBox.getSelectionModel().select(ApplicationGUI.localDate.getDayOfMonth());
         });
     }
 

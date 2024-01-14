@@ -6,10 +6,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-
 //Window for adding or editing played games
 public abstract class PlayedAddEditWindow extends AddEditGame{
     //GUI
@@ -45,11 +41,6 @@ public abstract class PlayedAddEditWindow extends AddEditGame{
     Label percentLabel = new Label("100% Status:");
     ChoiceBox<String> percentBox = new ChoiceBox<>();
     VBox percentVBox = new VBox(percentLabel, percentBox);
-
-    //Fields
-    private static final Date date = new Date();
-    private static final ZoneId timeZone = ZoneId.systemDefault();
-    private static final LocalDate localDate = date.toInstant().atZone(timeZone).toLocalDate();                         //Used to get current date
 
     public PlayedAddEditWindow(Stage stage){
         super();
@@ -94,13 +85,13 @@ public abstract class PlayedAddEditWindow extends AddEditGame{
 
         completionCurrentDateButton.setOnAction(e -> {
             //Set year
-            completionYearBox.setText("" + localDate.getYear());
+            completionYearBox.setText("" + ApplicationGUI.localDate.getYear());
 
             //Set month
-            completionMonthBox.getSelectionModel().select(localDate.getMonthValue());
+            completionMonthBox.getSelectionModel().select(ApplicationGUI.localDate.getMonthValue());
 
             //Set day
-            completionDayBox.getSelectionModel().select(localDate.getDayOfMonth());
+            completionDayBox.getSelectionModel().select(ApplicationGUI.localDate.getDayOfMonth());
         });
 
         //Set 100% values

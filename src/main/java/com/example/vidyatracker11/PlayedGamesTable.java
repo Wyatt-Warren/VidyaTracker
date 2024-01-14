@@ -1,9 +1,6 @@
 package com.example.vidyatracker11;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.function.Predicate;
 
 import javafx.collections.FXCollections;
@@ -35,9 +32,6 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
             genreColumn, releaseYearColumn, completionYearColumn, percent100Column);
 
     //Fields
-    private static final Date date = new Date();
-    private static final ZoneId timeZone = ZoneId.systemDefault();
-    private static final LocalDate localDate = date.toInstant().atZone(timeZone).toLocalDate(); //Used to get current year
     FilteredList<PlayedGame> filteredList = new FilteredList<>(GameLists.playedList);           //List of items in the table
 
     public PlayedGamesTable() {
@@ -156,10 +150,10 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                         //Set text
                         setText("" + item);
 
-                    if ((getItem()) == localDate.getYear())
+                    if ((getItem()) == ApplicationGUI.localDate.getYear())
                         //Current year color
                         setStyle(ApplicationGUI.colorMap.get("CURRENTYEAR"));
-                    else if ((getItem()) == localDate.getYear() - 1)
+                    else if ((getItem()) == ApplicationGUI.localDate.getYear() - 1)
                         //Last year color
                         setStyle(ApplicationGUI.colorMap.get("LASTYEAR"));
                     else
@@ -187,10 +181,10 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                         //Set text
                         setText("" + item);
 
-                    if ((getItem()) == localDate.getYear()) {
+                    if ((getItem()) == ApplicationGUI.localDate.getYear()) {
                         //Current year color
                         setStyle(ApplicationGUI.colorMap.get("CURRENTYEAR"));
-                    } else if ((getItem()) == localDate.getYear() - 1) {
+                    } else if ((getItem()) == ApplicationGUI.localDate.getYear() - 1) {
                         //Last year color
                         setStyle(ApplicationGUI.colorMap.get("LASTYEAR"));
                     } else {
