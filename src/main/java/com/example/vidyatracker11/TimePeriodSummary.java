@@ -41,6 +41,8 @@ public abstract class TimePeriodSummary extends VBox {
     TableColumn<PlayedGame, String> gameShortColumn = new TableColumn<>("Short");
     TableColumn<PlayedGame, String> gameTitleColumn = new TableColumn<>("Game");
     TableColumn<PlayedGame, Integer> gameRatingColumn = new TableColumn<>("Rating");
+    TableColumn<PlayedGame, String> gamePlatformColumn = new TableColumn<>("Platform");
+    TableColumn<PlayedGame, String> gameGenreColumn = new TableColumn<>("Genre");
     TableColumn<PlayedGame, Integer> gameReleaseYearColumn = new TableColumn<>("Release Year");
     TableColumn<PlayedGame, String> game100PercentColumn = new TableColumn<>("100%");
     TableView<PlayedGame> gameTable = new TableView<>();
@@ -77,7 +79,8 @@ public abstract class TimePeriodSummary extends VBox {
     ObservableList<TableView<?>> tableViews = FXCollections.observableArrayList(gameTable, franchiseTable,
             platformTable, genreTable);
     ObservableList<TableColumn<PlayedGame, ?>> gameColumns = FXCollections.observableArrayList(gameShortColumn,
-            gameTitleColumn, gameRatingColumn, gameReleaseYearColumn, game100PercentColumn);
+            gameTitleColumn, gameRatingColumn, gamePlatformColumn, gameGenreColumn, gameReleaseYearColumn,
+            game100PercentColumn);
     ObservableList<TableColumn<PlayedDataEntry, ?>> dataColumns = FXCollections.observableArrayList(
             franchiseTitleColumn, franchiseCountColumn, franchisePercentColumn, franchiseRatingColumn,
             platformTitleColumn, platformCountColumn, platformPercentColumn, platformRatingColumn, genreTitleColumn,
@@ -158,6 +161,8 @@ public abstract class TimePeriodSummary extends VBox {
         gameShortColumn.setCellValueFactory(new PropertyValueFactory<>("shortStatus"));
         gameTitleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         gameRatingColumn.setCellValueFactory(new PropertyValueFactory<>("rating"));
+        gamePlatformColumn.setCellValueFactory(new PropertyValueFactory<>("platform"));
+        gameGenreColumn.setCellValueFactory(new PropertyValueFactory<>("genre"));
         gameReleaseYearColumn.setCellValueFactory(new PropertyValueFactory<>("releaseYear"));
         game100PercentColumn.setCellValueFactory(new PropertyValueFactory<>("percent100"));
 
@@ -253,8 +258,7 @@ public abstract class TimePeriodSummary extends VBox {
         });
 
         //Add columns to tables
-        gameTable.getColumns().addAll(gameShortColumn, gameTitleColumn, gameRatingColumn,
-                gameReleaseYearColumn, game100PercentColumn);
+        gameTable.getColumns().addAll(gameColumns);
         franchiseTable.getColumns().addAll(franchiseTitleColumn, franchiseCountColumn, franchisePercentColumn,
                 franchiseRatingColumn);
         platformTable.getColumns().addAll(platformTitleColumn, platformCountColumn, platformPercentColumn,
