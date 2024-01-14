@@ -1198,6 +1198,7 @@ public class ApplicationGUI extends Application {
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Month Summary");
+            stage.setHeight(screenHeightMain);
             scene.getStylesheets().add(styleSheet);
             stage.setScene(scene);
 
@@ -1216,6 +1217,7 @@ public class ApplicationGUI extends Application {
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Year Summary");
+            stage.setHeight(screenHeightMain);
             scene.getStylesheets().add(styleSheet);
             stage.setScene(scene);
 
@@ -1271,7 +1273,7 @@ public class ApplicationGUI extends Application {
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Achievements");
-            stage.setHeight(900);
+            stage.setHeight(screenHeightMain);
             stage.setScene(scene);
             scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
             scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);

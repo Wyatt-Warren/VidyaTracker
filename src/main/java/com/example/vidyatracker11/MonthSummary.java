@@ -48,8 +48,8 @@ public class MonthSummary extends TimePeriodSummary{
             }
 
             if(game.getCompletionYear() > maxYear ||
-                    game.getCompletionYear() == minYear && game.getCompletionMonth() > maxMonth) {
-                //New highest year value
+                    game.getCompletionYear() == maxYear && game.getCompletionMonth() > maxMonth) {
+                //New highest month value
                 maxYear = game.getCompletionYear();
                 maxMonth = game.getCompletionMonth();
             }

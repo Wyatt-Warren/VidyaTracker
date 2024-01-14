@@ -2,14 +2,13 @@ package com.example.vidyatracker11;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -67,7 +66,7 @@ public abstract class TimePeriodSummary extends VBox {
     TableColumn<PlayedDataEntry, Double> genreRatingColumn = new TableColumn<>("Average Rating");
     TableView<PlayedDataEntry> genreTable = new TableView<>();
 
-    HBox tableBox = new HBox(gameTable, franchiseTable, platformTable, genreTable);
+    HBox tableBox = new HBox(franchiseTable, platformTable, genreTable);
 
     //Switch period
     Label switchPeriodLabel = new Label();
@@ -94,10 +93,10 @@ public abstract class TimePeriodSummary extends VBox {
 
     public TimePeriodSummary() {
         //GUI
-        getChildren().addAll(mainLabel, countPane, tableBox, switchPeriodBox);
+        getChildren().addAll(mainLabel, countPane, gameTable, tableBox, switchPeriodBox);
         setAlignment(Pos.CENTER);
         setSpacing(20);
-        setPadding(new Insets(5));
+        setPadding(new Insets(5, 5, 20, 5));
         mainLabel.setStyle("-fx-font-weight:bold;-fx-font-size:24;");
         countPane.add(countTotal, 0, 0);
         countPane.add(countNotShortLabel, 1, 0);
@@ -110,6 +109,16 @@ public abstract class TimePeriodSummary extends VBox {
         countPane.add(countSamePeriodLabel, 2, 3);
         countPane.add(count100PercentButton, 1, 4);
         countPane.add(countSamePeriodButton, 2, 4);
+        GridPane.setHalignment(countTotal, HPos.CENTER);
+        GridPane.setHalignment(countNotShortLabel, HPos.CENTER);
+        GridPane.setHalignment(countShortLabel, HPos.CENTER);
+        GridPane.setHalignment(countNotShortButton, HPos.CENTER);
+        GridPane.setHalignment(countShortButton, HPos.CENTER);
+        GridPane.setHalignment(averageRating, HPos.CENTER);
+        GridPane.setHalignment(count100PercentLabel, HPos.CENTER);
+        GridPane.setHalignment(countSamePeriodLabel, HPos.CENTER);
+        GridPane.setHalignment(count100PercentButton, HPos.CENTER);
+        GridPane.setHalignment(countSamePeriodButton, HPos.CENTER);
         countPane.setHgap(15);
         countPane.setVgap(5);
         countPane.setAlignment(Pos.CENTER);
@@ -119,6 +128,7 @@ public abstract class TimePeriodSummary extends VBox {
         averageRating.setStyle("-fx-font-weight:bold;");
         count100PercentLabel.setStyle("-fx-font-weight:bold;");
         countSamePeriodLabel.setStyle("-fx-font-weight:bold;");
+        gameTable.setMaxWidth(Region.USE_PREF_SIZE);
         tableBox.setSpacing(10);
         switchPeriodBox.setAlignment(Pos.CENTER);
         switchPeriodBox.setSpacing(10);
