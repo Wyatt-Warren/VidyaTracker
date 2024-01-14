@@ -291,6 +291,12 @@ public abstract class TimePeriodSummary extends VBox {
                 percent100Games.add(game);
         }
 
+        //Sort lists
+        notShortGames.sort(TableMethods.completionDateComparator);
+        shortGames.sort(TableMethods.completionDateComparator);
+        percent100Games.sort(TableMethods.completionDateComparator);
+        samePeriodGames.sort(TableMethods.completionDateComparator);
+
         //Set count text
         countNotShortLabel.setText("Non-Short Games:  " +  notShortGames.size());
         countShortLabel.setText("Short Games:  " + shortGames.size());
