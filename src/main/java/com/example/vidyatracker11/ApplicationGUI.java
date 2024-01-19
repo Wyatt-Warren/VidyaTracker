@@ -1199,8 +1199,16 @@ public class ApplicationGUI extends Application {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Month Summary");
             stage.setHeight(screenHeightMain);
+            stage.setWidth(1000);
             scene.getStylesheets().add(styleSheet);
             stage.setScene(scene);
+
+            scene.setOnKeyPressed(e1 -> {
+                if (e1.getCode() == KeyCode.ESCAPE) {
+                    //If escape is pressed, close window
+                    stage.close();
+                }
+            });
 
             stage.show();
         });
@@ -1218,8 +1226,16 @@ public class ApplicationGUI extends Application {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Year Summary");
             stage.setHeight(screenHeightMain);
+            stage.setWidth(1000);
             scene.getStylesheets().add(styleSheet);
             stage.setScene(scene);
+
+            scene.setOnKeyPressed(e1 -> {
+                if (e1.getCode() == KeyCode.ESCAPE) {
+                    //If escape is pressed, close window
+                    stage.close();
+                }
+            });
 
             stage.show();
         });

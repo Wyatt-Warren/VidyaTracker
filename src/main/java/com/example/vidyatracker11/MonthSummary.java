@@ -2,6 +2,7 @@ package com.example.vidyatracker11;
 
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 public class MonthSummary extends TimePeriodSummary{
@@ -83,9 +84,7 @@ public class MonthSummary extends TimePeriodSummary{
         switchPeriodButton.setOnAction(e-> {
             MonthSummary newMonthSummary =
                     new MonthSummary(switchPeriodChoices.getSelectionModel().getSelectedItem(), stage);
-            Scene newScene = new Scene(newMonthSummary);
-            newScene.getStylesheets().add(ApplicationGUI.styleSheet);
-            stage.setScene(newScene);
+            stage.getScene().setRoot(newMonthSummary);
         });
     }
 

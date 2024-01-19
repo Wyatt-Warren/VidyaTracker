@@ -64,9 +64,7 @@ public class YearSummary extends TimePeriodSummary{
         switchPeriodButton.setOnAction(e -> {
             YearSummary newYearSummary =
                     new YearSummary(switchPeriodChoices.getSelectionModel().getSelectedItem(), stage);
-            Scene newScene = new Scene(newYearSummary);
-            newScene.getStylesheets().add(ApplicationGUI.styleSheet);
-            stage.setScene(newScene);
+            stage.getScene().setRoot(newYearSummary);
         });
     }
 

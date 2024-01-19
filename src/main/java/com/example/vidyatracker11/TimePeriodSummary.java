@@ -133,6 +133,7 @@ public abstract class TimePeriodSummary extends VBox {
         countSamePeriodLabel.setStyle("-fx-font-weight:bold;");
         gameTable.setMaxWidth(Region.USE_PREF_SIZE);
         tableBox.setSpacing(10);
+        tableBox.setAlignment(Pos.CENTER);
         switchPeriodBox.setAlignment(Pos.CENTER);
         switchPeriodBox.setSpacing(10);
 
