@@ -1,13 +1,11 @@
 package com.example.vidyatracker11;
 
-import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 public class MonthSummary extends TimePeriodSummary{
     //GUI
-    ChoiceBox<SpecificMonth> switchPeriodChoices = new ChoiceBox<>();
+    ChoiceBox<String> switchPeriodChoicesMonth = new ChoiceBox<>();
 
     //Fields
     SpecificMonth thisMonth;                                                            //Month being viewed
@@ -22,15 +20,16 @@ public class MonthSummary extends TimePeriodSummary{
         countSamePeriodLabel.setText("Games released in " + thisMonth + ":  " + samePeriodGames.size());
         switchPeriodLabel.setText("Other Months: ");
         switchPeriodButton.setText("View Month Summary");
-        switchPeriodBox.getChildren().addAll(switchPeriodLabel, switchPeriodChoices, switchPeriodButton);
+        switchPeriodBox.getChildren().clear();
+        switchPeriodBox.getChildren().addAll(switchPeriodLabel, switchPeriodChoicesMonth, switchPeriodChoices, switchPeriodButton);
 
         //Populate switchPeriodChoices
         //Variables
-        int minYear = Integer.MAX_VALUE;                            //Lowest year value
         int minMonth = Integer.MAX_VALUE;                           //Lowest month value
-        int maxYear = ApplicationGUI.localDate.getYear();           //Highest year value
         int maxMonth = ApplicationGUI.localDate.getMonthValue();    //Highest month value
-        boolean noMonths = true;                                    //True if there are no games with year data
+        minYear = Integer.MAX_VALUE;
+        maxYear = ApplicationGUI.localDate.getYear();
+        noDates = true;
 
         for(PlayedGame game : GameLists.playedList){
             //Iterate through each game to find min and max years and months
@@ -39,51 +38,60 @@ public class MonthSummary extends TimePeriodSummary{
                 continue;
 
             //There is at least one game with a completion year and month
-            noMonths = false;
+            noDates = false;
 
-            if(game.getCompletionYear() < minYear ||
-                    game.getCompletionYear() == minYear && game.getCompletionMonth() < minMonth) {
+            if(game.getCompletionYear() < minYear && game.getCompletionMonth() != 0||
+                    (game.getCompletionYear() == minYear && game.getCompletionMonth() < minMonth)) {
                 //New lowest month value
                 minYear = game.getCompletionYear();
                 minMonth = game.getCompletionMonth();
             }
 
-            if(game.getCompletionYear() > maxYear ||
-                    game.getCompletionYear() == maxYear && game.getCompletionMonth() > maxMonth) {
+            if((game.getCompletionYear() > maxYear && game.getCompletionMonth() != 0) ||
+                    (game.getCompletionYear() == maxYear && game.getCompletionMonth() > maxMonth)) {
                 //New highest month value
                 maxYear = game.getCompletionYear();
                 maxMonth = game.getCompletionMonth();
             }
         }
 
-        if(!noMonths) {
-            //There are Months
-            for (int i = maxYear; i >= minYear; i--)
-                //Iterate through each year
-                for (int j = 12; j > 0; j--) {
-                    //Iterate through each month
-                    if(i == maxYear && j > maxMonth)
-                        //Skip months greater than max on first year iteration
-                        continue;
+        if(!noDates) {
+            for(int i = maxYear; i >= minYear; i--)
+                //Add each year between min and max to switchPeriodChoices
+                switchPeriodChoices.getItems().add(i);
 
-                    if (!(ApplicationGUI.localDate.getYear() == i && ApplicationGUI.localDate.getMonthValue() == j))
-                        //Add month if not current month
-                        switchPeriodChoices.getItems().add(new SpecificMonth(j, i));
+            //There are completion dates
+            for(int i = 1; i <= 12; i++)
+                switchPeriodChoicesMonth.getItems().add(SpecificMonth.months[i]);
 
-                    if(i == minYear && j == minMonth)
-                        //Stop on last month
-                        break;
-                }
             switchPeriodButton.setDisable(false);
         } else
-            //There are no months
+            //There are no completion dates
             switchPeriodButton.setDisable(true);
 
-        switchPeriodChoices.getSelectionModel().select(thisMonth);
+        switchPeriodChoicesMonth.getSelectionModel().select(SpecificMonth.months[thisMonth.getMonth()]);
+        switchPeriodChoices.getSelectionModel().select((Integer) thisMonth.getYear());
+
+        switchPeriodChoicesMonth.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) ->
+            //When month is selected, if month and year are current year, disable button
+            switchPeriodButton.setDisable((int) newNum >= ApplicationGUI.localDate.getMonthValue() - 1 &&
+                switchPeriodChoices.getSelectionModel().getSelectedItem() == ApplicationGUI.localDate.getYear())
+        );
+
+        switchPeriodChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) ->
+            //When year is selected, if month and year are current year, disable button
+            switchPeriodButton.setDisable(switchPeriodChoicesMonth.getSelectionModel().getSelectedIndex() >= ApplicationGUI.localDate.getMonthValue() - 1 &&
+                switchPeriodChoices.getItems().get((int) newNum) == ApplicationGUI.localDate.getYear())
+        );
+
+        switchPeriodChoicesMonth.getSelectionModel().select(SpecificMonth.months[thisMonth.getMonth()]);
+        switchPeriodChoices.getSelectionModel().select((Integer) thisMonth.getYear());
 
         switchPeriodButton.setOnAction(e-> {
             MonthSummary newMonthSummary =
-                    new MonthSummary(switchPeriodChoices.getSelectionModel().getSelectedItem(), stage);
+                    new MonthSummary(
+                            new SpecificMonth(switchPeriodChoicesMonth.getSelectionModel().getSelectedIndex() + 1,
+                                    switchPeriodChoices.getSelectionModel().getSelectedItem()), stage);
             stage.getScene().setRoot(newMonthSummary);
         });
     }

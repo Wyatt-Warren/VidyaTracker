@@ -72,6 +72,8 @@ public abstract class TimePeriodSummary extends VBox {
 
     //Switch period
     Label switchPeriodLabel = new Label();
+    //GUI
+    ChoiceBox<Integer> switchPeriodChoices = new ChoiceBox<>();
     Button switchPeriodButton = new Button();
     HBox switchPeriodBox = new HBox();
 
@@ -93,6 +95,11 @@ public abstract class TimePeriodSummary extends VBox {
     ObservableList<PlayedGame> shortGames = FXCollections.observableArrayList();
     ObservableList<PlayedGame> percent100Games = FXCollections.observableArrayList();
     ObservableList<PlayedGame> samePeriodGames = FXCollections.observableArrayList();
+
+    //Fields
+    int minYear;        //Lowest year where there are completed games
+    int maxYear;        //Highest year where there are completed gamers
+    boolean noDates;    //True if there are no completed games with completion year values
 
     public TimePeriodSummary() {
         //GUI
@@ -136,6 +143,7 @@ public abstract class TimePeriodSummary extends VBox {
         tableBox.setAlignment(Pos.CENTER);
         switchPeriodBox.setAlignment(Pos.CENTER);
         switchPeriodBox.setSpacing(10);
+        switchPeriodBox.getChildren().addAll(switchPeriodLabel, switchPeriodChoices, switchPeriodButton);
 
         //Column value factories
         //name

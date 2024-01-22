@@ -6,7 +6,7 @@ public class SpecificMonth {
     int year;
     String title;
 
-    final String[] months = {"N/A", "January", "February", "March", "April", "May",
+    static final String[] months = {"N/A", "January", "February", "March", "April", "May",
             "June", "July", "August", "September", "October", "November", "December"};  //Month strings
 
     public SpecificMonth(int month, int year) {

@@ -39,7 +39,7 @@ public class CollectionsWindow extends VBox {
     Button chooseRandomGameButton = new Button("Choose a Random Game");
     Button chooseRandomPlayedGameButton = new Button("Choose a Random Played Game");
     Button chooseRandomUnplayedGameButton = new Button("Choose a Random Unplayed Game");
-    Button reorderButton = new Button("Reorder List");
+    Button reorderButton = new Button("Reorder List By");
     ChoiceBox<String> reorderChoices = new ChoiceBox<>();
 
     //Text

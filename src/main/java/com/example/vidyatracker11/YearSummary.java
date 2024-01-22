@@ -1,13 +1,8 @@
 package com.example.vidyatracker11;
 
-import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
 
 public class YearSummary extends TimePeriodSummary{
-    //GUI
-    ChoiceBox<Integer> switchPeriodChoices = new ChoiceBox<>();
-
     //Fields
     int thisYear;                                                                               //Year being viewed
 
@@ -21,13 +16,14 @@ public class YearSummary extends TimePeriodSummary{
         countSamePeriodLabel.setText("Games Released in " + year + ":  " + samePeriodGames.size());
         switchPeriodLabel.setText("Other Years: ");
         switchPeriodButton.setText("View Year Summary");
-        switchPeriodBox.getChildren().addAll(switchPeriodLabel, switchPeriodChoices, switchPeriodButton);
+
+        switchPeriodChoices.getSelectionModel().select((Integer)thisYear);
 
         //Populate switchPeriodChoices
         //Variables
-        int minYear = Integer.MAX_VALUE;                    //Lowest year value
-        int maxYear = ApplicationGUI.localDate.getYear();   //Highest year value
-        boolean noYears = true;                             //True if there are no games with year data
+        minYear = Integer.MAX_VALUE;
+        maxYear = ApplicationGUI.localDate.getYear();
+        noDates = true;
 
         for(PlayedGame game : GameLists.playedList){
             //Iterate through each game to find min and max years
@@ -36,7 +32,7 @@ public class YearSummary extends TimePeriodSummary{
                 continue;
 
             //There is at least one game with a completion year
-            noYears = false;
+            noDates = false;
 
             if(game.getCompletionYear() < minYear)
                 //New lowest year value
@@ -47,7 +43,7 @@ public class YearSummary extends TimePeriodSummary{
                 maxYear = game.getCompletionYear();
         }
 
-        if(!noYears) {
+        if(!noDates) {
             //There are years
             for (int i = maxYear; i >= minYear; i--)
                 //Add each year between min and max to switchPeriodChoices
@@ -58,8 +54,6 @@ public class YearSummary extends TimePeriodSummary{
         } else
             //There are no years
             switchPeriodButton.setDisable(true);
-
-        switchPeriodChoices.getSelectionModel().select((Integer)thisYear);
 
         switchPeriodButton.setOnAction(e -> {
             YearSummary newYearSummary =
