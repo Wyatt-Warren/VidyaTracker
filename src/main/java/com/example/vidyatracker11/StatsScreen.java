@@ -202,6 +202,8 @@ public class StatsScreen extends HBox {
             unplayedReleaseYearTable, unplayedDeckTable
     );
 
+    int longestYear = 0;                                                            //Number of digits in longest year
+
     public StatsScreen(Stage parentStage) {
         //GUI
         playedLabel.setStyle("-fx-font-size: 16;-fx-font-weight: bold;");
@@ -396,7 +398,6 @@ public class StatsScreen extends HBox {
         });
 
         unplayedPlatformTitleColumn.setCellFactory(e -> new TableCell<>() {
-            //100% status column cell factory
             public void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
 
@@ -426,6 +427,42 @@ public class StatsScreen extends HBox {
                 }
             }
         });
+
+        playedCompletionMonthTitleColumn.setCellFactory(e -> new TableCell<>() {
+            //100% status column cell factory
+            public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (item == null || empty) {
+                    //Cells where there is no data
+                    setText(null);
+                    setStyle("");
+                } else {
+                    //Local variables
+                    int monthMonth = Integer.parseInt(item.substring(longestYear));
+                    int monthYear = Integer.parseInt(item.substring(0, longestYear));
+
+                    //Set text
+                    setText(new SpecificMonth(monthMonth, monthYear).getTitle());
+                }
+            }
+        });
+
+        for(Game game : GameLists.playedList) {
+            //Loop through each game and find the longest year
+            int currentYearLength = Integer.toString(game.getReleaseYear()).length();
+            if (currentYearLength > longestYear)
+                //Current game has longest year
+                longestYear = currentYearLength;
+        }
+
+        for(Game game : GameLists.unplayedList) {
+            //Loop through each game and find the longest year
+            int currentYearLength = Integer.toString(game.getReleaseYear()).length();
+            if (currentYearLength > longestYear)
+                //Current game has longest year
+                longestYear = currentYearLength;
+        }
 
         updateStats();
         preventColumnReorderingAndResizingForAll();
@@ -860,6 +897,7 @@ public class StatsScreen extends HBox {
         //Local variables
         ObservableList<PlayedDataEntry> dataList = FXCollections.observableArrayList(); //List to be returned
         HashMap<Integer, PlayedDataEntry> map = new HashMap<>();                        //Map of every year
+
         for(PlayedGame game : GameLists.playedList){
             //Iterate for each game
             //Local variables
@@ -894,7 +932,7 @@ public class StatsScreen extends HBox {
                 PlayedDataEntry newData = new PlayedDataEntry();    //New data entry for the game's month
 
                 //Set name to month title
-                newData.setName(month.getTitle());
+                newData.setName(String.format("%0" + longestYear + "d%09d", month.getYear(), month.getMonth()));
 
                 //Set int name to month name value
                 newData.setIntName(month.getNameValue());
@@ -932,8 +970,8 @@ public class StatsScreen extends HBox {
                     for (int i = 0; i < dataList.size(); i++)
                         //Iterate for each item in the list of months
 
-                        if(dataList.get(i).getIntName() > month.getNameValue()){
-                            //Compare the value of the current year with one from the month list
+                        if(dataList.get(i).getName().compareTo(newData.getName()) > 0){
+                            //Compare the value of the current month with one from the month list
                             dataList.add(i, newData);
                             placed = true;
                             break;

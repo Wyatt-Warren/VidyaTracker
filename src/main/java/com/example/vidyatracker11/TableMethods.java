@@ -55,9 +55,29 @@ public class TableMethods {
 
     public static final Comparator<Game> releaseDateComparator = (o1, o2) -> {                     //Sort by release date
         //Local variables
-        String sortBy1 = String.format("%04d%02d%02d", o1.getReleaseYear(), //String to sort with for o1
+        int longestYear = 0;    //Number of digits in the longest year (probably 4)
+        String sortBy1;         //String to sort with for o1
+        String sortBy2;         //String to sort with for o2
+
+        for(Game game : GameLists.playedList) {
+            //Loop through each game and find the longest year
+            int currentYearLength = Integer.toString(game.getReleaseYear()).length();
+            if (currentYearLength > longestYear)
+                //Current game has longest year
+                longestYear = currentYearLength;
+        }
+
+        for(Game game : GameLists.unplayedList) {
+            //Loop through each game and find the longest year
+            int currentYearLength = Integer.toString(game.getReleaseYear()).length();
+            if (currentYearLength > longestYear)
+                //Current game has longest year
+                longestYear = currentYearLength;
+        }
+
+        sortBy1 = String.format("%0" + longestYear + "d%02d%02d", o1.getReleaseYear(),
                 o1.getReleaseMonth(), o1.getReleaseDay());
-        String sortBy2= String.format("%04d%02d%02d", o2.getReleaseYear(),  //String to sort with for o2
+        sortBy2 = String.format("%0" + longestYear + "d%02d%02d", o2.getReleaseYear(),
                 o2.getReleaseMonth(), o2.getReleaseDay());
 
         return sortBy1.compareTo(sortBy2);
