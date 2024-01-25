@@ -52,6 +52,13 @@ public class StatsScreen extends HBox {
     TableColumn<PlayedDataEntry, Double> playedReleaseYearRatingColumn = new TableColumn<>("Average Rating");
     TableView<PlayedDataEntry> playedReleaseYearTable = new TableView<>();
 
+    //Completion Month
+    TableColumn<PlayedDataEntry, String> playedCompletionMonthTitleColumn = new TableColumn<>("Completion Month");
+    TableColumn<PlayedDataEntry, Integer> playedCompletionMonthCountColumn = new TableColumn<>("Count");
+    TableColumn<PlayedDataEntry, Double> playedCompletionMonthPercentColumn = new TableColumn<>("Percent");
+    TableColumn<PlayedDataEntry, Double> playedCompletionMonthRatingColumn = new TableColumn<>("Average Rating");
+    TableView<PlayedDataEntry> playedCompletionMonthTable = new TableView<>();
+
     //Completion Year
     TableColumn<PlayedDataEntry, Integer> playedCompletionYearTitleColumn = new TableColumn<>("Completion Year");
     TableColumn<PlayedDataEntry, Integer> playedCompletionYearCountColumn = new TableColumn<>("Count");
@@ -124,11 +131,12 @@ public class StatsScreen extends HBox {
             playedPlatformCountColumn, playedPlatformPercentColumn, playedPlatformRatingColumn,
             playedGenreTitleColumn, playedGenreCountColumn, playedGenrePercentColumn,
             playedGenreRatingColumn, playedReleaseYearTitleColumn, playedReleaseYearCountColumn,
-            playedReleaseYearPercentColumn, playedReleaseYearRatingColumn, playedCompletionYearTitleColumn,
-            playedCompletionYearCountColumn, playedCompletionYearPercentColumn, playedCompletionYearRatingColumn,
-            playedRatingTitleColumn, playedRatingCountColumn, playedRatingPercentColumn,
-            playedPercent100TitleColumn, playedPercent100CountColumn, playedPercent100PercentColumn,
-            playedPercent100RatingColumn);
+            playedReleaseYearPercentColumn, playedReleaseYearRatingColumn, playedCompletionMonthTitleColumn,
+            playedCompletionMonthCountColumn, playedCompletionMonthPercentColumn, playedCompletionMonthRatingColumn,
+            playedCompletionYearTitleColumn, playedCompletionYearCountColumn, playedCompletionYearPercentColumn,
+            playedCompletionYearRatingColumn, playedRatingTitleColumn, playedRatingCountColumn,
+            playedRatingPercentColumn, playedPercent100TitleColumn, playedPercent100CountColumn,
+            playedPercent100PercentColumn, playedPercent100RatingColumn);
     ObservableList<TableColumn<UnplayedDataEntry, ?>> unplayedColumnList = FXCollections.observableArrayList(
             unplayedFranchiseTitleColumn, unplayedFranchiseCountColumn, unplayedFranchisePercentColumn,
             unplayedFranchiseHoursColumn, unplayedPlatformTitleColumn, unplayedPlatformCountColumn,
@@ -143,8 +151,9 @@ public class StatsScreen extends HBox {
             playedShortPercentColumn, playedShortRatingColumn, playedFranchisePercentColumn,
             playedFranchiseRatingColumn, playedPlatformPercentColumn, playedPlatformRatingColumn,
             playedGenrePercentColumn, playedGenreRatingColumn, playedReleaseYearPercentColumn,
-            playedReleaseYearRatingColumn, playedCompletionYearPercentColumn, playedCompletionYearRatingColumn,
-            playedRatingPercentColumn, playedPercent100PercentColumn, playedPercent100RatingColumn);
+            playedReleaseYearRatingColumn, playedCompletionMonthPercentColumn, playedCompletionMonthRatingColumn,
+            playedCompletionYearPercentColumn, playedCompletionYearRatingColumn, playedRatingPercentColumn,
+            playedPercent100PercentColumn, playedPercent100RatingColumn);
     ObservableList<TableColumn<UnplayedDataEntry, Double>> unplayedDoubleColumnList = FXCollections.observableArrayList(
             unplayedFranchisePercentColumn, unplayedFranchiseHoursColumn, unplayedPlatformPercentColumn,
             unplayedPlatformHoursColumn, unplayedGenrePercentColumn, unplayedGenreHoursColumn,
@@ -154,30 +163,31 @@ public class StatsScreen extends HBox {
     //Columns used to set value factory
     ObservableList<TableColumn<?, String>> nameColumns = FXCollections.observableArrayList(
             playedShortTitleColumn, playedFranchiseTitleColumn, playedPlatformTitleColumn,
-            playedGenreTitleColumn, playedPercent100TitleColumn, unplayedFranchiseTitleColumn,
-            unplayedPlatformTitleColumn, unplayedGenreTitleColumn, unplayedDeckTitleColumn);
+            playedGenreTitleColumn, playedCompletionMonthTitleColumn, playedPercent100TitleColumn,
+            unplayedFranchiseTitleColumn, unplayedPlatformTitleColumn, unplayedGenreTitleColumn,
+            unplayedDeckTitleColumn);
     ObservableList<TableColumn<?, Integer>> intNameColumns = FXCollections.observableArrayList(
             playedReleaseYearTitleColumn, playedCompletionYearTitleColumn, playedRatingTitleColumn,
             unplayedReleaseYearTitleColumn
     );
     ObservableList<TableColumn<?, Integer>> countColumns = FXCollections.observableArrayList(
             playedShortCountColumn, playedFranchiseCountColumn, playedPlatformCountColumn,
-            playedGenreCountColumn, playedReleaseYearCountColumn, playedCompletionYearCountColumn,
-            playedRatingCountColumn, playedPercent100CountColumn, unplayedFranchiseCountColumn,
-            unplayedPlatformCountColumn, unplayedGenreCountColumn, unplayedReleaseYearCountColumn,
-            unplayedDeckCountColumn
+            playedGenreCountColumn, playedReleaseYearCountColumn, playedCompletionMonthCountColumn,
+            playedCompletionYearCountColumn, playedRatingCountColumn, playedPercent100CountColumn,
+            unplayedFranchiseCountColumn, unplayedPlatformCountColumn, unplayedGenreCountColumn,
+            unplayedReleaseYearCountColumn, unplayedDeckCountColumn
     );
     ObservableList<TableColumn<?, Double>> percentColumns = FXCollections.observableArrayList(
             playedShortPercentColumn, playedFranchisePercentColumn, playedPlatformPercentColumn,
-            playedGenrePercentColumn, playedReleaseYearPercentColumn, playedCompletionYearPercentColumn,
-            playedRatingPercentColumn, playedPercent100PercentColumn, unplayedFranchisePercentColumn,
-            unplayedPlatformPercentColumn, unplayedGenrePercentColumn, unplayedReleaseYearPercentColumn,
-            unplayedDeckPercentColumn
+            playedGenrePercentColumn, playedReleaseYearPercentColumn, playedCompletionMonthPercentColumn,
+            playedCompletionYearPercentColumn, playedRatingPercentColumn, playedPercent100PercentColumn,
+            unplayedFranchisePercentColumn, unplayedPlatformPercentColumn, unplayedGenrePercentColumn,
+            unplayedReleaseYearPercentColumn, unplayedDeckPercentColumn
     );
     ObservableList<TableColumn<?, Double>> ratingColumns = FXCollections.observableArrayList(
             playedShortRatingColumn, playedFranchiseRatingColumn, playedPlatformRatingColumn,
-            playedGenreRatingColumn, playedReleaseYearRatingColumn, playedCompletionYearRatingColumn,
-            playedPercent100RatingColumn
+            playedGenreRatingColumn, playedReleaseYearRatingColumn, playedCompletionMonthRatingColumn,
+            playedCompletionYearRatingColumn, playedPercent100RatingColumn
     );
     ObservableList<TableColumn<?, Double>> hoursColumns = FXCollections.observableArrayList(
             unplayedFranchiseHoursColumn, unplayedPlatformHoursColumn, unplayedGenreHoursColumn,
@@ -186,17 +196,18 @@ public class StatsScreen extends HBox {
 
     ObservableList<TableView<?>> tableViews = FXCollections.observableArrayList(
             playedShortTable, playedFranchiseTable, playedPlatformTable,
-            playedGenreTable, playedReleaseYearTable, playedCompletionYearTable,
-            playedRatingTable, playedPercent100Table, unplayedFranchiseTable,
-            unplayedPlatformTable, unplayedGenreTable, unplayedReleaseYearTable,
-            unplayedDeckTable
+            playedGenreTable, playedReleaseYearTable, playedCompletionMonthTable,
+            playedCompletionYearTable, playedRatingTable, playedPercent100Table,
+            unplayedFranchiseTable, unplayedPlatformTable, unplayedGenreTable,
+            unplayedReleaseYearTable, unplayedDeckTable
     );
 
     public StatsScreen(Stage parentStage) {
         //GUI
         playedLabel.setStyle("-fx-font-size: 16;-fx-font-weight: bold;");
         playedChoices.getSelectionModel().selectFirst();
-        playedChoices.getItems().addAll("Short Status", "Franchise", "Rating", "Platform", "Genre", "Release Year", "Completion Year", "100% Status");
+        playedChoices.getItems().addAll("Short Status", "Franchise", "Rating", "Platform", "Genre",
+                "Release Year", "Completion Month", "Completion Year", "100% Status");
         playedBox.setAlignment(Pos.CENTER);
         playedBox.setSpacing(5);
         playedBox.setMaxHeight(Double.MAX_VALUE);
@@ -240,6 +251,8 @@ public class StatsScreen extends HBox {
                 playedGenrePercentColumn, playedGenreRatingColumn);
         playedReleaseYearTable.getColumns().addAll(playedReleaseYearTitleColumn, playedReleaseYearCountColumn,
                 playedReleaseYearPercentColumn, playedReleaseYearRatingColumn);
+        playedCompletionMonthTable.getColumns().addAll(playedCompletionMonthTitleColumn, playedCompletionMonthCountColumn,
+                playedCompletionMonthPercentColumn, playedCompletionMonthRatingColumn);
         playedCompletionYearTable.getColumns().addAll(playedCompletionYearTitleColumn, playedCompletionYearCountColumn,
                 playedCompletionYearPercentColumn, playedCompletionYearRatingColumn);
         playedRatingTable.getColumns().addAll(playedRatingTitleColumn, playedRatingCountColumn,
@@ -291,11 +304,16 @@ public class StatsScreen extends HBox {
                     playedBox.getChildren().add(playedReleaseYearTable);
                     break;
                 case 6:
+                    //Completion Month
+                    playedBox.getChildren().remove(playedBox.getChildren().size()-1);
+                    playedBox.getChildren().add(playedCompletionMonthTable);
+                    break;
+                case 7:
                     //Completion Year
                     playedBox.getChildren().remove(playedBox.getChildren().size()-1);
                     playedBox.getChildren().add(playedCompletionYearTable);
                     break;
-                case 7:
+                case 8:
                     //100% Status
                     playedBox.getChildren().remove(playedBox.getChildren().size()-1);
                     playedBox.getChildren().add(playedPercent100Table);
@@ -407,6 +425,7 @@ public class StatsScreen extends HBox {
         playedPlatformTable.setItems(setPlayedPlatGenData(GameLists.platformList, true));
         playedGenreTable.setItems(setPlayedPlatGenData(GameLists.genreList, false));
         playedReleaseYearTable.setItems(setPlayedYearData(true));
+        playedCompletionMonthTable.setItems(setPlayedMonthData());
         playedCompletionYearTable.setItems(setPlayedYearData(false));
         playedRatingTable.setItems(setPlayedRatingData());
         playedPercent100Table.setItems(setPlayedPercentData());
@@ -750,6 +769,100 @@ public class StatsScreen extends HBox {
 
             //Update the percent
             data.setPercent(data.getCount()*1.0 / GameLists.unplayedList.size() * 100);
+        }
+
+        return dataList;
+    }
+
+    private ObservableList<PlayedDataEntry> setPlayedMonthData() {
+        //Local variables
+        ObservableList<PlayedDataEntry> dataList = FXCollections.observableArrayList(); //List to be returned
+        HashMap<Integer, PlayedDataEntry> map = new HashMap<>();                        //Map of every year
+        for(PlayedGame game : GameLists.playedList){
+            //Iterate for each game
+            //Local variables
+            SpecificMonth month = new SpecificMonth(game.getCompletionMonth(), game.getCompletionYear());   //Month of the current game
+
+            if(map.containsKey(month.getNameValue())){
+                //If the current game's month is already in the map, not the first occurrence
+                //Local variables
+                PlayedDataEntry data = map.get(month.getNameValue());   //data entry for the current month
+
+                //increment count
+                data.setCount(data.getCount()+1);
+
+                if(game.getRating()!=0){
+                    //Game has a rating
+                    //Increment rating count
+                    data.setRatingCount(data.getRatingCount() + 1);
+
+                    //Add to the total rating
+                    data.setTotalRating(data.getTotalRating() + game.getRating());
+
+                    //Update the average rating
+                    data.setAverageRating(data.getTotalRating() * 1.0 / data.getRatingCount());
+                }
+
+                //Update the percent
+                data.setPercent(data.getCount()*1.0 / GameLists.playedList.size() * 100);
+
+            }else{
+                //Current game's month is not in the map
+                //Local variables
+                PlayedDataEntry newData = new PlayedDataEntry();    //New data entry for the game's month
+
+                //Set name to month title
+                newData.setName(month.getTitle());
+
+                //Set int name to month name value
+                newData.setIntName(month.getNameValue());
+
+                //Count starts at 1
+                newData.setCount(1);
+
+                //Set percent
+                newData.setPercent(1.0 / GameLists.playedList.size() * 100);
+
+                if(game.getRating()!=0){
+                    //Game has a rating
+                    //Total rating starts at the rating of the current game
+                    newData.setTotalRating(game.getRating());
+
+                    //Rating count starts at 1
+                    newData.setRatingCount(1);
+
+                    //average rating starts at the rating of the current game
+                    newData.setAverageRating(game.getRating()*1.0);
+                }
+
+                //Add game to map
+                map.put(month.getNameValue(), newData);
+
+                //Add month to dataList, keep dataList sorted
+                if (dataList.isEmpty())
+                    //If the dataList is empty, just add it
+                    dataList.add(newData);
+                else {
+                    //There are items in the list of month
+                    //Local variables
+                    boolean placed = false; //Flag if the current item is placed
+
+                    for (int i = 0; i < dataList.size(); i++)
+                        //Iterate for each item in the list of months
+
+                        if(dataList.get(i).getIntName() > month.getNameValue()){
+                            //Compare the value of the current year with one from the month list
+                            dataList.add(i, newData);
+                            placed = true;
+                            break;
+                        }
+
+                    if(!placed)
+                        //If the month was not placed, put it at the end of the list
+                        dataList.add(newData);
+
+                }
+            }
         }
 
         return dataList;
