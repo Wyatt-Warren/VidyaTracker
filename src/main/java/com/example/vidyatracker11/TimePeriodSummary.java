@@ -266,6 +266,38 @@ public abstract class TimePeriodSummary extends VBox {
             }
         });
 
+        platformTitleColumn.setCellFactory(e -> new TableCell<>() {
+            //100% status column cell factory
+            public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (item == null || empty) {
+                    //Cells where there is no data
+                    setText(null);
+                    setStyle("");
+                } else {
+                    //Set text. We remove the digits of the index so it sorts by them but does not display them
+                    setText(item.substring(Integer.toString(GameLists.platformList.size()-1).length()));
+                }
+            }
+        });
+
+        genreTitleColumn.setCellFactory(e -> new TableCell<>() {
+            //100% status column cell factory
+            public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (item == null || empty) {
+                    //Cells where there is no data
+                    setText(null);
+                    setStyle("");
+                } else {
+                    //Set text. We remove the digits of the indexso it sorts by them but does not display them
+                    setText(item.substring(Integer.toString(GameLists.genreList.size()-1).length()));
+                }
+            }
+        });
+
         //Add columns to tables
         gameTable.getColumns().addAll(gameColumns);
         franchiseTable.getColumns().addAll(franchiseTitleColumn, franchiseCountColumn, franchisePercentColumn,
@@ -492,6 +524,15 @@ public abstract class TimePeriodSummary extends VBox {
         //Local variables
         ObservableList<PlayedDataEntry> dataList = FXCollections.observableArrayList(); //List to be returned
         HashMap<String, PlayedDataEntry> map = new HashMap<>();                         //Map of every platform/genre
+        ObservableList<String> platGenList;                                             //List of platforms/genres
+        int digitsToDisplay;                                                            //Number of digits of the index in the title
+
+        if (platform)
+            platGenList = GameLists.platformList;
+        else
+            platGenList = GameLists.genreList;
+
+        digitsToDisplay = Integer.toString(platGenList.size()-1).length();
 
         for(String genPlat : list){
             //Populate the map with platforms or genres
@@ -499,7 +540,7 @@ public abstract class TimePeriodSummary extends VBox {
             PlayedDataEntry newData = new PlayedDataEntry();    //New data for the current genre or platform
 
             //Set item's name
-            newData.setName(genPlat);
+            newData.setName(String.format("%0" + digitsToDisplay + "d", platGenList.indexOf(genPlat))+ genPlat);
 
             //Count starts at 0
             newData.setCount(0);
