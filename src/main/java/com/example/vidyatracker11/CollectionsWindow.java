@@ -312,17 +312,16 @@ public class CollectionsWindow extends VBox {
                     break;
                 case "Short":
                     //Local variables
-                    ObservableList<Game> blankShortList = FXCollections.observableArrayList(playedList); //List of games with blank status, should be mixed with unplayedGames
+                    ObservableList<Game> blankShortList = FXCollections.observableArrayList(); //List of games with blank status, should be mixed with unplayedGames
 
                     for(Game game : playedList){
                         //Remove each game with a status from blankList
                         //Local variables
                         PlayedGame playedGame = (PlayedGame) game;  //Cast to PlayedGame
 
-                        if(playedGame.getShortStatus().equals("Yes") ||
-                                playedGame.getShortStatus().equals("No"))
+                        if(playedGame.getShortStatus().equals("Blank"))
                             //If game has status Yes or No, remove it
-                            blankShortList.remove(game);
+                            blankShortList.add(game);
                     }
 
                     //Remove blankList from games to be sorted with comparator
@@ -359,16 +358,16 @@ public class CollectionsWindow extends VBox {
                     break;
                 case "Rating":
                     //Local variables
-                    ObservableList<Game> blankRatingList = FXCollections.observableArrayList(playedList); //List of games with blank rating, should be mixed with unplayedGames
+                    ObservableList<Game> blankRatingList = FXCollections.observableArrayList(); //List of games with blank rating, should be mixed with unplayedGames
 
                     for(Game game : playedList){
                         //Remove each game with a rating from blankList
                         //Local variables
                         PlayedGame playedGame = (PlayedGame) game;  //Cast to PlayedGame
 
-                        if(playedGame.getRating() != 0)
+                        if(playedGame.getRating() == 0)
                             //If game has rating other than 0, remove it
-                            blankRatingList.remove(game);
+                            blankRatingList.add(game);
                     }
 
                     //Remove blankList from games to be sorted with comparator
@@ -398,16 +397,16 @@ public class CollectionsWindow extends VBox {
                     break;
                 case "Completion Date":
                     //Local variables
-                    ObservableList<Game> blankYearList = FXCollections.observableArrayList(playedList); //List of games with blank completion year, should be mixed with unplayedGames
+                    ObservableList<Game> blankYearList = FXCollections.observableArrayList(); //List of games with blank completion year, should be mixed with unplayedGames
 
                     for(Game game : playedList){
                         //Remove each game with a completion year from blankList
                         //Local variables
                         PlayedGame playedGame = (PlayedGame) game;  //Cast to PlayedGame
 
-                        if(playedGame.getCompletionYear() != 0)
+                        if(playedGame.getCompletionYear() == 0)
                             //If game has year other than 0, remove it
-                            blankYearList.remove(game);
+                            blankYearList.add(game);
                     }
 
                     //Remove blankList from games to be sorted with comparator
@@ -428,17 +427,16 @@ public class CollectionsWindow extends VBox {
                     break;
                 case "100%":
                     //Local variables
-                    ObservableList<Game> blankPercentList = FXCollections.observableArrayList(playedList); //List of games with blank status, should be mixed with unplayedGames
+                    ObservableList<Game> blankPercentList = FXCollections.observableArrayList(); //List of games with blank status, should be mixed with unplayedGames
 
                     for(Game game : playedList){
                         //Remove each game with a status from blankList
                         //Local variables
                         PlayedGame playedGame = (PlayedGame) game;  //Cast to PlayedGame
 
-                        if(playedGame.getPercent100().equals("Yes") ||
-                                playedGame.getPercent100().equals("No"))
+                        if(playedGame.getPercent100().equals("Blank"))
                             //If game has status Yes or No, remove it
-                            blankPercentList.remove(game);
+                            blankPercentList.add(game);
                     }
 
                     //Remove blankList from games to be sorted with comparator
@@ -459,16 +457,16 @@ public class CollectionsWindow extends VBox {
                     break;
                 case "Hours":
                     //Local variables
-                    ObservableList<Game> blankHoursList = FXCollections.observableArrayList(unplayedList); //List of games with blank hours, should be mixed with playedGames
+                    ObservableList<Game> blankHoursList = FXCollections.observableArrayList(); //List of games with blank hours, should be mixed with playedGames
 
                     for(Game game : unplayedList){
                         //Remove each game with hours from blankList
                         //Local variables
                         UnplayedGame unplayedGame = (UnplayedGame) game;  //Cast to UnplayedGame
 
-                        if(unplayedGame.getHours() != 0)
+                        if(unplayedGame.getHours() == 0)
                             //If game has hours other than 0, remove it
-                            blankHoursList.remove(game);
+                            blankHoursList.add(game);
                     }
 
                     //Remove blankList from games to be sorted with comparator
@@ -489,18 +487,16 @@ public class CollectionsWindow extends VBox {
                     break;
                 case "Deck Status":
                     //Local variables
-                    ObservableList<Game> blankDeckList = FXCollections.observableArrayList(unplayedList); //List of games with blank status, should be mixed with playedGames
+                    ObservableList<Game> blankDeckList = FXCollections.observableArrayList(); //List of games with blank status, should be mixed with playedGames
 
                     for(Game game : unplayedList){
                         //Remove each game with a status from blankList
                         //Local variables
                         UnplayedGame unplayedGame = (UnplayedGame) game;  //Cast to UnplayedGame
 
-                        if(unplayedGame.getDeckCompatible().equals("Yes") ||
-                                unplayedGame.getDeckCompatible().equals("No") ||
-                                unplayedGame.getDeckCompatible().equals("Maybe"))
+                        if(unplayedGame.getDeckCompatible().equals("Blank"))
                             //If game has status Yes, No, or Maybe, remove it
-                            blankDeckList.remove(game);
+                            blankDeckList.add(game);
                     }
 
                     //Remove blankList from games to be sorted with comparator
@@ -541,7 +537,7 @@ public class CollectionsWindow extends VBox {
         list.addAll(newList);
     }
 
-    //Sort's by title, but franchises are grouped and sorted by release date
+    //Sorts by title, but franchises are grouped and sorted by release date
     public static ObservableList<Game> basicSort(ObservableList<Game> oldList, boolean title){
         ObservableList<Game> newList = FXCollections.observableArrayList(oldList);
         //Sort by release date first

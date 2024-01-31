@@ -70,9 +70,9 @@ public class TableMethods {
         //Local variables
         PlayedGame p1 = (PlayedGame) o1;                                        //Cast o1 to PlayedGame
         PlayedGame p2 = (PlayedGame) o2;                                        //Cast o2 to PlayedGame
-        String sortBy1 = String.format("%04d%02d%02d", p1.getCompletionYear(),  //String to sort with for o1
+        String sortBy1 = String.format("%010d%02d%02d", p1.getCompletionYear(),  //String to sort with for o1
                 p1.getCompletionMonth(), p1.getCompletionDay());
-        String sortBy2= String.format("%04d%02d%02d", p2.getCompletionYear(),   //String to sort with for o2
+        String sortBy2= String.format("%010d%02d%02d", p2.getCompletionYear(),   //String to sort with for o2
                 p2.getCompletionMonth(), p2.getCompletionDay());
 
         return sortBy1.compareTo(sortBy2);
