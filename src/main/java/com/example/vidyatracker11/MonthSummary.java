@@ -1,6 +1,7 @@
 package com.example.vidyatracker11;
 
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 public class MonthSummary extends TimePeriodSummary{
@@ -8,7 +9,7 @@ public class MonthSummary extends TimePeriodSummary{
     ChoiceBox<String> switchPeriodChoicesMonth = new ChoiceBox<>();
 
     //Fields
-    SpecificMonth thisMonth;                                                            //Month being viewed
+    SpecificMonth thisMonth;    //Month being viewed
 
     public MonthSummary(SpecificMonth month, Stage stage) {
         //Set global variables
@@ -21,12 +22,11 @@ public class MonthSummary extends TimePeriodSummary{
         switchPeriodLabel.setText("Other Months: ");
         switchPeriodButton.setText("View Month Summary");
         switchPeriodBox.getChildren().clear();
-        switchPeriodBox.getChildren().addAll(switchPeriodLabel, switchPeriodChoicesMonth, switchPeriodChoices, switchPeriodButton);
+        switchPeriodBox.getChildren().addAll(previousPeriod, new Label("        "), switchPeriodLabel, switchPeriodChoicesMonth,
+                switchPeriodChoices, switchPeriodButton, new Label("        "), nextPeriod);
 
         //Populate switchPeriodChoices
         //Variables
-        int minMonth = Integer.MAX_VALUE;                           //Lowest month value
-        int maxMonth = ApplicationGUI.localDate.getMonthValue();    //Highest month value
         minYear = Integer.MAX_VALUE;
         maxYear = ApplicationGUI.localDate.getYear();
         noDates = true;
@@ -40,18 +40,9 @@ public class MonthSummary extends TimePeriodSummary{
             //There is at least one game with a completion year and month
             noDates = false;
 
-            if(game.getCompletionYear() < minYear && game.getCompletionMonth() != 0||
-                    (game.getCompletionYear() == minYear && game.getCompletionMonth() < minMonth)) {
+            if(game.getCompletionYear() < minYear && game.getCompletionMonth() != 0) {
                 //New lowest month value
                 minYear = game.getCompletionYear();
-                minMonth = game.getCompletionMonth();
-            }
-
-            if((game.getCompletionYear() > maxYear && game.getCompletionMonth() != 0) ||
-                    (game.getCompletionYear() == maxYear && game.getCompletionMonth() > maxMonth)) {
-                //New highest month value
-                maxYear = game.getCompletionYear();
-                maxMonth = game.getCompletionMonth();
             }
         }
 
@@ -69,6 +60,7 @@ public class MonthSummary extends TimePeriodSummary{
             //There are no completion dates
             switchPeriodButton.setDisable(true);
 
+        //Select the current month
         switchPeriodChoicesMonth.getSelectionModel().select(SpecificMonth.months[thisMonth.getMonth()]);
         switchPeriodChoices.getSelectionModel().select((Integer) thisMonth.getYear());
 
@@ -84,16 +76,57 @@ public class MonthSummary extends TimePeriodSummary{
                 switchPeriodChoices.getItems().get((int) newNum) == ApplicationGUI.localDate.getYear())
         );
 
+        //Select current month again for some reason
         switchPeriodChoicesMonth.getSelectionModel().select(SpecificMonth.months[thisMonth.getMonth()]);
         switchPeriodChoices.getSelectionModel().select((Integer) thisMonth.getYear());
 
         switchPeriodButton.setOnAction(e-> {
+            //Switch to new month
             MonthSummary newMonthSummary =
                     new MonthSummary(
                             new SpecificMonth(switchPeriodChoicesMonth.getSelectionModel().getSelectedIndex() + 1,
                                     switchPeriodChoices.getSelectionModel().getSelectedItem()), stage);
             stage.getScene().setRoot(newMonthSummary);
         });
+
+        //Disable previousPeriod if at the earliest month
+        previousPeriod.setDisable(thisMonth.getYear() == minYear && thisMonth.getMonth() == 1);
+
+        //Disable nextPeriod if at the latest month
+        nextPeriod.setDisable(thisMonth.getYear() == ApplicationGUI.localDate.getYear() && thisMonth.getMonth() >= ApplicationGUI.localDate.getMonthValue() - 1);
+
+        previousPeriod.setOnAction(e -> {
+            //Switch to previous month
+            //Local variables
+            int newMonth = thisMonth.getMonth() - 1;    //Month to change to
+            int newYear = thisMonth.getYear();          //Year to change to
+
+            if(newMonth == 0) {
+                //If current month was January, switch to december and year - 1.
+                newMonth = 12;
+                newYear--;
+            }
+
+            MonthSummary newMonthSummary = new MonthSummary(new SpecificMonth(newMonth, newYear), stage);
+            stage.getScene().setRoot(newMonthSummary);
+        });
+
+        nextPeriod.setOnAction(e -> {
+            //Switch to next month
+            //Local variables
+            int newMonth = thisMonth.getMonth() + 1;    //Month to change to
+            int newYear = thisMonth.getYear();          //Year to change to
+
+            if(newMonth == 13) {
+                //If current month was December, switch to January and year + 1.
+                newMonth = 1;
+                newYear++;
+            }
+
+            MonthSummary newMonthSummary = new MonthSummary(new SpecificMonth(newMonth, newYear), stage);
+            stage.getScene().setRoot(newMonthSummary);
+        });
+
     }
 
     //Set games completed in thisYear and thisMonth

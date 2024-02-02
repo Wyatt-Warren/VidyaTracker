@@ -71,6 +71,8 @@ public abstract class TimePeriodSummary extends VBox {
     HBox tableBox = new HBox(franchiseTable, platformTable, genreTable);
 
     //Switch period
+    Button previousPeriod = new Button("<-");
+    Button nextPeriod = new Button("->");
     Label switchPeriodLabel = new Label();
     //GUI
     ChoiceBox<Integer> switchPeriodChoices = new ChoiceBox<>();
@@ -143,7 +145,8 @@ public abstract class TimePeriodSummary extends VBox {
         tableBox.setAlignment(Pos.CENTER);
         switchPeriodBox.setAlignment(Pos.CENTER);
         switchPeriodBox.setSpacing(10);
-        switchPeriodBox.getChildren().addAll(switchPeriodLabel, switchPeriodChoices, switchPeriodButton);
+        switchPeriodBox.getChildren().addAll(previousPeriod, new Label("        "), switchPeriodLabel, switchPeriodChoices,
+                switchPeriodButton, new Label("        "), nextPeriod);
 
         //Column value factories
         //name

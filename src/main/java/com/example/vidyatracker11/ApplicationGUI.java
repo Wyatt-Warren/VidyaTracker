@@ -1179,64 +1179,146 @@ public class ApplicationGUI extends Application {
         monthSummaryMenuItem.setOnAction(e -> {
             //Open month summary view
             //Local variables
-            Stage stage = new Stage();
-            MonthSummary monthSummary;
-            Scene scene;
-            int currentYear = localDate.getYear();
-            int lastMonth = localDate.getMonthValue()-1;
+            boolean monthsExist = false;    //True if there are games with completion year and month.
 
-            if(lastMonth == 0) {
-                //Loop from january to previous year december
-                lastMonth = 12;
-                currentYear--;
-            }
-
-            //GUI
-            monthSummary = new MonthSummary(new SpecificMonth(lastMonth, currentYear), stage);
-            scene = new Scene(monthSummary);
-            stage.getIcons().add(icon);
-            stage.setResizable(false);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Month Summary");
-            stage.setHeight(screenHeightMain);
-            stage.setWidth(1000);
-            scene.getStylesheets().add(styleSheet);
-            stage.setScene(scene);
-
-            scene.setOnKeyPressed(e1 -> {
-                if (e1.getCode() == KeyCode.ESCAPE) {
-                    //If escape is pressed, close window
-                    stage.close();
+            for(PlayedGame game : GameLists.playedList)
+                if(game.getCompletionYear() != 0 && game.getCompletionMonth() != 0) {
+                    monthsExist = true;
+                    break;
                 }
-            });
 
+            Stage stage = new Stage();
+
+            if(monthsExist) {
+                //There are games with completion year and month.
+                //Local variables
+                MonthSummary monthSummary;
+                Scene scene;
+                int currentYear = localDate.getYear();
+                int lastMonth = localDate.getMonthValue() - 1;
+
+                if (lastMonth == 0) {
+                    //Loop from january to previous year december
+                    lastMonth = 12;
+                    currentYear--;
+                }
+
+                //GUI
+                monthSummary = new MonthSummary(new SpecificMonth(lastMonth, currentYear), stage);
+                scene = new Scene(monthSummary);
+                stage.getIcons().add(icon);
+                stage.setResizable(false);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setTitle("Month Summary");
+                stage.setHeight(screenHeightMain);
+                stage.setWidth(1000);
+                scene.getStylesheets().add(styleSheet);
+                stage.setScene(scene);
+
+                scene.setOnKeyPressed(e1 -> {
+                    if (e1.getCode() == KeyCode.ESCAPE) {
+                        //If escape is pressed, close window
+                        stage.close();
+                    }
+                });
+
+            }else{
+                //There are no games with completion month and year
+                //Local Variables
+                Label label = new Label("");
+                Button button = new Button("Close");
+                VBox vbox = new VBox(label, button);
+                Scene scene = new Scene(vbox);
+
+                //GUI
+                stage.getIcons().add(icon);
+                stage.setTitle("Month Summary");
+                stage.setResizable(false);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(scene);
+                label.setStyle("-fx-font-size: 16;");
+                label.setText("There are no games with completion months.");
+                button.setOnAction(e1 -> stage.close());
+                vbox.setSpacing(10);
+                vbox.setAlignment(Pos.CENTER);
+                vbox.setPadding(new Insets(5));
+                scene.getStylesheets().add(styleSheet);
+
+                scene.setOnKeyPressed(e1 -> {
+                    if (e1.getCode() == KeyCode.ESCAPE || e1.getCode() == KeyCode.ENTER) {
+                        //If escape or ender are pressed, close the window
+                        stage.close();
+                    }
+                });
+            }
             stage.show();
         });
 
         yearSummaryMenuItem.setOnAction(e -> {
             //Open year summary view
-            //Local variables
-            Stage stage = new Stage();
-            YearSummary yearSummary = new YearSummary(localDate.getYear()-1, stage);
-            Scene scene = new Scene(yearSummary);
+            //Local vairables
+            boolean yearsExist = false; //There are games with completion years
 
-            //GUI
-            stage.getIcons().add(icon);
-            stage.setResizable(false);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Year Summary");
-            stage.setHeight(screenHeightMain);
-            stage.setWidth(1000);
-            scene.getStylesheets().add(styleSheet);
-            stage.setScene(scene);
-
-            scene.setOnKeyPressed(e1 -> {
-                if (e1.getCode() == KeyCode.ESCAPE) {
-                    //If escape is pressed, close window
-                    stage.close();
+            for(PlayedGame game : GameLists.playedList)
+                if(game.getCompletionYear() != 0){
+                    yearsExist = true;
+                    break;
                 }
-            });
 
+            Stage stage = new Stage();
+
+            if(yearsExist) {
+                //There are games with completion year.
+                //Local variables
+                YearSummary yearSummary = new YearSummary(localDate.getYear() - 1, stage);
+                Scene scene = new Scene(yearSummary);
+
+                //GUI
+                stage.getIcons().add(icon);
+                stage.setResizable(false);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setTitle("Year Summary");
+                stage.setHeight(screenHeightMain);
+                stage.setWidth(1000);
+                scene.getStylesheets().add(styleSheet);
+                stage.setScene(scene);
+
+                scene.setOnKeyPressed(e1 -> {
+                    if (e1.getCode() == KeyCode.ESCAPE) {
+                        //If escape is pressed, close window
+                        stage.close();
+                    }
+                });
+
+            }else{
+                //There are no games with completion year
+                //Local Variables
+                Label label = new Label("");
+                Button button = new Button("Close");
+                VBox vbox = new VBox(label, button);
+                Scene scene = new Scene(vbox);
+
+                //GUI
+                stage.getIcons().add(icon);
+                stage.setTitle("Year Summary");
+                stage.setResizable(false);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(scene);
+                label.setStyle("-fx-font-size: 16;");
+                label.setText("There are no games with completion years.");
+                button.setOnAction(e1 -> stage.close());
+                vbox.setSpacing(10);
+                vbox.setAlignment(Pos.CENTER);
+                vbox.setPadding(new Insets(5));
+                scene.getStylesheets().add(styleSheet);
+
+                scene.setOnKeyPressed(e1 -> {
+                    if (e1.getCode() == KeyCode.ESCAPE || e1.getCode() == KeyCode.ENTER) {
+                        //If escape or ender are pressed, close the window
+                        stage.close();
+                    }
+                });
+            }
             stage.show();
         });
 
