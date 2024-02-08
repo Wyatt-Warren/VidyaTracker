@@ -3,8 +3,6 @@ package com.example.vidyatracker11;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.nio.charset.StandardCharsets;
-
 //Class that stores each list: played games list, unplayed games list, platform list, genre list, collections list.
 public class GameLists {
     //Fields
@@ -13,6 +11,8 @@ public class GameLists {
     public static ObservableList<String> platformList = FXCollections.observableArrayList("PC");    //List of all platforms
     public static ObservableList<String> genreList = FXCollections.observableArrayList("Action");   //List of all genres
     public static ObservableList<GameCollection> collectionList = FXCollections.observableArrayList();  //List of all collections
+    public static ObservableList<PlayedGameGoal> playedGoalList = FXCollections.observableArrayList();  //List of all played goals
+    public static ObservableList<UnplayedGameGoal> unplayedGoalList = FXCollections.observableArrayList();  //List of all unplayed goals
 
     //Returns the amount of non-short games completed in the given year.
     public static int getCompletedYearCount(int year) {

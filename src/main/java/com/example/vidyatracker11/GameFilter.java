@@ -3,29 +3,41 @@ package com.example.vidyatracker11;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public abstract class gameFilter {
+public abstract class GameFilter {
     //Fields
-    ObservableList<String> possibleStatuses = FXCollections.observableArrayList();
-    ObservableList<String> possibleFranchises = FXCollections.observableArrayList();
-    ObservableList<String> possiblePlatforms = FXCollections.observableArrayList();
-    ObservableList<String> possibleGenres = FXCollections.observableArrayList();
-    ObservableList<String> possibleCollections = FXCollections.observableArrayList();
-    String titleContains = "";
-    int minimumReleaseYear;
-    int maximumReleaseYear;
+    ObservableList<String> possibleStatuses;
+    ObservableList<String> possibleFranchises;
+    ObservableList<String> possiblePlatforms;
+    ObservableList<String> possibleGenres;
+    ObservableList<GameCollection> possibleCollections;
+    String titleContains;
+    int minReleaseYear;
+    int maxReleaseYear;
 
-    public gameFilter(ObservableList<String> possibleStatuses, ObservableList<String> possibleFranchises,
+    public GameFilter(ObservableList<String> possibleStatuses, ObservableList<String> possibleFranchises,
                       ObservableList<String> possiblePlatforms, ObservableList<String> possibleGenres,
-                      ObservableList<String> possibleCollections,
-                      String titleContains, int minimumReleaseYear, int maximumReleaseYear) {
+                      ObservableList<GameCollection> possibleCollections,
+                      String titleContains, int minReleaseYear, int maxReleaseYear) {
         this.possibleStatuses = possibleStatuses;
         this.possibleFranchises = possibleFranchises;
         this.possiblePlatforms = possiblePlatforms;
         this.possibleGenres = possibleGenres;
         this.possibleCollections = possibleCollections;
         this.titleContains = titleContains;
-        this.minimumReleaseYear = minimumReleaseYear;
-        this.maximumReleaseYear = maximumReleaseYear;
+        this.minReleaseYear = minReleaseYear;
+        this.maxReleaseYear = maxReleaseYear;
+    }
+
+    //Returns true if given game is in any selected collection
+    public boolean gameInAnyCollection(Game game){
+        for(GameCollection collection : possibleCollections)
+            //Check each collection for given game
+            if(collection.getGames().contains(game))
+                //Collection contains game
+                return true;
+
+        //Was not found
+        return false;
     }
 
     public ObservableList<String> getPossibleStatuses() {
@@ -44,7 +56,7 @@ public abstract class gameFilter {
         return possibleGenres;
     }
 
-    public ObservableList<String> getPossibleCollections() {
+    public ObservableList<GameCollection> getPossibleCollections() {
         return possibleCollections;
     }
 
@@ -52,12 +64,12 @@ public abstract class gameFilter {
         return titleContains;
     }
 
-    public int getMinimumReleaseYear() {
-        return minimumReleaseYear;
+    public int getMinReleaseYear() {
+        return minReleaseYear;
     }
 
-    public int getMaximumReleaseYear() {
-        return maximumReleaseYear;
+    public int getMaxReleaseYear() {
+        return maxReleaseYear;
     }
 
     public void setPossibleStatuses(ObservableList<String> possibleStatuses) {
@@ -76,7 +88,7 @@ public abstract class gameFilter {
         this.possibleGenres = possibleGenres;
     }
 
-    public void setPossibleCollections(ObservableList<String> possibleCollections) {
+    public void setPossibleCollections(ObservableList<GameCollection> possibleCollections) {
         this.possibleCollections = possibleCollections;
     }
 
@@ -84,11 +96,11 @@ public abstract class gameFilter {
         this.titleContains = titleContains;
     }
 
-    public void setMinimumReleaseYear(int minimumReleaseYear) {
-        this.minimumReleaseYear = minimumReleaseYear;
+    public void setMinReleaseYear(int minReleaseYear) {
+        this.minReleaseYear = minReleaseYear;
     }
 
-    public void setMaximumReleaseYear(int maximumReleaseYear) {
-        this.maximumReleaseYear = maximumReleaseYear;
+    public void setMaxReleaseYear(int maxReleaseYear) {
+        this.maxReleaseYear = maxReleaseYear;
     }
 }

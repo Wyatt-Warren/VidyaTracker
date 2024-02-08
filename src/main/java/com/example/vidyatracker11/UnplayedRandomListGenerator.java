@@ -7,7 +7,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
@@ -79,39 +78,31 @@ public class UnplayedRandomListGenerator extends RandomListGenerator{
                 //There must be a number in lengthField
                 //Local variables
                 Random rand = new Random();
-                ArrayList<UnplayedGame> potentialList = new ArrayList<>();  //List of items that fit the requirements selected
+                UnplayedGameFilter newFilter;               //Filter object used to generate list
+                ObservableList<UnplayedGame> potentialList; //List of items that fit the requirements selected
+                int releaseYearMinValue = 0;
+                int releaseYearMaxValue = Integer.MAX_VALUE;
+                double hoursMinValue = 0;
+                double hoursMaxValue = Double.MAX_VALUE;
+
+                //If text fields for numerical values are empty, they should be 0 or MAX_VALUE, otherwise, they should be inputed text
+                if (!releaseYearMinField.getText().equals(""))
+                    releaseYearMinValue = Integer.parseInt(releaseYearMinField.getText());
+                if (!releaseYearMaxField.getText().equals(""))
+                    releaseYearMaxValue = Integer.parseInt(releaseYearMaxField.getText());
+                if (!hoursMinField.getText().equals(""))
+                    hoursMinValue = Integer.parseInt(hoursMinField.getText());
+                if (!hoursMaxField.getText().equals(""))
+                    hoursMaxValue = Integer.parseInt(hoursMaxField.getText());
+
+                //Create new filter and use it to create list of valid games
+                newFilter = new UnplayedGameFilter(statusView.getItems(), franchiseView.getItems(),
+                        platformView.getItems(), genreView.getItems(), collectionView.getItems(), deckView.getItems(),
+                        titleField.getText(), releaseYearMinValue, releaseYearMaxValue, hoursMinValue, hoursMaxValue);
+                potentialList = newFilter.filteredList();
 
                 //Clear the existing list to generate a new one
                 generatedList.getItems().clear();
-
-                for (UnplayedGame game : GameLists.unplayedList) {
-                    //Iterate for every UnplayedGame
-
-                    if ((statusView.getItems().isEmpty() || statusView.getItems().contains(game.getStatus())) &&
-                            //Status is selected and game matches
-                            (titleField.getText().equals("") || game.getTitle().toLowerCase().contains(titleField.getText().toLowerCase())) &&
-                            //Title is selected and game matches
-                            (franchiseView.getItems().isEmpty() || franchiseView.getItems().contains(game.getFranchise())) &&
-                            //franchise is selected and game matches
-                            (platformView.getItems().isEmpty() || platformView.getItems().contains(game.getPlatform())) &&
-                            //platform is selected and game matches
-                            (genreView.getItems().isEmpty() || genreView.getItems().contains(game.getGenre())) &&
-                            //genre is selected and game matches
-                            (releaseYearMinField.getText().equals("") || game.getReleaseYear() >= Integer.parseInt(releaseYearMinField.getText())) &&
-                            //release year is entered and game is greater or equal
-                            (releaseYearMaxField.getText().equals("") || game.getReleaseYear() <= Integer.parseInt(releaseYearMaxField.getText())) &&
-                            //release year is entered and game is less than or equal
-                            (hoursMinField.getText().equals("") || game.getHours() >= Double.parseDouble(hoursMinField.getText())) &&
-                            //hours is entered and game is greater or equal
-                            (hoursMaxField.getText().equals("") || game.getHours() <= Double.parseDouble(hoursMaxField.getText())) &&
-                            //hours is entered and game is less than or equal
-                            (deckView.getItems().isEmpty() || deckView.getItems().contains(game.getDeckCompatible())) &&
-                            //deck status is selected and game matches
-                            (collectionView.getItems().isEmpty() || gameInCollectionView(game)))
-
-                        //Add valid game to potentialList
-                        potentialList.add(game);
-                }
 
                 if (!potentialList.isEmpty()) {
                     //If there are items that are compatible with filters

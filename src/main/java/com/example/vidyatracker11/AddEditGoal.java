@@ -6,11 +6,11 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class addEditGoal extends VBox {
+public class AddEditGoal extends VBox {
     //GUI
     Label mainLabel = new Label();
-    Button doneButton = new Button();
     HBox mainHBox = new HBox();
+    Button doneButton = new Button();
 
     //Title
     Label titleLabel = new Label("Title:");
@@ -70,8 +70,9 @@ public class addEditGoal extends VBox {
     //Filters
     Button filterButton = new Button("Manage Filters");
 
-    public addEditGoal() {
+    public AddEditGoal() {
         //GUI
+        getChildren().addAll(mainLabel, mainHBox, doneButton);
         mainLabel.setStyle("-fx-font-size: 24;-fx-font-weight: bold;");
         mainHBox.setAlignment(Pos.CENTER);
         titleVBox.setAlignment(Pos.CENTER);
@@ -90,6 +91,7 @@ public class addEditGoal extends VBox {
         progressGoalVBox.setAlignment(Pos.CENTER);
         progressGoalVBox.setSpacing(5);
         mainHBox.setSpacing(5);
+        mainHBox.getChildren().addAll(titleVBox, startDateVBox, endDateVBox, progressStartVBox, progressGoalVBox, filterButton);
         setAlignment(Pos.CENTER);
         setPadding(new Insets(5));
 
@@ -156,16 +158,8 @@ public class addEditGoal extends VBox {
         //Only allow integers for progressStartBox
         progressStartBox.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
 
-        enterCurrentStartProgress.setOnAction(e -> {
-            //TODO
-        });
-
         //Only allow integers for progressGoalBox
         progressGoalBox.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
-
-        enterCurrentGoalProgress.setOnAction(e -> {
-            //TODO
-        });
     }
 
     //Sets the days in day choice boxes based on the month selected

@@ -8,9 +8,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.util.Collections;
-import java.util.Random;
 
-public class PlayedRandomListGenerator extends RandomListGenerator{
+public class PlayedGoalFilterWindow extends GoalFilterWindow{
     //GUI
     //Short
     Label shortLabel = new Label("Possible Short Statuses:");
@@ -46,9 +45,12 @@ public class PlayedRandomListGenerator extends RandomListGenerator{
     ListView<String> percent100View = new ListView<>();
     VBox percent100VBox = new VBox(percent100Label, percent100Box, percent100ButtonBox, percent100View);
 
-    public PlayedRandomListGenerator(){
+    //Fields
+    private PlayedGameFilter filter;
+
+    public PlayedGoalFilterWindow(PlayedGameFilter oldFilter) {
         //GUI
-        layer1HBox.getChildren().addAll(lengthVBox, statusVBox, shortVBox,
+        layer1HBox.getChildren().addAll(statusVBox, shortVBox,
                 titleVBox, franchiseVBox, ratingVBox);
         layer2HBox.getChildren().addAll(platformVBox, genreVBox, releaseYearVBox,
                 completionYearVBox, percent100VBox, collectionVBox);
@@ -66,9 +68,14 @@ public class PlayedRandomListGenerator extends RandomListGenerator{
 
         //Set status values
         statusBox.getItems().addAll("Playing", "Completed", "On Hold");
+        statusView.getItems().addAll(oldFilter.getPossibleStatuses());
 
         //Set short values
         shortBox.getItems().addAll("Yes", "No", "Blank");
+        shortView.getItems().addAll(oldFilter.getPossibleShortStatuses());
+
+        //Set title value
+        titleField.setText(oldFilter.getTitleContains());
 
         //Set franchise values
         ObservableList<String> franchises = FXCollections.observableArrayList();    //List of all franchises
@@ -80,16 +87,34 @@ public class PlayedRandomListGenerator extends RandomListGenerator{
         //Sort franchise list
         Collections.sort(franchises);
         franchiseBox.getItems().addAll(franchises);
+        franchiseView.getItems().addAll(oldFilter.getPossibleFranchises());
 
         //Set rating values
         ratingBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        ratingView.getItems().addAll(oldFilter.getPossibleRatings());
+
+        //Set platform values
+        platformView.getItems().addAll(oldFilter.getPossiblePlatforms());
+
+        //Set genre values
+        genreView.getItems().addAll(oldFilter.getPossibleGenres());
+
+        //Set release year values
+        releaseYearMinField.setText("" + oldFilter.getMinReleaseYear());
+        releaseYearMaxField.setText("" + oldFilter.getMaxReleaseYear());
 
         //Only allow integers for completionYearMinField and completionYearMaxField
         completionYearMinField.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
         completionYearMaxField.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
+        completionYearMinField.setText("" + oldFilter.getMinCompletionYear());
+        completionYearMaxField.setText("" + oldFilter.getMaxCompletionYear());
 
         //Set 100% values
         percent100Box.getItems().addAll("Yes", "No", "Blank");
+        percent100View.getItems().addAll(oldFilter.getPossible100PercentStatuses());
+
+        //Set collection values
+        collectionView.getItems().addAll(oldFilter.getPossibleCollections());
 
         shortAddButton.setOnAction(e -> {
             if (!shortView.getItems().contains(shortBox.getSelectionModel().getSelectedItem()) &&
@@ -121,53 +146,33 @@ public class PlayedRandomListGenerator extends RandomListGenerator{
         //Remove selected item from percent100View
         percent100RemoveButton.setOnAction(e -> percent100View.getItems().remove(percent100View.getSelectionModel().getSelectedItem()));
 
-        generateButton.setOnAction(e -> {
-            //Generate a random list of items based on selected filters
-            if (!lengthField.getText().equals("")) {
-                //There must be a number in lengthField
-                //Local variables
-                Random rand = new Random();
-                PlayedGameFilter newFilter;                 //Filter object used to generate list
-                ObservableList<PlayedGame> potentialList;   //List of items that fit the requirements selected
-                int releaseYearMinValue = 0;
-                int releaseYearMaxValue = Integer.MAX_VALUE;
-                int completionYearMinValue = 0;
-                int completionYearMaxValue = Integer.MAX_VALUE;
+    }
 
-                //If text fields for integer values are empty, they should be 0 or MAX_VALUE, otherwise, they should be inputed text
-                if (!releaseYearMinField.getText().equals(""))
-                    releaseYearMinValue = Integer.parseInt(releaseYearMinField.getText());
-                if (!releaseYearMaxField.getText().equals(""))
-                    releaseYearMaxValue = Integer.parseInt(releaseYearMaxField.getText());
-                if (!completionYearMinField.getText().equals(""))
-                    completionYearMinValue = Integer.parseInt(completionYearMinField.getText());
-                if (!completionYearMaxField.getText().equals(""))
-                    completionYearMaxValue = Integer.parseInt(completionYearMaxField.getText());
+    public void setFilters(){
+        //Local variables
+        int releaseYearMinValue = 0;
+        int releaseYearMaxValue = Integer.MAX_VALUE;
+        int completionYearMinValue = 0;
+        int completionYearMaxValue = Integer.MAX_VALUE;
 
-                //Create new filter and use it to create list of valid games
-                newFilter = new PlayedGameFilter(statusView.getItems(), franchiseView.getItems(),
-                        platformView.getItems(), genreView.getItems(), collectionView.getItems(), shortView.getItems(),
-                        ratingView.getItems(), percent100View.getItems(), titleField.getText(),
-                        releaseYearMinValue, releaseYearMaxValue, completionYearMinValue, completionYearMaxValue);
-                potentialList = newFilter.filteredList();
+        //If text fields for integer values are empty, they should be 0 or MAX_VALUE, otherwise, they should be inputed text
+        if (!releaseYearMinField.getText().equals(""))
+            releaseYearMinValue = Integer.parseInt(releaseYearMinField.getText());
+        if (!releaseYearMaxField.getText().equals(""))
+            releaseYearMaxValue = Integer.parseInt(releaseYearMaxField.getText());
+        if (!completionYearMinField.getText().equals(""))
+            completionYearMinValue = Integer.parseInt(completionYearMinField.getText());
+        if (!completionYearMaxField.getText().equals(""))
+            completionYearMaxValue = Integer.parseInt(completionYearMaxField.getText());
 
-                //Clear the existing list to generate a new one
-                generatedList.getItems().clear();
+        //Create new filter and use it to create list of valid games
+        filter = new PlayedGameFilter(statusView.getItems(), franchiseView.getItems(),
+                platformView.getItems(), genreView.getItems(), collectionView.getItems(), shortView.getItems(),
+                ratingView.getItems(), percent100View.getItems(), titleField.getText(),
+                releaseYearMinValue, releaseYearMaxValue, completionYearMinValue, completionYearMaxValue);
+    }
 
-                if (!potentialList.isEmpty()) {
-                    //If there are items that are compatible with filters
-                    //Local variables
-                    int gameNum = Integer.parseInt(lengthField.getText());  //Amount of games in the list
-
-                    if (gameNum > potentialList.size())
-                        //If there are less possible games than what was entered, only generate as many as possible
-                        gameNum = potentialList.size();
-
-                    for (int i = 0; i < gameNum; i++)
-                        //Add gameNum amount of games to the final list
-                        generatedList.getItems().add(potentialList.remove(rand.nextInt(potentialList.size())).getTitle());
-                }
-            }
-        });
+    public PlayedGameFilter getFilter() {
+        return filter;
     }
 }
