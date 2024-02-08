@@ -53,25 +53,28 @@ public class ApplicationGUI extends Application {
     public static MenuItem editGameMenuItem = new MenuItem("Edit Selected Game");
     public static MenuItem moveGameMenuItem = new MenuItem("Move Selected Game");
     public static MenuItem removeGameMenuItem = new MenuItem("Remove Selected Game");
+    public static MenuItem addTempListMenuItem = new MenuItem("Add Selected Game to Temp List");
     public static MenuItem collectGameMenuItem = new MenuItem("Add Selected Game to Collection");
     public static MenuItem showGameCollectionsMenuItem = new MenuItem("Show Collections Containing Selected Game");
     public static SeparatorMenuItem separatorMenuItem3 = new SeparatorMenuItem();
     public static MenuItem editGenreListMenuItem = new MenuItem("Edit Genre List");
     public static MenuItem editPlatformListMenuItem = new MenuItem("Edit Platform List");
-    public static SeparatorMenuItem separatorMenuItem4 = new SeparatorMenuItem();
+    public static Menu listMenu = new Menu("List");
+
+    //Random Menu
+    public static MenuItem chooseRandomGameMenuItem = new MenuItem("Choose a Random Game to Replay");
+    public static MenuItem generateRandomListMenuItem = new MenuItem("Generate a Random List of Games Based on Filters");
+    public static MenuItem chooseRandomFromList = new MenuItem("Choose a Random Game From the Temp List");
+    public static Menu randomMenu = new Menu("Random");
+
+    //Misc Menu
     public static MenuItem monthSummaryMenuItem = new MenuItem("Show Month Summary");
     public static MenuItem yearSummaryMenuItem = new MenuItem("Show Year Summary");
     public static SeparatorMenuItem separatorMenuItem6 =  new SeparatorMenuItem();
     public static MenuItem statsMenuItem = new MenuItem("Show Stats Window");
     public static MenuItem collectionsMenuItem = new MenuItem("Show Collections Window");
     public static MenuItem achievementsMenuItem = new MenuItem("Show Achievements Window");
-    public static Menu listMenu = new Menu("List");
-
-    //Random Menu
-    public static MenuItem chooseRandomGameMenuItem = new MenuItem("Choose a Random Game to Replay");
-    public static MenuItem generateRandomListMenuItem = new MenuItem("Generate a Random List of Games Based on Filters");
-    public static MenuItem chooseRandomFromList = new MenuItem("Choose a Random Game From the Small List");
-    public static Menu randomMenu = new Menu("Random");
+    public static Menu miscMenu = new Menu("Misc");
 
     //Played Window
     public static StatusCountBoxPlayed statusCountBoxPlayed = new StatusCountBoxPlayed();
@@ -110,7 +113,7 @@ public class ApplicationGUI extends Application {
     //Main GUI
     public static final int screenWidthMain = 1500;
     public static final int screenHeightMain = 800;
-    public static MenuBar menuBar = new MenuBar(fileMenu, listMenu, randomMenu);
+    public static MenuBar menuBar = new MenuBar(fileMenu, listMenu, randomMenu, miscMenu);
     public static VBox primarySceneVBox = new VBox(menuBar, playedWindow);
     public static Scene primaryScene = new Scene(primarySceneVBox, screenWidthMain, screenHeightMain);
     public static Stage primaryStage;
@@ -118,7 +121,7 @@ public class ApplicationGUI extends Application {
     //Other
     public static ContextMenu rowContextMenu = new ContextMenu(addNewGameMenuItem,                      //Right click menu for each TableView
             editGameMenuItem, moveGameMenuItem, removeGameMenuItem,
-            collectGameMenuItem, showGameCollectionsMenuItem);
+            addTempListMenuItem, collectGameMenuItem, showGameCollectionsMenuItem);
     public static FileChooser fileChooser = new FileChooser();                                          //FileChooser for opening files
     public static String styleSheet = "style.css";                                                      //Stylesheet for all GUI
     public static Image icon = new Image(                                                               //Icon for each window
@@ -426,12 +429,12 @@ public class ApplicationGUI extends Application {
         fileMenu.getItems().addAll(newFileMenuItem, openFileMenuItem, separatorMenuItem,
                 saveFileMenuItem, saveAsFileMenuItem, separatorMenuItem5, exitMenuItem);
         listMenu.getItems().addAll(addNewGameMenuItem, editGameMenuItem, moveGameMenuItem,
-                removeGameMenuItem, collectGameMenuItem, showGameCollectionsMenuItem,
-                separatorMenuItem3, editGenreListMenuItem, editPlatformListMenuItem,
-                separatorMenuItem4, monthSummaryMenuItem, yearSummaryMenuItem,
-                separatorMenuItem6, statsMenuItem, collectionsMenuItem,
-                achievementsMenuItem);
+                removeGameMenuItem, addTempListMenuItem, collectGameMenuItem,
+                showGameCollectionsMenuItem, separatorMenuItem3, editGenreListMenuItem,
+                editPlatformListMenuItem);
         randomMenu.getItems().addAll(chooseRandomGameMenuItem, chooseRandomFromList, generateRandomListMenuItem);
+        miscMenu.getItems().addAll(monthSummaryMenuItem, yearSummaryMenuItem, separatorMenuItem6,
+                statsMenuItem, collectionsMenuItem, achievementsMenuItem);
 
         newFileMenuItem.setOnAction(e -> {
             //Reset all lists.
@@ -895,6 +898,14 @@ public class ApplicationGUI extends Application {
 
                 stage.show();
             }
+        });
+
+        addTempListMenuItem.setOnAction(e -> {
+            //Add a game to the temp list
+            if(playedOpen)
+                playedTempList.addButton.fire();
+            else
+                unplayedTempList.addButton.fire();
         });
 
         collectGameMenuItem.setOnAction(e -> {
@@ -1603,6 +1614,8 @@ public class ApplicationGUI extends Application {
         moveGameMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.M,
                 KeyCombination.CONTROL_DOWN));
         removeGameMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.R,
+                KeyCombination.CONTROL_DOWN));
+        addTempListMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.T,
                 KeyCombination.CONTROL_DOWN));
         collectGameMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.C,
                 KeyCombination.CONTROL_DOWN));
