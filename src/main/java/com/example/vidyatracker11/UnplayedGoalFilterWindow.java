@@ -54,8 +54,14 @@ public class UnplayedGoalFilterWindow extends GoalFilterWindow{
         genreView.getItems().addAll(oldFilter.getPossibleGenres());
 
         //Set release year values
-        releaseYearMinField.setText("" + oldFilter.getMinReleaseYear());
-        releaseYearMaxField.setText("" + oldFilter.getMaxReleaseYear());
+        if(oldFilter.getMinReleaseYear() == 0)
+            releaseYearMinField.setText("");
+        else
+            releaseYearMinField.setText("" + oldFilter.getMinReleaseYear());
+        if(oldFilter.getMaxReleaseYear() == Integer.MAX_VALUE)
+            releaseYearMaxField.setText("");
+        else
+            releaseYearMaxField.setText("" + oldFilter.getMaxReleaseYear());
 
         //Set franchise values
         ObservableList<String> franchises = FXCollections.observableArrayList();    //List of all franchises
@@ -104,7 +110,7 @@ public class UnplayedGoalFilterWindow extends GoalFilterWindow{
         //If text fields for numerical values are empty, they should be 0 or MAX_VALUE, otherwise, they should be inputed text
         if (!releaseYearMinField.getText().equals(""))
             releaseYearMinValue = Integer.parseInt(releaseYearMinField.getText());
-        if (!releaseYearMaxField.getText().equals(""))
+        if (!(releaseYearMaxField.getText().equals("") || releaseYearMaxField.getText().equals("0")))
             releaseYearMaxValue = Integer.parseInt(releaseYearMaxField.getText());
         if (!hoursMinField.getText().equals(""))
             hoursMinValue = Integer.parseInt(hoursMinField.getText());

@@ -57,12 +57,12 @@ public abstract class GameGoal {
         return endDay;
     }
 
-    public int getStartProgress() {
-        return startProgress;
-    }
-
     public int getGoalProgress() {
         return goalProgress;
+    }
+
+    public int getStartProgress() {
+        return startProgress;
     }
 
     public void setTitle(String title) {
@@ -93,11 +93,11 @@ public abstract class GameGoal {
         this.endDay = endDay;
     }
 
-    public void setStartProgress(int startProgress) {
-        this.startProgress = startProgress;
-    }
-
     public void setGoalProgress(int goalProgress) {
         this.goalProgress = goalProgress;
+    }
+
+    public void setStartProgress(int startProgress) {
+        this.startProgress = startProgress;
     }
 }

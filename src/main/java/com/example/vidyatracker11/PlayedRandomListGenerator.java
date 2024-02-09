@@ -103,7 +103,7 @@ public class PlayedRandomListGenerator extends RandomListGenerator{
 
         ratingAddButton.setOnAction(e -> {
             if (!ratingView.getItems().contains(ratingBox.getSelectionModel().getSelectedItem()) &&
-                    shortBox.getSelectionModel().getSelectedItem() != null)
+                    ratingBox.getSelectionModel().getSelectedItem() != null)
                 //When ratingAddButton is pressed, If an item is selected, and it is not already in ratingView, add it to ratingView
                 ratingView.getItems().add(ratingBox.getSelectionModel().getSelectedItem());
         });
@@ -113,7 +113,7 @@ public class PlayedRandomListGenerator extends RandomListGenerator{
 
         percent100AddButton.setOnAction(e -> {
             if (!percent100View.getItems().contains(percent100Box.getSelectionModel().getSelectedItem()) &&
-                    shortBox.getSelectionModel().getSelectedItem() != null)
+                    percent100Box.getSelectionModel().getSelectedItem() != null)
                 //When percent100AddButton is pressed, If an item is selected, and it is not already in percent100View, add it to percent100View
                 percent100View.getItems().add(percent100Box.getSelectionModel().getSelectedItem());
         });

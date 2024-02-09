@@ -29,13 +29,6 @@ public class PlayedGoalFilterWindow extends GoalFilterWindow{
     ListView<Integer> ratingView = new ListView<>();
     VBox ratingVBox = new VBox(ratingLabel, ratingBox, ratingButtonBox, ratingView);
 
-    //Completion Year
-    Label completionYearMinLabel = new Label("Min Completion Year:");
-    TextField completionYearMinField = new TextField();
-    Label completionYearMaxLabel = new Label("Max Completion Year:");
-    TextField completionYearMaxField = new TextField();
-    VBox completionYearVBox = new VBox(completionYearMinLabel, completionYearMinField, completionYearMaxLabel,
-            completionYearMaxField);
     //100 Percent
     Label percent100Label = new Label("Possible 100% Statuses:");
     ChoiceBox<String> percent100Box = new ChoiceBox<>();
@@ -53,17 +46,15 @@ public class PlayedGoalFilterWindow extends GoalFilterWindow{
         layer1HBox.getChildren().addAll(statusVBox, shortVBox,
                 titleVBox, franchiseVBox, ratingVBox);
         layer2HBox.getChildren().addAll(platformVBox, genreVBox, releaseYearVBox,
-                completionYearVBox, percent100VBox, collectionVBox);
+                percent100VBox, collectionVBox);
         shortButtonBox.setAlignment(Pos.CENTER);
         ratingButtonBox.setAlignment(Pos.CENTER);
         percent100ButtonBox.setAlignment(Pos.CENTER);
         shortVBox.setAlignment(Pos.TOP_CENTER);
         ratingVBox.setAlignment(Pos.TOP_CENTER);
-        completionYearVBox.setAlignment(Pos.TOP_CENTER);
         percent100VBox.setAlignment(Pos.TOP_CENTER);
         shortVBox.setSpacing(5.0);
         ratingVBox.setSpacing(5.0);
-        completionYearVBox.setSpacing(5.0);
         percent100VBox.setSpacing(5.0);
 
         //Set status values
@@ -100,14 +91,14 @@ public class PlayedGoalFilterWindow extends GoalFilterWindow{
         genreView.getItems().addAll(oldFilter.getPossibleGenres());
 
         //Set release year values
-        releaseYearMinField.setText("" + oldFilter.getMinReleaseYear());
-        releaseYearMaxField.setText("" + oldFilter.getMaxReleaseYear());
-
-        //Only allow integers for completionYearMinField and completionYearMaxField
-        completionYearMinField.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
-        completionYearMaxField.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
-        completionYearMinField.setText("" + oldFilter.getMinCompletionYear());
-        completionYearMaxField.setText("" + oldFilter.getMaxCompletionYear());
+        if(oldFilter.getMinReleaseYear() == 0)
+            releaseYearMinField.setText("");
+        else
+            releaseYearMinField.setText("" + oldFilter.getMinReleaseYear());
+        if(oldFilter.getMaxReleaseYear() == Integer.MAX_VALUE)
+            releaseYearMaxField.setText("");
+        else
+            releaseYearMaxField.setText("" + oldFilter.getMaxReleaseYear());
 
         //Set 100% values
         percent100Box.getItems().addAll("Yes", "No", "Blank");
@@ -128,7 +119,7 @@ public class PlayedGoalFilterWindow extends GoalFilterWindow{
 
         ratingAddButton.setOnAction(e -> {
             if (!ratingView.getItems().contains(ratingBox.getSelectionModel().getSelectedItem()) &&
-                    shortBox.getSelectionModel().getSelectedItem() != null)
+                    ratingBox.getSelectionModel().getSelectedItem() != null)
                 //When ratingAddButton is pressed, If an item is selected, and it is not already in ratingView, add it to ratingView
                 ratingView.getItems().add(ratingBox.getSelectionModel().getSelectedItem());
         });
@@ -138,7 +129,7 @@ public class PlayedGoalFilterWindow extends GoalFilterWindow{
 
         percent100AddButton.setOnAction(e -> {
             if (!percent100View.getItems().contains(percent100Box.getSelectionModel().getSelectedItem()) &&
-                    shortBox.getSelectionModel().getSelectedItem() != null)
+                    percent100Box.getSelectionModel().getSelectedItem() != null)
                 //When percent100AddButton is pressed, If an item is selected, and it is not already in percent100View, add it to percent100View
                 percent100View.getItems().add(percent100Box.getSelectionModel().getSelectedItem());
         });
@@ -152,24 +143,18 @@ public class PlayedGoalFilterWindow extends GoalFilterWindow{
         //Local variables
         int releaseYearMinValue = 0;
         int releaseYearMaxValue = Integer.MAX_VALUE;
-        int completionYearMinValue = 0;
-        int completionYearMaxValue = Integer.MAX_VALUE;
 
         //If text fields for integer values are empty, they should be 0 or MAX_VALUE, otherwise, they should be inputed text
         if (!releaseYearMinField.getText().equals(""))
             releaseYearMinValue = Integer.parseInt(releaseYearMinField.getText());
-        if (!releaseYearMaxField.getText().equals(""))
+        if (!(releaseYearMaxField.getText().equals("") || releaseYearMaxField.getText().equals("0")))
             releaseYearMaxValue = Integer.parseInt(releaseYearMaxField.getText());
-        if (!completionYearMinField.getText().equals(""))
-            completionYearMinValue = Integer.parseInt(completionYearMinField.getText());
-        if (!completionYearMaxField.getText().equals(""))
-            completionYearMaxValue = Integer.parseInt(completionYearMaxField.getText());
 
         //Create new filter and use it to create list of valid games
         filter = new PlayedGameFilter(statusView.getItems(), franchiseView.getItems(),
                 platformView.getItems(), genreView.getItems(), collectionView.getItems(), shortView.getItems(),
                 ratingView.getItems(), percent100View.getItems(), titleField.getText(),
-                releaseYearMinValue, releaseYearMaxValue, completionYearMinValue, completionYearMaxValue);
+                releaseYearMinValue, releaseYearMaxValue, 0, Integer.MAX_VALUE);
     }
 
     public PlayedGameFilter getFilter() {

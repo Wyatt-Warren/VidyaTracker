@@ -6,11 +6,12 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class AddEditGoal extends VBox {
+public abstract class AddEditGoal extends VBox {
     //GUI
     Label mainLabel = new Label();
     HBox mainHBox = new HBox();
-    Button doneButton = new Button();
+    Label warningLabel = new Label();
+    Button doneButton = new Button("Save Changes and Close Window");
 
     //Title
     Label titleLabel = new Label("Title:");
@@ -36,7 +37,7 @@ public class AddEditGoal extends VBox {
             startDayHBox, startCurrentDateButton);
 
     //End Date
-    Label endDateLabel = new Label("Start Date:");
+    Label endDateLabel = new Label("End Date:");
     //Year
     Label endYearLabel = new Label("Year:");
     TextField endYearBox = new TextField();
@@ -54,14 +55,14 @@ public class AddEditGoal extends VBox {
             endDayHBox, endCurrentDateButton);
 
     //Progress Start
-    Label progressStartLabel = new Label("Progress Start:");
+    Label progressStartLabel = new Label("Start Progress:");
     TextField progressStartBox = new TextField();
     HBox progressStartHBox = new HBox(progressStartLabel, progressStartBox);
     Button enterCurrentStartProgress = new Button("Enter Current Progress");
     VBox progressStartVBox = new VBox(progressStartHBox, enterCurrentStartProgress);
 
     //Progress Goal
-    Label progressGoalLabel = new Label("Progress Goal:");
+    Label progressGoalLabel = new Label("Goal:");
     TextField progressGoalBox = new TextField();
     HBox progressGoalHBox = new HBox(progressGoalLabel, progressGoalBox);
     Button enterCurrentGoalProgress = new Button("Enter Current Progress");
@@ -72,9 +73,10 @@ public class AddEditGoal extends VBox {
 
     public AddEditGoal() {
         //GUI
-        getChildren().addAll(mainLabel, mainHBox, doneButton);
+        getChildren().addAll(mainLabel, mainHBox, warningLabel, doneButton);
         mainLabel.setStyle("-fx-font-size: 24;-fx-font-weight: bold;");
         mainHBox.setAlignment(Pos.CENTER);
+        mainHBox.setSpacing(10);
         titleVBox.setAlignment(Pos.CENTER);
         startYearHBox.setAlignment(Pos.CENTER);
         startMonthHBox.setAlignment(Pos.CENTER);
@@ -94,16 +96,16 @@ public class AddEditGoal extends VBox {
         mainHBox.getChildren().addAll(titleVBox, startDateVBox, endDateVBox, progressStartVBox, progressGoalVBox, filterButton);
         setAlignment(Pos.CENTER);
         setPadding(new Insets(5));
+        setSpacing(10);
 
         //Only allow integers for startYearBox
         startYearBox.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
 
         //Update releaseDayBox if value is changed
-        startYearBox.textProperty().addListener(e ->
-                setDayCount(startMonthBox.getSelectionModel().getSelectedItem(), startDayBox, startYearBox));
+        startYearBox.textProperty().addListener(e -> setDayCount(startMonthBox.getSelectionModel().getSelectedItem(), startDayBox, startYearBox));
 
         //Set start month
-        startMonthBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+        startMonthBox.getItems().addAll(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
 
         startMonthBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
             //setDayCount when month is changed
@@ -119,10 +121,10 @@ public class AddEditGoal extends VBox {
             startYearBox.setText("" + ApplicationGUI.localDate.getYear());
 
             //Set month
-            startMonthBox.getSelectionModel().select(ApplicationGUI.localDate.getMonthValue());
+            startMonthBox.getSelectionModel().select(ApplicationGUI.localDate.getMonthValue() - 1);
 
             //Set day
-            startDayBox.getSelectionModel().select(ApplicationGUI.localDate.getDayOfMonth());
+            startDayBox.getSelectionModel().select(ApplicationGUI.localDate.getDayOfMonth() - 1);
         });
 
         //Only allow integers for endYearBox
@@ -133,7 +135,7 @@ public class AddEditGoal extends VBox {
                 setDayCount(endMonthBox.getSelectionModel().getSelectedItem(), endDayBox, endYearBox));
 
         //Set end month
-        endMonthBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+        endMonthBox.getItems().addAll(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
 
         endMonthBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
             //setDayCount when month is changed
@@ -149,14 +151,11 @@ public class AddEditGoal extends VBox {
             endYearBox.setText("" + ApplicationGUI.localDate.getYear());
 
             //Set month
-            endMonthBox.getSelectionModel().select(ApplicationGUI.localDate.getMonthValue());
+            endMonthBox.getSelectionModel().select(ApplicationGUI.localDate.getMonthValue() - 1);
 
             //Set day
-            endDayBox.getSelectionModel().select(ApplicationGUI.localDate.getDayOfMonth());
+            endDayBox.getSelectionModel().select(ApplicationGUI.localDate.getDayOfMonth() - 1);
         });
-
-        //Only allow integers for progressStartBox
-        progressStartBox.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
 
         //Only allow integers for progressGoalBox
         progressGoalBox.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
@@ -209,7 +208,7 @@ public class AddEditGoal extends VBox {
 
         //Set dayBox values
         dayBox.getItems().clear();
-        for (int i = 0; i <= dayCount; i++)
+        for (int i = 1; i <= dayCount; i++)
             //Add each day individually
             dayBox.getItems().add(i);
 

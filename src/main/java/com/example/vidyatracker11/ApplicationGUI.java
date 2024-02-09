@@ -74,6 +74,9 @@ public class ApplicationGUI extends Application {
     public static MenuItem statsMenuItem = new MenuItem("Show Stats Window");
     public static MenuItem collectionsMenuItem = new MenuItem("Show Collections Window");
     public static MenuItem achievementsMenuItem = new MenuItem("Show Achievements Window");
+    public static SeparatorMenuItem separatorMenuItem7 = new SeparatorMenuItem();
+    public static MenuItem playedGoalsMenuItem = new MenuItem("Show Played Game Goals");
+    public static MenuItem unplayedGoalsMenuItem = new MenuItem("Show Unplayed Game Goals");
     public static Menu miscMenu = new Menu("Misc");
 
     //Played Window
@@ -434,7 +437,8 @@ public class ApplicationGUI extends Application {
                 editPlatformListMenuItem);
         randomMenu.getItems().addAll(chooseRandomGameMenuItem, chooseRandomFromList, generateRandomListMenuItem);
         miscMenu.getItems().addAll(monthSummaryMenuItem, yearSummaryMenuItem, separatorMenuItem6,
-                statsMenuItem, collectionsMenuItem, achievementsMenuItem);
+                statsMenuItem, collectionsMenuItem, achievementsMenuItem, separatorMenuItem7, playedGoalsMenuItem,
+                unplayedGoalsMenuItem);
 
         newFileMenuItem.setOnAction(e -> {
             //Reset all lists.
@@ -1187,6 +1191,177 @@ public class ApplicationGUI extends Application {
             stage.show();
         });
 
+        chooseRandomGameMenuItem.setOnAction(e -> {
+            //Chooses a random game from the unplayed list with the status "Backlog", or "Subbacklog"
+            //Local variables
+            ArrayList<String> gameList = new ArrayList<>(); //List of games to choose from
+
+            if(playedOpen){
+                //Played games
+                for (int i = 0; i < GameLists.playedList.size(); i++)
+                    //Iterate through each game
+                    if ((GameLists.playedList.get(i)).getStatus().equals("Completed"))
+                        //If game is not from wishlist, add it to gameList
+                        gameList.add((GameLists.playedList.get(i)).getTitle());
+            }else{
+                //Unplayed games
+                for (int i = 0; i < GameLists.unplayedList.size(); i++)
+                    //Iterate through each game
+                    if ((GameLists.unplayedList.get(i)).getStatus().equals("Backlog") ||
+                            (GameLists.unplayedList.get(i)).getStatus().equals("SubBacklog"))
+                        //If game is not from wishlist, add it to gameList
+                        gameList.add((GameLists.unplayedList.get(i)).getTitle());
+            }
+
+            if (gameList.size() > 0) {
+                //If there are any games to choose from
+                //Local variables
+                Random rand = new Random();
+                Stage stage = new Stage();
+                Label label = new Label("");
+                Button button = new Button("Close");
+                VBox vbox = new VBox(label, button);
+                Scene scene = new Scene(vbox);
+
+                //GUI
+                stage.getIcons().add(icon);
+                stage.setTitle("Random Game");
+                stage.setResizable(false);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(scene);
+                label.setStyle("-fx-font-size: 16;");
+                label.setText(gameList.get(rand.nextInt(gameList.size())));
+                button.setOnAction(e1 -> stage.close());
+                vbox.setSpacing(10);
+                vbox.setAlignment(Pos.CENTER);
+                vbox.setPadding(new Insets(5));
+                scene.getStylesheets().add(styleSheet);
+
+                scene.setOnKeyPressed(e1 -> {
+                    if (e1.getCode() == KeyCode.ESCAPE || e1.getCode() == KeyCode.ENTER) {
+                        //If enter or escape are pressed, exit the window
+                        stage.close();
+                    }
+                });
+
+                stage.show();
+            }
+        });
+
+        chooseRandomFromList.setOnAction(e -> {
+            //Chooses a random game from the temporary list.
+            if (playedOpen){
+                //playedTempList
+                if (playedTempList.getGames().size() > 0) {
+                    //There are games
+                    //Local variables
+                    Random rand = new Random();
+                    Stage stage = new Stage();
+                    Label label = new Label("");
+                    Button button = new Button("Close");
+                    VBox vbox = new VBox(label, button);
+                    Scene scene = new Scene(vbox);
+
+                    //GUI
+                    stage.getIcons().add(icon);
+                    stage.setTitle("Random Game");
+                    stage.setResizable(false);
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    stage.setScene(scene);
+                    label.setStyle("-fx-font-size: 16;");
+                    label.setText(playedTempList.getGames().get(rand.nextInt(playedTempList.getGames().size())).getTitle());
+                    button.setOnAction(e1 -> stage.close());
+                    vbox.setSpacing(10);
+                    vbox.setAlignment(Pos.CENTER);
+                    vbox.setPadding(new Insets(5));
+                    scene.getStylesheets().add(styleSheet);
+
+                    scene.setOnKeyPressed(e1 -> {
+                        if (e1.getCode() == KeyCode.ESCAPE || e1.getCode() == KeyCode.ENTER) {
+                            //If escape or ender are pressed, close the window
+                            stage.close();
+                        }
+                    });
+
+                    stage.show();
+                }
+            }else {
+                //unplayedTempList
+                if (unplayedTempList.getGames().size() > 0) {
+                    //There are games
+                    //Local variables
+                    Random rand = new Random();
+                    Stage stage = new Stage();
+                    Label label = new Label("");
+                    Button button = new Button("Close");
+                    VBox vbox = new VBox(label, button);
+                    Scene scene = new Scene(vbox);
+
+                    //GUI
+                    stage.getIcons().add(icon);
+                    stage.setTitle("Random Game");
+                    stage.setResizable(false);
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    stage.setScene(scene);
+                    label.setStyle("-fx-font-size: 16;");
+                    label.setText(unplayedTempList.getGames().get(rand.nextInt(unplayedTempList.getGames().size())).getTitle());
+                    button.setOnAction(e1 -> stage.close());
+                    vbox.setSpacing(10);
+                    vbox.setAlignment(Pos.CENTER);
+                    vbox.setPadding(new Insets(5));
+                    scene.getStylesheets().add(styleSheet);
+
+                    scene.setOnKeyPressed(e1 -> {
+                        if (e1.getCode() == KeyCode.ESCAPE || e1.getCode() == KeyCode.ENTER) {
+                            //If escape or ender are pressed, close the window
+                            stage.close();
+                        }
+                    });
+
+                    stage.show();
+                }
+            }
+        });
+
+        generateRandomListMenuItem.setOnAction(e -> {
+            //Generates a random list of unplayed games based on filters provided by the user.
+            //Local variables
+            Stage stage = new Stage();
+            RandomListGenerator window;
+            Scene scene;
+
+            if(playedOpen){
+                //Played game list generator
+                window = new PlayedRandomListGenerator();
+                scene = new Scene(window, 1300, 750);
+            }else{
+                //Unplayed game list generator
+                window = new UnplayedRandomListGenerator();
+                scene = new Scene(window, 1000, 750);
+            }
+
+
+            //GUI
+            stage.getIcons().add(icon);
+            stage.setTitle("Random Game List");
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(scene);
+            scene.getStylesheets().add(styleSheet);
+
+            scene.setOnKeyPressed(e1 -> {
+                if (e1.getCode() == KeyCode.ESCAPE) {
+                    //If escape is pressed, close the window
+                    stage.close();
+                } else if (e1.getCode() == KeyCode.ENTER) {
+                    //If enter is pressed, generate a list
+                    window.generateButton.fire();
+                }
+            });
+
+            stage.show();
+        });
+
         monthSummaryMenuItem.setOnAction(e -> {
             //Open month summary view
             //Local variables
@@ -1399,175 +1574,26 @@ public class ApplicationGUI extends Application {
                     achievementBox.labelBox.setMinWidth(500-achievementBox.titleLabel.getBoundsInParent().getWidth());
         });
 
-        chooseRandomGameMenuItem.setOnAction(e -> {
-            //Chooses a random game from the unplayed list with the status "Backlog", or "Subbacklog"
-            //Local variables
-            ArrayList<String> gameList = new ArrayList<>(); //List of games to choose from
-
-            if(playedOpen){
-                //Played games
-                for (int i = 0; i < GameLists.playedList.size(); i++)
-                    //Iterate through each game
-                    if ((GameLists.playedList.get(i)).getStatus().equals("Completed"))
-                        //If game is not from wishlist, add it to gameList
-                        gameList.add((GameLists.playedList.get(i)).getTitle());
-            }else{
-                //Unplayed games
-                for (int i = 0; i < GameLists.unplayedList.size(); i++)
-                    //Iterate through each game
-                    if ((GameLists.unplayedList.get(i)).getStatus().equals("Backlog") ||
-                            (GameLists.unplayedList.get(i)).getStatus().equals("SubBacklog"))
-                        //If game is not from wishlist, add it to gameList
-                        gameList.add((GameLists.unplayedList.get(i)).getTitle());
-            }
-
-            if (gameList.size() > 0) {
-                //If there are any games to choose from
-                //Local variables
-                Random rand = new Random();
-                Stage stage = new Stage();
-                Label label = new Label("");
-                Button button = new Button("Close");
-                VBox vbox = new VBox(label, button);
-                Scene scene = new Scene(vbox);
-
-                //GUI
-                stage.getIcons().add(icon);
-                stage.setTitle("Random Game");
-                stage.setResizable(false);
-                stage.initModality(Modality.APPLICATION_MODAL);
-                stage.setScene(scene);
-                label.setStyle("-fx-font-size: 16;");
-                label.setText(gameList.get(rand.nextInt(gameList.size())));
-                button.setOnAction(e1 -> stage.close());
-                vbox.setSpacing(10);
-                vbox.setAlignment(Pos.CENTER);
-                vbox.setPadding(new Insets(5));
-                scene.getStylesheets().add(styleSheet);
-
-                scene.setOnKeyPressed(e1 -> {
-                    if (e1.getCode() == KeyCode.ESCAPE || e1.getCode() == KeyCode.ENTER) {
-                        //If enter or escape are pressed, exit the window
-                        stage.close();
-                    }
-                });
-
-                stage.show();
-            }
-        });
-
-        chooseRandomFromList.setOnAction(e -> {
-            //Chooses a random game from the temporary list.
-            if (playedOpen){
-                //playedTempList
-                if (playedTempList.getGames().size() > 0) {
-                    //There are games
-                    //Local variables
-                    Random rand = new Random();
-                    Stage stage = new Stage();
-                    Label label = new Label("");
-                    Button button = new Button("Close");
-                    VBox vbox = new VBox(label, button);
-                    Scene scene = new Scene(vbox);
-
-                    //GUI
-                    stage.getIcons().add(icon);
-                    stage.setTitle("Random Game");
-                    stage.setResizable(false);
-                    stage.initModality(Modality.APPLICATION_MODAL);
-                    stage.setScene(scene);
-                    label.setStyle("-fx-font-size: 16;");
-                    label.setText(playedTempList.getGames().get(rand.nextInt(playedTempList.getGames().size())).getTitle());
-                    button.setOnAction(e1 -> stage.close());
-                    vbox.setSpacing(10);
-                    vbox.setAlignment(Pos.CENTER);
-                    vbox.setPadding(new Insets(5));
-                    scene.getStylesheets().add(styleSheet);
-
-                    scene.setOnKeyPressed(e1 -> {
-                        if (e1.getCode() == KeyCode.ESCAPE || e1.getCode() == KeyCode.ENTER) {
-                            //If escape or ender are pressed, close the window
-                            stage.close();
-                        }
-                    });
-
-                    stage.show();
-                }
-            }else {
-                //unplayedTempList
-                if (unplayedTempList.getGames().size() > 0) {
-                    //There are games
-                    //Local variables
-                    Random rand = new Random();
-                    Stage stage = new Stage();
-                    Label label = new Label("");
-                    Button button = new Button("Close");
-                    VBox vbox = new VBox(label, button);
-                    Scene scene = new Scene(vbox);
-
-                    //GUI
-                    stage.getIcons().add(icon);
-                    stage.setTitle("Random Game");
-                    stage.setResizable(false);
-                    stage.initModality(Modality.APPLICATION_MODAL);
-                    stage.setScene(scene);
-                    label.setStyle("-fx-font-size: 16;");
-                    label.setText(unplayedTempList.getGames().get(rand.nextInt(unplayedTempList.getGames().size())).getTitle());
-                    button.setOnAction(e1 -> stage.close());
-                    vbox.setSpacing(10);
-                    vbox.setAlignment(Pos.CENTER);
-                    vbox.setPadding(new Insets(5));
-                    scene.getStylesheets().add(styleSheet);
-
-                    scene.setOnKeyPressed(e1 -> {
-                        if (e1.getCode() == KeyCode.ESCAPE || e1.getCode() == KeyCode.ENTER) {
-                            //If escape or ender are pressed, close the window
-                            stage.close();
-                        }
-                    });
-
-                    stage.show();
-                }
-            }
-        });
-
-        generateRandomListMenuItem.setOnAction(e -> {
-            //Generates a random list of unplayed games based on filters provided by the user.
-            //Local variables
+        playedGoalsMenuItem.setOnAction(e -> {
+            //Open the goal window for played game goals
             Stage stage = new Stage();
-            RandomListGenerator window;
-            Scene scene;
-
-            if(playedOpen){
-                //Played game list generator
-                window = new PlayedRandomListGenerator();
-                scene = new Scene(window, 1300, 750);
-            }else{
-                //Unplayed game list generator
-                window = new UnplayedRandomListGenerator();
-                scene = new Scene(window, 1000, 750);
-            }
-
+            PlayedGoalWindow playedGoalWindow = new PlayedGoalWindow();
+            Scene scene = new Scene(playedGoalWindow);
 
             //GUI
             stage.getIcons().add(icon);
-            stage.setTitle("Random Game List");
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Played Game Goals");
+            stage.setHeight(screenHeightMain / 1.5);
             stage.setScene(scene);
             scene.getStylesheets().add(styleSheet);
-
-            scene.setOnKeyPressed(e1 -> {
-                if (e1.getCode() == KeyCode.ESCAPE) {
-                    //If escape is pressed, close the window
-                    stage.close();
-                } else if (e1.getCode() == KeyCode.ENTER) {
-                    //If enter is pressed, generate a list
-                    window.generateButton.fire();
-                }
-            });
-
             stage.show();
+        });
+
+        unplayedGoalsMenuItem.setOnAction(e -> {
+            //Open the goal window for unplayed game goals
+
         });
 
         switchFromPlayed.setOnAction(e -> {
