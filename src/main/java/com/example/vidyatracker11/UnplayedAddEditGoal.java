@@ -1,22 +1,65 @@
 package com.example.vidyatracker11;
 
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.time.LocalDate;
+
 public abstract class UnplayedAddEditGoal extends AddEditGoal{
+    //GUI
+    //Progress End
+    Label progressEndLabel = new Label("End Progress:");
+    TextField progressEndBox = new TextField();
+    HBox progressEndHBox = new HBox(progressEndLabel, progressEndBox);
+    Button enterCurrentEndProgress = new Button("Enter Current Progress");
+    VBox progressEndVBox = new VBox(progressEndHBox, enterCurrentEndProgress);
+
     //Fields
     UnplayedGameFilter filter;
 
     public UnplayedAddEditGoal(){
+        //GUI
+        mainHBox.getChildren().add(mainHBox.getChildren().size() - 1, progressEndVBox);
+        progressEndBox.setDisable(true);
+        enterCurrentEndProgress.setDisable(true);
+        progressEndHBox.setAlignment(Pos.CENTER);
+        progressEndVBox.setAlignment(Pos.CENTER);
+        progressEndVBox.setSpacing(5);
+
+        //Year box listener to enable/disable end progress
+        endYearBox.textProperty().addListener((observable, oldValue, newValue) ->
+                checkEndDate(newValue, endMonthBox.getSelectionModel().getSelectedItem(), endDayBox.getSelectionModel().getSelectedItem()));
+
+        //Month box listener to enable/disable end progress
+        endMonthBox.getSelectionModel().selectedItemProperty().addListener((observable, oldNum, newNum) ->
+                checkEndDate(endYearBox.getText(), newNum, endDayBox.getSelectionModel().getSelectedItem()));
+
+        //Day box listener to enable/disable end progress
+        endDayBox.getSelectionModel().selectedItemProperty().addListener((observable, oldNum, newNum) ->
+                checkEndDate(endYearBox.getText(), endMonthBox.getSelectionModel().getSelectedItem(), newNum));
+
         //Count games meeting requirements and set start progress to count
         enterCurrentStartProgress.setOnAction(e -> progressStartBox.setText("" + filter.filteredList().size()));
 
         //Count games meeting requirements and set goal progress to count
         enterCurrentGoalProgress.setOnAction(e -> progressGoalBox.setText("" + filter.filteredList().size()));
 
+        //Only allow integers for progressEndBox
+        progressEndBox.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
+
+        //Count games meeting requirements and set end progress to count
+        enterCurrentEndProgress.setOnAction(e -> progressEndBox.setText("" + filter.filteredList().size()));
+
         filterButton.setOnAction(e -> {
-            //Open window to manage fiters
+            //Open window to manage filters
             //Local variables
             Stage stage = new Stage();
             UnplayedGoalFilterWindow unplayedGoalFilterWindow = new UnplayedGoalFilterWindow(filter);
@@ -39,5 +82,26 @@ public abstract class UnplayedAddEditGoal extends AddEditGoal{
 
             stage.show();
         });
+    }
+
+    //Given the dates provided by the end date boxes, set end progress disabled value accordingly
+    public void checkEndDate(String year, Integer month, Integer day){
+        if(!year.equals("") && month != null && day != null) {
+            //If all values are entered
+            //Local variables
+            int yearValue = Integer.parseInt(year);
+            boolean disabled = !LocalDate.of(yearValue, month, day).isBefore(ApplicationGUI.localDate);
+
+            //Enable progress end text box if current date is after goal, disable otherwise
+            progressEndBox.setDisable(disabled);
+            enterCurrentEndProgress.setDisable(disabled);
+            if(!disabled)
+                progressEndBox.setText("");
+        }else {
+            //If values are not all entered, disable progress end box
+            progressEndBox.setDisable(true);
+            enterCurrentEndProgress.setDisable(true);
+            progressEndBox.setText("");
+        }
     }
 }

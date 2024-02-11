@@ -1,9 +1,16 @@
 package com.example.vidyatracker11;
 
+import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
+import java.time.LocalDate;
+
 public class UnplayedEditGoal extends UnplayedAddEditGoal{
-    public UnplayedEditGoal(Stage stage, UnplayedGameGoal goal){
+    public UnplayedEditGoal(Stage stage, TableView<UnplayedGameGoal> table){
+        //Local variables
+        UnplayedGameGoal goal = table.getSelectionModel().getSelectedItem();
+
+        //Set title of window
         mainLabel.setText("Edit " + goal.getTitle());
 
         //Set title
@@ -11,19 +18,24 @@ public class UnplayedEditGoal extends UnplayedAddEditGoal{
 
         //Set start date
         startYearBox.setText("" + goal.getStartYear());
-        startMonthBox.getSelectionModel().select(goal.getStartMonth());
-        startDayBox.getSelectionModel().select(goal.getStartDay());
+        startMonthBox.getSelectionModel().select((Integer) goal.getStartMonth());
+        startDayBox.getSelectionModel().select((Integer) goal.getStartDay());
 
         //Set end date
         endYearBox.setText("" + goal.getEndYear());
-        endMonthBox.getSelectionModel().select(goal.getEndMonth());
-        endDayBox.getSelectionModel().select(goal.getEndDay());
+        endMonthBox.getSelectionModel().select((Integer) goal.getEndMonth());
+        endDayBox.getSelectionModel().select((Integer) goal.getEndDay());
 
         //Set start progress
         progressStartBox.setText("" + goal.getStartProgress());
 
         //Set goal progress
         progressGoalBox.setText("" + goal.getGoalProgress());
+
+        //Set end progress
+        if(goal.getEndProgress() != -1)
+            //There is a valid end progress
+            progressEndBox.setText("" + goal.getEndProgress());
 
         //Set filter
         filter = goal.getFilter();
@@ -35,8 +47,9 @@ public class UnplayedEditGoal extends UnplayedAddEditGoal{
             int endYear = 0;
             int startProgress = 0;
             int goalProgress = 0;
-            String startDateString;
-            String endDateString;
+            int endProgress = -1;
+            LocalDate startDate;
+            LocalDate endDate;
 
             if(!startYearBox.getText().equals(""))
                 //If start year is entered, set value
@@ -54,47 +67,83 @@ public class UnplayedEditGoal extends UnplayedAddEditGoal{
                 //If goal progress is entered, set value
                 goalProgress = Integer.parseInt(progressGoalBox.getText());
 
-            //Start date for comparing
-            startDateString = String.format("%10d%2d%2d", startYear,
-                    startMonthBox.getSelectionModel().getSelectedItem(),
-                    startDayBox.getSelectionModel().getSelectedItem());
+            if(!progressEndBox.getText().equals(""))
+                endProgress = Integer.parseInt(progressEndBox.getText());
 
-            //End date for comparing
-            endDateString = String.format("%10d%2d%2d", endYear,
-                    endMonthBox.getSelectionModel().getSelectedItem(),
-                    endDayBox.getSelectionModel().getSelectedItem());
+            if(startYear == 0 ||
+                    startMonthBox.getSelectionModel().getSelectedItem() == 0 ||
+                    startDayBox.getSelectionModel().getSelectedItem() == 0) {
+                //If start date contains zeros
+                warningLabel.setText("Start date may not contain zeros.");
+                return;
+            }
 
-            if(startDateString.compareTo(endDateString) <= 0 &&
-                    startYear != 0 &&
-                    startMonthBox.getSelectionModel().getSelectedItem() != 0 &&
-                    startDayBox.getSelectionModel().getSelectedItem() != 0 &&
-                    endYear != 0 &&
-                    endMonthBox.getSelectionModel().getSelectedItem() != 0 &&
-                    endDayBox.getSelectionModel().getSelectedItem() != 0) {
-                //Set start date
-                goal.setStartYear(startYear);
-                goal.setStartMonth(startMonthBox.getSelectionModel().getSelectedItem());
-                goal.setStartDay(startDayBox.getSelectionModel().getSelectedItem());
+            if(endYear == 0 ||
+                    endMonthBox.getSelectionModel().getSelectedItem() == 0 ||
+                    endDayBox.getSelectionModel().getSelectedItem() == 0) {
+                //If end date contains zeros
+                warningLabel.setText("End date may not contain zeros.");
+                return;
+            }
 
-                //Set end date
-                goal.setEndYear(endYear);
-                goal.setEndMonth(endMonthBox.getSelectionModel().getSelectedItem());
-                goal.setEndDay(endDayBox.getSelectionModel().getSelectedItem());
+            //Start date
+            startDate = LocalDate.of(startYear, startMonthBox.getSelectionModel().getSelectedItem(), startDayBox.getSelectionModel().getSelectedItem());
 
-                //Set goal progress
-                goal.setGoalProgress(goalProgress);
+            //End date
+            endDate = LocalDate.of(endYear, endMonthBox.getSelectionModel().getSelectedItem(), endDayBox.getSelectionModel().getSelectedItem());
 
-                //Set start progress
-                goal.setStartProgress(startProgress);
+            if(endDate.isBefore(startDate)){
+                //End date is before start date
+                warningLabel.setText("End date may not be before start date.");
+                return;
+            }
 
-                //Set filter
-                goal.setFilter(filter);
+            if(goalProgress > startProgress) {
+                //Goal is less than start progress
+                warningLabel.setText("Goal may not be greater than start progress.");
+                return;
+            }
 
-                ApplicationGUI.changeMade = true;
-                ApplicationGUI.setStageTitle();
-                stage.close();
-            }else
-                warningLabel.setText("End Date must be greater than Start Date. Neither can contain zeros.");
+            if(endProgress > startProgress){
+                //End progress is greater than start progress
+                warningLabel.setText("End progress may not be greater than start progress.");
+                return;
+            }
+
+            //Set title
+            goal.setTitle(titleBox.getText());
+
+            //Set start date
+            goal.setStartYear(startYear);
+            goal.setStartMonth(startMonthBox.getSelectionModel().getSelectedItem());
+            goal.setStartDay(startDayBox.getSelectionModel().getSelectedItem());
+
+            //Set end date
+            goal.setEndYear(endYear);
+            goal.setEndMonth(endMonthBox.getSelectionModel().getSelectedItem());
+            goal.setEndDay(endDayBox.getSelectionModel().getSelectedItem());
+
+            //Set goal progress
+            goal.setGoalProgress(goalProgress);
+
+            //Set start progress
+            goal.setStartProgress(startProgress);
+
+            //Set end progress
+            goal.setEndProgress(endProgress);
+
+            //Set filter
+            goal.setFilter(filter);
+
+            //Update table
+            table.getSelectionModel().clearSelection();
+            table.getSelectionModel().select(goal);
+            TableMethods.updateColumnWidth(table.getColumns());
+            table.refresh();
+
+            ApplicationGUI.changeMade = true;
+            ApplicationGUI.setStageTitle();
+            stage.close();
         });
     }
 }

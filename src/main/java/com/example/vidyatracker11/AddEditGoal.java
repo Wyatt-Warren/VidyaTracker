@@ -107,9 +107,9 @@ public abstract class AddEditGoal extends VBox {
         //Set start month
         startMonthBox.getItems().addAll(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
 
-        startMonthBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
+        startMonthBox.getSelectionModel().selectedItemProperty().addListener((observable, oldNum, newNum) -> {
             //setDayCount when month is changed
-            setDayCount((int) newNum, startDayBox, startYearBox);
+            setDayCount(newNum, startDayBox, startYearBox);
         });
 
         //Select the first options of start date ChoiceBoxes
@@ -137,9 +137,9 @@ public abstract class AddEditGoal extends VBox {
         //Set end month
         endMonthBox.getItems().addAll(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
 
-        endMonthBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) -> {
+        endMonthBox.getSelectionModel().selectedItemProperty().addListener((observable, oldNum, newNum) -> {
             //setDayCount when month is changed
-            setDayCount((int) newNum, endDayBox, endYearBox);
+            setDayCount(newNum, endDayBox, endYearBox);
         });
 
         //Select the first options of end date ChoiceBoxes
@@ -156,6 +156,9 @@ public abstract class AddEditGoal extends VBox {
             //Set day
             endDayBox.getSelectionModel().select(ApplicationGUI.localDate.getDayOfMonth() - 1);
         });
+
+        //Only allow integers for progressStartBox
+        progressStartBox.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
 
         //Only allow integers for progressGoalBox
         progressGoalBox.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));

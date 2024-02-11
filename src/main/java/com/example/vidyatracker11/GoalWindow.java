@@ -1,5 +1,6 @@
 package com.example.vidyatracker11;
 
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -9,6 +10,7 @@ import javafx.scene.text.TextAlignment;
 import java.util.Comparator;
 
 public abstract class GoalWindow extends HBox {
+    //GUI
     //Manage goals
     Button addGoalButton = new Button("Add New Goal");
     Button editGoalButton = new Button("Edit Selected Goal");
@@ -29,7 +31,7 @@ public abstract class GoalWindow extends HBox {
     Label goalProgressLabel = new Label();
     HBox progressBox = new HBox(startProgressLabel, currentProgressLabel, goalProgressLabel);
     Label filtersMainLabel = new Label("Filters");
-    VBox filtersVBox = new VBox();
+    VBox filtersVBox = new VBox(new Label("No Filters"));
     VBox goalVBox = new VBox(mainLabel, goalStatusLabel, dateBox, timeProgressBar,
             goalProgressBar, progressBox, filtersMainLabel, filtersVBox);
 
@@ -47,27 +49,31 @@ public abstract class GoalWindow extends HBox {
     };
 
     public GoalWindow(){
+        //GUI
         manageGoalsButtonsBox.setSpacing(5);
         manageGoalsBox.setSpacing(5);
         mainLabel.setStyle("-fx-font-weight:bold;-fx-font-size:32;");
         goalStatusLabel.setStyle("-fx-font-size: 18;-fx-font-weight: bold;");
+        startDateLabel.setTextAlignment(TextAlignment.CENTER);
         startDateLabel.setMaxWidth(Double.MAX_VALUE);
         startDateLabel.setStyle("-fx-font-size: 16;-fx-font-weight: bold;");
         HBox.setHgrow(startDateLabel, Priority.ALWAYS);
+        endDateLabel.setTextAlignment(TextAlignment.CENTER);
         endDateLabel.setStyle("-fx-font-size: 16;-fx-font-weight: bold;");
         endDateLabel.setMaxWidth(Double.MAX_VALUE);
-        endDateLabel.setTextAlignment(TextAlignment.RIGHT);
         timeProgressBar.setMaxWidth(Double.MAX_VALUE);
         goalProgressBar.setMaxWidth(Double.MAX_VALUE);
+        startProgressLabel.setTextAlignment(TextAlignment.CENTER);
         startProgressLabel.setMaxWidth(Double.MAX_VALUE);
         startProgressLabel.setStyle("-fx-font-size: 16;-fx-font-weight: bold;");
         HBox.setHgrow(startProgressLabel, Priority.ALWAYS);
+        currentProgressLabel.setTextAlignment(TextAlignment.CENTER);
         currentProgressLabel.setMaxWidth(Double.MAX_VALUE);
         currentProgressLabel.setStyle("-fx-font-size: 16;-fx-font-weight: bold;");
         HBox.setHgrow(currentProgressLabel, Priority.ALWAYS);
+        goalProgressLabel.setTextAlignment(TextAlignment.CENTER);
         goalProgressLabel.setStyle("-fx-font-size: 16;-fx-font-weight: bold;");
         goalProgressLabel.setMaxWidth(Double.MAX_VALUE);
-        goalProgressLabel.setTextAlignment(TextAlignment.RIGHT);
         HBox.setHgrow(progressBox, Priority.ALWAYS);
         filtersMainLabel.setStyle("-fx-font-weight:bold;-fx-font-size:32;");
         goalVBox.setSpacing(10);
@@ -76,5 +82,30 @@ public abstract class GoalWindow extends HBox {
         getChildren().addAll(manageGoalsBox, goalVBox);
         setSpacing(40);
         setPadding(new Insets(5));
+    }
+
+    //Returns a string of the items in a list in a readable format, up to 3 items.
+    public String listItems(String label, ObservableList<?> list){
+        //Local variables
+        StringBuilder output = new StringBuilder(label);
+
+        for(int i = 0; i < 3; i++){
+            //Loop 3 times
+            //Add item to string
+            output.append(list.get(i));
+
+            if(list.size() > i+1)
+                //If there are more items, add a comma
+                output.append(", ");
+            else
+                //Otherwise, stop looping
+                break;
+        }
+
+        if(list.size() > 3)
+            //If there is still more add ...
+            output.append("...");
+
+        return output.toString();
     }
 }

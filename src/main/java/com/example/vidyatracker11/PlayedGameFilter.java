@@ -3,6 +3,8 @@ package com.example.vidyatracker11;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.time.LocalDate;
+
 public class PlayedGameFilter extends GameFilter {
     //Fields
     ObservableList<String> possibleShortStatuses;
@@ -10,6 +12,7 @@ public class PlayedGameFilter extends GameFilter {
     ObservableList<String> possible100PercentStatuses;
     int minCompletionYear;
     int maxCompletionYear;
+    LocalDate maxCompletionDate;
 
     public PlayedGameFilter(ObservableList<String> possibleStatuses, ObservableList<String> possibleFranchises,
                             ObservableList<String> possiblePlatforms, ObservableList<String> possibleGenres,
@@ -31,6 +34,22 @@ public class PlayedGameFilter extends GameFilter {
 
         for(PlayedGame game : GameLists.playedList){
             //Iterate for every PlayedGame
+            //Local variables
+            int effectiveCompletionYear = game.getCompletionYear();
+            int effectiveCompletionMonth = game.getCompletionMonth();
+            int effectiveCompletionDay = game.getCompletionDay();
+
+            if(maxCompletionDate != null) {
+                //If maxCompletionDate is provided, make date usable
+                if (game.getCompletionYear() == 0)
+                    effectiveCompletionYear = 1;
+
+                if (game.getCompletionMonth() == 0)
+                    effectiveCompletionMonth = 1;
+
+                if (game.getCompletionDay() == 0)
+                    effectiveCompletionDay = 1;
+            }
 
             if((possibleStatuses.isEmpty() || possibleStatuses.contains(game.getStatus())) &&
                     //Status is selected and game matches
@@ -54,6 +73,7 @@ public class PlayedGameFilter extends GameFilter {
                     //Completion year is entered and game is greater or equal
                     (game.getCompletionYear() <= maxCompletionYear) &&
                     //Completion year is entered and game is less  than or equal
+                    (maxCompletionDate == null || !maxCompletionDate.isBefore(LocalDate.of(effectiveCompletionYear, effectiveCompletionMonth, effectiveCompletionDay))) &&
                     (possible100PercentStatuses.isEmpty() || possible100PercentStatuses.contains(game.getPercent100())) &&
                     //100% status is selected and game matches
                     (possibleCollections.isEmpty() || gameInAnyCollection(game)))
@@ -78,24 +98,7 @@ public class PlayedGameFilter extends GameFilter {
         return possible100PercentStatuses;
     }
 
-    public int getMinCompletionYear() {
-        return minCompletionYear;
+    public void setMaxCompletionDate(LocalDate maxCompletionDate) {
+        this.maxCompletionDate = maxCompletionDate;
     }
-
-    public int getMaxCompletionYear() {
-        return maxCompletionYear;
-    }
-
-    public void setPossibleShortStatuses(ObservableList<String> possibleShortStatuses) {
-        this.possibleShortStatuses = possibleShortStatuses;
-    }
-
-    public void setPossibleRatings(ObservableList<Integer> possibleRatings) {
-        this.possibleRatings = possibleRatings;
-    }
-
-    public void setPossible100PercentStatuses(ObservableList<String> possible100PercentStatuses) {
-        this.possible100PercentStatuses = possible100PercentStatuses;
-    }
-
 }

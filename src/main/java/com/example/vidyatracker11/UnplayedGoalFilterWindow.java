@@ -113,9 +113,9 @@ public class UnplayedGoalFilterWindow extends GoalFilterWindow{
         if (!(releaseYearMaxField.getText().equals("") || releaseYearMaxField.getText().equals("0")))
             releaseYearMaxValue = Integer.parseInt(releaseYearMaxField.getText());
         if (!hoursMinField.getText().equals(""))
-            hoursMinValue = Integer.parseInt(hoursMinField.getText());
+            hoursMinValue = Double.parseDouble(hoursMinField.getText());
         if (!hoursMaxField.getText().equals(""))
-            hoursMaxValue = Integer.parseInt(hoursMaxField.getText());
+            hoursMaxValue = Double.parseDouble(hoursMaxField.getText());
 
         //Create new filter and use it to create list of valid games
         filter = new UnplayedGameFilter(statusView.getItems(), franchiseView.getItems(),

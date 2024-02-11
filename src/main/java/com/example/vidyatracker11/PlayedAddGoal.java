@@ -4,6 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
+import java.time.LocalDate;
+
 public class PlayedAddGoal extends PlayedAddEditGoal{
     public PlayedAddGoal(Stage stage, TableView<PlayedGameGoal> table){
         mainLabel.setText("Add New Played Game Goal");
@@ -23,8 +25,8 @@ public class PlayedAddGoal extends PlayedAddEditGoal{
             int endYear = 0;
             int startProgress = 0;
             int goalProgress = 0;
-            String startDateString;
-            String endDateString;
+            LocalDate startDate;
+            LocalDate endDate;
 
             if(!startYearBox.getText().equals(""))
                 //If start year is entered, set value
@@ -58,44 +60,45 @@ public class PlayedAddGoal extends PlayedAddEditGoal{
                 return;
             }
 
-            //Start date for comparing
-            startDateString = String.format("%10d%2d%2d", startYear,
-                    startMonthBox.getSelectionModel().getSelectedItem(),
-                    startDayBox.getSelectionModel().getSelectedItem());
+            //Start date
+            startDate = LocalDate.of(startYear, startMonthBox.getSelectionModel().getSelectedItem(), startDayBox.getSelectionModel().getSelectedItem());
 
-            //End date for comparing
-            endDateString = String.format("%10d%2d%2d", endYear,
-                    endMonthBox.getSelectionModel().getSelectedItem(),
-                    endDayBox.getSelectionModel().getSelectedItem());
+            //End date
+            endDate = LocalDate.of(endYear, endMonthBox.getSelectionModel().getSelectedItem(), endDayBox.getSelectionModel().getSelectedItem());
 
-            if(startDateString.compareTo(endDateString) > 0){
-                warningLabel.setText("End date may not be less than start date.");
-                return;
-            }
-
-            if(goalProgress == 0){
-                warningLabel.setText("Goal may not be zero.");
+            if(endDate.isBefore(startDate)){
+                //End date is before start date
+                warningLabel.setText("End date may not be before start date.");
                 return;
             }
 
             if(goalProgress < startProgress){
+                //Goal is less than start progress
                 warningLabel.setText("Goal may not be less than start progress.");
                 return;
             }
 
-            //If the start date less than end date
+            //Games completed after goal should not be counted.
+            filter.setMaxCompletionDate(LocalDate.of(
+                    endYear, endMonthBox.getSelectionModel().getSelectedItem(), endDayBox.getSelectionModel().getSelectedItem()));
+
+            //Create new goal
             newGoal = new PlayedGameGoal(titleBox.getText(), startYear, startMonthBox.getSelectionModel().getSelectedItem(),
                     startDayBox.getSelectionModel().getSelectedItem(), endYear, endMonthBox.getSelectionModel().getSelectedItem(),
                     endDayBox.getSelectionModel().getSelectedItem(), startProgress, goalProgress, filter);
 
+            //Add new goal
             GameLists.playedGoalList.add(newGoal);
+
+            //Update Table
             table.getSelectionModel().clearSelection();
             table.getSelectionModel().select(newGoal);
+            TableMethods.updateColumnWidth(table.getColumns());
+            table.refresh();
 
             ApplicationGUI.changeMade = true;
             ApplicationGUI.setStageTitle();
             stage.close();
-
         });
     }
 }

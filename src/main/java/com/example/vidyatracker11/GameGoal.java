@@ -2,6 +2,7 @@ package com.example.vidyatracker11;
 
 public abstract class GameGoal {
     //Fields
+    public static final String[] statuses = {"Not Started", "Behind", "On Schedule", "Ahead", "Completed", "Failed"};
     private String title;
 
     //Dates

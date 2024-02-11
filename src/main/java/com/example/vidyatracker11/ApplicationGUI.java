@@ -1592,8 +1592,20 @@ public class ApplicationGUI extends Application {
         });
 
         unplayedGoalsMenuItem.setOnAction(e -> {
-            //Open the goal window for unplayed game goals
+            //Open the goal window for played game goals
+            Stage stage = new Stage();
+            UnplayedGoalWindow unplayedGoalWindow = new UnplayedGoalWindow();
+            Scene scene = new Scene(unplayedGoalWindow);
 
+            //GUI
+            stage.getIcons().add(icon);
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Unplayed Game Goals");
+            stage.setHeight(screenHeightMain / 1.5);
+            stage.setScene(scene);
+            scene.getStylesheets().add(styleSheet);
+            stage.show();
         });
 
         switchFromPlayed.setOnAction(e -> {
@@ -1651,6 +1663,14 @@ public class ApplicationGUI extends Application {
         //open the default "List.json" file
         openFile(currentFilePathOut);
 
+        //Find unplayed goals that just ended and set their end progress value
+        for(UnplayedGameGoal goal : GameLists.unplayedGoalList)
+            //For every unplayed goal
+            if(LocalDate.of(goal.getEndYear(), goal.getEndMonth(), goal.getEndDay()).isBefore(localDate) &&
+            goal.getEndProgress() == -1)
+                //If goal is past end date and end progress is not yet set, set end progress to current progress.
+                goal.setEndProgress(goal.getFilter().filteredList().size());
+
         primaryStage.setScene(primaryScene);
         primaryStage.show();
     }
@@ -1672,7 +1692,9 @@ public class ApplicationGUI extends Application {
         JSONArray unplayedGameArray = new JSONArray();  //List of all UnplayedGames
         JSONArray collectionArray = new JSONArray();    //List of all Collections
         JSONArray playedTempArray = new JSONArray();    //List of games in playedTempList
-        JSONArray unplayedTempArray = new JSONArray();    //List of games in unplayedTempList
+        JSONArray unplayedTempArray = new JSONArray();  //List of games in unplayedTempList
+        JSONArray playedGoalArray = new JSONArray();    //List of add played goals
+        JSONArray unplayedGoalArray = new JSONArray();  //List of add played goals
         PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(fileOut), StandardCharsets.UTF_8));
         Stage stage = new Stage();
         Label label = new Label("Saving...");
@@ -1811,6 +1833,14 @@ public class ApplicationGUI extends Application {
 
             //Put game in array
             unplayedTempArray.put(GameLists.unplayedList.indexOf(game));
+        }
+
+        for(int i = 0; i < GameLists.playedGoalList.size(); i++){
+            //TODO
+        }
+
+        for(int i = 0; i < GameLists.unplayedGoalList.size(); i++){
+            //TODO
         }
 
         //Put each list in the JSONObject
