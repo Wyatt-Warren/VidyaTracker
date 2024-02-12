@@ -2282,7 +2282,7 @@ public class ApplicationGUI extends Application {
                     //If there is a minimum added year, put minimum added year
                     filters.put("LA", goal.getFilter().getMinAddedYear());
 
-                if(goal.getFilter().getMaxAddedYear() != 0)
+                if(goal.getFilter().getMaxAddedYear() != Integer.MAX_VALUE)
                     //If there is a maximum added year, put maximum added year
                     filters.put("HA", goal.getFilter().getMaxAddedYear());
 
