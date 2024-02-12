@@ -562,6 +562,8 @@ public class ApplicationGUI extends Application {
                 GameLists.collectionList.clear();
 
                 //Reset GUI
+                playedGamesTable.baseList = GameLists.playedList;
+                unplayedGamesTable.baseList = GameLists.unplayedList;
                 playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
                 unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
                 statusCountBoxPlayed.updateData();
@@ -800,6 +802,9 @@ public class ApplicationGUI extends Application {
 
                     //Remove game and update both tables
                     GameLists.playedList.remove(game);
+                    playedGamesTable.baseList = playedAdvancedFilter.filteredList();
+                    unplayedGamesTable.baseList = unplayedAdvancedFilter.filteredList();
+                    statusCountBoxUnplayed.updateData();
                     playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
                     unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
 
@@ -864,6 +869,9 @@ public class ApplicationGUI extends Application {
 
                     //Remove game and update both tables
                     GameLists.unplayedList.remove(game);
+                    playedGamesTable.baseList = playedAdvancedFilter.filteredList();
+                    unplayedGamesTable.baseList = unplayedAdvancedFilter.filteredList();
+                    statusCountBoxPlayed.updateData();
                     playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
                     unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
 
@@ -921,6 +929,7 @@ public class ApplicationGUI extends Application {
                         //Remove game from each collection
                         collection.getGames().remove(game);
 
+                    playedGamesTable.baseList = playedAdvancedFilter.filteredList();
                     statusCountBoxPlayed.updateData();
                     playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
                     stage.close();
@@ -971,6 +980,7 @@ public class ApplicationGUI extends Application {
                         //Remove game from each collection
                         collection.getGames().remove(game);
 
+                    unplayedGamesTable.baseList = unplayedAdvancedFilter.filteredList();
                     statusCountBoxUnplayed.updateData();
                     unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
                     stage.close();

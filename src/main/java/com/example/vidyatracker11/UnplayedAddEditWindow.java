@@ -68,6 +68,10 @@ public abstract class UnplayedAddEditWindow extends AddEditGame{
             setDayCount((int) newNum, addedDayBox, addedYearBox);
         });
 
+        //Select the first options of choiceboxes
+        addedMonthBox.getSelectionModel().selectFirst();
+        addedDayBox.getSelectionModel().selectFirst();
+
         addedCurrentDateButton.setOnAction(e -> {
             //Set year
             addedYearBox.setText("" + ApplicationGUI.localDate.getYear());

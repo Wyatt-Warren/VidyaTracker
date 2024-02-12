@@ -67,6 +67,7 @@ public class UnplayedAddWindow extends UnplayedAddEditWindow {
         GameLists.unplayedList.add(newGame);
 
         //Update data
+        ApplicationGUI.unplayedGamesTable.baseList = ApplicationGUI.unplayedAdvancedFilter.filteredList();
         ApplicationGUI.statusCountBoxUnplayed.updateData();
         ApplicationGUI.unplayedGamesTable.sortAndFilter(ApplicationGUI.unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
 

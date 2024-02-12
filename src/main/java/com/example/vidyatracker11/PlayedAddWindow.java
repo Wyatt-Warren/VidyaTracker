@@ -76,6 +76,7 @@ public class PlayedAddWindow extends PlayedAddEditWindow {
         GameLists.playedList.add(newGame);
 
         //Update data
+        ApplicationGUI.playedGamesTable.baseList = ApplicationGUI.playedAdvancedFilter.filteredList();
         ApplicationGUI.statusCountBoxPlayed.updateData();
         ApplicationGUI.playedGamesTable.sortAndFilter(ApplicationGUI.playedFilterTokenChoices.getSelectionModel().getSelectedItem());
 
