@@ -28,8 +28,8 @@ public abstract class EditGenPlatList extends VBox {
     Button removeItemButton = new Button();
     Button moveUpButton = new Button("Move Up");
     Button moveDownButton = new Button("Move Down");
-    Button sortButton = new Button("Sort Alphabetically");
-    VBox buttonBox = new VBox(renameItemButton, removeItemButton, moveUpButton, moveDownButton, sortButton);
+    Button sortListButton = new Button("Sort Alphabetically");
+    VBox buttonBox = new VBox(renameItemButton, removeItemButton, moveUpButton, moveDownButton, sortListButton);
     GridPane gridPane = new GridPane();
 
     //Fields
@@ -196,7 +196,7 @@ public abstract class EditGenPlatList extends VBox {
             }
         });
 
-        sortButton.setOnAction(e -> {
+        sortListButton.setOnAction(e -> {
             //Sort the list alphabetically
             Collections.sort(list);
 
