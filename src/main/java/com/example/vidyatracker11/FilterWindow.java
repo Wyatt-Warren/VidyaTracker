@@ -1,29 +1,14 @@
 package com.example.vidyatracker11;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import java.util.Collections;
-
-//Window used to generate a random list based on filters.
-public abstract class RandomListGenerator extends VBox {
+public abstract class FilterWindow extends VBox {
     //GUI
-    Label mainLabel = new Label("Generate List Based on Filters");
-
-    //Length
-    Label lengthLabel = new Label("List Size:");
-    TextField lengthField = new TextField();
-    VBox lengthVBox = new VBox(lengthLabel, lengthField);
+    Label mainLabel = new Label();
 
     //Status
     Label statusLabel = new Label("Possible Statuses:");
@@ -87,10 +72,8 @@ public abstract class RandomListGenerator extends VBox {
     HBox layer1HBox = new HBox();
     HBox layer2HBox = new HBox();
     VBox filtersVBox = new VBox(layer1HBox, layer2HBox);
-    Button generateButton = new Button("Generate List");
-    ListView<String> generatedList = new ListView<>();
 
-    public RandomListGenerator() {
+    public FilterWindow(){
         //GUI
         mainLabel.setStyle("-fx-font-size: 24;-fx-font-weight: bold;");
         statusButtonBox.setAlignment(Pos.CENTER);
@@ -98,7 +81,6 @@ public abstract class RandomListGenerator extends VBox {
         platformButtonBox.setAlignment(Pos.CENTER);
         genreButtonBox.setAlignment(Pos.CENTER);
         collectionButtonBox.setAlignment(Pos.CENTER);
-        lengthVBox.setAlignment(Pos.TOP_CENTER);
         statusVBox.setAlignment(Pos.TOP_CENTER);
         titleVBox.setAlignment(Pos.TOP_CENTER);
         franchiseVBox.setAlignment(Pos.TOP_CENTER);
@@ -112,7 +94,6 @@ public abstract class RandomListGenerator extends VBox {
         franchiseButtonBox.setSpacing(5.0);
         platformButtonBox.setSpacing(5.0);
         genreButtonBox.setSpacing(5.0);
-        lengthVBox.setSpacing(5.0);
         statusVBox.setSpacing(5.0);
         titleVBox.setSpacing(5.0);
         franchiseVBox.setSpacing(5.0);
@@ -120,19 +101,16 @@ public abstract class RandomListGenerator extends VBox {
         genreVBox.setSpacing(5.0);
         releaseYearVBox.setSpacing(5.0);
         collectionVBox.setSpacing(5.0);
+        collectionButtonBox.setSpacing(5.0);
         layer1HBox.setSpacing(5.0);
         layer2HBox.setSpacing(5.0);
         filtersVBox.setSpacing(40.0);
         layer1HBox.setMaxHeight(350);
         layer2HBox.setMaxHeight(350);
-        setAlignment(Pos.CENTER);
-        getChildren().addAll(mainLabel, filtersVBox, generateButton, generatedList);
+        getChildren().addAll(mainLabel, filtersVBox);
         setFillWidth(false);
         setPadding(new Insets(5.0));
         setSpacing(5.0);
-
-        //Only allow integers for lengthField
-        lengthField.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
 
         //Set platform values
         platformBox.getItems().addAll(GameLists.platformList);

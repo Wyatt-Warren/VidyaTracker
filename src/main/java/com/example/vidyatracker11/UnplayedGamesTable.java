@@ -32,7 +32,8 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
             genreColumn, releaseYearColumn, addedYearColumn, hoursColumn, deckColumn);
 
     //Fields
-    FilteredList<UnplayedGame> filteredList = new FilteredList<>(GameLists.unplayedList);       //List of items in the table
+    ObservableList<UnplayedGame> baseList = FXCollections.observableArrayList(GameLists.unplayedList);  //List that other filters use as the base (set by advanced filters)
+    FilteredList<UnplayedGame> filteredList = new FilteredList<>(baseList);                             //List of items in the table
 
     public UnplayedGamesTable() {
         //ValueFactory for each column
@@ -388,7 +389,7 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
 
     //Filters the list based on a predicate
     public void filterByAny(Predicate<UnplayedGame> predicate){
-        FilteredList<UnplayedGame> newList = new FilteredList<>(GameLists.unplayedList, p -> true);
+        FilteredList<UnplayedGame> newList = new FilteredList<>(baseList, p -> true);
         newList.setPredicate(predicate);
         filteredList = new FilteredList<>(newList);
         setItems(filteredList);
@@ -396,7 +397,7 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
 
     //Removes filters
     public void unFilter() {
-        filteredList = new FilteredList<>(GameLists.unplayedList);
+        filteredList = new FilteredList<>(baseList);
         setItems(filteredList);
     }
 }

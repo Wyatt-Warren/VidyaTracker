@@ -90,8 +90,9 @@ public class ApplicationGUI extends Application {
     public static ChoiceBox<String> playedFilterChoices = new ChoiceBox<>();
     public static Label playedFilterTokenLabel = new Label("Filter Token:");
     public static ChoiceBox<String> playedFilterTokenChoices = new ChoiceBox<>();
+    public static Button playedAdvancedFilters = new Button("Advanced Filters");
     public static HBox playedChoiceHBox = new HBox(playedSortLabel, playedSortChoices, playedFilterLabel,
-            playedFilterChoices, playedFilterTokenLabel, playedFilterTokenChoices);
+            playedFilterChoices, playedFilterTokenLabel, playedFilterTokenChoices, playedAdvancedFilters);
     public static PlayedGamesTable playedGamesTable = new PlayedGamesTable();
     public static VBox playedGamesVBox = new VBox(playedChoiceHBox, playedGamesTable);
     public static VBox playedWindow = new VBox(topBoxPlayed, playedGamesVBox);
@@ -107,8 +108,9 @@ public class ApplicationGUI extends Application {
     public static ChoiceBox<String> unplayedFilterChoices = new ChoiceBox<>();
     public static Label unplayedFilterTokenLabel = new Label("Filter Token:");
     public static ChoiceBox<String> unplayedFilterTokenChoices = new ChoiceBox<>();
+    public static Button unplayedAdvancedFilters = new Button("Advanced Filters");
     public static HBox unplayedChoiceHBox = new HBox(unplayedSortLabel, unplayedSortChoices, unplayedFilterLabel,
-            unplayedFilterChoices, unplayedFilterTokenLabel, unplayedFilterTokenChoices);
+            unplayedFilterChoices, unplayedFilterTokenLabel, unplayedFilterTokenChoices, unplayedAdvancedFilters);
     public static UnplayedGamesTable unplayedGamesTable = new UnplayedGamesTable();
     public static VBox unplayedGamesVBox = new VBox(unplayedChoiceHBox, unplayedGamesTable);
     public static VBox unplayedWindow = new VBox(topBoxUnplayed, unplayedGamesVBox);
@@ -331,6 +333,10 @@ public class ApplicationGUI extends Application {
         });
         playedFilterTokenChoices.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
                 playedGamesTable.sortAndFilter(newValue));
+
+        playedAdvancedFilters.setOnAction(e -> {
+            //Open advanced filters window
+        });
 
         //Unplayed ChoiceBox listeners
         unplayedSortChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) ->
@@ -1335,7 +1341,7 @@ public class ApplicationGUI extends Application {
             //Generates a random list of unplayed games based on filters provided by the user.
             //Local variables
             Stage stage = new Stage();
-            RandomListGenerator window;
+            FilterWindow window;
             Scene scene;
 
             if(playedOpen){
@@ -1347,7 +1353,6 @@ public class ApplicationGUI extends Application {
                 window = new UnplayedRandomListGenerator();
                 scene = new Scene(window, 1000, 750);
             }
-
 
             //GUI
             stage.getIcons().add(icon);
@@ -1363,7 +1368,12 @@ public class ApplicationGUI extends Application {
                     stage.close();
                 } else if (e1.getCode() == KeyCode.ENTER) {
                     //If enter is pressed, generate a list
-                    window.generateButton.fire();
+                    if(window instanceof PlayedRandomListGenerator)
+                        //Cast to window to PlayedRandomListGenerator so it has generateButton
+                        ((PlayedRandomListGenerator) window).generateButton.fire();
+                    else
+                        //Cast to window to UnplayedRandomListGenerator so it has generateButton
+                        ((UnplayedRandomListGenerator) window).generateButton.fire();
                 }
             });
 

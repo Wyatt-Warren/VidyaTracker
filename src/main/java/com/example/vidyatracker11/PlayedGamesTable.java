@@ -32,7 +32,8 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
             genreColumn, releaseYearColumn, completionYearColumn, percent100Column);
 
     //Fields
-    FilteredList<PlayedGame> filteredList = new FilteredList<>(GameLists.playedList);           //List of items in the table
+    ObservableList<PlayedGame> baseList = FXCollections.observableArrayList(GameLists.playedList);  //List that other filters use as the base (set by advanced filters)
+    FilteredList<PlayedGame> filteredList = new FilteredList<>(baseList);               //List of items in the table
 
     public PlayedGamesTable() {
         //ValueFactory for each column
@@ -428,7 +429,7 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
 
     //Filters the list based on a predicate
     public void filterByAny(Predicate<PlayedGame> predicate){
-        FilteredList<PlayedGame> newList = new FilteredList<>(GameLists.playedList, p -> true);
+        FilteredList<PlayedGame> newList = new FilteredList<>(baseList, p -> true);
         newList.setPredicate(predicate);
         filteredList = new FilteredList<>(newList);
         setItems(filteredList);
@@ -436,7 +437,7 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
 
     //Used if no filter is selected.
     public void unFilter() {
-        filteredList = new FilteredList<>(GameLists.playedList);
+        filteredList = new FilteredList<>(baseList);
         setItems(filteredList);
     }
 }
