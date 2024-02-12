@@ -1,7 +1,5 @@
 package com.example.vidyatracker11;
 
-import javafx.collections.FXCollections;
-
 public class PlayedGameGoal extends GameGoal {
     //Fields
     private PlayedGameFilter filter;

@@ -3,20 +3,27 @@ package com.example.vidyatracker11;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.time.LocalDate;
+
 public class UnplayedGameFilter extends GameFilter {
     //Fields
     ObservableList<String> possibleDeckStatuses;
+    int minAddedYear;
+    int maxAddedYear;
     double minHours;
     double maxHours;
+    LocalDate maxAddedDate;
 
     public UnplayedGameFilter(ObservableList<String> possibleStatuses, ObservableList<String> possibleFranchises,
                               ObservableList<String> possiblePlatforms, ObservableList<String> possibleGenres,
                               ObservableList<GameCollection> possibleCollections, ObservableList<String> possibleDeckStatuses,
-                              String titleContains, int minReleaseYear, int maxReleaseYear, double minHours,
-                              double maxHours) {
+                              String titleContains, int minReleaseYear, int maxReleaseYear, int minAddedYear,
+                              int maxAddedYear, double minHours, double maxHours) {
         super(possibleStatuses, possibleFranchises, possiblePlatforms, possibleGenres, possibleCollections,
                 titleContains, minReleaseYear, maxReleaseYear);
         this.possibleDeckStatuses = possibleDeckStatuses;
+        this.minAddedYear = minAddedYear;
+        this.maxAddedYear = maxAddedYear;
         this.minHours = minHours;
         this.maxHours = maxHours;
     }
@@ -26,6 +33,22 @@ public class UnplayedGameFilter extends GameFilter {
 
         for(UnplayedGame game : GameLists.unplayedList){
             //Iterate for every UnplayedGame
+            //Local variables
+            int effectiveAddedYear = game.getAddedYear();
+            int effectiveAddedMonth = game.getAddedMonth();
+            int effectiveAddedDay = game.getAddedDay();
+
+            if(maxAddedDate != null) {
+                //If maxAddedDate is provided, make date usable
+                if (effectiveAddedYear == 0)
+                    effectiveAddedYear = 1;
+
+                if (effectiveAddedMonth == 0)
+                    effectiveAddedMonth = 1;
+
+                if (effectiveAddedDay == 0)
+                    effectiveAddedDay = 1;
+            }
 
             if((possibleStatuses.isEmpty() || possibleStatuses.contains(game.getStatus())) &&
                     //Status is selected and game matches
@@ -41,6 +64,12 @@ public class UnplayedGameFilter extends GameFilter {
                     //Release year is entered and game is greater or equal
                     (game.getReleaseYear() <= maxReleaseYear) &&
                     //Release year is entered and game is less than or equal
+                    (game.getAddedYear() >= minAddedYear) &&
+                    //Added year is entered and game is greater or equal
+                    (game.getAddedYear() <= maxAddedYear) &&
+                    //Added year is entered and game is less than or equal
+                    (maxAddedDate == null || !maxAddedDate.isBefore(LocalDate.of(effectiveAddedYear, effectiveAddedMonth, effectiveAddedDay))) &&
+                    //If max added date is set, filter games by entire date rather than just year
                     (game.getHours() >= minHours) &&
                     //Hours is entered and game is greater or equal
                     (game.getHours() <= maxHours) &&
@@ -57,6 +86,14 @@ public class UnplayedGameFilter extends GameFilter {
         return newList;
     }
 
+    public int getMinAddedYear() {
+        return minAddedYear;
+    }
+
+    public int getMaxAddedYear() {
+        return maxAddedYear;
+    }
+
     public ObservableList<String> getPossibleDeckStatuses() {
         return possibleDeckStatuses;
     }
@@ -69,15 +106,7 @@ public class UnplayedGameFilter extends GameFilter {
         return maxHours;
     }
 
-    public void setPossibleDeckStatuses(ObservableList<String> possibleDeckStatuses) {
-        this.possibleDeckStatuses = possibleDeckStatuses;
-    }
-
-    public void setMinHours(int minHours) {
-        this.minHours = minHours;
-    }
-
-    public void setMaxHours(int maxHours) {
-        this.maxHours = maxHours;
+    public void setMaxAddedDate(LocalDate maxAddedDate) {
+        this.maxAddedDate = maxAddedDate;
     }
 }

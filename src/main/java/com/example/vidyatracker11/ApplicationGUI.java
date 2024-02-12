@@ -222,9 +222,9 @@ public class ApplicationGUI extends Application {
         playedFilterChoices.getItems().addAll("Status", "Short", "Franchise", "Rating", "Platform",
                 "Genre", "Release Year", "Completion Year", "100%", "Collection", "No Filter");
         unplayedSortChoices.getItems().addAll("Status", "Title", "Franchise", "Platform", "Genre", "Release Date",
-                "Hours", "Deck Status");
+                "Date Added", "Hours", "Deck Status");
         unplayedFilterChoices.getItems().addAll("Status", "Franchise", "Platform", "Genre", "Release Year",
-                "Deck Status", "Collection", "No Filter");
+                "Year Added", "Deck Status", "Collection", "No Filter");
 
         //Played ChoiceBox listeners
         playedSortChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) ->
@@ -377,6 +377,7 @@ public class ApplicationGUI extends Application {
                     unplayedFilterTokenChoices.getItems().addAll(GameLists.genreList);
                     break;
                 case 4:
+                case 5:
                     //Release Year
                     //Local variables
                     ObservableList<Integer> years = FXCollections.observableArrayList();    //List of all years
@@ -384,7 +385,14 @@ public class ApplicationGUI extends Application {
                     for(UnplayedGame game : GameLists.unplayedList){
                         //Iterate for each UnplayedGame
                         //Local variables
-                        int year = game.getReleaseYear();   //release year of game
+                        int year;   //release year of game
+
+                        if(unplayedFilterChoices.getSelectionModel().getSelectedIndex() == 4)
+                            //Release year is selected
+                            year = game.getReleaseYear();
+                        else
+                            //Added year is selected
+                            year = game.getAddedYear();
 
                         if(year!=0 && !years.contains((year)))
                             //If year is not 0 and not in years list
@@ -399,18 +407,18 @@ public class ApplicationGUI extends Application {
                         unplayedFilterTokenChoices.getItems().add(""+i);
 
                     break;
-                case 5:
+                case 6:
                     //Deck Status
                     unplayedFilterTokenChoices.getItems().addAll("Yes", "No", "Maybe", "Blank");
                     break;
-                case 6:
+                case 7:
                     //Collection
                     for(GameCollection collection: GameLists.collectionList){
                         //Add each collection title to playedFilterTokenChoices
                         unplayedFilterTokenChoices.getItems().add(collection.getTitle());
                     }
                     break;
-                case 7:
+                case 8:
                     //No Filter
                     //Sort because since there is nothing to select, it won't fire the listener
                     unplayedGamesTable.sortAndFilter("");
@@ -1720,137 +1728,503 @@ public class ApplicationGUI extends Application {
             //Add each platform to the platform list
             platformListArray.put(GameLists.platformList.get(i));
 
+        file.put("PL", platformListArray);
+
         for (int i = 0; i < GameLists.genreList.size(); i++)
             //Add each genre to the genre list
             genreListArray.put(GameLists.genreList.get(i));
 
-        for (int i = 0; i < GameLists.playedList.size(); i++) {
-            //Add each played game to the PlayedGame list
-            //Local variables
-            JSONObject newGame = new JSONObject();          //The game data to save
-            PlayedGame game = GameLists.playedList.get(i);  //The game to save
+        file.put("GL", genreListArray);
 
-            try {
-                //Put each piece of data in newGame
-                newGame.put("S", game.getStatus());
-                newGame.put("T", game.getTitle());
-                newGame.put("P", game.getPlatform());
-                newGame.put("G", game.getGenre());
-                newGame.put("RY", game.getReleaseYear());
-                newGame.put("RM", game.getReleaseMonth());
-                newGame.put("RD", game.getReleaseDay());
-                newGame.put("F", game.getFranchise());
-                newGame.put("R", game.getRating());
-                newGame.put("SS", game.getShortStatus());
-                newGame.put("CY", game.getCompletionYear());
-                newGame.put("CM", game.getCompletionMonth());
-                newGame.put("CD", game.getCompletionDay());
-                newGame.put("1", game.getPercent100());
+        if(GameLists.playedList.size() != 0) {
+            //If there are played games, put played list
+            for (int i = 0; i < GameLists.playedList.size(); i++) {
+                //Add each played game to the PlayedGame list
+                //Local variables
+                JSONObject newGame = new JSONObject();          //The game data to save
+                PlayedGame game = GameLists.playedList.get(i);  //The game to save
 
-                //Put newGame into the total array
-                playedGameArray.put(newGame);
-            } catch (JSONException e1) {
-                e1.printStackTrace();
+                try {
+                    //Put status
+                    newGame.put("S", game.getStatus());
+
+                    if (!game.getTitle().equals(""))
+                        //If game has title, put title
+                        newGame.put("T", game.getTitle());
+
+                    //Put platform and genre
+                    newGame.put("P", game.getPlatform());
+                    newGame.put("G", game.getGenre());
+
+                    if (game.getReleaseYear() != 0)
+                        //If game has release year, put release year
+                        newGame.put("RY", game.getReleaseYear());
+
+                    if (game.getReleaseMonth() != 0)
+                        //If game has release month, put release month
+                        newGame.put("RM", game.getReleaseMonth());
+
+                    if (game.getReleaseDay() != 0)
+                        //If game has release day, put release day
+                        newGame.put("RD", game.getReleaseDay());
+
+                    if (!game.getFranchise().equals(""))
+                        //If game has franchise, put franchise
+                        newGame.put("F", game.getFranchise());
+
+                    if (game.getRating() != 0)
+                        //If game has rating, put rating
+                        newGame.put("R", game.getRating());
+
+                    if (!game.getShortStatus().equals(""))
+                        //If game has short status, put short status
+                        newGame.put("SS", game.getShortStatus());
+
+                    if (game.getCompletionYear() != 0)
+                        //If game has completion year, put completion year
+                        newGame.put("CY", game.getCompletionYear());
+
+                    if (game.getCompletionMonth() != 0)
+                        //If game has completion month, put completion month
+                        newGame.put("CM", game.getCompletionMonth());
+
+                    if (game.getCompletionDay() != 0)
+                        //If game has completion day, put completion day
+                        newGame.put("CD", game.getCompletionDay());
+
+                    if (!game.getPercent100().equals(""))
+                        //If game has 100% status, put 100% status
+                        newGame.put("1", game.getPercent100());
+
+                    //Put newGame into the total array
+                    playedGameArray.put(newGame);
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                }
             }
+
+            file.put("P", playedGameArray);
         }
 
-        for (int i = 0; i < GameLists.unplayedList.size(); i++) {
-            //Add each played game to the UnplayedGame list
-            //Local variables
-            JSONObject newGame = new JSONObject();              //The game data to save
-            UnplayedGame game = GameLists.unplayedList.get(i);  //The game to save
+        if(GameLists.unplayedList.size() !=  0) {
+            for (int i = 0; i < GameLists.unplayedList.size(); i++) {
+                //Add each played game to the UnplayedGame list
+                //Local variables
+                JSONObject newGame = new JSONObject();              //The game data to save
+                UnplayedGame game = GameLists.unplayedList.get(i);  //The game to save
 
-            try {
-                //Put each piece of data in newGame
-                newGame.put("S", game.getStatus());
-                newGame.put("T", game.getTitle());
-                newGame.put("P", game.getPlatform());
-                newGame.put("G", game.getGenre());
-                newGame.put("RY", game.getReleaseYear());
-                newGame.put("RM", game.getReleaseMonth());
-                newGame.put("RD", game.getReleaseDay());
-                newGame.put("F", game.getFranchise());
-                newGame.put("H", game.getHours());
-                newGame.put("D", game.getDeckCompatible());
+                try {
+                    //Put each piece of data in newGame
+                    //Put status
+                    newGame.put("S", game.getStatus());
 
-                //Put newGame into the total array
-                unplayedGameArray.put(newGame);
-            } catch (JSONException e1) {
-                e1.printStackTrace();
+                    if (!game.getTitle().equals(""))
+                        //If game has title, put title
+                        newGame.put("T", game.getTitle());
+
+                    //Put platform and genre
+                    newGame.put("P", game.getPlatform());
+                    newGame.put("G", game.getGenre());
+
+                    if (game.getReleaseYear() != 0)
+                        //If game has release year, put release year
+                        newGame.put("RY", game.getReleaseYear());
+
+                    if (game.getReleaseMonth() != 0)
+                        //If game has release month, put release month
+                        newGame.put("RM", game.getReleaseMonth());
+
+                    if (game.getReleaseDay() != 0)
+                        //If game has release day, put release day
+                        newGame.put("RD", game.getReleaseDay());
+
+                    if(game.getAddedYear() != 0)
+                        //If game has added year, put added year
+                        newGame.put("AY", game.getAddedYear());
+
+                    if(game.getAddedMonth() != 0)
+                        //If game has added month, put added month
+                        newGame.put("AM", game.getAddedMonth());
+
+                    if(game.getAddedDay() != 0)
+                        //If game has added day, put added day
+                        newGame.put("AD", game.getAddedDay());
+
+                    if (!game.getFranchise().equals(""))
+                        //If game has franchise, put franchise
+                        newGame.put("F", game.getFranchise());
+
+                    if (game.getHours() != 0)
+                        //If game has hours, put hours
+                        newGame.put("H", game.getHours());
+
+                    if (!game.getDeckCompatible().equals(""))
+                        //If game has deck status, put deck status
+                        newGame.put("D", game.getDeckCompatible());
+
+                    //Put newGame into the total array
+                    unplayedGameArray.put(newGame);
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                }
             }
+
+            file.put("U", unplayedGameArray);
         }
 
-        for (int i = 0; i < GameLists.collectionList.size(); i++){
-            //Add each collection to the collection list
-            //Local variables
-            JSONObject newCollection = new JSONObject();                    //The collection data to save
-            GameCollection collection = GameLists.collectionList.get(i);    //The collection to save
-            JSONArray games = new JSONArray();                              //List of each game ID
+        if(GameLists.collectionList.size() != 0) {
+            //If there are collections, save collections
+            for (int i = 0; i < GameLists.collectionList.size(); i++) {
+                //Add each collection to the collection list
+                //Local variables
+                JSONObject newCollection = new JSONObject();                    //The collection data to save
+                GameCollection collection = GameLists.collectionList.get(i);    //The collection to save
+                JSONArray games = new JSONArray();                              //List of each game ID
 
-            try {
-                //Put the collection title
-                newCollection.put("CT", collection.getTitle());
+                try {
+                    //Put the collection title
+                    newCollection.put("CT", collection.getTitle());
 
-                for(int j = 0; j < collection.getGames().size(); j++){
-                    //Add each game from the collection to games
-                    //Local variables
-                    Game game = collection.getGames().get(j);   //The game to save
-                    String gameID = "";                         //The gameID to write
+                    for (int j = 0; j < collection.getGames().size(); j++) {
+                        //Add each game from the collection to games
+                        //Local variables
+                        Game game = collection.getGames().get(j);   //The game to save
+                        String gameID = "";                         //The gameID to write
 
-                    if(game instanceof PlayedGame){
-                        //If game is a PlayedGame, start its ID with p and get its index from playedList
-                        gameID = "p" + GameLists.playedList.indexOf(game);
-                    }else if(game instanceof UnplayedGame){
-                        //If game is an UnplayedGame, start its ID with u and get its index from unplayedList
-                        gameID = "u" + GameLists.unplayedList.indexOf(game);
+                        if (game instanceof PlayedGame) {
+                            //If game is a PlayedGame, start its ID with p and get its index from playedList
+                            gameID = "p" + GameLists.playedList.indexOf(game);
+                        } else if (game instanceof UnplayedGame) {
+                            //If game is an UnplayedGame, start its ID with u and get its index from unplayedList
+                            gameID = "u" + GameLists.unplayedList.indexOf(game);
+                        }
+
+                        //Put the game in the array
+                        games.put(gameID);
                     }
 
-                    //Put the game in the array
-                    games.put(gameID);
+                    //Put the collection in the collection list
+                    newCollection.put("CG", games);
+                    collectionArray.put(newCollection);
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+            file.put("C", collectionArray);
+        }
+
+        if(playedTempList.getGames().size() != 0) {
+            //If there are games in played temp list, save played temp list
+            for (int i = 0; i < playedTempList.getGames().size(); i++) {
+                //Add each game to playedTempArray
+                //Local variables
+                PlayedGame game = playedTempList.getGames().get(i); //Game to save
+
+                //Put game in array
+                playedTempArray.put(GameLists.playedList.indexOf(game));
+            }
+
+            file.put("PT", playedTempArray);
+        }
+
+        if(unplayedTempList.getGames().size() != 0) {
+            //If there are games in unplayed temp list, save unplayed temp list
+            for (int i = 0; i < unplayedTempList.getGames().size(); i++) {
+                //Add each game to unplayedTempArray
+                //Local variables
+                UnplayedGame game = unplayedTempList.getGames().get(i); //Game to save
+
+                //Put game in array
+                unplayedTempArray.put(GameLists.unplayedList.indexOf(game));
+            }
+
+            file.put("UT", unplayedTempArray);
+        }
+
+        if(GameLists.playedGoalList.size() != 0) {
+            //If there are played game goals, save goals
+
+            for (int i = 0; i < GameLists.playedGoalList.size(); i++) {
+                //Add each played goal to playedGoalArray
+                //Local variables
+                JSONObject newGoal = new JSONObject();
+                JSONObject filters = new JSONObject();
+                PlayedGameGoal goal = GameLists.playedGoalList.get(i);
+
+                if (!goal.getTitle().equals(""))
+                    //If goal has title, save title
+                    newGoal.put("GT", goal.getTitle());
+
+                newGoal.put("SY", goal.getStartYear());
+                newGoal.put("SM", goal.getStartMonth());
+                newGoal.put("SD", goal.getStartDay());
+                newGoal.put("EY", goal.getEndYear());
+                newGoal.put("EM", goal.getEndMonth());
+                newGoal.put("ED", goal.getEndDay());
+
+                if (goal.getStartProgress() != 0)
+                    //If there is start progress, put start progress
+                    newGoal.put("SP", goal.getStartProgress());
+
+                if (goal.getGoalProgress() != 0)
+                    //If there is end progress, put end progress
+                    newGoal.put("GP", goal.getGoalProgress());
+
+                if (!goal.getFilter().getPossibleStatuses().isEmpty()) {
+                    //If there are statuses in filter, save statuses
+                    //Local variables
+                    JSONArray statuses = new JSONArray();
+
+                    for (String status : goal.getFilter().getPossibleStatuses())
+                        //Loop for each status
+                        statuses.put(status);
+
+                    filters.put("S", statuses);
                 }
 
-                //Put the collection in the collection list
-                newCollection.put("CG", games);
-                collectionArray.put(newCollection);
-            } catch (JSONException e1) {
-                e1.printStackTrace();
+                if (!goal.getFilter().getTitleContains().equals(""))
+                    //If there is title in filter, save title
+                    filters.put("T", goal.getFilter().getTitleContains());
+
+                if (!goal.getFilter().getPossibleFranchises().isEmpty()) {
+                    //If there are franchises in filter, save franchises
+                    //Local variables
+                    JSONArray franchises = new JSONArray();
+
+                    for (String franchise : goal.getFilter().getPossibleFranchises())
+                        //Loop for each franchise
+                        franchises.put(franchise);
+
+                    filters.put("F", franchises);
+                }
+
+                if (!goal.getFilter().getPossiblePlatforms().isEmpty()) {
+                    //If there are platforms in filter, save platforms
+                    //Local variables
+                    JSONArray platforms = new JSONArray();
+
+                    for (String platform : goal.getFilter().getPossiblePlatforms())
+                        //Loop for each platform
+                        platforms.put(platform);
+
+                    filters.put("P", platforms);
+                }
+
+                if (!goal.getFilter().getPossibleGenres().isEmpty()) {
+                    //If there are genres in filter, save genres
+                    //Local variables
+                    JSONArray genres = new JSONArray();
+
+                    for (String genre : goal.getFilter().getPossibleGenres())
+                        //Loop for each genre
+                        genres.put(genre);
+
+                    filters.put("G", genres);
+                }
+
+                if(goal.getFilter().getMinReleaseYear() != 0)
+                    //If there is minimum release year, put minimum release year
+                    filters.put("LY", goal.getFilter().getMinReleaseYear());
+
+                if(goal.getFilter().getMaxReleaseYear() != Integer.MAX_VALUE)
+                    //If there is maximum release year, put maximum release year
+                    filters.put("HY", goal.getFilter().getMaxReleaseYear());
+
+                if (!goal.getFilter().getPossibleCollections().isEmpty()) {
+                    //If there are collections in filter, save collections
+                    //Local variables
+                    JSONArray collections = new JSONArray();
+
+                    for (GameCollection collection : goal.getFilter().getPossibleCollections())
+                        //Loop for each collection
+                        collections.put(collection.getTitle());
+
+                    filters.put("C", collections);
+                }
+
+                if (!goal.getFilter().getPossibleShortStatuses().isEmpty()) {
+                    //If there are short statuses in filter, save short statuses
+                    //Local variables
+                    JSONArray shortStatuses = new JSONArray();
+
+                    for (String shortStatus : goal.getFilter().getPossibleShortStatuses())
+                        //Loop for each short status
+                        shortStatuses.put(shortStatus);
+
+                    filters.put("SS", shortStatuses);
+                }
+
+                if (!goal.getFilter().getPossibleRatings().isEmpty()) {
+                    //If there are ratings in filter, save ratings
+                    //Local variables
+                    JSONArray ratings = new JSONArray();
+
+                    for (int rating : goal.getFilter().getPossibleRatings())
+                        //Loop for each short status
+                        ratings.put(rating);
+
+                    filters.put("R", ratings);
+                }
+
+                if (!goal.getFilter().getPossible100PercentStatuses().isEmpty()) {
+                    //If there are 100% statuses in filter, save 100% statuses
+                    //Local variables
+                    JSONArray percent100Statuses = new JSONArray();
+
+                    for (String percent100Status : goal.getFilter().getPossible100PercentStatuses())
+                        //Loop for each short status
+                        percent100Statuses.put(percent100Status);
+
+                    filters.put("1", percent100Statuses);
+                }
+
+                newGoal.put("F", filters);
+                playedGoalArray.put(newGoal);
             }
+
+            file.put("PG", playedGoalArray);
         }
 
-        for(int i = 0; i < playedTempList.getGames().size(); i++){
-            //Add each game to playedTempArray
-            //Local variables
-            PlayedGame game = playedTempList.getGames().get(i); //Game to save
+        if(GameLists.unplayedGoalList.size() != 0) {
+            //If there are unplayed goals, save goals
 
-            //Put game in array
-            playedTempArray.put(GameLists.playedList.indexOf(game));
+            for (int i = 0; i < GameLists.unplayedGoalList.size(); i++) {
+                //Add each played goal to unplayedGoalArray
+                //Local variables
+                JSONObject newGoal = new JSONObject();
+                JSONObject filters = new JSONObject();
+                UnplayedGameGoal goal = GameLists.unplayedGoalList.get(i);
+
+                if (!goal.getTitle().equals(""))
+                    //If goal has title, save title
+                    newGoal.put("GT", goal.getTitle());
+
+                newGoal.put("SY", goal.getStartYear());
+                newGoal.put("SM", goal.getStartMonth());
+                newGoal.put("SD", goal.getStartDay());
+                newGoal.put("EY", goal.getEndYear());
+                newGoal.put("EM", goal.getEndMonth());
+                newGoal.put("ED", goal.getEndDay());
+
+                if (goal.getStartProgress() != 0)
+                    //If there is start progress, put start progress
+                    newGoal.put("SP", goal.getStartProgress());
+
+                if (goal.getGoalProgress() != 0)
+                    //If there is goal progress, put goal progress
+                    newGoal.put("GP", goal.getGoalProgress());
+
+                if (goal.getEndProgress() != -1)
+                    //If there is end progress, put end progress
+                    newGoal.put("EP", goal.getEndProgress());
+
+                if (!goal.getFilter().getPossibleStatuses().isEmpty()) {
+                    //If there are statuses in filter, save statuses
+                    //Local variables
+                    JSONArray statuses = new JSONArray();
+
+                    for (String status : goal.getFilter().getPossibleStatuses())
+                        //Loop for each status
+                        statuses.put(status);
+
+                    filters.put("S", statuses);
+                }
+
+                if (!goal.getFilter().getTitleContains().equals(""))
+                    //If there is title in filter, save title
+                    filters.put("T", goal.getFilter().getTitleContains());
+
+                if (!goal.getFilter().getPossibleFranchises().isEmpty()) {
+                    //If there are franchises in filter, save franchises
+                    //Local variables
+                    JSONArray franchises = new JSONArray();
+
+                    for (String franchise : goal.getFilter().getPossibleFranchises())
+                        //Loop for each franchise
+                        franchises.put(franchise);
+
+                    filters.put("F", franchises);
+                }
+
+                if (!goal.getFilter().getPossiblePlatforms().isEmpty()) {
+                    //If there are platforms in filter, save platforms
+                    //Local variables
+                    JSONArray platforms = new JSONArray();
+
+                    for (String platform : goal.getFilter().getPossiblePlatforms())
+                        //Loop for each platform
+                        platforms.put(platform);
+
+                    filters.put("P", platforms);
+                }
+
+                if (!goal.getFilter().getPossibleGenres().isEmpty()) {
+                    //If there are genres in filter, save genres
+                    //Local variables
+                    JSONArray genres = new JSONArray();
+
+                    for (String genre : goal.getFilter().getPossibleGenres())
+                        //Loop for each genre
+                        genres.put(genre);
+
+                    filters.put("G", genres);
+                }
+
+                if(goal.getFilter().getMinReleaseYear() != 0)
+                    //If there is minimum release year, put minimum release year
+                    filters.put("LY", goal.getFilter().getMinReleaseYear());
+
+                if(goal.getFilter().getMaxReleaseYear() != Integer.MAX_VALUE)
+                    //If there is maximum release year, put maximum release year
+                    filters.put("HY", goal.getFilter().getMaxReleaseYear());
+
+                if (!goal.getFilter().getPossibleCollections().isEmpty()) {
+                    //If there are collections in filter, save collections
+                    //Local variables
+                    JSONArray collections = new JSONArray();
+
+                    for (GameCollection collection : goal.getFilter().getPossibleCollections())
+                        //Loop for each collection
+                        collections.put(collection.getTitle());
+
+                    filters.put("C", collections);
+                }
+
+                if(goal.getFilter().getMinAddedYear() != 0)
+                    //If there is a minimum added year, put minimum added year
+                    filters.put("LA", goal.getFilter().getMinAddedYear());
+
+                if(goal.getFilter().getMaxAddedYear() != 0)
+                    //If there is a maximum added year, put maximum added year
+                    filters.put("HA", goal.getFilter().getMaxAddedYear());
+
+                if(goal.getFilter().getMinHours() != 0)
+                    //If there is minimum hours, put minimum hours
+                    filters.put("LH", goal.getFilter().getMinHours());
+
+                if(goal.getFilter().getMaxHours() != Double.MAX_VALUE)
+                    //If there is maximum hours, put maximum hours
+                    filters.put("HH", goal.getFilter().getMaxHours());
+
+                if (!goal.getFilter().getPossibleDeckStatuses().isEmpty()) {
+                    //If there are deck statuses in filter, save deck statuses
+                    //Local variables
+                    JSONArray deckStatuses = new JSONArray();
+
+                    for (String deckStatus : goal.getFilter().getPossibleDeckStatuses())
+                        //Loop for each collection
+                        deckStatuses.put(deckStatus);
+
+                    filters.put("D", deckStatuses);
+                }
+
+                newGoal.put("F", filters);
+                unplayedGoalArray.put(newGoal);
+            }
+
+            file.put("UG", unplayedGoalArray);
         }
-
-        for(int i = 0; i < unplayedTempList.getGames().size(); i++){
-            //Add each game to unplayedTempArray
-            //Local variables
-            UnplayedGame game = unplayedTempList.getGames().get(i); //Game to save
-
-            //Put game in array
-            unplayedTempArray.put(GameLists.unplayedList.indexOf(game));
-        }
-
-        for(int i = 0; i < GameLists.playedGoalList.size(); i++){
-            //TODO
-        }
-
-        for(int i = 0; i < GameLists.unplayedGoalList.size(); i++){
-            //TODO
-        }
-
-        //Put each list in the JSONObject
-        file.put("PL", platformListArray);
-        file.put("GL", genreListArray);
-        file.put("P", playedGameArray);
-        file.put("U", unplayedGameArray);
-        file.put("C", collectionArray);
-        file.put("PT", playedTempArray);
-        file.put("UT", unplayedTempArray);
 
         //Write the JSONObject to the file and close the PrintWriter
         pw.write(file.toString());
@@ -1870,15 +2244,45 @@ public class ApplicationGUI extends Application {
     public static void openFile(Path filePath) {
         try {
             //Local variables
-            String jsonString = Files.readString(filePath);             //String to parse
-            JSONObject file = new JSONObject(jsonString);               //String as a JSONObject
-            JSONArray platformList = file.getJSONArray("PL");       //List of platforms in the file
-            JSONArray genreList = file.getJSONArray("GL");          //List  of genres in the file
-            JSONArray playedGameList = file.getJSONArray("P");      //list of PlayedGames in the file
-            JSONArray unplayedGameList = file.getJSONArray("U");    //List of UnplayedGames in the file
-            JSONArray collectionList = file.getJSONArray("C");     //List of collections in the file
-            JSONArray playedTempArray = file.getJSONArray("PT");     //List of collections in the file
-            JSONArray unplayedTempArray = file.getJSONArray("UT");     //List of collections in the file
+            String jsonString = Files.readString(filePath);         //String to parse
+            JSONObject file = new JSONObject(jsonString);           //String as a JSONObject
+            JSONArray platformList = file.getJSONArray("PL");   //List of platforms in the file
+            JSONArray genreList = file.getJSONArray("GL");      //List  of genres in the file
+            JSONArray playedGameList = null;                        //list of PlayedGames in the file
+            JSONArray unplayedGameList = null;                      //List of UnplayedGames in the file
+            JSONArray collectionList = null;                        //List of collections in the file
+            JSONArray playedTempArray = null;                       //List of played temp array items in the file
+            JSONArray unplayedTempArray = null;                     //List of unplayed temp array items in the file
+            JSONArray playedGoalList = null;                        //List of played goals in the file
+            JSONArray unplayedGoalList = null;                      //List of unplayed goals in the file
+
+            if(file.has("P"))
+                //If there are played games, open played games list
+                playedGameList = file.getJSONArray("P");
+
+            if(file.has("U"))
+                //If there are unplayed games, open unplayed games list
+                unplayedGameList = file.getJSONArray("U");
+
+            if(file.has("C"))
+                //If there are collections, open collection list
+                collectionList = file.getJSONArray("C");
+
+            if(file.has("PT"))
+                //If there are items in the played temp list, open played temp list
+                playedTempArray = file.getJSONArray("PT");
+
+            if(file.has("UT"))
+                //If there are items in the unplayed temp list, open unplayed temp list
+                unplayedTempArray = file.getJSONArray("UT");
+
+            if(file.has("PG"))
+                //If there are played game goals, open played game goals
+                playedGoalList = file.getJSONArray("PG");
+
+            if(file.has("UG"))
+                //If there are unplayed game goals, open unplayed game goals
+                unplayedGoalList = file.getJSONArray("UG");
 
             //Reset all lists before setting new data
             GameLists.platformList = FXCollections.observableArrayList();
@@ -1888,6 +2292,8 @@ public class ApplicationGUI extends Application {
             GameLists.collectionList = FXCollections.observableArrayList();
             ApplicationGUI.playedTempList.setGames(FXCollections.observableArrayList());
             ApplicationGUI.unplayedTempList.setGames(FXCollections.observableArrayList());
+            GameLists.playedGoalList = FXCollections.observableArrayList();
+            GameLists.unplayedGoalList = FXCollections.observableArrayList();
 
             for (int i = 0; i < platformList.length(); i++)
                 //Add each platform
@@ -1897,93 +2303,521 @@ public class ApplicationGUI extends Application {
                 //Add each genre
                 GameLists.genreList.add((String) genreList.get(i));
 
-            for (int i = 0; i < playedGameList.length(); i++) {
-                //Add each PlayedGame
-                //Local variables
-                JSONObject newObj = (JSONObject) playedGameList.get(i);                                 //Game data from the JSON file
-                PlayedGame newGame = new PlayedGame((String) newObj.get("T"), (String) newObj.get("S"), //New game to add to the list
-                        (String) newObj.get("P"), (String) newObj.get("G"), (int) newObj.get("RY"),
-                        (int) newObj.get("RM"), (int) newObj.get("RD"));
-
-                //Add data to game
-                newGame.setCompletionYear((int) newObj.get("CY"));
-                newGame.setCompletionMonth((int) newObj.get("CM"));
-                newGame.setCompletionDay((int) newObj.get("CD"));
-                newGame.setShortStatus((String) newObj.get("SS"));
-                newGame.setRating((int) newObj.get("R"));
-                newGame.setPercent100((String) newObj.get("1"));
-                newGame.setFranchise((String) newObj.get("F"));
-
-                //Add game to list
-                GameLists.playedList.add(newGame);
-            }
-
-            for (int i = 0; i < unplayedGameList.length(); i++) {
-                //Add each PlayedGame
-                //Local variables
-                JSONObject newObj = (JSONObject) unplayedGameList.get(i);                                   //Game data from the JSON file
-                UnplayedGame newGame = new UnplayedGame((String) newObj.get("T"), (String) newObj.get("S"), //New game to add to the list
-                        (String) newObj.get("P"), (String) newObj.get("G"), (int) newObj.get("RY"),
-                        (int) newObj.get("RM"), (int) newObj.get("RD"));
-
-                //Add data to game,
-                newGame.setFranchise((String) newObj.get("F"));
-                newGame.setDeckCompatible((String) newObj.get("D"));
-
-                try {
-                    //If hours value looks like a decimal
-                    newGame.setHours(((BigDecimal) newObj.get("H")).doubleValue());
-                } catch (ClassCastException e2) {
-                    //If hours value looks like an int
-                    newGame.setHours((int) newObj.get("H"));
-                }
-
-                //Add game to list
-                GameLists.unplayedList.add(newGame);
-            }
-
-            for(int i = 0; i < collectionList.length(); i++){
-                //Add each collection
-                //Local variables
-                JSONObject newObj = (JSONObject) collectionList.get(i);                        //Collection data from the JSON file
-                GameCollection newCollection = new GameCollection((String) newObj.get("CT"));   //New collection to add to the list
-                JSONArray collectionGameArray = newObj.getJSONArray("CG");                  //Array of games for the new collection
-
-                for(int j = 0; j < collectionGameArray.length(); j++){
-                    //Add each game from collectionGameArray to newCollection
+            if(playedGameList != null)
+                for (int i = 0; i < playedGameList.length(); i++) {
+                    //Add each PlayedGame
                     //Local variables
-                    String gameID = (String) collectionGameArray.get(j);            //ID of game
-                    int gameIndex = Integer.parseInt(gameID.substring(1));  //index of game
+                    JSONObject newObj = (JSONObject) playedGameList.get(i); //Game data from the JSON file
+                    PlayedGame newGame;                                     //New game to add to the list
+                    String title = "";                                      //New game's title
+                    int releaseYear = 0;                                    //New game's release year
+                    int releaseMonth = 0;                                   //New game's release month
+                    int releaseDay = 0;                                     //New game's release day
+                    String franchise = "";                                  //New game's franchise
+                    int rating = 0;                                         //New game's rating
+                    String shortStatus = "";                                //New game's short status
+                    int completionYear = 0;                                 //New game's completion year
+                    int completionMonth = 0;                                //New game's completion month
+                    int completionDay = 0;                                  //New game's completion day
+                    String percent100 = "";                                 //New game's 100% status
 
-                    if(gameID.charAt(0)=='p')
-                        //If game is a playedGame, add it to played list
-                        newCollection.getGames().add(GameLists.playedList.get(gameIndex));
-                    else if(gameID.charAt(0)=='u')
-                        //If game is an unplayedGame, add it to unplayed list
-                        newCollection.getGames().add(GameLists.unplayedList.get(gameIndex));
+                    if(newObj.has("T"))
+                        //If game has title, set title
+                        title = (String) newObj.get("T");
+
+                    if(newObj.has("RY"))
+                        //If the game has a release year, set release year
+                        releaseYear = (int) newObj.get("RY");
+
+                    if(newObj.has("RM"))
+                        //If the game has a release month, set release month
+                        releaseMonth = (int) newObj.get("RM");
+
+                    if(newObj.has("RD"))
+                        //If the game has a release day, set release day
+                        releaseDay = (int) newObj.get("RD");
+
+                    if(newObj.has("F"))
+                        //If game has franchise, set franchise
+                        franchise = (String) newObj.get("F");
+
+                    if(newObj.has("R"))
+                        //If the game has a rating, set rating
+                        rating = (int) newObj.get("R");
+
+                    if(newObj.has("SS"))
+                        //If game has short status, set short status
+                        shortStatus = (String) newObj.get("SS");
+
+                    if(newObj.has("CY"))
+                        //If the game has a completion year, set completion year
+                        completionYear = (int) newObj.get("CY");
+
+                    if(newObj.has("CM"))
+                        //If the game has a completion month, set completion month
+                        completionMonth = (int) newObj.get("CM");
+
+                    if(newObj.has("CD"))
+                        //If the game has a completion day, set completion day
+                        completionDay = (int) newObj.get("CD");
+
+                    if(newObj.has("1"))
+                        //If game has 100% status, set 100% status
+                        percent100 = (String) newObj.get("1");
+
+                    newGame = new PlayedGame(title, (String) newObj.get("S"), (String) newObj.get("P"),
+                            (String) newObj.get("G"), releaseYear, releaseMonth, releaseDay);
+
+                    //Add data to game
+                    newGame.setCompletionYear(completionYear);
+                    newGame.setCompletionMonth(completionMonth);
+                    newGame.setCompletionDay(completionDay);
+                    newGame.setShortStatus(shortStatus);
+                    newGame.setRating(rating);
+                    newGame.setPercent100(percent100);
+                    newGame.setFranchise(franchise);
+
+                    //Add game to list
+                    GameLists.playedList.add(newGame);
                 }
 
-                //Add collection to list
-                GameLists.collectionList.add(newCollection);
-            }
+            if(unplayedGameList != null)
+                for (int i = 0; i < unplayedGameList.length(); i++) {
+                    //Add each PlayedGame
+                    //Local variables
+                    JSONObject newObj = (JSONObject) unplayedGameList.get(i);   //Game data from the JSON file
+                    UnplayedGame newGame;                                       //New game to add to the list
+                    String title = "";                                          //New game's title
+                    int releaseYear = 0;                                        //New game's release year
+                    int releaseMonth = 0;                                       //New game's release month
+                    int releaseDay = 0;                                         //New game's release day
+                    String franchise = "";                                      //New game's franchise
+                    int addedYear = 0;                                          //New game's added year
+                    int addedMonth = 0;                                         //New game's added month
+                    int addedDay = 0;                                           //New game's added day
+                    double hours = 0.0;                                         //New game's hours
+                    String deckStatus = "";                                     //New game's deck status
 
-            for(int i = 0; i < playedTempArray.length(); i++){
-                //Add each item in playedTempArray
-                //Local variables
-                int gameID = (int) playedTempArray.get(i);    //Index of game
+                    if(newObj.has("T"))
+                        //If game has title, set title
+                        title = (String) newObj.get("T");
 
-                //Add game to list
-                playedTempList.getGames().add(GameLists.playedList.get(gameID));
-            }
+                    if(newObj.has("RY"))
+                        //If the game has a release year, set release year
+                        releaseYear = (int) newObj.get("RY");
 
-            for(int i = 0; i < unplayedTempArray.length(); i++){
-                //Add each item in playedTempArray
-                //Local variables
-                int gameID = (int) unplayedTempArray.get(i);    //ID of game
+                    if(newObj.has("RM"))
+                        //If the game has a release month, set release month
+                        releaseMonth = (int) newObj.get("RM");
 
-                //Add game to list
-                unplayedTempList.getGames().add(GameLists.unplayedList.get(gameID));
-            }
+                    if(newObj.has("RD"))
+                        //If the game has a release day, set release day
+                        releaseDay = (int) newObj.get("RD");
+
+                    if(newObj.has("F"))
+                        //If game has franchise, set franchise
+                        franchise = (String) newObj.get("F");
+
+                    if(newObj.has("AY"))
+                        //If the game has an added year, set added year
+                        addedYear = (int) newObj.get("AY");
+
+                    if(newObj.has("AM"))
+                        //If the game has an added month, set added month
+                        addedMonth = (int) newObj.get("AM");
+
+                    if(newObj.has("AD"))
+                        //If the game has an added day, set added day
+                        addedDay = (int) newObj.get("AD");
+
+                    if(newObj.has("H"))
+                        //If game has hours, set hours
+                        try{
+                            //Hours looks like double
+                            hours = ((BigDecimal) newObj.get("H")).doubleValue();
+                        } catch (ClassCastException e2) {
+                            //Hours looks like int
+                            hours = (int) newObj.get("H") * 1.0;
+                        }
+
+                    if(newObj.has("D"))
+                        //If game has deck status, set deck status
+                        deckStatus = (String) newObj.get("D");
+
+                    newGame = new UnplayedGame(title, (String) newObj.get("S"), (String) newObj.get("P"),
+                            (String) newObj.get("G"), releaseYear, releaseMonth, releaseDay);
+
+                    //Add data to game,
+                    newGame.setFranchise(franchise);
+                    newGame.setDeckCompatible(deckStatus);
+                    newGame.setHours(hours);
+                    newGame.setAddedYear(addedYear);
+                    newGame.setAddedMonth(addedMonth);
+                    newGame.setAddedDay(addedDay);
+
+                    //Add game to list
+                    GameLists.unplayedList.add(newGame);
+                }
+
+            if(collectionList != null)
+                for(int i = 0; i < collectionList.length(); i++){
+                    //Add each collection
+                    //Local variables
+                    JSONObject newObj = (JSONObject) collectionList.get(i);                        //Collection data from the JSON file
+                    GameCollection newCollection = new GameCollection((String) newObj.get("CT"));   //New collection to add to the list
+                    JSONArray collectionGameArray = newObj.getJSONArray("CG");                  //Array of games for the new collection
+
+                    for(int j = 0; j < collectionGameArray.length(); j++){
+                        //Add each game from collectionGameArray to newCollection
+                        //Local variables
+                        String gameID = (String) collectionGameArray.get(j);            //ID of game
+                        int gameIndex = Integer.parseInt(gameID.substring(1));  //index of game
+
+                        if(gameID.charAt(0)=='p')
+                            //If game is a playedGame, add it to played list
+                            newCollection.getGames().add(GameLists.playedList.get(gameIndex));
+                        else if(gameID.charAt(0)=='u')
+                            //If game is an unplayedGame, add it to unplayed list
+                            newCollection.getGames().add(GameLists.unplayedList.get(gameIndex));
+                    }
+
+                    //Add collection to list
+                    GameLists.collectionList.add(newCollection);
+                }
+
+            if(playedTempArray != null)
+                for(int i = 0; i < playedTempArray.length(); i++){
+                    //Add each item in playedTempArray
+                    //Local variables
+                    int gameID = (int) playedTempArray.get(i);    //Index of game
+
+                    //Add game to list
+                    playedTempList.getGames().add(GameLists.playedList.get(gameID));
+                }
+
+            if(unplayedTempArray != null)
+                for(int i = 0; i < unplayedTempArray.length(); i++){
+                    //Add each item in playedTempArray
+                    //Local variables
+                    int gameID = (int) unplayedTempArray.get(i);    //ID of game
+
+                    //Add game to list
+                    unplayedTempList.getGames().add(GameLists.unplayedList.get(gameID));
+                }
+
+            if(playedGoalList != null)
+                for(int i = 0; i < playedGoalList.length(); i++){
+                    //Add each game in playedGoalList
+                    //Local variables
+                    JSONObject newObj = (JSONObject) playedGoalList.get(i);                             //Goal data from json file
+                    JSONObject filterObj = (JSONObject) newObj.get("F");                                //Filters data from json file
+                    PlayedGameGoal newGoal;                                                             //New goal to add to list
+                    String title = "";                                                                  //Title of new goal
+                    int startProgress = 0;                                                              //Start progress of new goal
+                    int goalProgress = 0;                                                                //Goal progress of new goal
+                    PlayedGameFilter filter;                                                            //Filter for new goal
+                    ObservableList<String> statuses = FXCollections.observableArrayList();              //Statuses for filter
+                    String titleContains = "";                                                          //Title contains for filter
+                    ObservableList<String> franchises = FXCollections.observableArrayList();            //Franchises for filter
+                    ObservableList<String> platforms = FXCollections.observableArrayList();             //Platforms for filter
+                    ObservableList<String> genres = FXCollections.observableArrayList();                //Genres for filter
+                    int minReleaseYear = 0;                                                             //Minimum release year for filter
+                    int maxReleaseYear = Integer.MAX_VALUE;                                             //Maximum release year for filter
+                    ObservableList<GameCollection> collections = FXCollections.observableArrayList();   //Collections for filter
+                    ObservableList<String> shortStatuses = FXCollections.observableArrayList();         //Short statuses for filter
+                    ObservableList<Integer> ratings = FXCollections.observableArrayList();              //Ratings statuses for filter
+                    ObservableList<String> percent100Statuses = FXCollections.observableArrayList();    //100% statuses for filter
+
+                    if(newObj.has("GT"))
+                        //If goal has title, get title
+                        title = (String) newObj.get("GT");
+
+                    if(newObj.has("SP"))
+                        //If goal has start progress, get start progress
+                        startProgress = (int) newObj.get("SP");
+
+                    if(newObj.has("GP"))
+                        //If goal has goal progress, get goal progress
+                        goalProgress = (int) newObj.get("GP");
+
+                    if(filterObj.has("S")) {
+                        //If filter has statuses, get statuses
+                        //Local variables
+                        JSONArray statusesArray = filterObj.getJSONArray("S");
+
+                        for(int j = 0; j < statusesArray.length(); j++)
+                            //For each item in statuses array, put status in statuses
+                            statuses.add((String) statusesArray.get(j));
+                    }
+
+                    if(filterObj.has("T"))
+                        //If filter has title, get title
+                        titleContains = (String) filterObj.get("T");
+
+                    if(filterObj.has("F")) {
+                        //If filter has franchises, get franchises
+                        //Local variables
+                        JSONArray franchisesArray = filterObj.getJSONArray("F");
+
+                        for (int j = 0; j < franchisesArray.length(); j++)
+                            //For each item in franchises array, put franchise in franchises
+                            franchises.add((String) franchisesArray.get(j));
+                    }
+
+                    if(filterObj.has("P")) {
+                        //If filter has platforms, get platforms
+                        //Local variables
+                        JSONArray platformsArray = filterObj.getJSONArray("P");
+
+                        for (int j = 0; j < platformsArray.length(); j++)
+                            //For each item in platforms array, put platform in platforms
+                            platforms.add((String) platformsArray.get(j));
+                    }
+
+                    if(filterObj.has("G")) {
+                        //If filter has genres, get genres
+                        //Local variables
+                        JSONArray genresArray = filterObj.getJSONArray("G");
+
+                        for (int j = 0; j < genresArray.length(); j++)
+                            //For each item in genres array, put genre in genres
+                            genres.add((String) genresArray.get(j));
+                    }
+
+                    if(filterObj.has("LY"))
+                        //If filter has minimum release year, get year
+                        minReleaseYear = (int) filterObj.get("LY");
+
+                    if(filterObj.has("HY"))
+                        //If filter has maximum release year, get year
+                        maxReleaseYear = (int) filterObj.get("HY");
+
+                    if(filterObj.has("C")) {
+                        //If filter has collections, get collections
+                        //Local variables
+                        JSONArray collectionsArray = filterObj.getJSONArray("C");
+
+                        for (int j = 0; j < collectionsArray.length(); j++)
+                            //For each item in collections array, put short status in collections
+
+                            for (GameCollection collection : GameLists.collectionList)
+                                //For each collection, add the one with the same name.
+
+                                if(collection.getTitle().equals(collectionsArray.get(j))) {
+                                    //If collection found, add it to list and stop looping
+                                    collections.add(collection);
+                                    break;
+                                }
+                    }
+
+                    if(filterObj.has("SS")) {
+                        //If filter has short statuses, get short statuses
+                        //Local variables
+                        JSONArray shortStatusArray = filterObj.getJSONArray("SS");
+
+                        for (int j = 0; j < shortStatusArray.length(); j++)
+                            //For each item in short statuses array, put short status in short statuses
+                            shortStatuses.add((String) shortStatusArray.get(j));
+                    }
+
+                    if(filterObj.has("R")) {
+                        //If filter has ratings, get ratings
+                        //Local variables
+                        JSONArray ratingsArray = filterObj.getJSONArray("R");
+
+                        for (int j = 0; j < ratingsArray.length(); j++)
+                            //For each item in ratings array, put rating in short ratings
+                            ratings.add((int) ratingsArray.get(j));
+                    }
+
+                    if(filterObj.has("1")) {
+                        //If filter has 100% statuses, get 100% statuses
+                        //Local variables
+                        JSONArray percent100Array = filterObj.getJSONArray("1");
+
+                        for (int j = 0; j < percent100Array.length(); j++)
+                            //For each item in 100% statuses array, put 100% status in 100% statuses
+                            percent100Statuses.add((String) percent100Array.get(j));
+                    }
+
+                    //Create new filter
+                    filter = new PlayedGameFilter(statuses, franchises, platforms, genres, collections, shortStatuses,
+                            ratings, percent100Statuses, titleContains, minReleaseYear, maxReleaseYear,
+                            0, Integer.MAX_VALUE);
+                    filter.setMaxCompletionDate(
+                            LocalDate.of((int) newObj.get("EY"), (int) newObj.get("EM"), (int) newObj.get("ED")));
+
+                    //Create new goal
+                    newGoal = new PlayedGameGoal(title, (int) newObj.get("SY"), (int) newObj.get("SM"),
+                            (int) newObj.get("SD"), (int) newObj.get("EY"), (int) newObj.get("EM"),
+                            (int) newObj.get("ED"), startProgress, goalProgress, filter);
+
+                    GameLists.playedGoalList.add(newGoal);
+                }
+
+            if(unplayedGoalList != null)
+                for(int i = 0; i < unplayedGoalList.length(); i++){
+                    //Add each game in unplayedGoalList
+                    //Local variables
+                    JSONObject newObj = (JSONObject) unplayedGoalList.get(i);                             //Goal data from json file
+                    JSONObject filterObj = (JSONObject) newObj.get("F");                                //Filters data from json file
+                    UnplayedGameGoal newGoal;                                                             //New goal to add to list
+                    String title = "";                                                                  //Title of new goal
+                    int startProgress = 0;                                                              //Start progress of new goal
+                    int goalProgress = 0;                                                                //Goal progress of new goal
+                    int endProgress = -1;                                                               //End progress of new goal
+                    UnplayedGameFilter filter;                                                            //Filter for new goal
+                    ObservableList<String> statuses = FXCollections.observableArrayList();              //Statuses for filter
+                    String titleContains = "";                                                          //Title contains for filter
+                    ObservableList<String> franchises = FXCollections.observableArrayList();            //Franchises for filter
+                    ObservableList<String> platforms = FXCollections.observableArrayList();             //Platforms for filter
+                    ObservableList<String> genres = FXCollections.observableArrayList();                //Genres for filter
+                    int minReleaseYear = 0;                                                             //Minimum release year for filter
+                    int maxReleaseYear = Integer.MAX_VALUE;                                             //Maximum release year for filter
+                    ObservableList<GameCollection> collections = FXCollections.observableArrayList();   //Collections for filter
+                    int minAddedYear =  0;                                                              //Minimum added year for filter
+                    int maxAddedYear =  Integer.MAX_VALUE;                                              //Maximum added year for filter
+                    double minHours = 0.0;                                                              //Min hours for filter
+                    double maxHours = Double.MAX_VALUE;                                                 //Max hours for filter
+                    ObservableList<String> deckStatuses = FXCollections.observableArrayList();          //Deck statuses for filter
+
+                    if(newObj.has("GT"))
+                        //If goal has title, get title
+                        title = (String) newObj.get("GT");
+
+                    if(newObj.has("SP"))
+                        //If goal has start progress, get start progress
+                        startProgress = (int) newObj.get("SP");
+
+                    if(newObj.has("GP"))
+                        //If goal has goal progress, get goal progress
+                        goalProgress = (int) newObj.get("GP");
+
+                    if(newObj.has("EP"))
+                        //If goal has end progress, get end progress
+                        endProgress = (int) newObj.get("EP");
+
+                    if(filterObj.has("S")) {
+                        //If filter has statuses, get statuses
+                        //Local variables
+                        JSONArray statusesArray = filterObj.getJSONArray("S");
+
+                        for(int j = 0; j < statusesArray.length(); j++)
+                            //For each item in statuses array, put status in statuses
+                            statuses.add((String) statusesArray.get(j));
+                    }
+
+                    if(filterObj.has("T"))
+                        //If filter has title, get title
+                        titleContains = (String) filterObj.get("T");
+
+                    if(filterObj.has("F")) {
+                        //If filter has franchises, get franchises
+                        //Local variables
+                        JSONArray franchisesArray = filterObj.getJSONArray("F");
+
+                        for (int j = 0; j < franchisesArray.length(); j++)
+                            //For each item in franchises array, put franchise in franchises
+                            franchises.add((String) franchisesArray.get(j));
+                    }
+
+                    if(filterObj.has("P")) {
+                        //If filter has platforms, get platforms
+                        //Local variables
+                        JSONArray platformsArray = filterObj.getJSONArray("P");
+
+                        for (int j = 0; j < platformsArray.length(); j++)
+                            //For each item in platforms array, put platform in platforms
+                            platforms.add((String) platformsArray.get(j));
+                    }
+
+                    if(filterObj.has("G")) {
+                        //If filter has genres, get genres
+                        //Local variables
+                        JSONArray genresArray = filterObj.getJSONArray("G");
+
+                        for (int j = 0; j < genresArray.length(); j++)
+                            //For each item in genres array, put genre in genres
+                            genres.add((String) genresArray.get(j));
+                    }
+
+                    if(filterObj.has("LY"))
+                        //If filter has minimum release year, get year
+                        minReleaseYear = (int) filterObj.get("LY");
+
+                    if(filterObj.has("HY"))
+                        //If filter has maximum release year, get year
+                        maxReleaseYear = (int) filterObj.get("HY");
+
+                    if(filterObj.has("C")) {
+                        //If filter has collections, get collections
+                        //Local variables
+                        JSONArray collectionsArray = filterObj.getJSONArray("C");
+
+                        for (int j = 0; j < collectionsArray.length(); j++)
+                            //For each item in collections array, put short status in collections
+
+                            for (GameCollection collection : GameLists.collectionList)
+                                //For each collection, add the one with the same name.
+
+                                if(collection.getTitle().equals(collectionsArray.get(j))) {
+                                    //If collection found, add it to list and stop looping
+                                    collections.add(collection);
+                                    break;
+                                }
+                    }
+
+                    if(filterObj.has("LA"))
+                        //If filter has minimum added year, get year
+                        minAddedYear = (int) filterObj.get("LA");
+
+                    if(filterObj.has("HA"))
+                        //If filter has maximum added year, get year
+                        maxAddedYear = (int) filterObj.get("HA");
+
+                    if(filterObj.has("LH")) {
+                        //If filter has minimum hours, get hours
+                        try {
+                            //Hours looks like double
+                            minHours = ((BigDecimal) filterObj.get("LH")).doubleValue();
+                        } catch (ClassCastException e2) {
+                            //Hours looks like int
+                            minHours = (int) filterObj.get("LH") * 1.0;
+                        }
+                    }
+
+                    if(filterObj.has("HH")) {
+                        //If filter has maximum hours, get hours
+                        try {
+                            //Hours looks like double
+                            maxHours = ((BigDecimal) filterObj.get("HH")).doubleValue();
+                        } catch (ClassCastException e2) {
+                            //Hours looks like int
+                            maxHours = (int) filterObj.get("HH") * 1.0;
+                        }
+                    }
+
+                    if(filterObj.has("D")) {
+                        //If filter has deck statuses, get deck statuses
+                        //Local variables
+                        JSONArray deckStatusesArray = filterObj.getJSONArray("D");
+
+                        for (int j = 0; j < deckStatusesArray.length(); j++)
+                            //For each item in deck statuses array, put deck status in deck statuses
+                            deckStatuses.add((String) deckStatusesArray.get(j));
+                    }
+
+                    //Create new filter
+                    filter = new UnplayedGameFilter(statuses, franchises, platforms, genres, collections, deckStatuses,
+                            titleContains, minReleaseYear, maxReleaseYear, minAddedYear, maxAddedYear, minHours, maxHours);
+
+                    //Create new goal
+                    newGoal = new UnplayedGameGoal(title, (int) newObj.get("SY"), (int) newObj.get("SM"),
+                            (int) newObj.get("SD"), (int) newObj.get("EY"), (int) newObj.get("EM"),
+                            (int) newObj.get("ED"), startProgress, goalProgress, endProgress, filter);
+
+                    GameLists.unplayedGoalList.add(newGoal);
+                }
 
             //Update GUI
             playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());

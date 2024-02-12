@@ -3,6 +3,9 @@ package com.example.vidyatracker11;
 //An item in the unplayed game list.
 public class UnplayedGame extends Game {
     //Fields
+    private int addedYear;              //Year that game was added to backlog
+    private int addedMonth;             //Month that game was added to backlog
+    private int addedDay;               //Day that game was added to backlog
     private double hours;               //Predicted hours to beat game
     private String deckCompatible = ""; //Game compatibility with steam deck
 
@@ -14,6 +17,36 @@ public class UnplayedGame extends Game {
         if (!status.equals("Backlog") && !status.equals("SubBacklog") && !status.equals("Wishlist") && !status.equals("Ignored"))
             //If status is not Backlog, SubBacklog, or Wishlist, throw an error
             throw new IllegalArgumentException();
+    }
+
+    //Added year getter
+    public int getAddedYear() {
+        return addedYear;
+    }
+
+    //Added year setter
+    public void setAddedYear(int addedYear) {
+        this.addedYear = addedYear;
+    }
+
+    //Added month getter
+    public int getAddedMonth() {
+        return addedMonth;
+    }
+
+    //Added month setter
+    public void setAddedMonth(int addedMonth) {
+        this.addedMonth = addedMonth;
+    }
+
+    //Added day getter
+    public int getAddedDay() {
+        return addedDay;
+    }
+
+    //Added day setter
+    public void setAddedDay(int addedDay) {
+        this.addedDay = addedDay;
     }
 
     //Hours setter (double)

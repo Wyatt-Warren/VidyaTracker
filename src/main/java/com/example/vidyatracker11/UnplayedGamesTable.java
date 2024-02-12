@@ -24,11 +24,12 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
     TableColumn<UnplayedGame, String> platformColumn = new TableColumn<>("Platform");
     TableColumn<UnplayedGame, String> genreColumn = new TableColumn<>("Genre");
     TableColumn<UnplayedGame, Integer> releaseYearColumn = new TableColumn<>("Release Year");
+    TableColumn<UnplayedGame, Integer> addedYearColumn = new TableColumn<>("Year Added");
     TableColumn<UnplayedGame, Double> hoursColumn = new TableColumn<>("Predicted Hours");
     TableColumn<UnplayedGame, String> deckColumn = new TableColumn<>("Deck Status");
     ObservableList<TableColumn<UnplayedGame, ?>> columnList = FXCollections.observableArrayList(
             statusColumn, titleColumn, franchiseColumn, platformColumn,
-            genreColumn, releaseYearColumn, hoursColumn, deckColumn);
+            genreColumn, releaseYearColumn, addedYearColumn, hoursColumn, deckColumn);
 
     //Fields
     FilteredList<UnplayedGame> filteredList = new FilteredList<>(GameLists.unplayedList);       //List of items in the table
@@ -41,6 +42,7 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
         platformColumn.setCellValueFactory(new PropertyValueFactory<>("platform"));
         genreColumn.setCellValueFactory(new PropertyValueFactory<>("genre"));
         releaseYearColumn.setCellValueFactory(new PropertyValueFactory<>("releaseYear"));
+        addedYearColumn.setCellValueFactory(new PropertyValueFactory<>("addedYear"));
         hoursColumn.setCellValueFactory(new PropertyValueFactory<>("hours"));
         deckColumn.setCellValueFactory(new PropertyValueFactory<>("deckCompatible"));
 
@@ -70,6 +72,36 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
         });
 
         releaseYearColumn.setCellFactory(e -> new TableCell<>() {
+            public void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (item == null || empty) {
+                    //Cells where there is no game object
+                    setText(null);
+                    setStyle("");
+                } else {
+
+                    if (item == 0)
+                        //0 means no rating
+                        setText("");
+                    else
+                        //Set text
+                        setText("" + item);
+
+                    if ((getItem()) == ApplicationGUI.localDate.getYear())
+                        //Current year color
+                        setStyle(ApplicationGUI.colorMap.get("CURRENTYEAR"));
+                    else if ((getItem()) == ApplicationGUI.localDate.getYear() - 1)
+                        //Last year color
+                        setStyle(ApplicationGUI.colorMap.get("LASTYEAR"));
+                    else
+                        //Any other year color
+                        setStyle("");
+                }
+            }
+        });
+
+        addedYearColumn.setCellFactory(e -> new TableCell<>() {
             public void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
 
@@ -232,22 +264,31 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
             case 4:
                 //Release Year
                 try{
-                    filterByAny(playedGame -> playedGame.getReleaseYear() ==
+                    filterByAny(unplayedGame -> unplayedGame.getReleaseYear() ==
                             Integer.parseInt(finalFilterToken));
                 }catch (NumberFormatException ignored){
                     //This shouldn't happen
                 }
                 break;
             case 5:
+                //Release Year
+                try{
+                    filterByAny(unplayedGame -> unplayedGame.getAddedYear() ==
+                            Integer.parseInt(finalFilterToken));
+                }catch (NumberFormatException ignored){
+                    //This shouldn't happen
+                }
+                break;
+            case 6:
                 //Deck Status
                 filterByAny(unplayedGame ->
                         unplayedGame.getDeckCompatible().equals(finalFilterToken));
                 break;
-            case 6:
+            case 7:
                 //Collection
                 filterByAny(unplayedGame -> unplayedGame.isInCollection(finalFilterToken));
                 break;
-            case 7:
+            case 8:
                 //Don't Filter
                 unFilter();
                 break;
@@ -275,14 +316,18 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
                 sortByAny(TableMethods.genreComparator);
                 break;
             case 5:
-                //Date
+                //Release Date
                 sortByAny(TableMethods.releaseDateComparator);
                 break;
             case 6:
+                //Release Date
+                sortByAny(TableMethods.addedDateComparator);
+                break;
+            case 7:
                 //Hours
                 sortByAny(TableMethods.hoursComparator);
                 break;
-            case 7:
+            case 8:
                 //Deck Status
                 sortByAny(TableMethods.deckStatusComparator);
                 break;

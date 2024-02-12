@@ -93,6 +93,18 @@ public class TableMethods {
         }
     };
 
+    public static final Comparator<Game> addedDateComparator = (o1, o2) -> {            //Sort by added date
+        //Local variables
+        UnplayedGame p1 = (UnplayedGame) o1;                                        //Cast o1 to UnplayedGame
+        UnplayedGame p2 = (UnplayedGame) o2;                                        //Cast o2 to UnplayedGame
+        String sortBy1 = String.format("%010d%02d%02d", p1.getAddedYear(),  //String to sort with for o1
+                p1.getAddedMonth(), p1.getAddedDay());
+        String sortBy2= String.format("%010d%02d%02d", p2.getAddedYear(),   //String to sort with for o2
+                p2.getAddedMonth(), p2.getAddedDay());
+
+        return sortBy1.compareTo(sortBy2);
+    };
+
     public static final Comparator<Game> hoursComparator = (o1, o2) -> {                    //Sort by hours
         //Return a value according to position in statuses list
         //Local variables

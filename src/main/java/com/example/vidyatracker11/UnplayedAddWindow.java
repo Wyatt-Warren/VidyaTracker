@@ -30,7 +30,6 @@ public class UnplayedAddWindow extends UnplayedAddEditWindow {
             //Text is entered
             releaseYear = Integer.parseInt(releaseYearBox.getText());
 
-
         //Create new game object
         UnplayedGame newGame = new UnplayedGame(titleBox.getText(), statusBox.getSelectionModel().getSelectedItem(),
                 platformBox.getSelectionModel().getSelectedItem(), genreBox.getSelectionModel().getSelectedItem(),
@@ -38,6 +37,17 @@ public class UnplayedAddWindow extends UnplayedAddEditWindow {
 
         //Set Franchise
         newGame.setFranchise(franchiseBox.getText());
+
+        if (addedYearBox.getText().equals(""))
+            //If no text is entered, set addedYear to 0
+            newGame.setAddedYear(0);
+        else
+            //A value is entered
+            newGame.setAddedYear(Integer.parseInt(addedYearBox.getText()));
+
+        //Set added month and day
+        newGame.setAddedMonth(addedMonthBox.getValue());
+        newGame.setAddedDay(addedDayBox.getValue());
 
         if (hoursBox.getText().equals("") || hoursBox.getText().equals("."))
             //If no value is entered, hours = 0

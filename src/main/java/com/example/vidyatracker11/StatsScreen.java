@@ -108,6 +108,13 @@ public class StatsScreen extends HBox {
     TableColumn<UnplayedDataEntry, Double> unplayedReleaseYearHoursColumn = new TableColumn<>("Total Hours");
     TableView<UnplayedDataEntry> unplayedReleaseYearTable = new TableView<>();
 
+    //Added Year
+    TableColumn<UnplayedDataEntry, Integer> unplayedAddedYearTitleColumn = new TableColumn<>("Year Added");
+    TableColumn<UnplayedDataEntry, Integer> unplayedAddedYearCountColumn = new TableColumn<>("Count");
+    TableColumn<UnplayedDataEntry, Double> unplayedAddedYearPercentColumn = new TableColumn<>("Percent");
+    TableColumn<UnplayedDataEntry, Double> unplayedAddedYearHoursColumn = new TableColumn<>("Total Hours");
+    TableView<UnplayedDataEntry> unplayedAddedYearTable = new TableView<>();
+
     //Deck Status
     TableColumn<UnplayedDataEntry, String> unplayedDeckTitleColumn = new TableColumn<>("Deck Status");
     TableColumn<UnplayedDataEntry, Integer> unplayedDeckCountColumn = new TableColumn<>("Count");
@@ -142,9 +149,10 @@ public class StatsScreen extends HBox {
             unplayedFranchiseHoursColumn, unplayedPlatformTitleColumn, unplayedPlatformCountColumn,
             unplayedPlatformPercentColumn, unplayedPlatformHoursColumn, unplayedGenreTitleColumn,
             unplayedGenreCountColumn, unplayedGenrePercentColumn, unplayedGenreHoursColumn,
-            unplayedReleaseYearTitleColumn, unplayedReleaseYearCountColumn, unplayedReleaseYearPercentColumn,
-            unplayedReleaseYearHoursColumn, unplayedDeckTitleColumn, unplayedDeckCountColumn,
-            unplayedDeckPercentColumn, unplayedDeckHoursColumn);
+            unplayedReleaseYearTitleColumn, unplayedAddedYearTitleColumn, unplayedReleaseYearCountColumn,
+            unplayedAddedYearCountColumn, unplayedReleaseYearPercentColumn, unplayedAddedYearPercentColumn,
+            unplayedReleaseYearHoursColumn, unplayedAddedYearHoursColumn, unplayedDeckTitleColumn,
+            unplayedDeckCountColumn, unplayedDeckPercentColumn, unplayedDeckHoursColumn);
 
     //Columns with double data type
     ObservableList<TableColumn<PlayedDataEntry, Double>> playedDoubleColumnList = FXCollections.observableArrayList(
@@ -157,8 +165,8 @@ public class StatsScreen extends HBox {
     ObservableList<TableColumn<UnplayedDataEntry, Double>> unplayedDoubleColumnList = FXCollections.observableArrayList(
             unplayedFranchisePercentColumn, unplayedFranchiseHoursColumn, unplayedPlatformPercentColumn,
             unplayedPlatformHoursColumn, unplayedGenrePercentColumn, unplayedGenreHoursColumn,
-            unplayedReleaseYearPercentColumn, unplayedReleaseYearHoursColumn, unplayedDeckPercentColumn,
-            unplayedDeckHoursColumn);
+            unplayedReleaseYearPercentColumn, unplayedAddedYearPercentColumn, unplayedReleaseYearHoursColumn,
+            unplayedAddedYearHoursColumn, unplayedDeckPercentColumn, unplayedDeckHoursColumn);
 
     //Columns used to set value factory
     ObservableList<TableColumn<?, String>> nameColumns = FXCollections.observableArrayList(
@@ -168,21 +176,21 @@ public class StatsScreen extends HBox {
             unplayedDeckTitleColumn);
     ObservableList<TableColumn<?, Integer>> intNameColumns = FXCollections.observableArrayList(
             playedReleaseYearTitleColumn, playedCompletionYearTitleColumn, playedRatingTitleColumn,
-            unplayedReleaseYearTitleColumn
+            unplayedReleaseYearTitleColumn, unplayedAddedYearTitleColumn
     );
     ObservableList<TableColumn<?, Integer>> countColumns = FXCollections.observableArrayList(
             playedShortCountColumn, playedFranchiseCountColumn, playedPlatformCountColumn,
             playedGenreCountColumn, playedReleaseYearCountColumn, playedCompletionMonthCountColumn,
             playedCompletionYearCountColumn, playedRatingCountColumn, playedPercent100CountColumn,
             unplayedFranchiseCountColumn, unplayedPlatformCountColumn, unplayedGenreCountColumn,
-            unplayedReleaseYearCountColumn, unplayedDeckCountColumn
+            unplayedReleaseYearCountColumn, unplayedAddedYearCountColumn, unplayedDeckCountColumn
     );
     ObservableList<TableColumn<?, Double>> percentColumns = FXCollections.observableArrayList(
             playedShortPercentColumn, playedFranchisePercentColumn, playedPlatformPercentColumn,
             playedGenrePercentColumn, playedReleaseYearPercentColumn, playedCompletionMonthPercentColumn,
             playedCompletionYearPercentColumn, playedRatingPercentColumn, playedPercent100PercentColumn,
             unplayedFranchisePercentColumn, unplayedPlatformPercentColumn, unplayedGenrePercentColumn,
-            unplayedReleaseYearPercentColumn, unplayedDeckPercentColumn
+            unplayedReleaseYearPercentColumn, unplayedAddedYearPercentColumn, unplayedDeckPercentColumn
     );
     ObservableList<TableColumn<?, Double>> ratingColumns = FXCollections.observableArrayList(
             playedShortRatingColumn, playedFranchiseRatingColumn, playedPlatformRatingColumn,
@@ -191,7 +199,7 @@ public class StatsScreen extends HBox {
     );
     ObservableList<TableColumn<?, Double>> hoursColumns = FXCollections.observableArrayList(
             unplayedFranchiseHoursColumn, unplayedPlatformHoursColumn, unplayedGenreHoursColumn,
-            unplayedReleaseYearHoursColumn, unplayedDeckHoursColumn
+            unplayedReleaseYearHoursColumn, unplayedAddedYearHoursColumn, unplayedDeckHoursColumn
     );
 
     ObservableList<TableView<?>> tableViews = FXCollections.observableArrayList(
@@ -199,7 +207,7 @@ public class StatsScreen extends HBox {
             playedGenreTable, playedReleaseYearTable, playedCompletionMonthTable,
             playedCompletionYearTable, playedRatingTable, playedPercent100Table,
             unplayedFranchiseTable, unplayedPlatformTable, unplayedGenreTable,
-            unplayedReleaseYearTable, unplayedDeckTable
+            unplayedReleaseYearTable, unplayedAddedYearTable, unplayedDeckTable
     );
 
     int longestYear = 0;                                                            //Number of digits in longest year
@@ -215,7 +223,7 @@ public class StatsScreen extends HBox {
         playedBox.setMaxHeight(Double.MAX_VALUE);
         unplayedLabel.setStyle("-fx-font-size: 16;-fx-font-weight: bold;");
         unplayedChoices.getSelectionModel().selectFirst();
-        unplayedChoices.getItems().addAll("Franchise", "Platform", "Genre", "Release Year", "Deck Status");
+        unplayedChoices.getItems().addAll("Franchise", "Platform", "Genre", "Release Year", "Year Added", "Deck Status");
         unplayedBox.setAlignment(Pos.CENTER);
         unplayedBox.setSpacing(5);
         unplayedBox.setMaxHeight(Double.MAX_VALUE);
@@ -269,6 +277,8 @@ public class StatsScreen extends HBox {
                 unplayedGenrePercentColumn, unplayedGenreHoursColumn);
         unplayedReleaseYearTable.getColumns().addAll(unplayedReleaseYearTitleColumn, unplayedReleaseYearCountColumn,
                 unplayedReleaseYearPercentColumn, unplayedReleaseYearHoursColumn);
+        unplayedAddedYearTable.getColumns().addAll(unplayedAddedYearTitleColumn, unplayedAddedYearCountColumn,
+                unplayedAddedYearPercentColumn, unplayedAddedYearHoursColumn);
         unplayedDeckTable.getColumns().addAll(unplayedDeckTitleColumn, unplayedDeckCountColumn,
                 unplayedDeckPercentColumn, unplayedDeckHoursColumn);
 
@@ -351,7 +361,12 @@ public class StatsScreen extends HBox {
                     unplayedBox.getChildren().add(unplayedReleaseYearTable);
                     break;
                 case 4:
-                    //Completion Year
+                    //Release Year
+                    unplayedBox.getChildren().remove(unplayedBox.getChildren().size()-1);
+                    unplayedBox.getChildren().add(unplayedAddedYearTable);
+                    break;
+                case 5:
+                    //Deck Status
                     unplayedBox.getChildren().remove(unplayedBox.getChildren().size()-1);
                     unplayedBox.getChildren().add(unplayedDeckTable);
                     break;
@@ -535,7 +550,8 @@ public class StatsScreen extends HBox {
         unplayedFranchiseTable.setItems(setUnplayedFranchiseData());
         unplayedPlatformTable.setItems(setUnplayedPlatGenData(GameLists.platformList, true));
         unplayedGenreTable.setItems(setUnplayedPlatGenData(GameLists.genreList, false));
-        unplayedReleaseYearTable.setItems(setUnplayedYearData());
+        unplayedReleaseYearTable.setItems(setUnplayedYearData(true));
+        unplayedAddedYearTable.setItems(setUnplayedYearData(false));
         unplayedDeckTable.setItems(setUnplayedDeckData());
 
         TableMethods.updateColumnWidth(playedColumnList);
@@ -1090,7 +1106,7 @@ public class StatsScreen extends HBox {
     }
 
     //Sets the data for the unplayed release year table.
-    public ObservableList<UnplayedDataEntry> setUnplayedYearData() {
+    public ObservableList<UnplayedDataEntry> setUnplayedYearData(boolean release) {
         //Local variables
         ObservableList<UnplayedDataEntry> dataList = FXCollections.observableArrayList();   //List to be returned
         HashMap<Integer, UnplayedDataEntry> map = new HashMap<>();                          //Map of every year
@@ -1098,7 +1114,12 @@ public class StatsScreen extends HBox {
         for(UnplayedGame game : GameLists.unplayedList){
             //Iterate for each game
             //Local variables
-            int year = game.getReleaseYear();   //Release year of the current game
+            int year;   //Release year of the current game
+
+            if(release)
+                year = game.getReleaseYear();
+            else
+                year = game.getAddedYear();
 
             if(map.containsKey(year)){
                 //If the current game's year is already in the map, not the first occurrence

@@ -31,14 +31,15 @@ public class UnplayedEditWindow extends UnplayedAddEditWindow {
         //Set hours text
         hoursBox.setText("" + game.getHours());
 
-        //Set release year text
+        //Set release date value
         releaseYearBox.setText("" + game.getReleaseYear());
-
-        //Select release month
         releaseMonthBox.getSelectionModel().select(game.getReleaseMonth());
-
-        //Select release day
         releaseDayBox.getSelectionModel().select(game.getReleaseDay());
+
+        //Set added date value
+        addedMonthBox.getSelectionModel().select(game.getAddedMonth());
+        addedYearBox.setText("" + game.getAddedYear());
+        addedDayBox.getSelectionModel().select(game.getAddedDay());
 
         if (!game.getDeckCompatible().equals(""))
             //If deck status is not blank, select deck status
@@ -72,6 +73,17 @@ public class UnplayedEditWindow extends UnplayedAddEditWindow {
         else
             //A value is entered
             game.setReleaseYear(Integer.parseInt(releaseYearBox.getText()));
+
+        if (addedYearBox.getText().equals(""))
+            //If no text is entered, set addedYear to 0
+            game.setAddedYear(0);
+        else
+            //A value is entered
+            game.setAddedYear(Integer.parseInt(addedYearBox.getText()));
+
+        //Set added month and day
+        game.setAddedMonth(addedMonthBox.getValue());
+        game.setAddedDay(addedDayBox.getValue());
 
         if (hoursBox.getText().equals("") || hoursBox.getText().equals("."))
             //If no value is entered, set hours to 0
