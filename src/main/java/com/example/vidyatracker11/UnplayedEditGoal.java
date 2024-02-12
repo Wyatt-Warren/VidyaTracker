@@ -133,6 +133,8 @@ public class UnplayedEditGoal extends UnplayedAddEditGoal{
             goal.setEndProgress(endProgress);
 
             //Set filter
+            filter.setMaxAddedDate(LocalDate.of(
+                    endYear, endMonthBox.getSelectionModel().getSelectedItem(), endDayBox.getSelectionModel().getSelectedItem()));
             goal.setFilter(filter);
 
             //Update table

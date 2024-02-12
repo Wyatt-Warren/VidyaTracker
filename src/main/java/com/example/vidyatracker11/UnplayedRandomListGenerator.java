@@ -12,6 +12,14 @@ import java.util.Random;
 
 public class UnplayedRandomListGenerator extends RandomListGenerator{
     //GUI
+    //Added Year
+    Label addedYearMinLabel = new Label("Min Added Year:");
+    TextField addedYearMinField = new TextField();
+    Label addedYearMaxLabel = new Label("Max Added Year:");
+    TextField addedYearMaxField = new TextField();
+    VBox addedYearVBox = new VBox(addedYearMinLabel, addedYearMinField, addedYearMaxLabel,
+            addedYearMaxField);
+
     //Hours
     Label hoursMinLabel = new Label("Min Hours:");
     TextField hoursMinField = new TextField();
@@ -31,12 +39,14 @@ public class UnplayedRandomListGenerator extends RandomListGenerator{
     public UnplayedRandomListGenerator(){
         //GUI
         layer1HBox.getChildren().addAll(lengthVBox, statusVBox, titleVBox,
-                franchiseVBox, platformVBox);
-        layer2HBox.getChildren().addAll(genreVBox, releaseYearVBox, hoursVBox,
-                deckVBox, collectionVBox);
+                franchiseVBox, platformVBox, genreVBox);
+        layer2HBox.getChildren().addAll(releaseYearVBox, addedYearVBox,
+                hoursVBox, deckVBox, collectionVBox);
+        addedYearVBox.setAlignment(Pos.TOP_CENTER);
         deckButtonBox.setAlignment(Pos.CENTER);
         hoursVBox.setAlignment(Pos.TOP_CENTER);
         deckVBox.setAlignment(Pos.TOP_CENTER);
+        addedYearVBox.setSpacing(5.0);
         deckButtonBox.setSpacing(5.0);
         hoursVBox.setSpacing(5.0);
         deckVBox.setSpacing(5.0);
@@ -54,6 +64,10 @@ public class UnplayedRandomListGenerator extends RandomListGenerator{
         //Sort franchise list
         Collections.sort(franchises);
         franchiseBox.getItems().addAll(franchises);
+
+        //Only allow integers for addedMinField and addedMaxField
+        addedYearMinField.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
+        addedYearMaxField.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
 
         //Only allow doubles for hoursMinField and hoursMaxField
         hoursMinField.setTextFormatter(new TextFormatter<>(ApplicationGUI.doubleFilter));
@@ -82,6 +96,8 @@ public class UnplayedRandomListGenerator extends RandomListGenerator{
                 ObservableList<UnplayedGame> potentialList; //List of items that fit the requirements selected
                 int releaseYearMinValue = 0;
                 int releaseYearMaxValue = Integer.MAX_VALUE;
+                int addedYearMinValue = 0;
+                int addedYearMaxValue = Integer.MAX_VALUE;
                 double hoursMinValue = 0;
                 double hoursMaxValue = Double.MAX_VALUE;
 
@@ -90,6 +106,10 @@ public class UnplayedRandomListGenerator extends RandomListGenerator{
                     releaseYearMinValue = Integer.parseInt(releaseYearMinField.getText());
                 if (!releaseYearMaxField.getText().equals(""))
                     releaseYearMaxValue = Integer.parseInt(releaseYearMaxField.getText());
+                if (!addedYearMinField.getText().equals(""))
+                    addedYearMinValue = Integer.parseInt(addedYearMinField.getText());
+                if (!(addedYearMaxField.getText().equals("")))
+                    addedYearMaxValue = Integer.parseInt(addedYearMaxField.getText());
                 if (!hoursMinField.getText().equals(""))
                     hoursMinValue = Integer.parseInt(hoursMinField.getText());
                 if (!hoursMaxField.getText().equals(""))
@@ -98,7 +118,8 @@ public class UnplayedRandomListGenerator extends RandomListGenerator{
                 //Create new filter and use it to create list of valid games
                 newFilter = new UnplayedGameFilter(statusView.getItems(), franchiseView.getItems(),
                         platformView.getItems(), genreView.getItems(), collectionView.getItems(), deckView.getItems(),
-                        titleField.getText(), releaseYearMinValue, releaseYearMaxValue, hoursMinValue, hoursMaxValue);
+                        titleField.getText(), releaseYearMinValue, releaseYearMaxValue, addedYearMinValue,
+                        addedYearMaxValue, hoursMinValue, hoursMaxValue);
                 potentialList = newFilter.filteredList();
 
                 //Clear the existing list to generate a new one

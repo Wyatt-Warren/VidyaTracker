@@ -41,13 +41,13 @@ public class PlayedGameFilter extends GameFilter {
 
             if(maxCompletionDate != null) {
                 //If maxCompletionDate is provided, make date usable
-                if (game.getCompletionYear() == 0)
+                if (effectiveCompletionYear == 0)
                     effectiveCompletionYear = 1;
 
-                if (game.getCompletionMonth() == 0)
+                if (effectiveCompletionMonth == 0)
                     effectiveCompletionMonth = 1;
 
-                if (game.getCompletionDay() == 0)
+                if (effectiveCompletionDay == 0)
                     effectiveCompletionDay = 1;
             }
 
@@ -72,8 +72,9 @@ public class PlayedGameFilter extends GameFilter {
                     (game.getCompletionYear() >= minCompletionYear) &&
                     //Completion year is entered and game is greater or equal
                     (game.getCompletionYear() <= maxCompletionYear) &&
-                    //Completion year is entered and game is less  than or equal
+                    //Completion year is entered and game is less than or equal
                     (maxCompletionDate == null || !maxCompletionDate.isBefore(LocalDate.of(effectiveCompletionYear, effectiveCompletionMonth, effectiveCompletionDay))) &&
+                    //If max completion date is set, filter games by entire date rather than just year
                     (possible100PercentStatuses.isEmpty() || possible100PercentStatuses.contains(game.getPercent100())) &&
                     //100% status is selected and game matches
                     (possibleCollections.isEmpty() || gameInAnyCollection(game)))

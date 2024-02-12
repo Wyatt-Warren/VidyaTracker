@@ -1,6 +1,5 @@
 package com.example.vidyatracker11;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public abstract class GameFilter {
@@ -70,37 +69,5 @@ public abstract class GameFilter {
 
     public int getMaxReleaseYear() {
         return maxReleaseYear;
-    }
-
-    public void setPossibleStatuses(ObservableList<String> possibleStatuses) {
-        this.possibleStatuses = possibleStatuses;
-    }
-
-    public void setPossibleFranchises(ObservableList<String> possibleFranchises) {
-        this.possibleFranchises = possibleFranchises;
-    }
-
-    public void setPossiblePlatforms(ObservableList<String> possiblePlatforms) {
-        this.possiblePlatforms = possiblePlatforms;
-    }
-
-    public void setPossibleGenres(ObservableList<String> possibleGenres) {
-        this.possibleGenres = possibleGenres;
-    }
-
-    public void setPossibleCollections(ObservableList<GameCollection> possibleCollections) {
-        this.possibleCollections = possibleCollections;
-    }
-
-    public void setTitleContains(String titleContains) {
-        this.titleContains = titleContains;
-    }
-
-    public void setMinReleaseYear(int minReleaseYear) {
-        this.minReleaseYear = minReleaseYear;
-    }
-
-    public void setMaxReleaseYear(int maxReleaseYear) {
-        this.maxReleaseYear = maxReleaseYear;
     }
 }

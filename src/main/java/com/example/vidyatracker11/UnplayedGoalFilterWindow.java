@@ -11,6 +11,14 @@ import java.util.Collections;
 
 public class UnplayedGoalFilterWindow extends GoalFilterWindow{
     //GUI
+    //Added Year
+    Label addedYearMinLabel = new Label("Min Added Year:");
+    TextField addedYearMinField = new TextField();
+    Label addedYearMaxLabel = new Label("Max Added Year:");
+    TextField addedYearMaxField = new TextField();
+    VBox addedYearVBox = new VBox(addedYearMinLabel, addedYearMinField, addedYearMaxLabel,
+            addedYearMaxField);
+
     //Hours
     Label hoursMinLabel = new Label("Min Hours:");
     TextField hoursMinField = new TextField();
@@ -33,12 +41,14 @@ public class UnplayedGoalFilterWindow extends GoalFilterWindow{
     public UnplayedGoalFilterWindow(UnplayedGameFilter oldFilter){
         //GUI
         layer1HBox.getChildren().addAll(statusVBox, titleVBox, franchiseVBox,
-                platformVBox);
-        layer2HBox.getChildren().addAll(genreVBox, releaseYearVBox, hoursVBox,
+                platformVBox, genreVBox);
+        layer2HBox.getChildren().addAll(releaseYearVBox, addedYearVBox, hoursVBox,
                 deckVBox, collectionVBox);
+        addedYearVBox.setAlignment(Pos.TOP_CENTER);
         deckButtonBox.setAlignment(Pos.CENTER);
         hoursVBox.setAlignment(Pos.TOP_CENTER);
         deckVBox.setAlignment(Pos.TOP_CENTER);
+        addedYearVBox.setSpacing(5.0);
         deckButtonBox.setSpacing(5.0);
         hoursVBox.setSpacing(5.0);
         deckVBox.setSpacing(5.0);
@@ -75,11 +85,33 @@ public class UnplayedGoalFilterWindow extends GoalFilterWindow{
         franchiseBox.getItems().addAll(franchises);
         franchiseView.getItems().addAll(oldFilter.getPossibleFranchises());
 
+        //Only allow integers for addedMinField and addedMaxField
+        addedYearMinField.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
+        addedYearMaxField.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
+
+        //Set added year values
+        if(oldFilter.getMinAddedYear() == 0)
+            addedYearMinField.setText("");
+        else
+            addedYearMinField.setText("" + oldFilter.getMinAddedYear());
+        if(oldFilter.getMaxAddedYear() == Integer.MAX_VALUE)
+            addedYearMaxField.setText("");
+        else
+            addedYearMaxField.setText("" + oldFilter.getMaxAddedYear());
+
         //Only allow doubles for hoursMinField and hoursMaxField
         hoursMinField.setTextFormatter(new TextFormatter<>(ApplicationGUI.doubleFilter));
         hoursMaxField.setTextFormatter(new TextFormatter<>(ApplicationGUI.doubleFilter));
-        hoursMinField.setText("" + oldFilter.getMinHours());
-        hoursMaxField.setText("" + oldFilter.getMaxHours());
+
+        //Set hours values
+        if(oldFilter.getMinHours() == 0)
+            hoursMinField.setText("");
+        else
+            hoursMinField.setText("" + oldFilter.getMinHours());
+        if(oldFilter.getMinHours() == Double.MAX_VALUE)
+            hoursMaxField.setText("");
+        else
+            hoursMaxField.setText("" + oldFilter.getMaxHours());
 
         //Set deck values
         deckBox.getItems().addAll("Yes", "No", "Maybe", "Blank");
@@ -104,14 +136,20 @@ public class UnplayedGoalFilterWindow extends GoalFilterWindow{
     public void setFilters(){
         int releaseYearMinValue = 0;
         int releaseYearMaxValue = Integer.MAX_VALUE;
+        int addedYearMinValue = 0;
+        int addedYearMaxValue = Integer.MAX_VALUE;
         double hoursMinValue = 0;
         double hoursMaxValue = Double.MAX_VALUE;
 
         //If text fields for numerical values are empty, they should be 0 or MAX_VALUE, otherwise, they should be inputed text
         if (!releaseYearMinField.getText().equals(""))
             releaseYearMinValue = Integer.parseInt(releaseYearMinField.getText());
-        if (!(releaseYearMaxField.getText().equals("") || releaseYearMaxField.getText().equals("0")))
+        if (!(releaseYearMaxField.getText().equals("")))
             releaseYearMaxValue = Integer.parseInt(releaseYearMaxField.getText());
+        if (!addedYearMinField.getText().equals(""))
+            addedYearMinValue = Integer.parseInt(addedYearMinField.getText());
+        if (!(addedYearMaxField.getText().equals("")))
+            addedYearMaxValue = Integer.parseInt(addedYearMaxField.getText());
         if (!hoursMinField.getText().equals(""))
             hoursMinValue = Double.parseDouble(hoursMinField.getText());
         if (!hoursMaxField.getText().equals(""))
@@ -120,7 +158,8 @@ public class UnplayedGoalFilterWindow extends GoalFilterWindow{
         //Create new filter and use it to create list of valid games
         filter = new UnplayedGameFilter(statusView.getItems(), franchiseView.getItems(),
                 platformView.getItems(), genreView.getItems(), collectionView.getItems(), deckView.getItems(),
-                titleField.getText(), releaseYearMinValue, releaseYearMaxValue, hoursMinValue, hoursMaxValue);
+                titleField.getText(), releaseYearMinValue, releaseYearMaxValue, addedYearMinValue, addedYearMaxValue,
+                hoursMinValue, hoursMaxValue);
     }
 
     public UnplayedGameFilter getFilter() {

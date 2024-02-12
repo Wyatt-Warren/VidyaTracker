@@ -4,11 +4,9 @@ import javafx.collections.transformation.SortedList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -47,6 +45,28 @@ public class UnplayedGoalWindow extends GoalWindow{
             if (newSelection != null)
                 //If something is selected
                 updateGoal(newSelection);
+        });
+        goalTable.getSelectionModel().selectFirst();
+
+        goalTable.setRowFactory(tv -> {
+            //Row factory
+            //Local variables
+            TableRow<UnplayedGameGoal> row = new TableRow<>();    //The row
+
+            row.setOnMouseClicked(event -> {
+                //Mouse is clicked
+
+                if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY
+                        && event.getClickCount() == 2)
+                    //Mouse double-clicks a non-empty row
+                    //Open edit game window
+                    editGoalButton.fire();
+            });
+
+            //Set right click menu
+            row.setContextMenu(ApplicationGUI.rowContextMenu);
+
+            return row;
         });
 
         addGoalButton.setOnAction(e -> {
@@ -179,7 +199,7 @@ public class UnplayedGoalWindow extends GoalWindow{
         LocalDate startDate = LocalDate.of(goal.getStartYear(), goal.getStartMonth(), goal.getStartDay());
         LocalDate endDate = LocalDate.of(goal.getEndYear(), goal.getEndMonth(), goal.getEndDay());
 
-        if(endDate.isBefore(ApplicationGUI.localDate))
+        if(goal.getEndProgress() != -1)
             //If goal is over, use endProgress as current progress
             currentProgress = goal.getStartProgress() - goal.getEndProgress();
 
@@ -224,7 +244,7 @@ public class UnplayedGoalWindow extends GoalWindow{
         startProgressLabel.setText("Start\n" + goal.getStartProgress());
 
         //Set current progress text
-        if(endDate.isBefore(ApplicationGUI.localDate))
+        if(goal.getEndProgress() != -1)
             currentProgressLabel.setText("Progress\n" + goal.getEndProgress());
         else
             currentProgressLabel.setText("Progress\n" + goal.getFilter().filteredList().size());

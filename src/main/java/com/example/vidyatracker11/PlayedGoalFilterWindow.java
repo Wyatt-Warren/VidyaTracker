@@ -147,7 +147,7 @@ public class PlayedGoalFilterWindow extends GoalFilterWindow{
         //If text fields for integer values are empty, they should be 0 or MAX_VALUE, otherwise, they should be inputed text
         if (!releaseYearMinField.getText().equals(""))
             releaseYearMinValue = Integer.parseInt(releaseYearMinField.getText());
-        if (!(releaseYearMaxField.getText().equals("") || releaseYearMaxField.getText().equals("0")))
+        if (!(releaseYearMaxField.getText().equals("")))
             releaseYearMaxValue = Integer.parseInt(releaseYearMaxField.getText());
 
         //Create new filter and use it to create list of valid games

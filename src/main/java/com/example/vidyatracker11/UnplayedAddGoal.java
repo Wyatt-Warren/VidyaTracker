@@ -14,7 +14,8 @@ public class UnplayedAddGoal extends UnplayedAddEditGoal{
         filter = new UnplayedGameFilter(FXCollections.observableArrayList(), FXCollections.observableArrayList(),
                 FXCollections.observableArrayList(), FXCollections.observableArrayList(),
                 FXCollections.observableArrayList(), FXCollections.observableArrayList(),
-                "", 0, Integer.MAX_VALUE, 0, Double.MAX_VALUE);
+                "", 0, Integer.MAX_VALUE, 0, Integer.MAX_VALUE,
+                0, Double.MAX_VALUE);
 
         doneButton.setOnAction(e -> {
             //Add new goal to goal list.
@@ -86,6 +87,10 @@ public class UnplayedAddGoal extends UnplayedAddEditGoal{
                 warningLabel.setText("End progress may not be greater than start progress.");
                 return;
             }
+
+            //Games added to backlog after end date should not be counted
+            filter.setMaxAddedDate(LocalDate.of(
+                    endYear, endMonthBox.getSelectionModel().getSelectedItem(), endDayBox.getSelectionModel().getSelectedItem()));
 
             //Create new goal
             newGoal = new UnplayedGameGoal(titleBox.getText(), startYear, startMonthBox.getSelectionModel().getSelectedItem(),

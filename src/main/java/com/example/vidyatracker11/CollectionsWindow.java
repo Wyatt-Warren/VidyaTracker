@@ -86,7 +86,7 @@ public class CollectionsWindow extends VBox {
         tableView.getColumns().addAll(columnList);
         tableView.setMaxWidth(750);
         reorderChoices.getItems().addAll("Status", "Short", "Title", "Franchise", "Rating", "Platform", "Genre",
-                "Release Date", "Completion Date", "100%", "Hours", "Deck Status");
+                "Release Date", "Completion Date", "100%", "Date Added", "Hours", "Deck Status");
         reorderChoices.getSelectionModel().selectFirst();
         reorderBox.setSpacing(5);
         editButtons.setSpacing(5);
@@ -454,6 +454,36 @@ public class CollectionsWindow extends VBox {
                     collection.getGames().clear();
                     collection.getGames().addAll(playedList);
                     collection.getGames().addAll(unplayedList);
+                    break;
+                case "Date Added":
+                    //Local variables
+                    ObservableList<Game> blankYearList1 = FXCollections.observableArrayList(); //List of games with blank added year, should be mixed with playedGames
+
+                    for(Game game : unplayedList){
+                        //Remove each game with a completion year from blankList
+                        //Local variables
+                        UnplayedGame unplayedGame = (UnplayedGame) game;  //Cast to UnplayedGame
+
+                        if(unplayedGame.getAddedYear() == 0)
+                            //If game has year other than 0, remove it
+                            blankYearList1.add(game);
+                    }
+
+                    //Remove blankList from games to be sorted with comparator
+                    unplayedList.removeAll(blankYearList1);
+
+                    //Add blankList to games to be appended after unplayedList
+                    playedList.addAll(blankYearList1);
+
+                    //Sort new playedList
+                    playedList = basicSort(playedList, true);
+
+                    //Sort unplayedList
+                    sortCollectionList(unplayedList, TableMethods.addedDateComparator);
+
+                    collection.getGames().clear();
+                    collection.getGames().addAll(unplayedList);
+                    collection.getGames().addAll(playedList);
                     break;
                 case "Hours":
                     //Local variables
