@@ -23,6 +23,12 @@ public class UnplayedAdvancedFilters extends UnplayedFilterWindow{
         //Set status values
         statusView.getItems().addAll(oldFilter.getPossibleStatuses());
 
+        //Set title value
+        titleField.setText(oldFilter.getTitleContains());
+
+        //Set franchise values
+        franchiseView.getItems().addAll(oldFilter.getPossibleFranchises());
+
         //Set platform values
         platformView.getItems().addAll(oldFilter.getPossiblePlatforms());
 
@@ -38,9 +44,6 @@ public class UnplayedAdvancedFilters extends UnplayedFilterWindow{
             releaseYearMaxField.setText("");
         else
             releaseYearMaxField.setText("" + oldFilter.getMaxReleaseYear());
-
-        //Set franchise values
-        franchiseView.getItems().addAll(oldFilter.getPossibleFranchises());
 
         //Set added year values
         if(oldFilter.getMinAddedYear() == 0)
