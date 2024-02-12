@@ -31,7 +31,11 @@ public class StatusCountBoxUnplayed extends GridPane {
     Label totalIgnoredCountLabel = new Label();
     Label totalIgnoredHoursLabel = new Label();
 
-    public StatusCountBoxUnplayed() {
+    //Fields
+    UnplayedGamesTable table;
+
+    public StatusCountBoxUnplayed(UnplayedGamesTable table) {
+        this.table = table;
         //GUI
         add(statusLabel, 0, 0);
         add(countLabel, 1, 0);
@@ -77,39 +81,74 @@ public class StatusCountBoxUnplayed extends GridPane {
     //Sets the labels' texts accordingly.
     public void updateData() {
         //Count of games with status Backlog
-        backlogCountLabel.setText("" + GameLists.getUnplayedStatusCount("Backlog"));
+        backlogCountLabel.setText("" + getUnplayedStatusCount("Backlog"));
 
         //Count of games with status SubBacklog
-        subBacklogCountLabel.setText("" + GameLists.getUnplayedStatusCount("SubBacklog"));
+        subBacklogCountLabel.setText("" + getUnplayedStatusCount("SubBacklog"));
 
         //Count of games with status Wishlist
-        wishlistCountLabel.setText("" + GameLists.getUnplayedStatusCount("Wishlist"));
+        wishlistCountLabel.setText("" + getUnplayedStatusCount("Wishlist"));
 
         //Count of games with status Ignored
-        ignoredCountLabel.setText("" + GameLists.getUnplayedStatusCount("Ignored"));
+        ignoredCountLabel.setText("" + getUnplayedStatusCount("Ignored"));
 
         //Count of games
-        totalCountLabel.setText("" + (GameLists.unplayedList.size() - GameLists.getUnplayedStatusCount("Ignored")));
+        totalCountLabel.setText("" + (table.baseList.size() - getUnplayedStatusCount("Ignored")));
 
         //Count of games including Ignored
-        totalIgnoredCountLabel.setText("" + GameLists.unplayedList.size());
+        totalIgnoredCountLabel.setText("" + table.baseList.size());
 
         //Total hours of games with status Backlog
-        backlogHoursLabel.setText(String.format("%.2f", GameLists.getStatusHours("Backlog")));
+        backlogHoursLabel.setText(String.format("%.2f", getStatusHours("Backlog")));
 
         //Total hours of games with status SubBacklog
-        subBacklogHoursLabel.setText(String.format("%.2f", GameLists.getStatusHours("SubBacklog")));
+        subBacklogHoursLabel.setText(String.format("%.2f", getStatusHours("SubBacklog")));
 
         //Total hours of games with status Wishlist
-        wishlistHoursLabel.setText(String.format("%.2f", GameLists.getStatusHours("Wishlist")));
+        wishlistHoursLabel.setText(String.format("%.2f", getStatusHours("Wishlist")));
 
         //Total hours of games with status Ignored
-        ignoredHoursLabel.setText(String.format("%.2f", GameLists.getStatusHours("Ignored")));
+        ignoredHoursLabel.setText(String.format("%.2f", getStatusHours("Ignored")));
 
         //Total hours of all games
-        totalHoursLabel.setText(String.format("%.2f", GameLists.getTotalHours() - GameLists.getStatusHours("Ignored")));
+        totalHoursLabel.setText(String.format("%.2f", getTotalHours() - getStatusHours("Ignored")));
 
         //Total hours of all games including Ignored
-        totalIgnoredHoursLabel.setText(String.format("%.2f", GameLists.getTotalHours()));
+        totalIgnoredHoursLabel.setText(String.format("%.2f", getTotalHours()));
+    }
+
+    //Returns the number of UnplayedGames with the given status
+    public int getUnplayedStatusCount(String status) {
+        //Local variables
+        int total = 0;  //Count of applicable games
+
+        for (UnplayedGame unplayedGame: table.baseList) {
+            //Iterate for each UnplayedGame
+            if (unplayedGame.getStatus().equals(status))
+                //If game has the given status, increment total
+                total++;
+        }
+
+        return total;
+    }
+
+    //Returns the total hours of all games with the given status
+    public double getStatusHours(String status) {
+        //Local variables
+        double total = 0.0; //Count of total hours
+
+        for (UnplayedGame unplayedGame: table.baseList) {
+            //Iterate for each UnplayedGame
+            if (unplayedGame.getStatus().equals(status))
+                //If game has the given status, increment total
+                total += unplayedGame.getHours();
+        }
+
+        return total;
+    }
+
+    //Returns the hours of all unplayed games added together.
+    public double getTotalHours() {
+        return getStatusHours("Backlog") + getStatusHours("SubBacklog") + getStatusHours("Wishlist");
     }
 }

@@ -87,6 +87,14 @@ public class PlayedGameFilter extends GameFilter {
         return newList;
     }
 
+    public int getMinCompletionYear() {
+        return minCompletionYear;
+    }
+
+    public int getMaxCompletionYear() {
+        return maxCompletionYear;
+    }
+
     public ObservableList<String> getPossibleShortStatuses() {
         return possibleShortStatuses;
     }

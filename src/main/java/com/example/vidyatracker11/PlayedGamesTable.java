@@ -32,8 +32,8 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
             genreColumn, releaseYearColumn, completionYearColumn, percent100Column);
 
     //Fields
-    ObservableList<PlayedGame> baseList = FXCollections.observableArrayList(GameLists.playedList);  //List that other filters use as the base (set by advanced filters)
-    FilteredList<PlayedGame> filteredList = new FilteredList<>(baseList);               //List of items in the table
+    ObservableList<PlayedGame> baseList = GameLists.playedList;             //List that other filters use as the base (set by advanced filters)
+    FilteredList<PlayedGame> filteredList = new FilteredList<>(baseList);   //List of items in the table
 
     public PlayedGamesTable() {
         //ValueFactory for each column

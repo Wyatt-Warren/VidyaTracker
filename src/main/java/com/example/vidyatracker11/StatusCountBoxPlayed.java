@@ -30,7 +30,11 @@ public class StatusCountBoxPlayed extends GridPane {
     Label totalThisYearCountLabel = new Label();
     Label totalLastYearCountLabel = new Label();
 
-    public StatusCountBoxPlayed() {
+    //Fields
+    PlayedGamesTable table;
+
+    public StatusCountBoxPlayed(PlayedGamesTable table) {
+        this.table = table;
         //GUI
         add(statusLabel, 0, 0);
         add(countLabel, 1, 0);
@@ -78,36 +82,107 @@ public class StatusCountBoxPlayed extends GridPane {
     //Sets labels' texts accordingly
     public void updateData() {
         //Count of games with status Playing
-        playingCountLabel.setText("" + GameLists.getPlayedStatusCount("Playing"));
+        playingCountLabel.setText("" + getPlayedStatusCount("Playing"));
 
         //Count of games with status Completed and short status No
-        completedCountLabel.setText("" + GameLists.getPlayedStatusCount("Completed"));
+        completedCountLabel.setText("" + getPlayedStatusCount("Completed"));
 
         //Count of games with status Completed and short status Yes
-        shortCompletedCountLabel.setText("" + GameLists.getPlayedStatusShortCount("Completed"));
+        shortCompletedCountLabel.setText("" + getPlayedStatusShortCount("Completed"));
 
         //Count of games with status On Hold
-        holdCountLabel.setText("" + GameLists.getPlayedStatusCount("On Hold"));
+        holdCountLabel.setText("" + getPlayedStatusCount("On Hold"));
 
         //Total count of games
-        totalCountLabel.setText("" + GameLists.playedList.size());
+        totalCountLabel.setText("" + table.baseList.size());
 
         //Total count of games with status Completed, short status No, and release year as the current year
-        completedThisYearCountLabel.setText("" + GameLists.getCompletedYearCount(ApplicationGUI.localDate.getYear()));
+        completedThisYearCountLabel.setText("" + getCompletedYearCount(ApplicationGUI.localDate.getYear()));
 
         //Total count of games with status Completed, short status No, and release year as last year
-        completedLastYearCountLabel.setText("" + GameLists.getCompletedYearCount(ApplicationGUI.localDate.getYear()-1));
+        completedLastYearCountLabel.setText("" + getCompletedYearCount(ApplicationGUI.localDate.getYear()-1));
 
         //Total count of games with status Completed, short status Yes, and release year as the current year
-        shortCompletedThisYearCountLabel.setText("" + GameLists.getShortCompletedYearCount(ApplicationGUI.localDate.getYear()));
+        shortCompletedThisYearCountLabel.setText("" + getShortCompletedYearCount(ApplicationGUI.localDate.getYear()));
 
         //Total count of games with status Completed, short status Yes, and release year as last year
-        shortCompletedLastYearCountLabel.setText("" + GameLists.getShortCompletedYearCount(ApplicationGUI.localDate.getYear()-1));
+        shortCompletedLastYearCountLabel.setText("" + getShortCompletedYearCount(ApplicationGUI.localDate.getYear()-1));
 
         //Total count of games with status Completed and release year as the current year
-        totalThisYearCountLabel.setText("" + GameLists.getTotalYearCount(ApplicationGUI.localDate.getYear()));
+        totalThisYearCountLabel.setText("" + getTotalYearCount(ApplicationGUI.localDate.getYear()));
 
         //Total count of games with the status Completed and release year as the last year
-        totalLastYearCountLabel.setText("" + GameLists.getTotalYearCount(ApplicationGUI.localDate.getYear()-1));
+        totalLastYearCountLabel.setText("" + getTotalYearCount(ApplicationGUI.localDate.getYear()-1));
+    }
+
+    //Returns the amount of non-short games completed in the given year.
+    public int getCompletedYearCount(int year) {
+        //Local variables
+        int total = 0;  //Count of applicable games
+
+        for (PlayedGame playedGame: table.baseList) {
+            //Iterate for each PlayedGame
+            if (playedGame.getStatus().equals("Completed") &&
+                    playedGame.getCompletionYear() == year &&
+                    !playedGame.getShortStatus().equals("Yes"))
+                //If game is completed, not short, and completed in the given year, increment total
+                total++;
+        }
+
+        return total;
+    }
+
+    //Returns the amount of short games completed in the given year.
+    public int getShortCompletedYearCount(int year) {
+        //Local variables
+        int total = 0;  //Count of applicable games
+
+        for (PlayedGame playedGame: table.baseList) {
+            //Iterate for each PlayedGame
+            if (playedGame.getStatus().equals("Completed") &&
+                    playedGame.getCompletionYear() == year &&
+                    playedGame.getShortStatus().equals("Yes"))
+                //If game is completed, short, and completed in the given year, increment total
+                total++;
+        }
+
+        return total;
+    }
+
+    //Returns the number of games completed this year, regardless of short status.
+    public int getTotalYearCount(int year) {
+        return getCompletedYearCount(year) + getShortCompletedYearCount(year);
+    }
+
+    //Returns the number of PlayedGames with the given status that are short.
+    public int getPlayedStatusShortCount(String status) {
+        //Local variables
+        int total = 0;  //Count of applicable games
+
+        for (PlayedGame playedGame: table.baseList) {
+            //Iterate for each PlayedGame
+            if (playedGame.getStatus().equals(status) &&
+                    playedGame.getShortStatus().equals("Yes"))
+                //If game has the given status and is short, increment total
+                total++;
+        }
+
+        return total;
+    }
+
+    //Returns the number of PlayedGames with the given status and not short.
+    public int getPlayedStatusCount(String status) {
+        //Local variables
+        int total = 0;  //Count of applicable games
+
+        for (PlayedGame playedGame: table.baseList) {
+            //Iterate for each PlayedGame
+            if (playedGame.getStatus().equals(status) &&
+                    !playedGame.getShortStatus().equals("Yes"))
+                //If game has the given status and is not short, increment total
+                total++;
+        }
+
+        return total;
     }
 }

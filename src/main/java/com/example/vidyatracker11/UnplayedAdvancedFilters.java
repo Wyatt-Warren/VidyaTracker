@@ -1,21 +1,24 @@
 package com.example.vidyatracker11;
 
+import javafx.collections.FXCollections;
 import javafx.scene.control.Button;
 
-public class UnplayedGoalFilterWindow extends UnplayedFilterWindow{
+public class UnplayedAdvancedFilters extends UnplayedFilterWindow{
     //GUI
     Button confirmButton = new Button("Confirm Filters");
-
+    Button resetButton = new Button("Reset All Filters");
     //Fields
     private UnplayedGameFilter filter;
 
-    public UnplayedGoalFilterWindow(UnplayedGameFilter oldFilter){
+    public UnplayedAdvancedFilters(UnplayedGameFilter oldFilter){
         //GUI
+        mainLabel.setText("Choose Advanced Filters");
         layer1HBox.getChildren().addAll(statusVBox, titleVBox, franchiseVBox,
                 platformVBox, genreVBox);
         layer2HBox.getChildren().addAll(releaseYearVBox, addedYearVBox, hoursVBox,
                 deckVBox, collectionVBox);
-        getChildren().add(confirmButton);
+        getChildren().add(1, resetButton);
+        getChildren().addAll(confirmButton);
 
         //Set status values
         statusView.getItems().addAll(oldFilter.getPossibleStatuses());
@@ -64,6 +67,24 @@ public class UnplayedGoalFilterWindow extends UnplayedFilterWindow{
 
         //Set collection values
         collectionView.getItems().addAll(oldFilter.possibleCollections);
+
+        resetButton.setOnAction(e -> {
+            //Clear all selected filters when pressed
+
+            statusView.setItems(FXCollections.observableArrayList());
+            titleField.setText("");
+            franchiseView.setItems(FXCollections.observableArrayList());
+            platformView.setItems(FXCollections.observableArrayList());
+            genreView.setItems(FXCollections.observableArrayList());
+            releaseYearMinField.setText("");
+            releaseYearMaxField.setText("");
+            addedYearMinField.setText("");
+            addedYearMaxField.setText("");
+            hoursMinField.setText("");
+            hoursMaxField.setText("");
+            deckView.setItems(FXCollections.observableArrayList());
+            collectionView.setItems(FXCollections.observableArrayList());
+        });
     }
 
     public void setFilters(){

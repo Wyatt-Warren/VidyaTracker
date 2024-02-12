@@ -80,7 +80,8 @@ public class ApplicationGUI extends Application {
     public static Menu miscMenu = new Menu("Misc");
 
     //Played Window
-    public static StatusCountBoxPlayed statusCountBoxPlayed = new StatusCountBoxPlayed();
+    public static PlayedGamesTable playedGamesTable = new PlayedGamesTable();
+    public static StatusCountBoxPlayed statusCountBoxPlayed = new StatusCountBoxPlayed(playedGamesTable);
     public static PlayedTempList playedTempList = new PlayedTempList();
     public static Button switchFromPlayed = new Button("Show Unplayed List");
     public static HBox topBoxPlayed = new HBox(statusCountBoxPlayed, playedTempList, switchFromPlayed);
@@ -90,15 +91,16 @@ public class ApplicationGUI extends Application {
     public static ChoiceBox<String> playedFilterChoices = new ChoiceBox<>();
     public static Label playedFilterTokenLabel = new Label("Filter Token:");
     public static ChoiceBox<String> playedFilterTokenChoices = new ChoiceBox<>();
-    public static Button playedAdvancedFilters = new Button("Advanced Filters");
+    public static Button playedAdvancedFilterButton = new Button("Advanced Filters");
     public static HBox playedChoiceHBox = new HBox(playedSortLabel, playedSortChoices, playedFilterLabel,
-            playedFilterChoices, playedFilterTokenLabel, playedFilterTokenChoices, playedAdvancedFilters);
-    public static PlayedGamesTable playedGamesTable = new PlayedGamesTable();
+            playedFilterChoices, playedFilterTokenLabel, playedFilterTokenChoices, new Label("     "),
+            playedAdvancedFilterButton);
     public static VBox playedGamesVBox = new VBox(playedChoiceHBox, playedGamesTable);
     public static VBox playedWindow = new VBox(topBoxPlayed, playedGamesVBox);
 
     //Unplayed Window
-    public static StatusCountBoxUnplayed statusCountBoxUnplayed = new StatusCountBoxUnplayed();
+    public static UnplayedGamesTable unplayedGamesTable = new UnplayedGamesTable();
+    public static StatusCountBoxUnplayed statusCountBoxUnplayed = new StatusCountBoxUnplayed(unplayedGamesTable);
     public static UnplayedTempList unplayedTempList = new UnplayedTempList();
     public static Button switchFromUnplayed = new Button("Show Played List");
     public static HBox topBoxUnplayed = new HBox(statusCountBoxUnplayed, unplayedTempList, switchFromUnplayed);
@@ -108,10 +110,10 @@ public class ApplicationGUI extends Application {
     public static ChoiceBox<String> unplayedFilterChoices = new ChoiceBox<>();
     public static Label unplayedFilterTokenLabel = new Label("Filter Token:");
     public static ChoiceBox<String> unplayedFilterTokenChoices = new ChoiceBox<>();
-    public static Button unplayedAdvancedFilters = new Button("Advanced Filters");
+    public static Button unplayedAdvancedFilterButton = new Button("Advanced Filters");
     public static HBox unplayedChoiceHBox = new HBox(unplayedSortLabel, unplayedSortChoices, unplayedFilterLabel,
-            unplayedFilterChoices, unplayedFilterTokenLabel, unplayedFilterTokenChoices, unplayedAdvancedFilters);
-    public static UnplayedGamesTable unplayedGamesTable = new UnplayedGamesTable();
+            unplayedFilterChoices, unplayedFilterTokenLabel, unplayedFilterTokenChoices, new Label("     "),
+            unplayedAdvancedFilterButton);
     public static VBox unplayedGamesVBox = new VBox(unplayedChoiceHBox, unplayedGamesTable);
     public static VBox unplayedWindow = new VBox(topBoxUnplayed, unplayedGamesVBox);
 
@@ -143,6 +145,16 @@ public class ApplicationGUI extends Application {
         String input = change.getControlNewText();
         return input.matches("\\d*\\.\\d*")||input.matches("\\d*") ? change : null;
     };
+
+    public static PlayedGameFilter playedAdvancedFilter = new PlayedGameFilter(FXCollections.observableArrayList(),                     //Advanced filter for played table
+            FXCollections.observableArrayList(), FXCollections.observableArrayList(), FXCollections.observableArrayList(),
+            FXCollections.observableArrayList(), FXCollections.observableArrayList(), FXCollections.observableArrayList(),
+            FXCollections.observableArrayList(), "", 0, Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
+
+    public static UnplayedGameFilter unplayedAdvancedFilter = new UnplayedGameFilter(FXCollections.observableArrayList(),               //Advanced filter for unplayed table
+            FXCollections.observableArrayList(), FXCollections.observableArrayList(), FXCollections.observableArrayList(),
+            FXCollections.observableArrayList(), FXCollections.observableArrayList(),
+            "", 0, Integer.MAX_VALUE, 0, Integer.MAX_VALUE, 0, Double.MAX_VALUE);
 
     //Main method
     public static void main(String[] args) {
@@ -260,7 +272,7 @@ public class ApplicationGUI extends Application {
                     //Local variables
                     ObservableList<String> franchises = FXCollections.observableArrayList();    //List of all franchises
 
-                    for(PlayedGame game : GameLists.playedList)
+                    for(PlayedGame game : playedGamesTable.baseList)
                         //Iterate for each PlayedGame
                         if( !game.getFranchise().equals("") && !franchises.contains(game.getFranchise()))
                             //Game has a franchise and it isn't already in the list
@@ -289,7 +301,7 @@ public class ApplicationGUI extends Application {
                     //Local variables
                     ObservableList<Integer> years = FXCollections.observableArrayList();    //List of all years
 
-                    for(PlayedGame game : GameLists.playedList){
+                    for(PlayedGame game : playedGamesTable.baseList){
                         //Iterate for each PlayedGame
                         //Local variable
                         int year;   //Release or completion year of each game
@@ -334,8 +346,33 @@ public class ApplicationGUI extends Application {
         playedFilterTokenChoices.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
                 playedGamesTable.sortAndFilter(newValue));
 
-        playedAdvancedFilters.setOnAction(e -> {
+        playedAdvancedFilterButton.setOnAction(e -> {
             //Open advanced filters window
+            //Local variables
+            Stage stage = new Stage();
+            PlayedAdvancedFilters playedAdvancedFilters = new PlayedAdvancedFilters(playedAdvancedFilter);
+            Scene scene = new Scene(playedAdvancedFilters);
+
+            //GUI
+            stage.getIcons().add(ApplicationGUI.icon);
+            stage.setResizable(false);
+            stage.setScene(scene);
+            stage.setTitle("Set Advanced Filters");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            scene.getStylesheets().add(ApplicationGUI.styleSheet);
+
+            playedAdvancedFilters.confirmButton.setOnAction(e1 -> {
+                //Set current filter to filter generated by playedAdvancedFilters
+                playedAdvancedFilters.setFilters();
+                playedAdvancedFilter = playedAdvancedFilters.getFilter();
+
+                playedGamesTable.baseList = playedAdvancedFilter.filteredList();
+                playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
+                statusCountBoxPlayed.updateData();
+                stage.close();
+            });
+
+            stage.show();
         });
 
         //Unplayed ChoiceBox listeners
@@ -435,6 +472,36 @@ public class ApplicationGUI extends Application {
         });
         unplayedFilterTokenChoices.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
                 unplayedGamesTable.sortAndFilter(newValue));
+
+        unplayedAdvancedFilterButton.setOnAction(e -> {
+            //Open advanced filters window
+            //Local variables
+            Stage stage = new Stage();
+            UnplayedAdvancedFilters unplayedAdvancedFilters = new UnplayedAdvancedFilters(unplayedAdvancedFilter);
+            Scene scene = new Scene(unplayedAdvancedFilters);
+
+            //GUI
+            stage.getIcons().add(ApplicationGUI.icon);
+            stage.setResizable(false);
+            stage.setScene(scene);
+            stage.setTitle("Set Advanced Filters");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            scene.getStylesheets().add(ApplicationGUI.styleSheet);
+
+            unplayedAdvancedFilters.confirmButton.setOnAction(e1 -> {
+                //Set current filter to filter generated by playedAdvancedFilters
+                unplayedAdvancedFilters.setFilters();
+                unplayedAdvancedFilter = unplayedAdvancedFilters.getFilter();
+
+                unplayedGamesTable.baseList = unplayedAdvancedFilter.filteredList();
+                unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
+                statusCountBoxUnplayed.updateData();
+
+                stage.close();
+            });
+
+            stage.show();
+        });
 
         //Select the first item in ChoiceBoxes
         playedSortChoices.getSelectionModel().selectFirst();
@@ -2830,7 +2897,15 @@ public class ApplicationGUI extends Application {
                 }
 
             //Update GUI
+            playedSortChoices.getSelectionModel().selectFirst();
+            playedFilterChoices.getSelectionModel().selectLast();
+            playedFilterTokenChoices.getSelectionModel().clearSelection();
+            playedGamesTable.baseList = playedAdvancedFilter.filteredList();
             playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
+            unplayedSortChoices.getSelectionModel().selectFirst();
+            unplayedFilterChoices.getSelectionModel().selectLast();
+            unplayedFilterTokenChoices.getSelectionModel().clearSelection();
+            unplayedGamesTable.baseList = unplayedAdvancedFilter.filteredList();
             unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
             statusCountBoxPlayed.updateData();
             statusCountBoxUnplayed.updateData();

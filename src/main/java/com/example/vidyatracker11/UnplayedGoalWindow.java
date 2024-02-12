@@ -80,7 +80,7 @@ public class UnplayedGoalWindow extends GoalWindow{
             stage.getIcons().add(ApplicationGUI.icon);
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Add New Played Game Goal");
+            stage.setTitle("Add New Unplayed Game Goal");
             stage.setScene(scene);
             scene.getStylesheets().add(ApplicationGUI.styleSheet);
             stage.show();
@@ -100,7 +100,7 @@ public class UnplayedGoalWindow extends GoalWindow{
                 stage.getIcons().add(ApplicationGUI.icon);
                 stage.setResizable(false);
                 stage.initModality(Modality.APPLICATION_MODAL);
-                stage.setTitle("Edit Played Game Goal");
+                stage.setTitle("Edit Unplayed Game Goal");
                 stage.setScene(scene);
                 scene.getStylesheets().add(ApplicationGUI.styleSheet);
                 stage.show();
