@@ -14,6 +14,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.util.Collections;
+
 //Superclass for EditGenreList and EditPlatformList
 public abstract class EditGenPlatList extends VBox {
     //GUI
@@ -26,7 +28,8 @@ public abstract class EditGenPlatList extends VBox {
     Button removeItemButton = new Button();
     Button moveUpButton = new Button("Move Up");
     Button moveDownButton = new Button("Move Down");
-    VBox buttonBox = new VBox(renameItemButton, removeItemButton, moveUpButton, moveDownButton);
+    Button sortButton = new Button("Sort Alphabetically");
+    VBox buttonBox = new VBox(renameItemButton, removeItemButton, moveUpButton, moveDownButton, sortButton);
     GridPane gridPane = new GridPane();
 
     //Fields
@@ -191,6 +194,14 @@ public abstract class EditGenPlatList extends VBox {
                 ApplicationGUI.changeMade = true;
                 ApplicationGUI.setStageTitle();
             }
+        });
+
+        sortButton.setOnAction(e -> {
+            //Sort the list alphabetically
+            Collections.sort(list);
+
+            ApplicationGUI.changeMade = true;
+            ApplicationGUI.setStageTitle();
         });
 
         //Set textField text to the selected item.
