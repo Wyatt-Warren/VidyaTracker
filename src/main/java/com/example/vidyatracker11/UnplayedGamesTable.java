@@ -1,6 +1,7 @@
 package com.example.vidyatracker11;
 
 import java.text.DecimalFormat;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.function.Predicate;
 
@@ -302,11 +303,21 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
                 break;
             case 1:
                 //Title
-                setItems(new FilteredList<>(basicSort(filteredList, true)));
+                ObservableList<UnplayedGame> newList = FXCollections.observableArrayList(basicSort(filteredList, true));
+
+                if(ApplicationGUI.unplayedFlipped)
+                    Collections.reverse(newList);
+
+                setItems(newList);
                 break;
             case 2:
-                //Title
-                setItems(new FilteredList<>(basicSort(filteredList, false)));
+                //Franchise
+                ObservableList<UnplayedGame> newList1 = FXCollections.observableArrayList(basicSort(filteredList, false));
+
+                if(ApplicationGUI.unplayedFlipped)
+                    Collections.reverse(newList1);
+
+                setItems(newList1);
                 break;
             case 3:
                 //Platform
@@ -384,6 +395,11 @@ public class UnplayedGamesTable extends TableView<UnplayedGame> {
         ObservableList<UnplayedGame> newList = FXCollections.observableArrayList(basicSort(filteredList, true));   //List to be sorted by the end, first sorted by basicSort
 
         newList.sort(comparator);
+
+        if(ApplicationGUI.unplayedFlipped)
+            //Flip list if button is pressed
+            Collections.reverse(newList);
+
         setItems(newList);
     }
 

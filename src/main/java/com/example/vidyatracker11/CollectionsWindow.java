@@ -15,6 +15,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
 
@@ -23,7 +24,10 @@ public class CollectionsWindow extends VBox {
     //GUI
     Label mainLabel = new Label("Collections");
     Button manageButton = new Button("Manage Collections");
+    Button prevCollectionButton = new Button("<-");
+    Button nextCollectionButton = new Button("->");
     ChoiceBox<GameCollection> collectionChoices = new ChoiceBox<>();
+    HBox selectCollectionBox = new HBox(prevCollectionButton, new Label("        "), collectionChoices, new Label("        "),nextCollectionButton);
 
     //TableView
     TableColumn<Game, Integer> indexColumn = new TableColumn<>("");
@@ -40,6 +44,7 @@ public class CollectionsWindow extends VBox {
     Button chooseRandomPlayedGameButton = new Button("Choose a Random Played Game");
     Button chooseRandomUnplayedGameButton = new Button("Choose a Random Unplayed Game");
     Button reorderButton = new Button("Reorder List By");
+    Button flipButton = new Button("Flip List Order");
     ChoiceBox<String> reorderChoices = new ChoiceBox<>();
 
     //Text
@@ -56,7 +61,7 @@ public class CollectionsWindow extends VBox {
     //Boxes
     HBox reorderBox = new HBox(reorderButton, reorderChoices);
     VBox editButtons = new VBox(removeButton, moveUpButton, moveDownButton,
-            reorderBox);
+            reorderBox, flipButton);
     VBox randomButtons = new VBox(chooseRandomGameButton, chooseRandomPlayedGameButton,
             chooseRandomUnplayedGameButton);
     VBox buttonBox = new VBox(editButtons, randomButtons, labelPane);
@@ -77,6 +82,8 @@ public class CollectionsWindow extends VBox {
 
         //GUI
         mainLabel.setStyle("-fx-font-weight:bold;-fx-font-size:24;");
+        selectCollectionBox.setAlignment(Pos.CENTER);
+        selectCollectionBox.setSpacing(5);
         indexColumn.setCellValueFactory(cellData -> {
             int rowIndex = cellData.getTableView().getItems().indexOf(cellData.getValue());
             return javafx.beans.binding.Bindings.createObjectBinding(() -> rowIndex + 1);
@@ -111,10 +118,18 @@ public class CollectionsWindow extends VBox {
         labelPane.setHgap(10);
         collectionBox.setAlignment(Pos.CENTER);
         collectionBox.setSpacing(5);
-        getChildren().addAll(mainLabel, manageButton, collectionChoices, collectionBox);
+        getChildren().addAll(mainLabel, manageButton, selectCollectionBox, collectionBox);
         setAlignment(Pos.CENTER);
         setPadding(new Insets(5));
-        setSpacing(5);
+        setSpacing(15);
+
+        prevCollectionButton.setOnAction(e ->
+                //Select the previous collection in the list
+                collectionChoices.getSelectionModel().selectPrevious());
+
+        nextCollectionButton.setOnAction(e ->
+                //Select the next collection in the list
+                collectionChoices.getSelectionModel().selectNext());
 
         statusColumn.setCellFactory(e -> new TableCell<>() {
             public void updateItem(String item, boolean empty) {
@@ -551,6 +566,14 @@ public class CollectionsWindow extends VBox {
             ApplicationGUI.setStageTitle();
         });
 
+        flipButton.setOnAction(e -> {
+            //Flip the order of items in the list
+            Collections.reverse(collectionChoices.getSelectionModel().getSelectedItem().getGames());
+
+            ApplicationGUI.changeMade = true;
+            ApplicationGUI.setStageTitle();
+        });
+
         TableMethods.preventColumnResizing(tableView);
         TableMethods.preventColumnSorting(tableView);
         TableMethods.preventColumnReordering(tableView);
@@ -642,10 +665,14 @@ public class CollectionsWindow extends VBox {
             //Local variables
             GameCollection collection = collectionChoices.getItems().get(index);    //Currently selected collection
 
+            //Set prev and next buttons disabled if the first or last collection is selected
+            prevCollectionButton.setDisable(index == 0);
+            nextCollectionButton.setDisable(index == collectionChoices.getItems().size()-1);
+
             //Populate the table
             tableView.setItems(collection.getGames());
 
-            //There is a weird problem with percent100Column, resetting the columns fixes it.
+            //There is a weird problem with percent100Column, resetting the columns fixes it
             tableView.getColumns().clear();
             tableView.getColumns().addAll(columnList);
 

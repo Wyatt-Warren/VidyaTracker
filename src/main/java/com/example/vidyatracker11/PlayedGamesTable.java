@@ -1,5 +1,6 @@
 package com.example.vidyatracker11;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.function.Predicate;
 
@@ -342,11 +343,21 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
                 break;
             case 2:
                 //Title
-                setItems(new FilteredList<>(basicSort(filteredList, true)));
+                ObservableList<PlayedGame> newList = FXCollections.observableArrayList(basicSort(filteredList, true));
+
+                if(ApplicationGUI.playedFlipped)
+                    Collections.reverse(newList);
+
+                setItems(newList);
                 break;
             case 3:
                 //Franchise
-                setItems(new FilteredList<>(basicSort(filteredList, false)));
+                ObservableList<PlayedGame> newList1 = FXCollections.observableArrayList(basicSort(filteredList, false));
+
+                if(ApplicationGUI.playedFlipped)
+                    Collections.reverse(newList1);
+
+                setItems(newList1);
                 break;
             case 4:
                 //Rating
@@ -424,6 +435,11 @@ public class PlayedGamesTable extends TableView<PlayedGame> {
         ObservableList<PlayedGame> newList = FXCollections.observableArrayList(basicSort(filteredList, true));   //List to be sorted by the end, first sorted by basicSort
 
         newList.sort(comparator);
+
+        if(ApplicationGUI.playedFlipped)
+            //Flip list if button is pressed
+            Collections.reverse(newList);
+
         setItems(newList);
     }
 

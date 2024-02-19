@@ -29,7 +29,8 @@ public abstract class EditGenPlatList extends VBox {
     Button moveUpButton = new Button("Move Up");
     Button moveDownButton = new Button("Move Down");
     Button sortButton = new Button("Sort Alphabetically");
-    VBox buttonBox = new VBox(renameItemButton, removeItemButton, moveUpButton, moveDownButton, sortButton);
+    Button flipButton = new Button("Flip List Order");
+    VBox buttonBox = new VBox(renameItemButton, removeItemButton, moveUpButton, moveDownButton, sortButton, flipButton);
     GridPane gridPane = new GridPane();
 
     //Fields
@@ -39,8 +40,7 @@ public abstract class EditGenPlatList extends VBox {
     public EditGenPlatList(){
         //GUI
         mainLabel.setStyle("-fx-font-weight:bold;-fx-font-size:24;");
-        buttonBox.setAlignment(Pos.TOP_CENTER);
-        buttonBox.setSpacing(10);
+        buttonBox.setSpacing(5);
         gridPane.add(addItemField, 0, 0);
         gridPane.add(addItemButton, 1, 0);
         gridPane.add(warningLabel, 1, 1);
@@ -202,6 +202,14 @@ public abstract class EditGenPlatList extends VBox {
 
             ApplicationGUI.changeMade = true;
             ApplicationGUI.setStageTitle();
+        });
+
+        flipButton.setOnAction(e -> {
+                //Flip the order of items in the list
+                Collections.reverse(list);
+
+                ApplicationGUI.changeMade = true;
+                ApplicationGUI.setStageTitle();
         });
 
         //Set textField text to the selected item.

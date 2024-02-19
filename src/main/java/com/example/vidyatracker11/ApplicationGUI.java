@@ -87,15 +87,17 @@ public class ApplicationGUI extends Application {
     public static HBox topBoxPlayed = new HBox(statusCountBoxPlayed, playedTempList, switchFromPlayed);
     public static Label playedSortLabel = new Label("Sort by:");
     public static ChoiceBox<String> playedSortChoices = new ChoiceBox<>();
+    public static Button playedFlipSort = new Button("↑   Flip Sort Order   ↑");
     public static Label playedFilterLabel = new Label("Filter by:");
     public static ChoiceBox<String> playedFilterChoices = new ChoiceBox<>();
     public static Label playedFilterTokenLabel = new Label("Filter Token:");
     public static ChoiceBox<String> playedFilterTokenChoices = new ChoiceBox<>();
     public static Button playedAdvancedFilterButton = new Button("Advanced Filters");
-    public static HBox playedChoiceHBox = new HBox(playedSortLabel, playedSortChoices, playedFilterLabel,
-            playedFilterChoices, playedFilterTokenLabel, playedFilterTokenChoices, new Label("     "),
-            playedAdvancedFilterButton);
-    public static VBox playedGamesVBox = new VBox(playedChoiceHBox, playedGamesTable);
+    public static HBox playedSortHBox = new HBox(playedSortLabel, playedSortChoices, new Label("     "),
+            playedFlipSort);
+    public static HBox playedFilterHBox = new HBox(playedFilterLabel, playedFilterChoices, playedFilterTokenLabel,
+            playedFilterTokenChoices, new Label("     "), playedAdvancedFilterButton);
+    public static VBox playedGamesVBox = new VBox(playedSortHBox, playedFilterHBox, playedGamesTable);
     public static VBox playedWindow = new VBox(topBoxPlayed, playedGamesVBox);
 
     //Unplayed Window
@@ -106,15 +108,17 @@ public class ApplicationGUI extends Application {
     public static HBox topBoxUnplayed = new HBox(statusCountBoxUnplayed, unplayedTempList, switchFromUnplayed);
     public static Label unplayedSortLabel = new Label("Sort by:");
     public static ChoiceBox<String> unplayedSortChoices = new ChoiceBox<>();
+    public static Button unplayedFlipSort = new Button("↑   Flip Sort Order   ↑");
     public static Label unplayedFilterLabel = new Label("Filter by:");
     public static ChoiceBox<String> unplayedFilterChoices = new ChoiceBox<>();
     public static Label unplayedFilterTokenLabel = new Label("Filter Token:");
     public static ChoiceBox<String> unplayedFilterTokenChoices = new ChoiceBox<>();
     public static Button unplayedAdvancedFilterButton = new Button("Advanced Filters");
-    public static HBox unplayedChoiceHBox = new HBox(unplayedSortLabel, unplayedSortChoices, unplayedFilterLabel,
-            unplayedFilterChoices, unplayedFilterTokenLabel, unplayedFilterTokenChoices, new Label("     "),
-            unplayedAdvancedFilterButton);
-    public static VBox unplayedGamesVBox = new VBox(unplayedChoiceHBox, unplayedGamesTable);
+    public static HBox unplayedSortHBox = new HBox(unplayedSortLabel, unplayedSortChoices, new Label("     "),
+            unplayedFlipSort);
+    public static HBox unplayedFilterHBox = new HBox(unplayedFilterLabel, unplayedFilterChoices, unplayedFilterTokenLabel,
+            unplayedFilterTokenChoices, new Label("     "), unplayedAdvancedFilterButton);
+    public static VBox unplayedGamesVBox = new VBox(unplayedSortHBox, unplayedFilterHBox, unplayedGamesTable);
     public static VBox unplayedWindow = new VBox(topBoxUnplayed, unplayedGamesVBox);
 
     //Main GUI
@@ -155,6 +159,8 @@ public class ApplicationGUI extends Application {
             FXCollections.observableArrayList(), FXCollections.observableArrayList(), FXCollections.observableArrayList(),
             FXCollections.observableArrayList(), FXCollections.observableArrayList(),
             "", 0, Integer.MAX_VALUE, 0, Integer.MAX_VALUE, 0, Double.MAX_VALUE);
+    public static boolean playedFlipped = false;    //True if sort order is flipped for the played table
+    public static boolean unplayedFlipped = false;  //True if sort order is flipped for the unplayed table
 
     //Main method
     public static void main(String[] args) {
@@ -189,15 +195,19 @@ public class ApplicationGUI extends Application {
         topBoxPlayed.setAlignment(Pos.CENTER_LEFT);
         topBoxPlayed.setSpacing(10);
         HBox.setHgrow(topBoxPlayed, javafx.scene.layout.Priority.ALWAYS);
-        playedChoiceHBox.setSpacing(5);
-        playedChoiceHBox.setPadding(new Insets(2));
+        playedSortHBox.setSpacing(5);
+        playedSortHBox.setPadding(new Insets(2));
+        playedFilterHBox.setSpacing(5);
+        playedFilterHBox.setPadding(new Insets(2));
         playedGamesVBox.setSpacing(5);
         playedWindow.setSpacing(5);
         topBoxUnplayed.setAlignment(Pos.CENTER_LEFT);
         topBoxUnplayed.setSpacing(10);
         HBox.setHgrow(topBoxUnplayed, javafx.scene.layout.Priority.ALWAYS);
-        unplayedChoiceHBox.setSpacing(5);
-        unplayedChoiceHBox.setPadding(new Insets(2));
+        unplayedSortHBox.setSpacing(5);
+        unplayedSortHBox.setPadding(new Insets(2));
+        unplayedFilterHBox.setSpacing(5);
+        unplayedFilterHBox.setPadding(new Insets(2));
         unplayedGamesVBox.setSpacing(5);
         unplayedWindow.setSpacing(5);
         primaryScene.getStylesheets().add(styleSheet);
@@ -240,6 +250,18 @@ public class ApplicationGUI extends Application {
         unplayedFilterChoices.getItems().addAll("Status", "Franchise", "Platform", "Genre", "Release Year",
                 "Year Added", "Deck Status", "Collection", "No Filter");
 
+        playedFlipSort.setOnAction(e -> {
+            //Flip the order of the played list
+            playedFlipped = !playedFlipped;
+
+            if(playedFlipped)
+                playedFlipSort.setText("↓   Flip Sort Order   ↓");
+            else
+                playedFlipSort.setText("↑   Flip Sort Order   ↑");
+
+            playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
+        });
+
         //Played ChoiceBox listeners
         playedSortChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) ->
                 playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem()));
@@ -249,12 +271,12 @@ public class ApplicationGUI extends Application {
             //Delete and re-make playedFilterTokenChoices
             //This fixes an issue where playedFilterTokenChoices would remember how far down you scrolled after changing filter type
             //For example, Franchise to Status. It would be scrolled past the available options
-            int index = playedChoiceHBox.getChildren().indexOf(playedFilterTokenChoices);
-            playedChoiceHBox.getChildren().remove(playedFilterTokenChoices);
+            int index = playedFilterHBox.getChildren().indexOf(playedFilterTokenChoices);
+            playedFilterHBox.getChildren().remove(playedFilterTokenChoices);
             playedFilterTokenChoices = new ChoiceBox<>();
             playedFilterTokenChoices.getSelectionModel().selectedItemProperty().addListener((observable1, oldValue1, newValue1) ->
                     playedGamesTable.sortAndFilter(newValue1));
-            playedChoiceHBox.getChildren().add(index, playedFilterTokenChoices);
+            playedFilterHBox.getChildren().add(index, playedFilterTokenChoices);
 
             switch (playedFilterChoices.getSelectionModel().getSelectedIndex()){
                 //Switch for each possible selection of playedFilterChoices
@@ -375,6 +397,18 @@ public class ApplicationGUI extends Application {
             stage.show();
         });
 
+        unplayedFlipSort.setOnAction(e -> {
+            //Flip the order of the unplayed list
+            unplayedFlipped = !unplayedFlipped;
+
+            if(unplayedFlipped)
+                unplayedFlipSort.setText("↓   Flip Sort Order   ↓");
+            else
+                unplayedFlipSort.setText("↑   Flip Sort Order   ↑");
+
+            unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
+        });
+
         //Unplayed ChoiceBox listeners
         unplayedSortChoices.getSelectionModel().selectedIndexProperty().addListener((observable, oldNum, newNum) ->
                 unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem()));
@@ -384,12 +418,12 @@ public class ApplicationGUI extends Application {
             //Delete and re-make unplayedFilterTokenChoices
             //This fixes an issue where unplayedFilterTokenChoices would remember how far down you scrolled after changing filter type
             //For example, Franchise to Status. It would be scrolled past the available options
-            int index = unplayedChoiceHBox.getChildren().indexOf(unplayedFilterTokenChoices);
-            unplayedChoiceHBox.getChildren().remove(unplayedFilterTokenChoices);
+            int index = unplayedFilterHBox.getChildren().indexOf(unplayedFilterTokenChoices);
+            unplayedFilterHBox.getChildren().remove(unplayedFilterTokenChoices);
             unplayedFilterTokenChoices = new ChoiceBox<>();
             unplayedFilterTokenChoices.getSelectionModel().selectedItemProperty().addListener((observable1, oldValue1, newValue1) ->
                     unplayedGamesTable.sortAndFilter(newValue1));
-            unplayedChoiceHBox.getChildren().add(index, unplayedFilterTokenChoices);
+            unplayedFilterHBox.getChildren().add(index, unplayedFilterTokenChoices);
 
             switch (ApplicationGUI.unplayedFilterChoices.getSelectionModel().getSelectedIndex()) {
                 //Switch for each possible selection of unplayedFilterChoices
@@ -1289,19 +1323,19 @@ public class ApplicationGUI extends Application {
 
             if(playedOpen){
                 //Played games
-                for (int i = 0; i < GameLists.playedList.size(); i++)
+                for (int i = 0; i < playedGamesTable.baseList.size(); i++)
                     //Iterate through each game
-                    if ((GameLists.playedList.get(i)).getStatus().equals("Completed"))
+                    if ((playedGamesTable.baseList.get(i)).getStatus().equals("Completed"))
                         //If game is not from wishlist, add it to gameList
-                        gameList.add((GameLists.playedList.get(i)).getTitle());
+                        gameList.add((playedGamesTable.baseList.get(i)).getTitle());
             }else{
                 //Unplayed games
-                for (int i = 0; i < GameLists.unplayedList.size(); i++)
+                for (int i = 0; i < unplayedGamesTable.baseList.size(); i++)
                     //Iterate through each game
-                    if ((GameLists.unplayedList.get(i)).getStatus().equals("Backlog") ||
-                            (GameLists.unplayedList.get(i)).getStatus().equals("SubBacklog"))
+                    if ((unplayedGamesTable.baseList.get(i)).getStatus().equals("Backlog") ||
+                            (unplayedGamesTable.baseList.get(i)).getStatus().equals("SubBacklog"))
                         //If game is not from wishlist, add it to gameList
-                        gameList.add((GameLists.unplayedList.get(i)).getTitle());
+                        gameList.add((unplayedGamesTable.baseList.get(i)).getTitle());
             }
 
             if (gameList.size() > 0) {

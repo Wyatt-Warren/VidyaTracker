@@ -12,6 +12,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.util.Collections;
+import java.util.Comparator;
+
 //GUI for managing collections
 public class CollectionsManageWindow extends VBox {
     //GUI
@@ -27,8 +30,10 @@ public class CollectionsManageWindow extends VBox {
     Button moveUpButton = new Button("Move Up");
     Button moveDownButton = new Button("Move Down");
     Button duplicateButton = new Button("Duplicate Selected Collection");
+    Button sortButton = new Button("Sort Alphabetically");
+    Button flipButton = new Button("Flip List Order");
     VBox buttonBox = new VBox(renameButton, removeButton, duplicateButton,
-            moveUpButton, moveDownButton);
+            moveUpButton, moveDownButton, sortButton, flipButton);
 
     GridPane gridPane = new GridPane();
 
@@ -39,8 +44,7 @@ public class CollectionsManageWindow extends VBox {
         //GUI
         label.setStyle("-fx-font-weight:bold;-fx-font-size:24;");
         collectionListView.setItems(GameLists.collectionList);
-        buttonBox.setAlignment(Pos.TOP_CENTER);
-        buttonBox.setSpacing(10);
+        buttonBox.setSpacing(5);
         gridPane.add(collectionTextField, 0, 0);
         gridPane.add(addCollectionButton, 1, 0);
         gridPane.add(warningLabel, 1, 1);
@@ -199,6 +203,22 @@ public class CollectionsManageWindow extends VBox {
                 ApplicationGUI.changeMade = true;
                 ApplicationGUI.setStageTitle();
             }
+        });
+
+        sortButton.setOnAction(e -> {
+            //Sort the list alphabetically
+            GameLists.collectionList.sort(Comparator.comparing(GameCollection::getTitle));
+
+            ApplicationGUI.changeMade = true;
+            ApplicationGUI.setStageTitle();
+        });
+
+        flipButton.setOnAction(e -> {
+            //Flip the order of items in the list
+            Collections.reverse(GameLists.collectionList);
+
+            ApplicationGUI.changeMade = true;
+            ApplicationGUI.setStageTitle();
         });
 
         //Set textField text to the selected item.
