@@ -71,6 +71,9 @@ public abstract class AddEditGoal extends VBox {
     //Filters
     Button filterButton = new Button("Manage Filters");
 
+    //Fields
+    boolean countAllCollection = false;
+
     public AddEditGoal() {
         //GUI
         getChildren().addAll(mainLabel, mainHBox, warningLabel, doneButton);

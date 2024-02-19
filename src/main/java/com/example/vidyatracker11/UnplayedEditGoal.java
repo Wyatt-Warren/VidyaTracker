@@ -40,6 +40,9 @@ public class UnplayedEditGoal extends UnplayedAddEditGoal{
         //Set filter
         filter = goal.getFilter();
 
+        //Set countAllCollection
+        countAllCollection = goal.isCountAllCollection();
+
         doneButton.setOnAction(e -> {
             //Save changes to goal
             //Local variables
@@ -131,6 +134,9 @@ public class UnplayedEditGoal extends UnplayedAddEditGoal{
 
             //Set end progress
             goal.setEndProgress(endProgress);
+
+            //Set countAllCollection
+            goal.setCountAllCollection(countAllCollection);
 
             //Set filter
             filter.setMaxAddedDate(LocalDate.of(

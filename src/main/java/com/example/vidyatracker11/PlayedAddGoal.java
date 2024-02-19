@@ -87,6 +87,9 @@ public class PlayedAddGoal extends PlayedAddEditGoal{
                     startDayBox.getSelectionModel().getSelectedItem(), endYear, endMonthBox.getSelectionModel().getSelectedItem(),
                     endDayBox.getSelectionModel().getSelectedItem(), startProgress, goalProgress, filter);
 
+            //Set countAllCollection
+            newGoal.setCountAllCollection(countAllCollection);
+
             //Add new goal
             GameLists.playedGoalList.add(newGoal);
 

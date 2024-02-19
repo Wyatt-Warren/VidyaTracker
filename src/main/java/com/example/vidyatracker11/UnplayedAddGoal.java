@@ -97,6 +97,9 @@ public class UnplayedAddGoal extends UnplayedAddEditGoal{
                     startDayBox.getSelectionModel().getSelectedItem(), endYear, endMonthBox.getSelectionModel().getSelectedItem(),
                     endDayBox.getSelectionModel().getSelectedItem(), startProgress, goalProgress, endProgress, filter);
 
+            //Set countAllCollection
+            newGoal.setCountAllCollection(countAllCollection);
+
             //Add new goal
             GameLists.unplayedGoalList.add(newGoal);
 

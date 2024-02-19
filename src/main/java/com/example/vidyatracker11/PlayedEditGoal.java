@@ -38,6 +38,9 @@ public class PlayedEditGoal extends PlayedAddEditGoal{
         //Set filter
         filter = goal.getFilter();
 
+        //Set countAllCollection
+        countAllCollection = goal.isCountAllCollection();
+
         doneButton.setOnAction(e -> {
             //Save changes to goal
             //Local variables
@@ -116,6 +119,9 @@ public class PlayedEditGoal extends PlayedAddEditGoal{
 
             //Set start progress
             goal.setStartProgress(startProgress);
+
+            //Set countAllCollection
+            goal.setCountAllCollection(countAllCollection);
 
             //Set filter
             filter.setMaxCompletionDate(LocalDate.of(

@@ -381,6 +381,7 @@ public class ApplicationGUI extends Application {
             stage.setScene(scene);
             stage.setTitle("Set Advanced Filters");
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setHeight(750);
             scene.getStylesheets().add(ApplicationGUI.styleSheet);
 
             playedAdvancedFilters.confirmButton.setOnAction(e1 -> {
@@ -520,6 +521,7 @@ public class ApplicationGUI extends Application {
             stage.setScene(scene);
             stage.setTitle("Set Advanced Filters");
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setHeight(750);
             scene.getStylesheets().add(ApplicationGUI.styleSheet);
 
             unplayedAdvancedFilters.confirmButton.setOnAction(e1 -> {
@@ -2201,6 +2203,11 @@ public class ApplicationGUI extends Application {
                 }
 
                 newGoal.put("F", filters);
+
+                if(goal.isCountAllCollection())
+                    //If countAllCollection, put some value
+                    newGoal.put("C", 1);
+
                 playedGoalArray.put(newGoal);
             }
 
@@ -2341,6 +2348,11 @@ public class ApplicationGUI extends Application {
                 }
 
                 newGoal.put("F", filters);
+
+                if(goal.isCountAllCollection())
+                    //If countAllCollection, put some value
+                    newGoal.put("C", 1);
+
                 unplayedGoalArray.put(newGoal);
             }
 
@@ -2648,6 +2660,7 @@ public class ApplicationGUI extends Application {
                     ObservableList<String> shortStatuses = FXCollections.observableArrayList();         //Short statuses for filter
                     ObservableList<Integer> ratings = FXCollections.observableArrayList();              //Ratings statuses for filter
                     ObservableList<String> percent100Statuses = FXCollections.observableArrayList();    //100% statuses for filter
+                    boolean countAllCollection = false;                                                 //CountAllCollection of new goal
 
                     if(newObj.has("GT"))
                         //If goal has title, get title
@@ -2768,10 +2781,16 @@ public class ApplicationGUI extends Application {
                     filter.setMaxCompletionDate(
                             LocalDate.of((int) newObj.get("EY"), (int) newObj.get("EM"), (int) newObj.get("ED")));
 
+                    if(newObj.has("C"))
+                        //If goal has countAllCollection, set countAllCollection
+                        countAllCollection = true;
+
                     //Create new goal
                     newGoal = new PlayedGameGoal(title, (int) newObj.get("SY"), (int) newObj.get("SM"),
                             (int) newObj.get("SD"), (int) newObj.get("EY"), (int) newObj.get("EM"),
                             (int) newObj.get("ED"), startProgress, goalProgress, filter);
+
+                    newGoal.setCountAllCollection(countAllCollection);
 
                     GameLists.playedGoalList.add(newGoal);
                 }
@@ -2801,6 +2820,7 @@ public class ApplicationGUI extends Application {
                     double minHours = 0.0;                                                              //Min hours for filter
                     double maxHours = Double.MAX_VALUE;                                                 //Max hours for filter
                     ObservableList<String> deckStatuses = FXCollections.observableArrayList();          //Deck statuses for filter
+                    boolean countAllCollection = false;                                                 //CountAllCollection of new goal
 
                     if(newObj.has("GT"))
                         //If goal has title, get title
@@ -2932,10 +2952,16 @@ public class ApplicationGUI extends Application {
                     filter = new UnplayedGameFilter(statuses, franchises, platforms, genres, collections, deckStatuses,
                             titleContains, minReleaseYear, maxReleaseYear, minAddedYear, maxAddedYear, minHours, maxHours);
 
+                    if(newObj.has("C"))
+                        //If goal has countAllCollection, set countAllCollection
+                        countAllCollection = true;
+
                     //Create new goal
                     newGoal = new UnplayedGameGoal(title, (int) newObj.get("SY"), (int) newObj.get("SM"),
                             (int) newObj.get("SD"), (int) newObj.get("EY"), (int) newObj.get("EM"),
                             (int) newObj.get("ED"), startProgress, goalProgress, endProgress, filter);
+
+                    newGoal.setCountAllCollection(countAllCollection);
 
                     GameLists.unplayedGoalList.add(newGoal);
                 }

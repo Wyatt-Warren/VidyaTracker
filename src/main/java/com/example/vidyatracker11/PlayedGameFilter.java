@@ -87,6 +87,37 @@ public class PlayedGameFilter extends GameFilter {
         return newList;
     }
 
+    //Return the count of games that meet the filter
+    public int getFilterCount(boolean countAllCollection){
+        //Local variables
+        int count = filteredList().size();
+
+        if(countAllCollection){
+            //If countAllCollection is selected, count UnplayedGames meeting filter requirements
+            for(GameCollection collection : possibleCollections)
+                //For every collection
+                for(Game game : collection.getGames())
+                    //For every game in the collection
+                    if(game instanceof UnplayedGame &&
+                            //If game is an unplayedGame
+                            (titleContains.equals("") || game.getTitle().toLowerCase().contains(titleContains.toLowerCase())) &&
+                            //Title is selected and game matches
+                            (possibleFranchises.isEmpty() || possibleFranchises.contains(game.getFranchise())) &&
+                            //Franchise is selected and game matches
+                            (possiblePlatforms.isEmpty() || possiblePlatforms.contains(game.getPlatform())) &&
+                            //Platform is selected and game matches
+                            (possibleGenres.isEmpty() || possibleGenres.contains(game.getGenre())) &&
+                            //Genre is selected and game matches
+                            (game.getReleaseYear() >= minReleaseYear) &&
+                            //Release year is entered and game is greater or equal
+                            (game.getReleaseYear() <= maxReleaseYear))
+                            //Release year is entered and game is less than or equal
+                        count++;
+        }
+
+        return count;
+    }
+
     public int getMinCompletionYear() {
         return minCompletionYear;
     }

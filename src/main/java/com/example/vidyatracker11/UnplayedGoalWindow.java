@@ -191,7 +191,7 @@ public class UnplayedGoalWindow extends GoalWindow{
     //Update display with information from the selected goal
     public void updateGoal(UnplayedGameGoal goal){
         //Local variables
-        int currentProgress = goal.getStartProgress() - goal.getFilter().filteredList().size();
+        int currentProgress = goal.getStartProgress() - goal.getFilter().getFilterCount(goal.isCountAllCollection());
         double progressRatio;
         double timeRatio;
         long dayProgress;
@@ -247,7 +247,7 @@ public class UnplayedGoalWindow extends GoalWindow{
         if(goal.getEndProgress() != -1)
             currentProgressLabel.setText("Progress\n" + goal.getEndProgress());
         else
-            currentProgressLabel.setText("Progress\n" + goal.getFilter().filteredList().size());
+            currentProgressLabel.setText("Progress\n" + goal.getFilter().getFilterCount(goal.isCountAllCollection()));
 
 
         //Set goal progress text

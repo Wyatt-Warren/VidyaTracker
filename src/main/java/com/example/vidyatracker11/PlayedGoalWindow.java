@@ -191,7 +191,7 @@ public class PlayedGoalWindow extends GoalWindow{
     //Update display with information from the selected goal
     public void updateGoal(PlayedGameGoal goal){
         //Local variables
-        int currentProgress = goal.getFilter().filteredList().size() - goal.getStartProgress();
+        int currentProgress = goal.getFilter().getFilterCount(goal.isCountAllCollection()) - goal.getStartProgress();
         double progressRatio;
         double timeRatio;
         long dayProgress;
@@ -240,7 +240,7 @@ public class PlayedGoalWindow extends GoalWindow{
         startProgressLabel.setText("Start\n" + goal.getStartProgress());
 
         //Set current progress text
-        currentProgressLabel.setText("Progress\n" + goal.getFilter().filteredList().size());
+        currentProgressLabel.setText("Progress\n" + goal.getFilter().getFilterCount(goal.isCountAllCollection()));
 
         //Set goal progress text
         goalProgressLabel.setText("End\n" + goal.getGoalProgress());

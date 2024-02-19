@@ -4,6 +4,7 @@ public abstract class GameGoal {
     //Fields
     public static final String[] statuses = {"Not Started", "Behind", "On Schedule", "Ahead", "Completed", "Failed"};
     private String title;
+    private boolean countAllCollection = false;
 
     //Dates
     private int startYear;
@@ -100,5 +101,13 @@ public abstract class GameGoal {
 
     public void setStartProgress(int startProgress) {
         this.startProgress = startProgress;
+    }
+
+    public boolean isCountAllCollection() {
+        return countAllCollection;
+    }
+
+    public void setCountAllCollection(boolean countAllCollection) {
+        this.countAllCollection = countAllCollection;
     }
 }
