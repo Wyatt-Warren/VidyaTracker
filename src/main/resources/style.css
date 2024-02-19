@@ -217,3 +217,26 @@
     -fx-border-color: white;
     -fx-border-width: 0
 }
+
+.check-box {
+    /* default properties */
+    selected-box-color: #545454;
+    box-color: #545454;
+    mark-color: white;
+}
+
+.check-box:selected > .box {
+    /* background color for selected checkbox */
+    -fx-background-color: selected-box-color;
+}
+
+.check-box > .box {
+    /* background color of unselected checkbox */
+    -fx-background-color: box-color;
+}
+
+.check-box:selected > .box > .mark,
+.check-box:indeterminate  > .box > .mark {
+    /* modify mark color */
+    -fx-background-color: mark-color;
+}
