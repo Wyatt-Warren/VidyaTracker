@@ -375,7 +375,7 @@ public class UnplayedGoalWindow extends GoalWindow{
         else if(timeRatio <= 1){
             //Goal has started, but is not over
 
-            if(currentProgress <= goal.getStartProgress() - goal.getGoalProgress())
+            if(currentProgress >= goal.getStartProgress() - goal.getGoalProgress())
                 //Goal is done early
                 goalStatusLabel.setText(GameGoal.statuses[4]);
 
