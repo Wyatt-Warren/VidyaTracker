@@ -1,12 +1,13 @@
 package com.example.vidyatracker11;
 
+import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
 
 public class PlayedEditGoal extends PlayedAddEditGoal{
-    public PlayedEditGoal(Stage stage, TableView<PlayedGameGoal> table){
+    public PlayedEditGoal(Stage stage, TableView<PlayedGameGoal> table, PlayedGoalWindow window){
         //Local variables
         PlayedGameGoal goal = table.getSelectionModel().getSelectedItem();
 
@@ -128,10 +129,19 @@ public class PlayedEditGoal extends PlayedAddEditGoal{
                     endYear, endMonthBox.getSelectionModel().getSelectedItem(), endDayBox.getSelectionModel().getSelectedItem()));
             goal.setFilter(filter);
 
+            //Remake the whole list as a lazy way to deal with items updating and needing to move tables
+            window.ongoingList = new FilteredList<>(window.sortedList,
+                    p -> !LocalDate.of(p.getEndYear(), p.getEndMonth(), p.getEndDay()).isBefore(ApplicationGUI.localDate));
+            window.endedList = new FilteredList<>(window.sortedList,
+                    p -> LocalDate.of(p.getEndYear(), p.getEndMonth(), p.getEndDay()).isBefore(ApplicationGUI.localDate));
+            window.ongoingTable.setItems(window.ongoingList);
+            window.endedTable.setItems(window.endedList);
+            TableMethods.updateColumnWidth(window.ongoingTable.getColumns());
+            TableMethods.updateColumnWidth(window.endedTable.getColumns());
+
             //Update table
             table.getSelectionModel().clearSelection();
             table.getSelectionModel().select(goal);
-            TableMethods.updateColumnWidth(table.getColumns());
             table.refresh();
 
             ApplicationGUI.changeMade = true;

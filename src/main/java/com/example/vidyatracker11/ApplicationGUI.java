@@ -1289,6 +1289,11 @@ public class ApplicationGUI extends Application {
 
             });
 
+            stage.setOnCloseRequest(e1 -> {
+                playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
+                unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
+            });
+
             stage.show();
         });
 
@@ -1313,6 +1318,11 @@ public class ApplicationGUI extends Application {
                 else if (e1.getCode() == KeyCode.ENTER && window.addItemField.isFocused())
                     //If enter is pressed while addItemField is focused, add the inputted platform
                     window.addItemButton.fire();
+            });
+
+            stage.setOnCloseRequest(e1 -> {
+                playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
+                unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
             });
 
             stage.show();
@@ -1671,6 +1681,11 @@ public class ApplicationGUI extends Application {
             stage.setTitle("Collections");
             stage.setScene(scene);
             scene.getStylesheets().add(styleSheet);
+
+            stage.setOnCloseRequest(e1 -> {
+                playedGamesTable.sortAndFilter(playedFilterTokenChoices.getSelectionModel().getSelectedItem());
+                unplayedGamesTable.sortAndFilter(unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
+            });
 
             stage.show();
         });

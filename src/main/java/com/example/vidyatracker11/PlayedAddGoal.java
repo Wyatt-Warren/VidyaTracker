@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 import java.time.LocalDate;
 
 public class PlayedAddGoal extends PlayedAddEditGoal{
-    public PlayedAddGoal(Stage stage, TableView<PlayedGameGoal> table){
+    public PlayedAddGoal(Stage stage, TableView<PlayedGameGoal> table, TableView<PlayedGameGoal> table1){
         mainLabel.setText("Add New Played Game Goal");
 
         //Create new empty filter
@@ -93,11 +93,18 @@ public class PlayedAddGoal extends PlayedAddEditGoal{
             //Add new goal
             GameLists.playedGoalList.add(newGoal);
 
-            //Update Table
-            table.getSelectionModel().clearSelection();
-            table.getSelectionModel().select(newGoal);
-            TableMethods.updateColumnWidth(table.getColumns());
-            table.refresh();
+            //Update Tables
+            if(LocalDate.of(newGoal.getEndYear(), newGoal.getEndMonth(), newGoal.getEndDay()).isBefore(ApplicationGUI.localDate)){
+                table1.getSelectionModel().clearSelection();
+                table1.getSelectionModel().select(newGoal);
+                TableMethods.updateColumnWidth(table1.getColumns());
+                table1.refresh();
+            }else{
+                table.getSelectionModel().clearSelection();
+                table.getSelectionModel().select(newGoal);
+                TableMethods.updateColumnWidth(table.getColumns());
+                table.refresh();
+            }
 
             ApplicationGUI.changeMade = true;
             ApplicationGUI.setStageTitle();

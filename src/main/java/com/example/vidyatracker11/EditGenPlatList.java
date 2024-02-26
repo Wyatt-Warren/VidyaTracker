@@ -111,9 +111,6 @@ public abstract class EditGenPlatList extends VBox {
                     removeGameItems(toRemove);
 
                     //Update tables
-                    ApplicationGUI.playedGamesTable.sortAndFilter(ApplicationGUI.playedFilterTokenChoices.getSelectionModel().getSelectedItem());
-                    ApplicationGUI.unplayedGamesTable.sortAndFilter(ApplicationGUI.unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
-
                     ApplicationGUI.changeMade = true;
                     ApplicationGUI.setStageTitle();
                     stage.close();
@@ -151,9 +148,6 @@ public abstract class EditGenPlatList extends VBox {
                 addItemField.setText("");
 
                 //Update tables
-                ApplicationGUI.playedGamesTable.sortAndFilter(ApplicationGUI.playedFilterTokenChoices.getSelectionModel().getSelectedItem());
-                ApplicationGUI.unplayedGamesTable.sortAndFilter(ApplicationGUI.unplayedFilterTokenChoices.getSelectionModel().getSelectedItem());
-
                 ApplicationGUI.changeMade = true;
                 ApplicationGUI.setStageTitle();
             }
@@ -205,11 +199,11 @@ public abstract class EditGenPlatList extends VBox {
         });
 
         flipButton.setOnAction(e -> {
-                //Flip the order of items in the list
-                Collections.reverse(list);
+            //Flip the order of items in the list
+            Collections.reverse(list);
 
-                ApplicationGUI.changeMade = true;
-                ApplicationGUI.setStageTitle();
+            ApplicationGUI.changeMade = true;
+            ApplicationGUI.setStageTitle();
         });
 
         //Set textField text to the selected item.

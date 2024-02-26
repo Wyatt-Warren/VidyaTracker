@@ -53,7 +53,7 @@ public abstract class UnplayedAddEditGoal extends AddEditGoal{
         progressEndBox.setTextFormatter(new TextFormatter<>(ApplicationGUI.integerFilter));
 
         //Count games meeting requirements and set end progress to count
-        enterCurrentEndProgress.setOnAction(e -> progressEndBox.setText("" + filter.filteredList().size()));
+        enterCurrentEndProgress.setOnAction(e -> progressEndBox.setText("" + filter.getFilterCount(countAllCollection)));
 
         filterButton.setOnAction(e -> {
             //Open window to manage filters

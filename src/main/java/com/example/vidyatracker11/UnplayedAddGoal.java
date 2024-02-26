@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 import java.time.LocalDate;
 
 public class UnplayedAddGoal extends UnplayedAddEditGoal{
-    public UnplayedAddGoal(Stage stage, TableView<UnplayedGameGoal> table){
+    public UnplayedAddGoal(Stage stage, TableView<UnplayedGameGoal> table, TableView<UnplayedGameGoal> table1){
         mainLabel.setText("Add New Unplayed Game Goal");
 
         //Create new empty filter
@@ -104,10 +104,17 @@ public class UnplayedAddGoal extends UnplayedAddEditGoal{
             GameLists.unplayedGoalList.add(newGoal);
 
             //Update Table
-            table.getSelectionModel().clearSelection();
-            table.getSelectionModel().select(newGoal);
-            TableMethods.updateColumnWidth(table.getColumns());
-            table.refresh();
+            if(LocalDate.of(newGoal.getEndYear(), newGoal.getEndMonth(), newGoal.getEndDay()).isBefore(ApplicationGUI.localDate)){
+                table1.getSelectionModel().clearSelection();
+                table1.getSelectionModel().select(newGoal);
+                TableMethods.updateColumnWidth(table1.getColumns());
+                table1.refresh();
+            }else{
+                table.getSelectionModel().clearSelection();
+                table.getSelectionModel().select(newGoal);
+                TableMethods.updateColumnWidth(table.getColumns());
+                table.refresh();
+            }
 
             ApplicationGUI.changeMade = true;
             ApplicationGUI.setStageTitle();

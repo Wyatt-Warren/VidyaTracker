@@ -1,5 +1,6 @@
 package com.example.vidyatracker11;
 
+import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,38 +18,61 @@ import java.time.temporal.ChronoUnit;
 
 public class PlayedGoalWindow extends GoalWindow{
     //GUI
-    TableColumn<PlayedGameGoal, String> goalTitleColumn = new TableColumn<>("Goal");
-    TableColumn<PlayedGameGoal, Integer> goalYearColumn = new TableColumn<>("Y");
-    TableColumn<PlayedGameGoal, Integer> goalMonthColumn = new TableColumn<>("M");
-    TableColumn<PlayedGameGoal, Integer> goalDayColumn = new TableColumn<>("D");
-    TableView<PlayedGameGoal> goalTable = new TableView<>();
+    TableColumn<PlayedGameGoal, String> ongoingTitleColumn = new TableColumn<>("Goal");
+    TableColumn<PlayedGameGoal, Integer> ongoingYearColumn = new TableColumn<>("Y");
+    TableColumn<PlayedGameGoal, Integer> ongoingMonthColumn = new TableColumn<>("M");
+    TableColumn<PlayedGameGoal, Integer> ongoingDayColumn = new TableColumn<>("D");
+    TableView<PlayedGameGoal> ongoingTable = new TableView<>();
+    TableColumn<PlayedGameGoal, String> endedCompletedColumn = new TableColumn<>("Completed?");
+    TableColumn<PlayedGameGoal, String> endedTitleColumn = new TableColumn<>("Goal");
+    TableColumn<PlayedGameGoal, Integer> endedYearColumn = new TableColumn<>("Y");
+    TableColumn<PlayedGameGoal, Integer> endedMonthColumn = new TableColumn<>("M");
+    TableColumn<PlayedGameGoal, Integer> endedDayColumn = new TableColumn<>("D");
+    TableView<PlayedGameGoal> endedTable = new TableView<>();
     SortedList<PlayedGameGoal> sortedList = new SortedList<>(GameLists.playedGoalList);
+    FilteredList<PlayedGameGoal> ongoingList = new FilteredList<>(sortedList);
+    FilteredList<PlayedGameGoal> endedList = new FilteredList<>(sortedList);
 
     public PlayedGoalWindow(){
         //GUI
-        goalTitleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
-        goalYearColumn.setCellValueFactory(new PropertyValueFactory<>("endYear"));
-        goalMonthColumn.setCellValueFactory(new PropertyValueFactory<>("endMonth"));
-        goalDayColumn.setCellValueFactory(new PropertyValueFactory<>("endDay"));
-        goalTable.getColumns().addAll(goalTitleColumn, goalYearColumn, goalMonthColumn, goalDayColumn);
-        goalTable.setItems(sortedList);
-        goalTable.setPrefWidth(350);
-        goalTable.setMaxWidth(350);
-        TableMethods.preventColumnSorting(goalTable);
-        TableMethods.preventColumnResizing(goalTable);
-        TableMethods.preventColumnReordering(goalTable);
+        ongoingTitleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        ongoingYearColumn.setCellValueFactory(new PropertyValueFactory<>("endYear"));
+        ongoingMonthColumn.setCellValueFactory(new PropertyValueFactory<>("endMonth"));
+        ongoingDayColumn.setCellValueFactory(new PropertyValueFactory<>("endDay"));
+        ongoingTable.getColumns().addAll(ongoingTitleColumn, ongoingYearColumn, ongoingMonthColumn, ongoingDayColumn);
+        ongoingTable.setItems(ongoingList);
+        ongoingTable.setPrefWidth(400);
+        ongoingTable.setMaxWidth(400);
+        endedTitleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        endedYearColumn.setCellValueFactory(new PropertyValueFactory<>("endYear"));
+        endedMonthColumn.setCellValueFactory(new PropertyValueFactory<>("endMonth"));
+        endedDayColumn.setCellValueFactory(new PropertyValueFactory<>("endDay"));
+        endedTable.getColumns().addAll(endedTitleColumn, endedYearColumn, endedMonthColumn, endedDayColumn, endedCompletedColumn);
+        endedTable.setItems(endedList);
+        endedTable.setPrefWidth(400);
+        endedTable.setMaxWidth(400);
+        TableMethods.preventColumnSorting(ongoingTable);
+        TableMethods.preventColumnResizing(ongoingTable);
+        TableMethods.preventColumnReordering(ongoingTable);
+        TableMethods.preventColumnSorting(endedTable);
+        TableMethods.preventColumnResizing(endedTable);
+        TableMethods.preventColumnReordering(endedTable);
         sortedList.setComparator(GoalWindow.endDateComparator);
-        manageGoalsBox.getChildren().addAll(goalTable, manageGoalsButtonsBox);
+        ongoingList.setPredicate(p -> !LocalDate.of(p.getEndYear(), p.getEndMonth(), p.getEndDay()).isBefore(ApplicationGUI.localDate));
+        endedList.setPredicate(p -> LocalDate.of(p.getEndYear(), p.getEndMonth(), p.getEndDay()).isBefore(ApplicationGUI.localDate));
+        tableBox.getChildren().add(1, ongoingTable);
+        tableBox.getChildren().add(3, endedTable);
 
-        goalTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+        ongoingTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             //When goal is selected on table, update display
-            if (newSelection != null)
+            if (newSelection != null) {
                 //If something is selected
                 updateGoal(newSelection);
+                endedTable.getSelectionModel().clearSelection();
+            }
         });
-        goalTable.getSelectionModel().selectFirst();
 
-        goalTable.setRowFactory(tv -> {
+        ongoingTable.setRowFactory(tv -> {
             //Row factory
             //Local variables
             TableRow<PlayedGameGoal> row = new TableRow<>();    //The row
@@ -69,11 +93,77 @@ public class PlayedGoalWindow extends GoalWindow{
             return row;
         });
 
+        endedCompletedColumn.setCellValueFactory(cellData -> {
+            PlayedGameGoal goal = cellData.getValue();
+            String cellMessage;
+
+            if(goal.getFilter().getFilterCount(goal.isCountAllCollection()) >= goal.getGoalProgress())
+                cellMessage = "Yes";
+            else
+                cellMessage = "No";
+
+            String finalCellMessage = cellMessage;
+            return javafx.beans.binding.Bindings.createObjectBinding(() -> finalCellMessage);
+        });
+
+        endedCompletedColumn.setCellFactory(e -> new TableCell<>() {
+            //Status column cell factory
+            public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (item == null || empty) {
+                    //Cells where there is no game object
+                    setText(null);
+                    setStyle("");
+                } else {
+                    //Set text
+                    setText(item);
+
+                    //Set color
+                    setStyle(ApplicationGUI.colorMap.get(item));
+                }
+            }
+        });
+
+        endedTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            //When goal is selected on table, update display
+            if (newSelection != null) {
+                //If something is selected
+                updateGoal(newSelection);
+                ongoingTable.getSelectionModel().clearSelection();
+            }
+        });
+
+        endedTable.setRowFactory(tv -> {
+            //Row factory
+            //Local variables
+            TableRow<PlayedGameGoal> row = new TableRow<>();    //The row
+
+            row.setOnMouseClicked(event -> {
+                //Mouse is clicked
+
+                if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY
+                        && event.getClickCount() == 2)
+                    //Mouse double-clicks a non-empty row
+                    //Open edit game window
+                    editGoalButton.fire();
+            });
+
+            //Set right click menu
+            row.setContextMenu(ApplicationGUI.rowContextMenu);
+
+            return row;
+        });
+
+        //Select a goal, ongoing has priority
+        endedTable.getSelectionModel().selectFirst();
+        ongoingTable.getSelectionModel().selectFirst();
+
         addGoalButton.setOnAction(e -> {
             //Open add goal window
             //Local variables
             Stage stage = new Stage();
-            PlayedAddGoal playedAddGoal = new PlayedAddGoal(stage, goalTable);
+            PlayedAddGoal playedAddGoal = new PlayedAddGoal(stage, ongoingTable, endedTable);
             Scene scene = new Scene(playedAddGoal);
 
             //GUI
@@ -88,89 +178,113 @@ public class PlayedGoalWindow extends GoalWindow{
 
         editGoalButton.setOnAction(e -> {
             //Open edit goal window for selected goal
+            //Local variables
+            TableView<PlayedGameGoal> selectedTable;
+            Stage stage = new Stage();
+            PlayedEditGoal playedEditGoal;
+            Scene scene;
 
-            if(goalTable.getSelectionModel().getSelectedIndex() != -1) {
-                //If a goal is selected
-                //Local variables
-                Stage stage = new Stage();
-                PlayedEditGoal playedEditGoal = new PlayedEditGoal(stage, goalTable);
-                Scene scene = new Scene(playedEditGoal);
+            if(ongoingTable.getSelectionModel().getSelectedIndex() != -1)
+                //Current table is ongoing table
+                selectedTable = ongoingTable;
+            else if(endedTable.getSelectionModel().getSelectedIndex() != -1)
+                //Current table is ended table
+                selectedTable = endedTable;
+            else
+                //No table is selected, do nothing
+                return;
 
-                //GUI
-                stage.getIcons().add(ApplicationGUI.icon);
-                stage.setResizable(false);
-                stage.initModality(Modality.APPLICATION_MODAL);
-                stage.setTitle("Edit Played Game Goal");
-                stage.setScene(scene);
-                scene.getStylesheets().add(ApplicationGUI.styleSheet);
-                stage.show();
-            }
+            //Set values after table is discovered
+            playedEditGoal = new PlayedEditGoal(stage, selectedTable, this);
+            scene = new Scene(playedEditGoal);
+
+            //GUI
+            stage.getIcons().add(ApplicationGUI.icon);
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Edit Played Game Goal");
+            stage.setScene(scene);
+            scene.getStylesheets().add(ApplicationGUI.styleSheet);
+            stage.show();
         });
 
         removeGoalButton.setOnAction(e -> {
             //Remove the currently selected goal
+            //Local variables
+            TableView<PlayedGameGoal> selectedTable;
+            PlayedGameGoal goal;
+            Stage stage = new Stage();
+            Label label = new Label();
+            Label label1 = new Label("Are you sure?");
+            Button yesButton = new Button("Yes");
+            Button noButton = new Button("No");
+            HBox hbox = new HBox(yesButton, noButton);
+            VBox vbox = new VBox(label, label1, hbox);
+            Scene scene = new Scene(vbox);
 
-            if(goalTable.getSelectionModel().getSelectedIndex() != -1){
-                //If a goal is selected
-                //Local variables
-                PlayedGameGoal goal = goalTable.getSelectionModel().getSelectedItem();
-                Stage stage = new Stage();
-                Label label = new Label("Remove " + goal.getTitle());
-                Label label1 = new Label("Are you sure?");
-                Button yesButton = new Button("Yes");
-                Button noButton = new Button("No");
-                HBox hbox = new HBox(yesButton, noButton);
-                VBox vbox = new VBox(label, label1, hbox);
-                Scene scene = new Scene(vbox);
+            if(ongoingTable.getSelectionModel().getSelectedIndex() != -1)
+                //Current table is ongoing table
+                selectedTable = ongoingTable;
+            else if(endedTable.getSelectionModel().getSelectedIndex() != -1)
+                //Current table is ended table
+                selectedTable = endedTable;
+            else
+                //No table is selected, do nothing
+                return;
 
-                //GUI
-                stage.getIcons().add(ApplicationGUI.icon);
-                stage.setResizable(false);
-                stage.initModality(Modality.APPLICATION_MODAL);
-                stage.setTitle("Remove Played Game Goal");
-                stage.setScene(scene);
-                label.setStyle("-fx-font-weight: bold;-fx-font-size: 16;");
-                yesButton.setStyle("-fx-font-size: 16;");
-                yesButton.setPrefWidth(80);
-                noButton.setStyle("-fx-font-size: 16;");
-                noButton.setPrefWidth(80);
-                hbox.setAlignment(Pos.CENTER);
-                hbox.setSpacing(30);
-                vbox.setSpacing(20);
-                vbox.setAlignment(Pos.TOP_CENTER);
-                vbox.setPadding(new Insets(10));
-                scene.getStylesheets().add(ApplicationGUI.styleSheet);
+            //Set goal after selected table is discovered
+            goal = selectedTable.getSelectionModel().getSelectedItem();
 
-                yesButton.setOnAction(e1 -> {
-                    //Remove from list
-                    GameLists.playedGoalList.remove(goalTable.getSelectionModel().getSelectedItem());
+            //GUI
+            stage.getIcons().add(ApplicationGUI.icon);
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Remove Played Game Goal");
+            stage.setScene(scene);
+            label.setStyle("-fx-font-weight: bold;-fx-font-size: 16;");
+            label.setText("Remove " + goal.getTitle());
+            yesButton.setStyle("-fx-font-size: 16;");
+            yesButton.setPrefWidth(80);
+            noButton.setStyle("-fx-font-size: 16;");
+            noButton.setPrefWidth(80);
+            hbox.setAlignment(Pos.CENTER);
+            hbox.setSpacing(30);
+            vbox.setSpacing(20);
+            vbox.setAlignment(Pos.TOP_CENTER);
+            vbox.setPadding(new Insets(10));
+            scene.getStylesheets().add(ApplicationGUI.styleSheet);
 
-                    if(GameLists.playedGoalList.size() != 0) {
-                        //If there are goals remaining, select the first one
-                        goalTable.getSelectionModel().clearSelection();
-                        goalTable.getSelectionModel().selectFirst();
-                    }else
-                        //Otherwise update the display for no goals selected
-                        updateGoal();
+            yesButton.setOnAction(e1 -> {
+                //Remove from list
+                GameLists.playedGoalList.remove(selectedTable.getSelectionModel().getSelectedItem());
 
-                    //Update table
-                    TableMethods.updateColumnWidth(goalTable.getColumns());
-                    goalTable.refresh();
+                if(GameLists.playedGoalList.size() != 0) {
+                    //If there are goals remaining, select the first one
+                    selectedTable.getSelectionModel().clearSelection();
+                    selectedTable.getSelectionModel().selectFirst();
+                }else
+                    //Otherwise update the display for no goals selected
+                    updateGoal();
 
-                    ApplicationGUI.changeMade = true;
-                    ApplicationGUI.setStageTitle();
-                    stage.close();
-                });
+                //Update table
+                TableMethods.updateColumnWidth(selectedTable.getColumns());
+                selectedTable.refresh();
 
-                noButton.setOnAction(e1 -> stage.close());
+                ApplicationGUI.changeMade = true;
+                ApplicationGUI.setStageTitle();
+                stage.close();
+            });
 
-                stage.show();
-            }
+            noButton.setOnAction(e1 -> stage.close());
+
+            stage.show();
         });
 
-        //Update table
-        TableMethods.updateColumnWidth(goalTable.getColumns());
-        goalTable.refresh();
+        //Update tables
+        TableMethods.updateColumnWidth(endedTable.getColumns());
+        endedTable.refresh();
+        TableMethods.updateColumnWidth(ongoingTable.getColumns());
+        ongoingTable.refresh();
     }
 
     //Updates display when no goal is selected

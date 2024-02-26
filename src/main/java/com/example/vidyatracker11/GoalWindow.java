@@ -12,11 +12,14 @@ import java.util.Comparator;
 public abstract class GoalWindow extends HBox {
     //GUI
     //Manage goals
+    Label ongoingGoalsLabel = new Label("Ongoing Goals");
+    Label endedGoalsLabel = new Label("Ended Goals");
+    VBox tableBox = new VBox(ongoingGoalsLabel, endedGoalsLabel);
     Button addGoalButton = new Button("Add New Goal");
     Button editGoalButton = new Button("Edit Selected Goal");
     Button removeGoalButton = new Button("Remove Selected Goal");
     VBox manageGoalsButtonsBox = new VBox(addGoalButton, editGoalButton, removeGoalButton);
-    HBox manageGoalsBox = new HBox();
+    HBox manageGoalsBox = new HBox(tableBox, manageGoalsButtonsBox);
 
     //View goal
     Label mainLabel = new Label("No Goal Selected");
@@ -50,6 +53,10 @@ public abstract class GoalWindow extends HBox {
 
     public GoalWindow(){
         //GUI
+        ongoingGoalsLabel.setStyle("-fx-font-weight:bold;-fx-font-size:16;");
+        endedGoalsLabel.setStyle("-fx-font-weight:bold;-fx-font-size:16;");
+        tableBox.setSpacing(10);
+        tableBox.setAlignment(Pos.TOP_CENTER);
         manageGoalsButtonsBox.setSpacing(5);
         manageGoalsBox.setSpacing(5);
         mainLabel.setStyle("-fx-font-weight:bold;-fx-font-size:32;");
