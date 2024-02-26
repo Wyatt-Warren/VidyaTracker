@@ -1809,14 +1809,6 @@ public class ApplicationGUI extends Application {
         //open the default "List.json" file
         openFile(currentFilePathOut);
 
-        //Find unplayed goals that just ended and set their end progress value
-        for(UnplayedGameGoal goal : GameLists.unplayedGoalList)
-            //For every unplayed goal
-            if(LocalDate.of(goal.getEndYear(), goal.getEndMonth(), goal.getEndDay()).isBefore(localDate) &&
-            goal.getEndProgress() == -1)
-                //If goal is past end date and end progress is not yet set, set end progress to current progress.
-                goal.setEndProgress(goal.getFilter().filteredList().size());
-
         primaryStage.setScene(primaryScene);
         primaryStage.show();
     }
@@ -2980,6 +2972,14 @@ public class ApplicationGUI extends Application {
 
                     GameLists.unplayedGoalList.add(newGoal);
                 }
+
+            //Find unplayed goals that just ended and set their end progress value
+            for(UnplayedGameGoal goal : GameLists.unplayedGoalList)
+                //For every unplayed goal
+                if(LocalDate.of(goal.getEndYear(), goal.getEndMonth(), goal.getEndDay()).isBefore(localDate) &&
+                        goal.getEndProgress() == -1)
+                    //If goal is past end date and end progress is not yet set, set end progress to current progress.
+                    goal.setEndProgress(goal.getFilter().getFilterCount(goal.isCountAllCollection()));
 
             //Update GUI
             playedSortChoices.getSelectionModel().selectFirst();
